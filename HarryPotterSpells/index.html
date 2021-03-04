@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Harry Potter Spells</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Elsie:wght@400;900&family=Fondamento:ital@0;1&family=Jomhuria&family=Lancelot&family=Poppins:wght@200;400;700&family=Yatra+One&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+  </head>
+  <body>
+
+    <div class="div1 main container-fluid">
+      <h1 class="title">Harry Potter Spells</h1>
+
+      <p class="intro">This is my first-ever visualization created using D3.js (completed March 2021).
+        I had been interested in learning D3 ever since I saw <a href="https://benjerry.heshlindsdataviz.com/">
+        this extraordinary visualization</a> from Lindsey Poulter and Hesham Eissa (fellow Tableau enthusiasts) last summer.
+        My 2021 job search was the extra push I needed to make it happen.
+      </p>
+    </div>
+
+
+    <div class="div 2 main container-fluid">
+      <div class="row">
+        <div class="col-md-6 col-lg-3 spellList">
+          <p>Top 10 spells (by count of appearance)</p>
+          <div class="spellItem lumo">
+            <h3>Lumos</h3>
+            <object id="wand14" class = "wand" type="image/svg+xml" data="images/Wand_14.svg">
+              <img class="backupWand14" src="images/Wand_14.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem acci">
+            <h3>Accio</h3>
+            <object id="wand02" class = "wand" type="image/svg+xml" data="images/Wand_2.svg">
+              <img class="backupWand02" src="images/Wand_2.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem muff">
+            <h3>Muffliato</h3>
+            <object id="wand03" class = "wand" type="image/svg+xml" data="images/Wand_3.svg">
+              <img class="backupWand03" src="images/Wand_3.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem ridd">
+            <h3>Riddikulus</h3>
+            <object id="wand04" class = "wand" type="image/svg+xml" data="images/Wand_4.svg">
+              <img class="backupWand04" src="images/Wand_4.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem expa">
+            <h3>Expecto Patronum</h3>
+            <object id="wand05" class = "wand" type="image/svg+xml" data="images/Wand_5.svg">
+              <img class="backupWand05" src="images/Wand_5.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 spellList">
+          <br>  
+          <div class="spellItem expe">
+            <h3>Expelliarmus</h3>
+            <object id="wand08" class = "wand" type="image/svg+xml" data="images/Wand_8.svg">
+              <img class="backupWand08" src="images/Wand_8.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem impe">
+            <h3>Impedimenta</h3>
+            <object id="wand09" class = "wand" type="image/svg+xml" data="images/Wand_9.svg">
+              <img class="backupWand09" src="images/Wand_9.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem stup">
+            <h3>Stupefy</h3>
+            <object id="wand12" class = "wand" type="image/svg+xml" data="images/Wand_12.svg">
+              <img class="backupWand12" src="images/Wand_12.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem cruc">
+            <h3>Crucio</h3>
+            <object id="wand13" class = "wand" type="image/svg+xml" data="images/Wand_13.svg">
+              <img class="backupWand13" src="images/Wand_13.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+          <div class="spellItem avke">
+            <h3>Avada Kedavra</h3>
+            <object id="wand06" class = "wand" type="image/svg+xml" data="images/Wand_6.svg">
+              <img class="backupWand06" src="images/Wand_6.svg" alt="">
+            </object>
+            <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+          </div>
+
+        </div>
+        <div class="col-lg-6 scatter">
+          <!-- <p>This is some content.</p> -->
+          <div class="canvas">
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="div3 main container-fluid takeaways">
+      <h2>Takeaways from the data (contains spoilers)</h2>
+      <ul>
+        <li>Harry steals the show with over half of the total spells coming from him.</li>
+        <li>It's easy to spot some of the more pivotal moments in the books where the spells are clustered together. </li>
+        <li>There's definitely more spell activity in book 7, but it's more spread out than in the other books.  As a fan, this reflects my memories of reading them. </li>
+        <li>Poor Ron doesn't get half as many spells as his lady Ms. Granger and is even bested by his own mother, poor thing (we'll throw him a bone and point out that the scope  of this data is limited to the top 10 spells).</li>
+        <li>The evil/aggressive spells come almost entirely from the Death Eaters (surprising no one), with one noteworthy exception: Severus Snape twice performs the "Avada Kedavra" (killing) curse, but he was of course acting as a spy and only doing so when necessary. </li>
+        <li>None of the top 10 spells appeared in the first book.  One of them (the Muffliato spell) doesn't debut until book 6.</li>
+        <li>Less of an observation and more of an author's note - Dolores Umbridge was included as an honorary Death Eater - while she technically wasn't reporting to Lord Voldemort, she may as well have been. </li>
+      </ul>
+
+    </div>
+
+    <div class="div4 main container-fluid process">
+      <h2>About this Viz</h2>
+
+      <ul>
+        <li>I started with <a href="https://www.udemy.com/share/1013gGAEYad1xSQX0F/">Angela Yu's Web Development bootcamp</a>.
+          <ul>
+            <li>Focusing on the modules listed in this blog post <a href="https://www.heshameissa.com/blog/learn-d3">here</a>.</li>
+          </ul>
+        </li>
+        <li>Learned the basics of D3 from <a href="https://www.udemy.com/share/1020mmAEYad1xSQX0F/">Shaun Pelling's course</a>.</li>
+        <li>The inspiration for the content (and most of the data) came from Skyler Johnson's <a href="https://public.tableau.com/profile/skybjohnson#!/vizhome/TheSpellsofHarryPotter/HarryPotterSpells">The Spells of Harry Potter</a> on Tableau Public.</li>
+        <li>I then manually augmented the data with spellcaster names and emphasis descriptors.</li>
+        <li>Wand images from <a href="https://www.etsy.com/listing/671811946/magical-wands-bundle-15-images-svg-cut?ref=yr_purchases">AnamCaraGraphics</a>, Harry Potter book icons from <a href="#">Leah Kotas</a>.</li>
+        <li>Code snippets borrowed from:
+          <ul>
+            <li><a href="https://www.d3-graph-gallery.com/graph/scatter_grouped.html">Scatterplot with color coding</a></li>
+            <li><a href="https://stackoverflow.com/questions/40458363/how-to-add-jitter-to-avoid-overplot-in-d3">Adding jitter to each row</a></li>
+            <li><a href="https://www.d3-graph-gallery.com/graph/barplot_stacked_highlight.html">Highlighting group (spell) on hover</a></li>
+            <li><a href="https://gist.github.com/explunit/4659227">Adding custom symbols</a></li>
+            <li><a href="https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52">Adding tooltips</a></li>
+            <li><a href="https://github.com/d3/d3-axis/issues/48">Remove line from axis</a> </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="div5" id="bottomContainer">
+      <a class="footerLink" href="https://www.linkedin.com/in/heidiebrooks/">LinkedIn</a>
+      <a class="footerLink" href="https://public.tableau.com/profile/heidi.stockton#!/">Tableau Public</a>
+      <a class="footerLink" href="mailto:stocktonheidi@gmail.com">Email</a>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="index.js" charset="utf-8"></script>
+
+  </body>
+</html>
