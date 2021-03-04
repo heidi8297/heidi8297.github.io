@@ -1,0 +1,174 @@
+body {
+  color: #f5f5f5;
+  background-color: #202020;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  font-size: 0.9rem;
+  /* padding: 10%; */
+}
+
+
+
+h1 {
+  margin-bottom: 50px;
+  font-size: 4rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 1.7rem;
+  font-family: 'Lancelot', sans-serif;
+  color: #f5f5f5;
+}
+
+p {
+
+}
+
+a {
+  /* color: #06ADAE; */
+  color: #EED8AD;
+}
+
+a:hover {
+  color: #EEB547;
+  text-decoration: none;
+}
+
+.main {
+  padding: 0 10%;
+}
+
+.title {
+  margin-bottom: 100px;
+}
+
+.intro {
+  margin-bottom: 70px;
+  font-size: 1.1rem;
+}
+
+.col-lg-6 {
+}
+
+.container-fluid {
+  margin: 50px auto;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 250px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  pointer-events: none;
+  text-shadow: 0 0 6px #000000;
+}
+
+.lumo {
+  color: #55CC66;
+}
+
+.acci {
+  color: #06ADAE;
+}
+
+.muff {
+  color: #0B97E6;
+}
+
+.ridd {
+  color: #5A69EE;
+}
+
+.expa {
+  color: #7363E6;
+}
+
+.expe {
+  color: #885DDE;
+}
+
+.impe {
+  color: #9D53D7;
+}
+
+.stup {
+  color: #AD42C2;
+}
+
+.cruc {
+  color: #DE116D;
+}
+
+.avke {
+  color: #DC164E;
+}
+
+.lumo:hover {
+  color: #56B864;
+}
+
+.acci {
+  color: #06ADAE;
+}
+
+.muff {
+  color: #0B97E6;
+}
+
+.ridd {
+  color: #5A69EE;
+}
+
+.expa {
+  color: #7363E6;
+}
+
+.expe {
+  color: #885DDE;
+}
+
+.impe {
+  color: #9D53D7;
+}
+
+.stup {
+  color: #AD42C2;
+}
+
+.cruc {
+  color: #DE116D;
+}
+
+.avke {
+  color: #DC164E;
+}
+
+.wand {
+  width: 190px;
+}
+
+.spellItem {
+  padding: 14px;
+  font-size: 0.5rem;
+}
+
+.footerLink {
+  padding: 10px;
+}
+
+/* For some reason this styling didn't work as a class (had to change to an id) */
+#bottomContainer {
+  background-color: #131313;
+  text-align: center;
+  padding: 50px;
+  margin: 50px 0 0 0;
+}
