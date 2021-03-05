@@ -185,10 +185,10 @@ a:hover {
   color: #DC164E;
 }
 
-.colorScaleImg {
+.colorScaleImage {
   margin-top: 50px;
+  width: 70%;
 }
-
 
 .footerLink {
   padding: 10px;

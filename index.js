@@ -243,9 +243,6 @@ for (ind = 0; ind < 10; ind++) {
 
 	const thisSpell = spellsFull[ind]
 
-	console.log(ind);
-	console.log(thisSpell);
-
 	// create the svg
 	const svgSpell = d3.select('.canvas'+spells[ind])
 	  .append('svg')
@@ -261,12 +258,6 @@ for (ind = 0; ind < 10; ind++) {
 
 
 	d3.json('top10spellsAugmented.json').then( data => {
-
-		console.log("thisSpell:"+thisSpell);
-		console.log("ind:"+ind);
-		console.log("spellsFull:"+spellsFull);
-		console.log(thisSpell);
-		console.log(dataFilter);
 
 		// filter the data to only the spells that are equal to "thisSpell"
 		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );  // why does this one need to be a var???
@@ -296,7 +287,5 @@ for (ind = 0; ind < 10; ind++) {
 
 
 	 });  // end of d3.json function
-
- 	console.log('after the data bit');
 
 } // end of loop
