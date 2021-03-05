@@ -53,30 +53,78 @@ function opacityValue(talk) {
 	}
 }
 
+// Color scale: give me a spell name, I return a color
+const color = d3.scaleOrdinal()
+	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4","#BA3ED4","#F2006C","#EE0044"]);
 
+
+// this function makes our graph responsive to the size of the container/screen!
+function responsivefy(svg) {
+  // container will be the DOM element that the svg is appended to
+  // we then measure the container and find its aspect ratio
+  const container = d3.select(svg.node().parentNode),
+      width = parseInt(svg.style('width'), 10),
+      height = parseInt(svg.style('height'), 10),
+      aspect = width / height;
+
+  // set viewBox attribute to the initial size control scaling with preserveAspectRatio
+  // resize svg on inital page load
+  svg.attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMinYMid')
+      .call(resize);
+
+  // add a listener so the chart will be resized when the window resizes
+  // multiple listeners for the same event type requires a namespace, i.e., 'click.foo'
+  // api docs: https://goo.gl/F3ZCFr
+  d3.select(window).on(
+      'resize.' + container.attr('id'),
+      resize
+  );
+
+  // this is the code that resizes the chart
+  // it will be called on load and in response to window resizes
+  // gets the width of the container and resizes the svg to fill it
+  // while maintaining a consistent aspect ratio
+  function resize() {
+      const w = parseInt(container.style('width'));
+      svg.attr('width', w);
+      svg.attr('height', Math.round(w / aspect));
+  }
+}
+
+
+
+//  CREATE THE SCATTER PLOT
 const svgWidth = 640;
 const svgHeight = 600;
 
-const margin = {top: 0, right: 110, bottom: 40, left: 0};
+const margin = {top: 0, right: 130, bottom: 45, left: 0};
 const graphWidth = svgWidth - margin.left - margin.right;
 const graphHeight = svgHeight - margin.top - margin.bottom;
 
 const svg = d3.select('.canvas')
   .append('svg')
     .attr('width', svgWidth)
-    .attr('height', svgHeight);
+    .attr('height', svgHeight)
+		.call(responsivefy);
 
 const graph = svg.append('g')
   .attr('width',graphWidth)
   .attr('height',graphHeight)
   .attr('transform',`translate(${margin.left},${margin.top})`);
 
+// Define the div for the tooltip
+var div = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
 
 d3.json('top10spellsAugmented.json').then(data => {
 
   // define the x and y scales
   const x = d3.scaleLinear()
-    .domain([0,d3.max(data,d=>d.position)])
+    .domain([90000,d3.max(data,d=>d.position)])
     .range([0,graphWidth]);
 
   const y = d3.scaleLinear()
@@ -84,28 +132,9 @@ d3.json('top10spellsAugmented.json').then(data => {
     .range([0,graphHeight]);
 
 
-  // Color scale: give me a spell name, I return a color
-  const color = d3.scaleOrdinal()
-    .domain(["Avada Kedavra","Crucio","Stupefy","Impedimenta","Expelliarmus","Expecto Patronum","Riddikulus","Muffliato","Accio","Lumos"])
-    .range([ "#EE0044", "#F2006C", "#BA3ED4", "#A24DE4","#8A58F0","#735FF8","#5566FF","#00A3FF","#00BFC0","#55CC66"]);
-
-
-
 	// find the existing paths (stars) in the html
 	const stars = graph.selectAll("path")
 		.data(data);
-
-	// Define the div for the tooltip
-	var div = d3.select("body").append("div")
-	    .attr("class", "tooltip")
-	    .style("opacity", 0);
-
-
-	// update the existing paths (stars)
-	stars.attr( "d", d => flow_shapes["star"](2*halfSize*(10+d.descriptorValue)) )
-  	.attr("fill", d=>color(d.spell) )
-		.attr("opacity",d=> opacityValue(d.talkTF))
-  	.attr("transform", d=> "translate(" + x(d.position) + "," + y(jitter(d.namePosition)) + ")");
 
 	// add stars for the remaining data points
 	stars.enter()
@@ -129,16 +158,25 @@ d3.json('top10spellsAugmented.json').then(data => {
        });
 
 
-/////////////////// start new stuff
 
-	// Create the scale
+	// ADDING AXES TO THE SCATTER PLOT
+
+	// Create the y Axis - just names that line up with the data
 	var yScaleForAxis = d3.scaleBand()
 		.domain(["Death Eaters, other", "Vincent Crabbe", "Barty Crouch", "Bellatrix Lestrange", "Voldemort", "", "Harry Potter", " ", "Hermione Granger",
-			"Remus Lupin","Mrs. Weasley","Ron Weasley","Severus Snape","Neville Longbottom","Albus Dumbledore","Sirius Black","Others"])         // This is what is written on the Axis: from 0 to 100
+			"Remus Lupin","Mrs. Weasley","Ron Weasley","Neville Longbottom","Severus Snape","Albus Dumbledore","Sirius Black","Others"])
 		.range([0, graphHeight]);
 
+	// Create the x Axis - just names that line up with the data
+	var xScaleForAxis = d3.scaleBand()
+		.domain(["progression in the books --------->"])
+		.range([0, graphWidth]);
+
 	const yAxisGroup = graph.append("g")
-		.attr('transform', `translate(${graphWidth}, 20)`);
+		.attr('transform', `translate(${graphWidth+25}, 20)`);
+
+	const xAxisGroup = graph.append("g")
+		.attr('transform', `translate(20, ${graphHeight+15})`);
 
 	// Draw the axis
 	yAxisGroup.call(d3.axisLeft(yScaleForAxis))
@@ -147,10 +185,105 @@ d3.json('top10spellsAugmented.json').then(data => {
 		.style("font-family", "Poppins")
 		.style("font-size", 12);
 
+	// Draw the axis
+	xAxisGroup.call(d3.axisBottom(xScaleForAxis))
+		.selectAll("text")
+		.style("text-anchor", "middle")
+		.style("font-family", "Poppins")
+		.style("font-size", 12);
+
+	// remove the lines and ticks from the axes
 	yAxisGroup.select('.domain').attr('stroke-width', 0);
-
-
-///////////////// end new stuff
+	yAxisGroup.selectAll('.tick').selectAll('line').remove();
+	xAxisGroup.select('.domain').attr('stroke-width', 0);
+	xAxisGroup.selectAll('.tick').selectAll('line').remove();
 
 
 })
+
+
+
+
+
+
+
+
+
+// CREATE THE INDIVIDUAL STAR CHARTS FOR EACH SPELL
+
+
+// Define the div for the tooltip
+var divSpell = d3.select("body").append("div")
+	.attr("class", "tooltipSpell")
+	.style("opacity", 0);
+
+// set the dimensions of the graph
+const graphWidthSpell = 240;
+const graphHeightSpell = 30;
+
+// define the x and y scales
+const xSpell = d3.scaleLinear()
+	.domain([0,34])  // 34 = the maximum number of occurences of one spell
+	.range([0,graphWidthSpell]);
+
+const ySpell = d3.scaleLinear()
+	.domain([0,1])
+	.range([0,graphHeightSpell]);
+
+
+var spellsFull = ["Lumos","Accio","Muffliato"] //  NEEDS THE REST OF THE VALUES
+var spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc","Avke"];
+
+
+
+
+
+
+for (ind = 0; ind < 3; ind++) {
+
+	var thisSpell = spellsFull[ind]
+
+	console.log(ind);
+	console.log(thisSpell);
+
+	// create the svg
+	const svgSpell = d3.select('.canvas'+spells[ind])
+	  .append('svg')
+	    .attr('width', graphWidthSpell)
+	    .attr('height', graphHeightSpell);
+	//		.call(responsivefy);   // for some reason I can't seem to use "responsivefy" more than once in the code?
+
+	// create a group to contain the graph
+	const graphSpell = svgSpell.append('g')
+	  .attr('width',graphWidthSpell)
+	  .attr('height',graphHeightSpell);
+
+
+
+	d3.json('top10spellsAugmented.json').then( data => {    // do I really need to include so much code in this wrapper function?  I'm guessing not?
+
+		console.log("thisSpell:"+thisSpell);
+		console.log("ind:"+ind);
+		console.log("spellsFull:"+spellsFull);
+		console.log(thisSpell);
+		console.log(dataFilter);
+
+		// filter the data to only the spells that are equal to "thisSpell"
+		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );
+
+		//create a star for each (filtered) data point
+	 	graphSpell.selectAll("path")
+			.data(dataFilter)
+	 		.enter()
+	 		.append("svg:path")
+	 		.attr( "d", d => flow_shapes["star"](2*halfSize*(12+d.descriptorValue)) )
+	 		.attr("fill", d=> color(d.spell) )
+	 		.attr("opacity",d=> opacityValue(d.talkTF))
+	 		.attr("transform", (d,i) => "translate(" + xSpell(i) + ",0.5)");
+
+
+	 });  // end of d3.json function
+
+ 	console.log('after the data bit');
+
+} // end of loop

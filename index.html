@@ -2,7 +2,10 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Harry Potter Spells</title>
+    <title>Spells and Spellcasters</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.ico">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -19,26 +22,31 @@
   <body>
 
     <div class="div1 main container-fluid">
-      <h1 class="title">Harry Potter Spells</h1>
+      <h1 class="title">Spells and Spellcasters</h1>
 
-      <p class="intro">This is my first-ever visualization created using D3.js (completed March 2021).
+      <p class="intro">This is my first-ever visualization created using D3.js (March 2021).
         I had been interested in learning D3 ever since I saw <a href="https://benjerry.heshlindsdataviz.com/">
         this extraordinary visualization</a> from Lindsey Poulter and Hesham Eissa (fellow Tableau enthusiasts) last summer.
         My 2021 job search was the extra push I needed to make it happen.
       </p>
     </div>
 
+    <hr>
 
-    <div class="div 2 main container-fluid">
-      <div class="row">
-        <div class="col-md-6 col-lg-3 spellList">
-          <p>Top 10 spells (by count of appearance)</p>
+    <div class="div2 main container-fluid">
+      <div class="row d3content">
+
+        <!-- SPELLS WITH WANDS (COLUMN 1) -->
+        <div class="col-md-6 col-lg-3 spellList spellListA secondary">
+          <p>Top 10 spells (by usage count)</p>
           <div class="spellItem lumo">
             <h3>Lumos</h3>
             <object id="wand14" class = "wand" type="image/svg+xml" data="images/Wand_14.svg">
               <img class="backupWand14" src="images/Wand_14.svg" alt="">
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+            <div class="canvasLumo">
+            </div>
           </div>
           <div class="spellItem acci">
             <h3>Accio</h3>
@@ -46,6 +54,8 @@
               <img class="backupWand02" src="images/Wand_2.svg" alt="">
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+            <div class="canvasAcci">
+            </div>
           </div>
           <div class="spellItem muff">
             <h3>Muffliato</h3>
@@ -53,6 +63,8 @@
               <img class="backupWand03" src="images/Wand_3.svg" alt="">
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+            <div class="canvasMuff">
+            </div>
           </div>
           <div class="spellItem ridd">
             <h3>Riddikulus</h3>
@@ -60,6 +72,8 @@
               <img class="backupWand04" src="images/Wand_4.svg" alt="">
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+            <div class="canvasRidd">
+            </div>
           </div>
           <div class="spellItem expa">
             <h3>Expecto Patronum</h3>
@@ -67,10 +81,14 @@
               <img class="backupWand05" src="images/Wand_5.svg" alt="">
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
+            <div class="canvasExpa">
+            </div>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3 spellList">
-          <br>  
+
+        <!-- SPELLS WITH WANDS (COLUMN 2) -->
+        <div class="col-md-6 col-lg-3 spellList spellListB secondary">
+          <br>
           <div class="spellItem expe">
             <h3>Expelliarmus</h3>
             <object id="wand08" class = "wand" type="image/svg+xml" data="images/Wand_8.svg">
@@ -106,17 +124,31 @@
             </object>
             <p><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></p>
           </div>
-
         </div>
-        <div class="col-lg-6 scatter">
-          <!-- <p>This is some content.</p> -->
+
+        <!-- SCATTER PLOT -->
+        <div class="col-lg-6 scatter secondary">
           <div class="canvas">
-
           </div>
+        </div>
 
+      </div>
+
+      <br>
+
+      <!-- LEGENDS -->
+      <div class="row">
+        <div class="col-md-6 col-lg-3 colorScale">
+          <object class = "colorScaleImage" type="image/svg+xml" data="images/colorScale.svg">
+            <img class="colorScaleImg" src="images/colorScale.svg" alt="">
+          </object>
         </div>
       </div>
+
+
     </div>
+
+    <hr>
 
     <div class="div3 main container-fluid takeaways">
       <h2>Takeaways from the data (contains spoilers)</h2>
@@ -132,27 +164,35 @@
 
     </div>
 
+    <hr>
+
     <div class="div4 main container-fluid process">
       <h2>About this Viz</h2>
 
       <ul>
-        <li>I started with <a href="https://www.udemy.com/share/1013gGAEYad1xSQX0F/">Angela Yu's Web Development bootcamp</a>.
-          <ul>
-            <li>Focusing on the modules listed in this blog post <a href="https://www.heshameissa.com/blog/learn-d3">here</a>.</li>
-          </ul>
-        </li>
-        <li>Learned the basics of D3 from <a href="https://www.udemy.com/share/1020mmAEYad1xSQX0F/">Shaun Pelling's course</a>.</li>
+        <li>How did I learn D3?</li>
+        <ul>
+          <li>I started with <a href="https://www.udemy.com/share/1013gGAEYad1xSQX0F/">Angela Yu's Web Development bootcamp</a>.
+            <ul>
+              <li>I focused on the modules listed in this blog post <a href="https://www.heshameissa.com/blog/learn-d3">here</a>.</li>
+            </ul>
+          </li>
+          <li>Learned the basics of D3 from <a href="https://www.udemy.com/share/1020mmAEYad1xSQX0F/">Shaun Pelling's course</a>.</li>
+          <li>Everything else I got from Google (specific links listed below).</li>
+        </ul>
         <li>The inspiration for the content (and most of the data) came from Skyler Johnson's <a href="https://public.tableau.com/profile/skybjohnson#!/vizhome/TheSpellsofHarryPotter/HarryPotterSpells">The Spells of Harry Potter</a> on Tableau Public.</li>
         <li>I then manually augmented the data with spellcaster names and emphasis descriptors.</li>
-        <li>Wand images from <a href="https://www.etsy.com/listing/671811946/magical-wands-bundle-15-images-svg-cut?ref=yr_purchases">AnamCaraGraphics</a>, Harry Potter book icons from <a href="#">Leah Kotas</a>.</li>
+        <li>Wand images from <a href="https://www.etsy.com/listing/671811946/magical-wands-bundle-15-images-svg-cut?ref=yr_purchases">AnamCaraGraphics</a>.</li>
         <li>Code snippets borrowed from:
           <ul>
             <li><a href="https://www.d3-graph-gallery.com/graph/scatter_grouped.html">Scatterplot with color coding</a></li>
             <li><a href="https://stackoverflow.com/questions/40458363/how-to-add-jitter-to-avoid-overplot-in-d3">Adding jitter to each row</a></li>
-            <li><a href="https://www.d3-graph-gallery.com/graph/barplot_stacked_highlight.html">Highlighting group (spell) on hover</a></li>
+            <li><a href="https://www.d3-graph-gallery.com/graph/barplot_stacked_highlight.html">Highlighting group (spell) on hover</a> - I STILL NEED TO DO THIS ONE</li>
             <li><a href="https://gist.github.com/explunit/4659227">Adding custom symbols</a></li>
+            <li><a href="https://benclinkinbeard.com/d3tips/make-any-chart-responsive-with-one-function/?utm_content=buffer976d6&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer">Make the graph responsive to screen resizing</a> </li>
+            <li><a href="#">Change color of svg images (wands)</a></li>
             <li><a href="https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52">Adding tooltips</a></li>
-            <li><a href="https://github.com/d3/d3-axis/issues/48">Remove line from axis</a> </li>
+            <li>Remove <a href="https://github.com/d3/d3-axis/issues/48">line</a> and <a href="https://stackoverflow.com/questions/36641788/remove-tick-marks-in-d3-dimple">ticks</a> from axis</li>
           </ul>
         </li>
       </ul>
