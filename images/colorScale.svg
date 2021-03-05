@@ -8,9 +8,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="182.22649mm"
-   height="19.905432mm"
-   viewBox="0 0 182.22649 19.905431"
+   width="120mm"
+   height="11mm"
+   viewBox="0 0 182.06418 17.308294"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (c497b03c, 2020-09-10)"
@@ -33,43 +33,43 @@
        inkscape:collect="always"
        id="linearGradient46">
       <stop
-         style="stop-color:#dc164e;stop-opacity:1"
+         style="stop-color:#b31140;stop-opacity:1"
          offset="0"
          id="stop42" />
       <stop
-         style="stop-color:#de116d;stop-opacity:0.88235295"
+         style="stop-color:#b50e59;stop-opacity:0.88235295"
          offset="0.11222192"
          id="stop64" />
       <stop
-         style="stop-color:#ad42c2;stop-opacity:1"
+         style="stop-color:#843294;stop-opacity:1"
          offset="0.21909119"
          id="stop62" />
       <stop
-         style="stop-color:#9d53d7;stop-opacity:1"
+         style="stop-color:#7940a6;stop-opacity:1"
          offset="0.33165738"
          id="stop60" />
       <stop
-         style="stop-color:#885dde;stop-opacity:1"
+         style="stop-color:#6a49ae;stop-opacity:1"
          offset="0.4415558"
          id="stop58" />
       <stop
-         style="stop-color:#7363e6;stop-opacity:1"
+         style="stop-color:#574aae;stop-opacity:1"
          offset="0.54805475"
          id="stop56" />
       <stop
-         style="stop-color:#5a69ee;stop-opacity:1"
+         style="stop-color:#4551b5;stop-opacity:1"
          offset="0.6696651"
          id="stop54" />
       <stop
-         style="stop-color:#0b97e6;stop-opacity:1"
+         style="stop-color:#0874b0;stop-opacity:1"
          offset="0.79061472"
          id="stop52" />
       <stop
-         style="stop-color:#06adae;stop-opacity:1"
+         style="stop-color:#04898a;stop-opacity:1"
          offset="0.89447546"
          id="stop50" />
       <stop
-         style="stop-color:#56b864;stop-opacity:1"
+         style="stop-color:#459451;stop-opacity:1"
          offset="1"
          id="stop44" />
     </linearGradient>
@@ -82,7 +82,7 @@
        x2="19.483698"
        y2="52.98732"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,0.69003568,-0.64928425,14.377304)" />
+       gradientTransform="matrix(1,0,0,0.48939903,-0.64928425,25.784957)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -92,16 +92,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.63"
-     inkscape:cx="260.1267"
-     inkscape:cy="114.37821"
+     inkscape:cx="348.23378"
+     inkscape:cy="30.829129"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:window-width="1792"
-     inkscape:window-height="943"
-     inkscape:window-x="35"
-     inkscape:window-y="49"
+     inkscape:window-height="683"
+     inkscape:window-x="6"
+     inkscape:window-y="23"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata5">
@@ -119,10 +119,10 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-7.5568574,-42.131243)">
+     transform="translate(-7.4245661,-44.75841)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="13.472649"
        y="58.299343"
        id="text893"><tspan
@@ -130,10 +130,10 @@
          id="tspan891"
          x="13.472649"
          y="58.299343"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583;">good/neutral</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583">good/neutral</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="79.29892"
        y="58.299343"
        id="text893-0"><tspan
@@ -141,10 +141,10 @@
          id="tspan891-4"
          x="79.29892"
          y="58.299343"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583;">combat/defensive</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583">combat/defensive</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="151.20715"
        y="58.299343"
        id="text893-8"><tspan
@@ -152,14 +152,14 @@
          id="tspan891-2"
          x="151.20715"
          y="58.299343"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58610999999999969px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583;">aggressive/evil</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:Poppins;-inkscape-font-specification:Poppins;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f5f5f5;fill-opacity:1;stroke-width:0.264583">aggressive/evil</tspan></text>
     <rect
-       style="fill:url(#linearGradient48);fill-opacity:1;stroke-width:0.219785"
+       style="fill:url(#linearGradient48);fill-opacity:1;stroke-width:0.185095"
        id="rect40"
        width="174.05403"
-       height="5.5825953"
+       height="3.9593847"
        x="12.016929"
-       y="48.028255" />
+       y="49.651466" />
     <text
        xml:space="preserve"
        id="text895"
