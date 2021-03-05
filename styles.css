@@ -14,12 +14,6 @@ h1 {
   font-weight: 700;
 }
 
-/* h2 {
-  font-size: 1.8rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-} */
-
 h2 {
   font-size: 2rem;
   font-family: 'Lancelot', sans-serif;
@@ -38,7 +32,7 @@ hr {
   border-top-style: dotted;
   border-color: #444444;
   border-width: 7px;
-  width: 6%;
+  width: 7%;
   margin: 90px auto;
 }
 
@@ -84,7 +78,6 @@ a:hover {
 }
 
 .topSpells {
-
 }
 
 .textAsBackground {
@@ -106,6 +99,7 @@ a:hover {
 
 .wand {
   width: 180px;
+  margin-bottom: 5px;
 }
 
 .scatter {
@@ -118,31 +112,31 @@ a:hover {
 }
 
 .tooltip {
+  background: #131313;
+  border: 0;
+  border-radius: 4px;
   position: absolute;
   text-align: center;
   width: 250px;
   font-family: 'Poppins', sans-serif;
   font-weight: 100;
-  pointer-events: none;
   height: auto;
+  pointer-events: none;
   padding: 2px;
-  background: #131313;
-  border: 0;
-  border-radius: 4px;
 }
 
 .tooltipSpell {
-  position: absolute;
-  text-align: center;
-  width: 250px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 100;
-  pointer-events: none;
-  height: auto;
-  padding: 2px;
   background: #131313;
   border: 0;
   border-radius: 4px;
+  position: absolute;
+  text-align: left;
+  width: 350px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  height: auto;
+  pointer-events: none;
+  padding: 4px;
 }
 
 .lumo {

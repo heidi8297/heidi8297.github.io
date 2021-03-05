@@ -27,11 +27,11 @@ const flow_shapes = {
 };
 
 // define a "jitter" function based on the namePosition
-function jitter(namePos) {
-	if (namePos === 7) {
+function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
+	if (namePos === 7 && harrySeparate) {
 		return namePos -0.5 + Math.random();  // Harry Potter gets more space and a wider jitter
 	} else {
-		return namePos -0.1 + Math.random()*0.2;  // everyone else gets less jitter
+		return namePos -0.1 + Math.random()*rangeDefault;  // everyone else gets less jitter
 	}
 };
 
@@ -99,7 +99,7 @@ function responsivefy(thisSvg) {
 const svgWidth = 640;
 const svgHeight = 600;
 
-const margin = {top: 0, right: 130, bottom: 45, left: 0};
+const margin = {top: 0, right: 130, bottom: 50, left: 0};
 const graphWidth = svgWidth - margin.left - margin.right;
 const graphHeight = svgHeight - margin.top - margin.bottom;
 
@@ -146,7 +146,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.on("mouseover", function(event,d) {
 				div.transition()
          .duration(200)
-         .style("opacity", .9);
+         .style("opacity", .8);
        	div.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+d.classification+" in book "+d.book+".")
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
@@ -176,7 +176,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 		.attr('transform', `translate(${graphWidth+25}, 20)`);
 
 	const xAxisGroup = graph.append("g")
-		.attr('transform', `translate(20, ${graphHeight+15})`);
+		.attr('transform', `translate(20, ${graphHeight+20})`);
 
 	// Draw the axis
 	yAxisGroup.call(d3.axisLeft(yScaleForAxis))
@@ -270,12 +270,15 @@ for (ind = 0; ind < 10; ind++) {
 	 		.attr( "d", d => flow_shapes["star"](1.7*halfSize*(12+d.descriptorValue)) )
 	 		.attr("fill", d=> color(d.spell) )
 	 		.attr("opacity",d=> opacityValue(d.talkTF))
-	 		.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ",0.5)")
+	 		.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ","+(jitter(0.5,false,0.8))+")")
 			.on("mouseover", function(event,d) {
 				divSpell.transition()
          .duration(200)
-         .style("opacity", .9);
-       	divSpell.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+d.classification+" in book "+d.book+".")
+         .style("opacity", .8);
+       	divSpell.html(
+					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+" ("+d.descriptorValue+")<br>Book: "+d.book+
+					"<br>Effect: "+d.effect+"<br><br><em>\""+d.concordance+"\"</em>"
+					)
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
        })
@@ -284,7 +287,6 @@ for (ind = 0; ind < 10; ind++) {
          .duration(500)
          .style("opacity", 0);
        });
-
 
 	 });  // end of d3.json function
 
