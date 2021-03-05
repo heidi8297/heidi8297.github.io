@@ -14,13 +14,13 @@ window.onload=function() {   // wait for the page to load before applying styles
 };
 
 // define the default size of the stars
-var halfSize = 0.3;
+const halfSize = 0.3;
 
 // define my custom shape (for now there is just one, but i'm leaving it open to add more later if needed)
 // I couldn't find a star shape svg that I liked so I created this one by hand
-var flow_shapes = {
+const flow_shapes = {
   star: function(size) {
-    var points = [ [0.5*size,0], [0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size], [0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
+    const points = [ [0.5*size,0], [0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size], [0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
 		[0.4019*size, 0.6731*size], [0.3269*size, 0.5981*size], [0, 0.5*size], [0.3269*size, 0.4019*size], [0.4019*size, 0.3269*size], [0.5*size, 0] ]
     return d3.line()(points);
   }
@@ -60,17 +60,17 @@ const color = d3.scaleOrdinal()
 
 
 // this function makes our graph responsive to the size of the container/screen!
-function responsivefy(svg) {
+function responsivefy(thisSvg) {
   // container will be the DOM element that the svg is appended to
   // we then measure the container and find its aspect ratio
-  const container = d3.select(svg.node().parentNode),
-      width = parseInt(svg.style('width'), 10),
-      height = parseInt(svg.style('height'), 10),
+  const container = d3.select(thisSvg.node().parentNode),
+      width = parseInt(thisSvg.style('width'), 10),
+      height = parseInt(thisSvg.style('height'), 10),
       aspect = width / height;
 
   // set viewBox attribute to the initial size control scaling with preserveAspectRatio
   // resize svg on inital page load
-  svg.attr('viewBox', `0 0 ${width} ${height}`)
+  thisSvg.attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMinYMid')
       .call(resize);
 
@@ -88,8 +88,8 @@ function responsivefy(svg) {
   // while maintaining a consistent aspect ratio
   function resize() {
       const w = parseInt(container.style('width'));
-      svg.attr('width', w);
-      svg.attr('height', Math.round(w / aspect));
+      thisSvg.attr('width', w);
+      thisSvg.attr('height', Math.round(w / aspect));
   }
 }
 
@@ -115,7 +115,7 @@ const graph = svg.append('g')
   .attr('transform',`translate(${margin.left},${margin.top})`);
 
 // Define the div for the tooltip
-var div = d3.select("body").append("div")
+const div = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
@@ -162,13 +162,13 @@ d3.json('top10spellsAugmented.json').then(data => {
 	// ADDING AXES TO THE SCATTER PLOT
 
 	// Create the y Axis - just names that line up with the data
-	var yScaleForAxis = d3.scaleBand()
+	const yScaleForAxis = d3.scaleBand()
 		.domain(["Death Eaters, other", "Vincent Crabbe", "Barty Crouch", "Bellatrix Lestrange", "Voldemort", "", "Harry Potter", " ", "Hermione Granger",
 			"Remus Lupin","Mrs. Weasley","Ron Weasley","Neville Longbottom","Severus Snape","Albus Dumbledore","Sirius Black","Others"])
 		.range([0, graphHeight]);
 
 	// Create the x Axis - just names that line up with the data
-	var xScaleForAxis = d3.scaleBand()
+	const xScaleForAxis = d3.scaleBand()
 		.domain(["progression in the books --------->"])
 		.range([0, graphWidth]);
 
@@ -213,7 +213,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 
 
 // Define the div for the tooltip
-var divSpell = d3.select("body").append("div")
+const divSpell = d3.select("body").append("div")
 	.attr("class", "tooltipSpell")
 	.style("opacity", 0);
 
@@ -223,25 +223,25 @@ const graphHeightSpell = 30;
 
 // define the x and y scales
 const xSpell = d3.scaleLinear()
-	.domain([0,34])  // 34 = the maximum number of occurences of one spell
+	.domain([-1,34])  // 34 = the maximum number of occurences of one spell
 	.range([0,graphWidthSpell]);
 
 const ySpell = d3.scaleLinear()
-	.domain([0,1])
+	.domain([-0.5,1])
 	.range([0,graphHeightSpell]);
 
 
-var spellsFull = ["Lumos","Accio","Muffliato"] //  NEEDS THE REST OF THE VALUES
-var spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc","Avke"];
+const spellsFull = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"]
+const spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc","Avke"];
 
 
 
 
 
 
-for (ind = 0; ind < 3; ind++) {
+for (ind = 0; ind < 10; ind++) {
 
-	var thisSpell = spellsFull[ind]
+	const thisSpell = spellsFull[ind]
 
 	console.log(ind);
 	console.log(thisSpell);
@@ -251,7 +251,7 @@ for (ind = 0; ind < 3; ind++) {
 	  .append('svg')
 	    .attr('width', graphWidthSpell)
 	    .attr('height', graphHeightSpell);
-	//		.call(responsivefy);   // for some reason I can't seem to use "responsivefy" more than once in the code?
+			//.call(responsivefy);   // for some reason I can't seem to use "responsivefy" more than once in the code?
 
 	// create a group to contain the graph
 	const graphSpell = svgSpell.append('g')
@@ -260,7 +260,7 @@ for (ind = 0; ind < 3; ind++) {
 
 
 
-	d3.json('top10spellsAugmented.json').then( data => {    // do I really need to include so much code in this wrapper function?  I'm guessing not?
+	d3.json('top10spellsAugmented.json').then( data => {
 
 		console.log("thisSpell:"+thisSpell);
 		console.log("ind:"+ind);
@@ -269,17 +269,30 @@ for (ind = 0; ind < 3; ind++) {
 		console.log(dataFilter);
 
 		// filter the data to only the spells that are equal to "thisSpell"
-		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );
+		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );  // why does this one need to be a var???
 
 		//create a star for each (filtered) data point
 	 	graphSpell.selectAll("path")
 			.data(dataFilter)
 	 		.enter()
 	 		.append("svg:path")
-	 		.attr( "d", d => flow_shapes["star"](2*halfSize*(12+d.descriptorValue)) )
+	 		.attr( "d", d => flow_shapes["star"](1.7*halfSize*(12+d.descriptorValue)) )
 	 		.attr("fill", d=> color(d.spell) )
 	 		.attr("opacity",d=> opacityValue(d.talkTF))
-	 		.attr("transform", (d,i) => "translate(" + xSpell(i) + ",0.5)");
+	 		.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ",0.5)")
+			.on("mouseover", function(event,d) {
+				divSpell.transition()
+         .duration(200)
+         .style("opacity", .9);
+       	divSpell.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+d.classification+" in book "+d.book+".")
+         .style("left", (event.pageX) + "px")
+         .style("top", (event.pageY - 28) + "px");
+       })
+     .on("mouseout", function(d) {
+       divSpell.transition()
+         .duration(500)
+         .style("opacity", 0);
+       });
 
 
 	 });  // end of d3.json function

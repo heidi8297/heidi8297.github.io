@@ -1,6 +1,7 @@
 body {
   color: #f5f5f5;
   background-color: #1d1d1d;
+  /* background-color: #ffffff; */
   font-family: 'Poppins', sans-serif;
   font-weight: 100;
   font-size: 0.9rem;
@@ -13,14 +14,21 @@ h1 {
   font-weight: 700;
 }
 
-h2 {
+/* h2 {
   font-size: 1.8rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
+} */
+
+h2 {
+  font-size: 2rem;
+  font-family: 'Lancelot', sans-serif;
+  color: #f5f5f5;
 }
 
+
 h3 {
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   font-family: 'Lancelot', sans-serif;
   color: #f5f5f5;
 }
@@ -30,13 +38,14 @@ hr {
   border-top-style: dotted;
   border-color: #444444;
   border-width: 7px;
-  width: 4%;
-  margin: 100px auto;
+  width: 6%;
+  margin: 90px auto;
 }
 
 a {
   color: #EED8AD;
 }
+
 
 a:hover {
   color: #EEB547;
@@ -56,16 +65,38 @@ a:hover {
   font-size: 1.1rem;
 }
 
+.d3content {
+  margin: auto 0;
+}
+
 .container-fluid {
   margin: 50px auto;
 }
 
+.one {
+  font-family: "Fondamento",sans-serif;
+  font-size: 2.2rem;
+}
+
+.zero {
+  font-family: "Fondamento",sans-serif;
+  font-size: 1.8rem;
+}
+
+.topSpells {
+
+}
+
+.textAsBackground {
+  color: #1d1d1d;
+}
+
 .spellListA {
-  padding: 0 5% 0 0;
+  padding: 20px 3% 20px 0;
 }
 
 .spellListB {
-  padding: 0 5% 0 0;
+  padding: 20px 3% 20px 0;
 }
 
 .spellItem {
@@ -78,10 +109,29 @@ a:hover {
 }
 
 .scatter {
-  padding: 0;
+  padding: 20px 0 20px 0;
+  text-align: center;
+}
+
+.canvas {
+  margin-bottom: 50px;
 }
 
 .tooltip {
+  position: absolute;
+  text-align: center;
+  width: 250px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  pointer-events: none;
+  height: auto;
+  padding: 2px;
+  background: #131313;
+  border: 0;
+  border-radius: 4px;
+}
+
+.tooltipSpell {
   position: absolute;
   text-align: center;
   width: 250px;
@@ -135,19 +185,10 @@ a:hover {
   color: #DC164E;
 }
 
-.colorScale {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  /* background: linear-gradient(90deg, #56B864,#06ADAE,#0B97E6,#5A69EE,#7363E6,#885DDE,#9D53D7,#AD42C2,#DE116D,#DC164E ); */
+.colorScaleImg {
+  margin-top: 50px;
 }
 
-.colorScaleImage {  /* a lot of this stuff is likely unnecessary */
-  display: inline;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
 
 .footerLink {
   padding: 10px;
