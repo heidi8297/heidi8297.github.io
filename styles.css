@@ -52,6 +52,7 @@ a:hover {
 
 .title {
   margin-bottom: 70px;
+  padding-top: 70px;
 }
 
 .intro {
@@ -99,7 +100,7 @@ a:hover {
 
 .wand {
   width: 180px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 .scatter {
@@ -180,8 +181,13 @@ a:hover {
 }
 
 .colorScaleImage {
-  margin-top: 50px;
+  margin-top: 20px;
   width: 70%;
+}
+
+.starLegendImage {
+  margin-top: 50px;
+  width: 58%;
 }
 
 .footerLink {

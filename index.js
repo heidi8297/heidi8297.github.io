@@ -53,10 +53,31 @@ function opacityValue(talk) {
 	}
 }
 
+
 // Color scale: give me a spell name, I return a color
 const color = d3.scaleOrdinal()
 	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
 	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4","#BA3ED4","#F2006C","#EE0044"]);
+
+
+// determine the color based both on spell name and talkTF
+function colorFinal(spellName,talkBool) {
+	if (talkBool === "TRUE") {
+		return "none"
+	} else {
+		return color(spellName)
+	}
+}
+
+// determine the stroke based on spell name and talkTF
+function stroke(spellName,talkBool) {
+	if (talkBool === "TRUE") {
+		return color(spellName)
+	} else {
+		return "none"
+	}
+}
+
 
 
 // this function makes our graph responsive to the size of the container/screen!
@@ -140,9 +161,10 @@ d3.json('top10spellsAugmented.json').then(data => {
 	stars.enter()
 		.append("svg:path")
 			.attr( "d", d => flow_shapes["star"](2*halfSize*(12+d.descriptorValue)) )
-	  	.attr("fill", d=>color(d.spell) )
-			.attr("opacity",d=> opacityValue(d.talkTF))
-	  	.attr("transform", d=> "translate(" + (x(d.position)-halfSize*(12+d.descriptorValue)) + "," + (y(jitter(d.namePosition))-halfSize*(12+d.descriptorValue)) + ")")
+			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+			.attr("stroke",d => stroke(d.spell,d.talkTF))
+			.attr("opacity",1)
+			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
 				div.transition()
          .duration(200)
@@ -150,12 +172,15 @@ d3.json('top10spellsAugmented.json').then(data => {
        	div.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+d.classification+" in book "+d.book+".")
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
-       })
-     .on("mouseout", function(d) {
-       div.transition()
+      })
+     	.on("mouseout", function(d) {
+       	div.transition()
          .duration(500)
          .style("opacity", 0);
-       });
+      })
+		 	.transition().duration(800)
+		 		.attr("transform", d=> "translate(" + (x(d.position)-halfSize*(12+d.descriptorValue)) + "," + (y(jitter(d.namePosition))-halfSize*(12+d.descriptorValue)) + ")")
+				.delay(d => 800*Math.random() );
 
 
 
@@ -268,9 +293,10 @@ for (ind = 0; ind < 10; ind++) {
 	 		.enter()
 	 		.append("svg:path")
 	 		.attr( "d", d => flow_shapes["star"](1.7*halfSize*(12+d.descriptorValue)) )
-	 		.attr("fill", d=> color(d.spell) )
-	 		.attr("opacity",d=> opacityValue(d.talkTF))
-	 		.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ","+(jitter(0.5,false,0.8))+")")
+			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+			.attr("stroke",d => stroke(d.spell,d.talkTF))
+			.attr("opacity",0)
+			.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ","+(jitter(8,false,6))+")")
 			.on("mouseover", function(event,d) {
 				divSpell.transition()
          .duration(200)
@@ -286,7 +312,10 @@ for (ind = 0; ind < 10; ind++) {
        divSpell.transition()
          .duration(500)
          .style("opacity", 0);
-       });
+       })
+			.transition().duration(300)
+				.attr("opacity",1)
+				.delay( d => 1000*Math.random() );
 
 	 });  // end of d3.json function
 
