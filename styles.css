@@ -86,11 +86,16 @@ a:hover {
   padding: 20px 3% 20px 0;
 }
 
+.spacer {  /* added to align spell list A (which has a title) with spell list B */
+  height: 52px;
+}
+
 .spellListB {
   padding: 20px 3% 20px 0;
 }
 
 .spellItem {
+  height: 110px;
   padding: 14px 0;
   font-size: 0.5rem;
 }

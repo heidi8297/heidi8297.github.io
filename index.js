@@ -20,8 +20,8 @@ const halfSize = 0.3;
 // I couldn't find a star shape svg that I liked so I created this one by hand
 const flow_shapes = {
   star: function(size) {
-    const points = [ [0.5*size,0], [0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size], [0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
-		[0.4019*size, 0.6731*size], [0.3269*size, 0.5981*size], [0, 0.5*size], [0.3269*size, 0.4019*size], [0.4019*size, 0.3269*size], [0.5*size, 0] ]
+    const points = [ [0.4019*size, 0.3269*size], [0.5*size,0], [0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size], [0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
+		[0.4019*size, 0.6731*size], [0.3269*size, 0.5981*size], [0, 0.5*size], [0.3269*size, 0.4019*size], [0.4019*size, 0.3269*size] ]
     return d3.line()(points);
   }
 };
@@ -54,11 +54,16 @@ function opacityValue(talk) {
 }
 
 
+
 // Color scale: give me a spell name, I return a color
 const color = d3.scaleOrdinal()
 	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
 	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4","#BA3ED4","#F2006C","#EE0044"]);
 
+// Color scale for making the stars sparkle
+const colorTwinkle = d3.scaleOrdinal()
+	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.range(["#BCFFC6","#AFF8F8","#B0E2FF","#BFC6FF","#C4BBFF","#D3BDFF","#E4BDFF","#F5BFFF","#FFB3D7","#FFA8C1"])
 
 // determine the color based both on spell name and talkTF
 function colorFinal(spellName,talkBool) {
@@ -178,10 +183,21 @@ d3.json('top10spellsAugmented.json').then(data => {
          .duration(500)
          .style("opacity", 0);
       })
-		 	.transition().duration(800)
+		 	.transition().duration(800)  // loading animation (arrive from all different directions)
 		 		.attr("transform", d=> "translate(" + (x(d.position)-halfSize*(12+d.descriptorValue)) + "," + (y(jitter(d.namePosition))-halfSize*(12+d.descriptorValue)) + ")")
 				.attr("opacity",1)
-				.delay(d => 800*Math.random() );
+				.delay(d => 800*Math.random() )
+			.transition().duration(0)			// STARS TWINKLING animation begins here
+				.attr("stroke", "#00000000")  // needs to be transparent because stars overlap
+				.attr("stroke-width",2)				// makes the stars appear a bit larger for the "twinkle"
+				.delay(d => 300000*Math.random())  // this is how we make the stars twinkle "randomly"
+			.transition().duration(400)
+				.attr("fill", d=> colorTwinkle(d.spell))
+				.attr("stroke", d=> colorTwinkle(d.spell))
+			.transition().duration(400)
+				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke",d => stroke(d.spell,d.talkTF))
+				;
 
 
 
@@ -303,7 +319,7 @@ for (ind = 0; ind < 10; ind++) {
          .duration(200)
          .style("opacity", .8);
        	divSpell.html(
-					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+" ("+d.descriptorValue+")<br>Book: "+d.book+
+					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+"<br>Book: "+d.book+
 					"<br>Effect: "+d.effect+"<br><br><em>\""+d.concordance+"\"</em>"
 					)
          .style("left", (event.pageX) + "px")
@@ -316,7 +332,18 @@ for (ind = 0; ind < 10; ind++) {
        })
 			.transition().duration(300)
 				.attr("opacity",1)
-				.delay( d => 1000*Math.random() );
+				.delay( d => 1200*Math.random() )
+			.transition().duration(0)			// STARS TWINKLING animation begins here
+				.attr("stroke", "#00000000")  // needs to be transparent because stars overlap
+				.attr("stroke-width",2)				// makes the stars appear a bit larger for the "twinkle"
+				.delay(d => 600000*Math.random())  // this is how we make the stars twinkle "randomly"
+			.transition().duration(400)
+				.attr("fill", d=> colorTwinkle(d.spell))
+				.attr("stroke", d=> colorTwinkle(d.spell))
+			.transition().duration(400)
+				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke",d => stroke(d.spell,d.talkTF))
+			;
 
 	 });  // end of d3.json function
 
