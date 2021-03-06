@@ -78,9 +78,6 @@ a:hover {
   font-size: 1.8rem;
 }
 
-.topSpells {
-}
-
 .textAsBackground {
   color: #1d1d1d;
 }
@@ -100,7 +97,7 @@ a:hover {
 
 .wand {
   width: 180px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .scatter {
@@ -109,7 +106,7 @@ a:hover {
 }
 
 .canvas {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .tooltip {
@@ -180,22 +177,21 @@ a:hover {
   color: #DC164E;
 }
 
-.colorScaleImage {
-  margin-top: 20px;
-  width: 70%;
+.starLegendImage {
+  margin-top: 30px;
+  width: 51%;
 }
 
-.starLegendImage {
-  margin-top: 50px;
-  width: 58%;
+.colorScaleImage {
+  margin-top: 0;
+  width: 70%;
 }
 
 .footerLink {
   padding: 10px;
 }
 
-/* For some reason this styling didn't work as a class (had to change to an id) */
-#bottomContainer {
+#bottomContainer {   /* For some reason this styling didn't work as a class (had to change to an id) */
   background-color: #151515;
   text-align: center;
   padding: 50px;

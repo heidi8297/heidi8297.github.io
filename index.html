@@ -2,15 +2,18 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86">
+
     <title>Spells and Spellcasters</title>
+
+    <!-- Make the webpage perform better on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86">
 
     <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
 
     <!-- Google Fonts -->
@@ -28,8 +31,8 @@
 
       <p class="intro">This is my first-ever visualization created using D3.js (March 2021).
         I had been interested in learning D3 ever since I saw <a target="_blank" href="https://benjerry.heshlindsdataviz.com/">
-        this extraordinary visualization</a> from Lindsey Poulter and Hesham Eissa (fellow Tableau enthusiasts) last summer.
-        My 2021 job search was the extra push I needed to make it happen.
+        this extraordinary visualization</a> from Lindsey Poulter and Hesham Eissa (fellow Tableau
+        enthusiasts) last summer. My 2021 job search was the extra push I needed to make it happen.
       </p>
     </div>
 
@@ -40,7 +43,8 @@
 
         <!-- SPELLS WITH WANDS (COLUMN 1) -->
         <div class="col-md-6 col-lg-3 spellList spellListA secondary">
-          <h2 class = "topSpells textWhite">Top <span class="one">1</span><span class="zero">0</span> spells</h2>
+          <h2 class = "topSpells textWhite">Top <span class="one">1</span><span class="zero">0</span>
+            spells</h2>
           <div class="spellItem lumo">
             <h3>Lumos</h3>
             <object id="wand14" class = "wand" type="image/svg+xml" data="images/Wand_14.svg">
@@ -85,7 +89,8 @@
 
         <!-- SPELLS WITH WANDS (COLUMN 2) -->
         <div class="col-md-6 col-lg-3 spellList spellListB secondary">
-          <h2 class="topSpells textAsBackground">Top <span class="one">1</span><span class="zero">0</span> spells</h2>
+          <h2 class="topSpells textAsBackground">Top <span class="one">1</span><span class="zero">0</span>
+            spells</h2>
           <div class="spellItem expe">
             <h3>Expelliarmus</h3>
             <object id="wand08" class = "wand" type="image/svg+xml" data="images/Wand_8.svg">
@@ -157,12 +162,21 @@
       <h2>Takeaways from the data (contains spoilers)</h2>
       <ul>
         <li>Harry steals the show with over half of the total spells coming from him.</li>
-        <li>It's easy to spot some of the more pivotal moments in the books where the spells are clustered together. </li>
-        <li>There's definitely more spell activity in book 7, but it's more spread out than in the other books.  As a fan, this reflects my memories of reading them. </li>
-        <li>Poor Ron doesn't get half as many spells as his lady Ms. Granger and is even bested by his own mother, poor thing (we'll throw him a bone and point out that the scope  of this data is limited to the top 10 spells).</li>
-        <li>The evil/aggressive spells come almost entirely from the Death Eaters (surprising no one), with one noteworthy exception: Severus Snape twice performs the "Avada Kedavra" (killing) curse, but he was of course acting as a spy and only doing so when necessary. </li>
-        <li>None of the top 10 spells appeared in the first book.  One of them (the Muffliato spell) doesn't debut until book 6.</li>
-        <li>Less of an observation and more of an author's note - Dolores Umbridge was included as an honorary Death Eater - while she technically wasn't reporting to Lord Voldemort, she may as well have been. </li>
+        <li>It's easy to spot some of the more pivotal moments in the books where the spells are clustered
+          together. </li>
+        <li>There's definitely more spell activity in book 7, but it's more spread out than in the other
+          books. As a fan, this reflects my memories of reading them. </li>
+        <li>Poor Ron doesn't get half as many spells as his lady Ms. Granger and is even bested by his own
+          mother, poor thing (we'll throw him a bone and point out that the scope  of this data is limited to
+          the top 10 spells).</li>
+        <li>The evil/aggressive spells come almost entirely from the Death Eaters (surprising no one), with
+          one noteworthy exception: Severus Snape twice performs the "Avada Kedavra" (killing) curse, but he
+          was of course acting as a spy and only doing so when necessary. </li>
+        <li>None of the top 10 spells appeared in the first book.  One of them (the Muffliato spell) doesn't
+          debut until book 6.</li>
+        <li>Less of an observation and more of an author's note - Dolores Umbridge was included as an
+          honorary Death Eater - while she technically wasn't reporting to Lord Voldemort, she may as well
+          have been. </li>
       </ul>
 
     </div>
@@ -173,26 +187,40 @@
       <h2>About this Viz</h2>
 
       <ul>
-        <li>How did I learn D3?</li>
+        <li>Learning D3</li>
         <ul>
-          <li>I started with <a target="_blank" href="https://www.udemy.com/share/1013gGAEYad1xSQX0F/">Angela Yu's Web Development bootcamp</a>, focusing on the modules listed in this blog post <a target="_blank" href="https://www.heshameissa.com/blog/learn-d3">here</a>.</li>
-          <li>Learned the basics of D3 from the first few modules of <a target="_blank" href="https://www.udemy.com/share/1020mmAEYad1xSQX0F/">Shaun Pelling's course</a>.</li>
+          <li>I started with <a target="_blank" href="https://www.udemy.com/share/1013gGAEYad1xSQX0F/">
+            Angela Yu's Web Development bootcamp</a>, focusing on the modules listed in this blog post
+            <a target="_blank" href="https://www.heshameissa.com/blog/learn-d3">here</a>.</li>
+          <li>Learned the basics of D3 from the first few modules of <a target="_blank" href="https://www.udemy.com/share/1020mmAEYad1xSQX0F/">
+            Shaun Pelling's course</a>.</li>
           <li>Everything else I got from Google (specific links listed below).</li>
         </ul>
-        <li>The inspiration for the content (and most of the data) came from Skyler Johnson's <a target="_blank" href="https://public.tableau.com/profile/skybjohnson#!/vizhome/TheSpellsofHarryPotter/HarryPotterSpells">The Spells of Harry Potter</a> on Tableau Public.</li>
+        <li>The inspiration for the content (and most of the data) came from Skyler Johnson's
+          <a target="_blank" href="https://public.tableau.com/profile/skybjohnson#!/vizhome/TheSpellsofHarryPotter/HarryPotterSpells">
+          The Spells of Harry Potter</a> on Tableau Public.</li>
         <li>I then augmented the data with spellcaster names and emphasis descriptors.</li>
-        <li>Wand images from <a target="_blank" href="https://www.etsy.com/listing/671811946/magical-wands-bundle-15-images-svg-cut?ref=yr_purchases">AnamCaraGraphics</a>.</li>
+        <li>Wand images from <a target="_blank" href="https://www.etsy.com/listing/671811946/magical-wands-bundle-15-images-svg-cut?ref=yr_purchases">
+          AnamCaraGraphics</a>.</li>
         <li>Code snippets borrowed from:
           <ul>
-            <li><a target="_blank" href="https://www.d3-graph-gallery.com/graph/scatter_grouped.html">Scatterplot with color coding</a></li>
-            <li><a target="_blank" href="https://stackoverflow.com/questions/40458363/how-to-add-jitter-to-avoid-overplot-in-d3">Add jitter to each row</a></li>
+            <li><a target="_blank" href="https://www.d3-graph-gallery.com/graph/scatter_grouped.html">
+              Scatterplot with color coding</a></li>
+            <li><a target="_blank" href="https://stackoverflow.com/questions/40458363/how-to-add-jitter-to-avoid-overplot-in-d3">
+              Add jitter to each row</a></li>
             <!-- <li><a target="_blank" href="https://www.d3-graph-gallery.com/graph/barplot_stacked_highlight.html">Highlighting group (spell) on hover</a> - I STILL NEED TO DO THIS ONE</li> -->
             <li><a target="_blank" href="https://gist.github.com/explunit/4659227">Add custom symbols</a></li>
-            <li><a target="_blank" href="https://benclinkinbeard.com/d3tips/make-any-chart-responsive-with-one-function/?utm_content=buffer976d6&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer">Make the graph responsive to screen resizing</a> </li>
-            <li><a target="_blank" href="https://benfrain.com/selecting-svg-inside-tags-with-javascript/">Change color of svg images (wands)</a></li>
-            <li><a target="_blank" href="https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52">Add tooltips</a></li>
-            <li>Remove <a target="_blank" href="https://github.com/d3/d3-axis/issues/48">line</a> and <a target="_blank" href="https://stackoverflow.com/questions/36641788/remove-tick-marks-in-d3-dimple">ticks</a> from axis</li>
-            <li><a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag">Improve mobile viewing experience</a></li>
+            <li><a target="_blank" href="https://benclinkinbeard.com/d3tips/make-any-chart-responsive-with-one-function/?utm_content=buffer976d6&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer">
+              Make the scatter plot responsive to screen resizing</a></li>
+            <li><a target="_blank" href="https://benfrain.com/selecting-svg-inside-tags-with-javascript/">
+              Change color of svg images (wands)</a></li>
+            <li><a target="_blank" href="https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52">
+              Add tooltips</a></li>
+            <li>Remove <a target="_blank" href="https://github.com/d3/d3-axis/issues/48">line</a> and
+              <a target="_blank" href="https://stackoverflow.com/questions/36641788/remove-tick-marks-in-d3-dimple">
+                ticks</a> from axis</li>
+            <li><a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag">
+              Improve mobile viewing experience</a></li>
           </ul>
         </li>
       </ul>
@@ -200,10 +228,10 @@
 
     <div class="div5" id="bottomContainer">
       <a class="footerLink" target="_blank" href="https://www.linkedin.com/in/heidistockton/">LinkedIn</a>
-      <a class="footerLink" target="_blank" href="https://public.tableau.com/profile/heidi.stockton/">Tableau Public</a>
+      <a class="footerLink" target="_blank" href="https://public.tableau.com/profile/heidi.stockton/">
+        Tableau Public</a>
       <a class="footerLink" href="mailto:stocktonheidi@gmail.com">Email</a>
     </div>
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>

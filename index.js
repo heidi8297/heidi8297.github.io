@@ -163,7 +163,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.attr( "d", d => flow_shapes["star"](2*halfSize*(12+d.descriptorValue)) )
 			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
-			.attr("opacity",1)
+			.attr("opacity",0)
 			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
 				div.transition()
@@ -180,6 +180,7 @@ d3.json('top10spellsAugmented.json').then(data => {
       })
 		 	.transition().duration(800)
 		 		.attr("transform", d=> "translate(" + (x(d.position)-halfSize*(12+d.descriptorValue)) + "," + (y(jitter(d.namePosition))-halfSize*(12+d.descriptorValue)) + ")")
+				.attr("opacity",1)
 				.delay(d => 800*Math.random() );
 
 
