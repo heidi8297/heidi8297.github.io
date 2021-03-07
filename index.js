@@ -1,37 +1,80 @@
 
-// change the fill colors of the wand images (surely there must be a better way to accomplish this)
+// change the fill colors of the wand images (surely there must be a better way
+//   to accomplish this)
 window.onload=function() {   // wait for the page to load before applying styles
-	$("#wand14")[0].contentDocument.getElementById("wand14original").setAttribute("fill", "#459451");
-	$("#wand02")[0].contentDocument.getElementById("wand02original").setAttribute("fill", "#04898A");
-	$("#wand03")[0].contentDocument.getElementById("wand03original").setAttribute("fill", "#0874B0");
-	$("#wand04")[0].contentDocument.getElementById("wand04original").setAttribute("fill", "#4551B5");
-	$("#wand05")[0].contentDocument.getElementById("wand05original").setAttribute("fill", "#574AAE");
-	$("#wand08")[0].contentDocument.getElementById("wand08original").setAttribute("fill", "#6A49AE");
-	$("#wand09")[0].contentDocument.getElementById("wand09original").setAttribute("fill", "#7940A6");
-	$("#wand12")[0].contentDocument.getElementById("wand12original").setAttribute("fill", "#843294");
-	$("#wand13")[0].contentDocument.getElementById("wand13original").setAttribute("fill", "#B50E59");
-	$("#wand06")[0].contentDocument.getElementById("wand06original").setAttribute("fill", "#B31140");
+	$("#wand14")[0].contentDocument.getElementById("wand14original")
+		.setAttribute("fill", "#459451");
+	$("#wand02")[0].contentDocument.getElementById("wand02original")
+		.setAttribute("fill", "#04898A");
+	$("#wand03")[0].contentDocument.getElementById("wand03original")
+		.setAttribute("fill", "#0874B0");
+	$("#wand04")[0].contentDocument.getElementById("wand04original")
+		.setAttribute("fill", "#4551B5");
+	$("#wand05")[0].contentDocument.getElementById("wand05original")
+		.setAttribute("fill", "#574AAE");
+	$("#wand08")[0].contentDocument.getElementById("wand08original")
+		.setAttribute("fill", "#6A49AE");
+	$("#wand09")[0].contentDocument.getElementById("wand09original")
+		.setAttribute("fill", "#7940A6");
+	$("#wand12")[0].contentDocument.getElementById("wand12original")
+		.setAttribute("fill", "#843294");
+	$("#wand13")[0].contentDocument.getElementById("wand13original")
+		.setAttribute("fill", "#B50E59");
+	$("#wand06")[0].contentDocument.getElementById("wand06original")
+		.setAttribute("fill", "#B31140");
 };
 
-// define the default size of the stars
-const halfSize = 0.3;
-
-// define my custom shape (for now there is just one, but i'm leaving it open to add more later if needed)
+// define my custom shape (for now there is just one, but i'm leaving it open to
+//   add more later if needed)
 // I couldn't find a star shape svg that I liked so I created this one by hand
 const flow_shapes = {
   star: function(size) {
-    const points = [ [0.4019*size, 0.3269*size], [0.5*size,0], [0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size], [0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
-		[0.4019*size, 0.6731*size], [0.3269*size, 0.5981*size], [0, 0.5*size], [0.3269*size, 0.4019*size], [0.4019*size, 0.3269*size] ]
+    const points = [ [0.4019*size, 0.3269*size], [0.5*size,0],
+		[0.5981*size, 0.3269*size], [0.6731*size, 0.4019*size], [size, 0.5*size],
+		[0.6731*size, 0.5981*size], [0.5981*size, 0.6731*size], [0.5*size, size],
+		[0.4019*size, 0.6731*size], [0.3269*size, 0.5981*size], [0, 0.5*size],
+		[0.3269*size, 0.4019*size], [0.4019*size, 0.3269*size] ]
     return d3.line()(points);
   }
+};
+
+
+// initial viewport size - vw seems to be 10-20 px wider than $(this).width() used below
+const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+// if the screen seems to be a phone, shrink the "spacer" div to 0
+// also set a time delay = 1.5 seconds (to give a chance for user to scroll)
+// this is totally a workaround to try and improve the mobile experience
+// the better approach would be to detect when the user had scrolled to the
+//   visualizations and begin the initial animations at that time.
+if (vw <= 767) {
+	$(".spacer").css("height","0px");
+	var varDelay = 1500;
+} else {
+	var varDelay = 0;
+}
+
+// if the window is resized, change the height of the spacer
+$(window).resize(function() {
+		if ($(this).width() <= 752) {
+			$(".spacer").css("height","0px");
+		} else {
+			$(".spacer").css("height","72px");
+		};
+});
+
+// determine the size of each star based on the emphasis descriptor value
+function starSize(thisDescriptorValue, scaler = 1) {
+	return scaler*0.3*(12+thisDescriptorValue)
 };
 
 // define a "jitter" function based on the namePosition
 function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
 	if (namePos === 7 && harrySeparate) {
-		return namePos -0.5 + Math.random();  // Harry Potter gets more space and a wider jitter
+		return namePos -0.5 + Math.random();  // HP gets more space and more jitter
 	} else {
-		return namePos -0.1 + Math.random()*rangeDefault;  // everyone else gets less jitter
+		return namePos -0.1 + Math.random()*rangeDefault;
 	}
 };
 
@@ -42,28 +85,31 @@ function spellAction(talk) {
 	} else {
 		return "performed"
 	}
-}
+};
 
-// determine the opacity of each shape based on whether the spell was cast or merely mentioned in conversation
+// determine the opacity of each shape based on whether the spell was cast or
+//   merely mentioned in conversation
 function opacityValue(talk) {
 	if (talk === "TRUE") {
 		return 0.4
 	} else {
 		return 0.8
 	}
-}
-
-
+};
 
 // Color scale: give me a spell name, I return a color
 const color = d3.scaleOrdinal()
-	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
-	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4","#BA3ED4","#F2006C","#EE0044"]);
+	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
+		"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4",
+		"#BA3ED4","#F2006C","#EE0044"]);
 
 // Color scale for making the stars sparkle
 const colorTwinkle = d3.scaleOrdinal()
-	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
-	.range(["#BCFFC6","#AFF8F8","#B0E2FF","#BFC6FF","#C4BBFF","#D3BDFF","#E4BDFF","#F5BFFF","#FFB3D7","#FFA8C1"])
+	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
+		"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.range(["#BCFFC6","#AFF8F8","#B0E2FF","#BFC6FF","#C4BBFF","#D3BDFF","#E4BDFF",
+		"#F5BFFF","#FFB3D7","#FFA8C1"]);
 
 // determine the color based both on spell name and talkTF
 function colorFinal(spellName,talkBool) {
@@ -72,7 +118,7 @@ function colorFinal(spellName,talkBool) {
 	} else {
 		return color(spellName)
 	}
-}
+};
 
 // determine the stroke based on spell name and talkTF
 function stroke(spellName,talkBool) {
@@ -81,8 +127,17 @@ function stroke(spellName,talkBool) {
 	} else {
 		return "none"
 	}
-}
+};
 
+// create special tooltip add-on(s)
+function extraText(thisPosition) {
+	if (thisPosition === 762170) {
+		return "<br><br><em>***Technically Dolores Umbridge was not a Death Eater,"+
+		" but her behavior was so despicable, she may as well have been</em>";
+	} else {
+		return "";
+	}
+};
 
 
 // this function makes our graph responsive to the size of the container/screen!
@@ -94,14 +149,16 @@ function responsivefy(thisSvg) {
       height = parseInt(thisSvg.style('height'), 10),
       aspect = width / height;
 
-  // set viewBox attribute to the initial size control scaling with preserveAspectRatio
+  // set viewBox attribute to the initial size control scaling without
+	//   preserveAspectRatio
   // resize svg on inital page load
   thisSvg.attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMinYMid')
       .call(resize);
 
   // add a listener so the chart will be resized when the window resizes
-  // multiple listeners for the same event type requires a namespace, i.e., 'click.foo'
+  // multiple listeners for the same event type requires a namespace, i.e.,
+	//   'click.foo'
   // api docs: https://goo.gl/F3ZCFr
   d3.select(window).on(
       'resize.' + container.attr('id'),
@@ -165,16 +222,18 @@ d3.json('top10spellsAugmented.json').then(data => {
 	// add stars for the remaining data points
 	stars.enter()
 		.append("svg:path")
-			.attr( "d", d => flow_shapes["star"](2*halfSize*(12+d.descriptorValue)) )
+			.attr( "d", d => flow_shapes["star"](starSize(d.descriptorValue,2)) )
 			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.attr("opacity",0)
-			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+(800-1600*Math.random())+")")
+			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+
+				(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
 				div.transition()
          .duration(200)
          .style("opacity", .8);
-       	div.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+d.classification+" in book "+d.book+".")
+       	div.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+
+					d.classification+" in book "+d.book+".")
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
       })
@@ -183,19 +242,24 @@ d3.json('top10spellsAugmented.json').then(data => {
          .duration(500)
          .style("opacity", 0);
       })
-		 	.transition().duration(800)  // loading animation (arrive from all different directions)
-		 		.attr("transform", d=> "translate(" + (x(d.position)-halfSize*(12+d.descriptorValue)) + "," + (y(jitter(d.namePosition))-halfSize*(12+d.descriptorValue)) + ")")
+			.transition().duration(0)
+				.delay(varDelay)  // if the display seems to be a phone, wait 2 sec
+		 	.transition().duration(800)  // loading animation (arrive from all over)
+		 		.attr("transform", d=> "translate(" + (x(d.position)-
+					starSize(d.descriptorValue)) + "," + (y(jitter(d.namePosition))-
+					starSize(d.descriptorValue)) + ")")
 				.attr("opacity",1)
 				.delay(d => 800*Math.random() )
 			.transition().duration(0)			// STARS TWINKLING animation begins here
-				.attr("stroke", "#00000000")  // needs to be transparent because stars overlap
-				.attr("stroke-width",2)				// makes the stars appear a bit larger for the "twinkle"
-				.delay(d => 300000*Math.random())  // this is how we make the stars twinkle "randomly"
+				.attr("stroke", "#00000000")  // transparent because stars overlap
+				.attr("stroke-width",2)				// makes the stars appear larger
+				.delay(d => 300000*Math.random())  // make the stars twinkle "randomly"
 			.transition().duration(400)
 				.attr("fill", d=> colorTwinkle(d.spell))
 				.attr("stroke", d=> colorTwinkle(d.spell))
 			.transition().duration(400)
 				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke-width",1)
 				.attr("stroke",d => stroke(d.spell,d.talkTF))
 				;
 
@@ -205,8 +269,11 @@ d3.json('top10spellsAugmented.json').then(data => {
 
 	// Create the y Axis - just names that line up with the data
 	const yScaleForAxis = d3.scaleBand()
-		.domain(["Death Eaters, other", "Vincent Crabbe", "Barty Crouch", "Bellatrix Lestrange", "Voldemort", "", "Harry Potter", " ", "Hermione Granger",
-			"Remus Lupin","Mrs. Weasley","Ron Weasley","Neville Longbottom","Severus Snape","Albus Dumbledore","Sirius Black","Others"])
+		.domain(["Death Eaters, other", "Vincent Crabbe", "Barty Crouch",
+			"Bellatrix Lestrange", "Voldemort", "", "Harry Potter", " ",
+			"Hermione Granger","Remus Lupin","Mrs. Weasley","Ron Weasley",
+			"Neville Longbottom","Severus Snape","Albus Dumbledore","Sirius Black",
+			"Others"])
 		.range([0, graphHeight]);
 
 	// Create the x Axis - just names that line up with the data
@@ -273,8 +340,10 @@ const ySpell = d3.scaleLinear()
 	.range([0,graphHeightSpell]);
 
 
-const spellsFull = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum","Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"]
-const spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc","Avke"];
+const spellsFull = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
+	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"]
+const spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc",
+	"Avke"];
 
 
 
@@ -290,7 +359,8 @@ for (ind = 0; ind < 10; ind++) {
 	  .append('svg')
 	    .attr('width', graphWidthSpell)
 	    .attr('height', graphHeightSpell);
-			//.call(responsivefy);   // for some reason I can't seem to use "responsivefy" more than once in the code?
+			//.call(responsivefy);
+			// for some reason I can't seem to use "responsivefy" more than once?
 
 	// create a group to contain the graph
 	const graphSpell = svgSpell.append('g')
@@ -298,29 +368,31 @@ for (ind = 0; ind < 10; ind++) {
 	  .attr('height',graphHeightSpell);
 
 
-
 	d3.json('top10spellsAugmented.json').then( data => {
 
 		// filter the data to only the spells that are equal to "thisSpell"
-		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );  // why does this one need to be a var???
+		// why does this need to be a var???
+		var dataFilter = data.filter(function(d) {return d.spell === thisSpell;} );
 
 		//create a star for each (filtered) data point
 	 	graphSpell.selectAll("path")
 			.data(dataFilter)
 	 		.enter()
 	 		.append("svg:path")
-	 		.attr( "d", d => flow_shapes["star"](1.7*halfSize*(12+d.descriptorValue)) )
+	 		.attr( "d", d => flow_shapes["star"](starSize(d.descriptorValue,1.7)) )
 			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.attr("opacity",0)
-			.attr("transform", (d,i) => "translate(" + (xSpell(i)-0.85*halfSize*(12+d.descriptorValue)) + ","+(jitter(8,false,6))+")")
+			.attr("transform", (d,i) => "translate(" + (xSpell(i)-
+				starSize(d.descriptorValue,0.85)) + ","+(jitter(8,false,6))+")")
 			.on("mouseover", function(event,d) {
 				divSpell.transition()
          .duration(200)
          .style("opacity", .8);
        	divSpell.html(
-					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+"<br>Book: "+d.book+
-					"<br>Effect: "+d.effect+"<br><br><em>\""+d.concordance+"\"</em>"
+					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+
+					"<br>Book: "+d.book+"<br>Effect: "+d.effect+"<br><br><em>\""+
+					d.concordance+"\"</em>"+extraText(d.position)
 					)
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
@@ -330,18 +402,21 @@ for (ind = 0; ind < 10; ind++) {
          .duration(500)
          .style("opacity", 0);
        })
+			.transition().duration(0)
+				.delay(varDelay)
 			.transition().duration(300)
 				.attr("opacity",1)
 				.delay( d => 1200*Math.random() )
 			.transition().duration(0)			// STARS TWINKLING animation begins here
-				.attr("stroke", "#00000000")  // needs to be transparent because stars overlap
-				.attr("stroke-width",2)				// makes the stars appear a bit larger for the "twinkle"
-				.delay(d => 600000*Math.random())  // this is how we make the stars twinkle "randomly"
+				.attr("stroke", "#00000000")  // transparent because stars overlap
+				.attr("stroke-width",2)				// makes the stars appear larger
+				.delay(d => 600000*Math.random())  // make the stars twinkle "randomly"
 			.transition().duration(400)
 				.attr("fill", d=> colorTwinkle(d.spell))
 				.attr("stroke", d=> colorTwinkle(d.spell))
 			.transition().duration(400)
 				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke-width",1)
 				.attr("stroke",d => stroke(d.spell,d.talkTF))
 			;
 
