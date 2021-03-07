@@ -4,7 +4,7 @@ body {
   /* background-color: #ffffff; */
   font-family: 'Poppins', sans-serif;
   font-weight: 100;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 h1 {
@@ -12,7 +12,7 @@ h1 {
   font-family: 'Lancelot', sans-serif;
   font-weight: 700;
   margin-bottom: 60px;
-  padding-top: 70px;
+  padding-top: 50px;
 }
 
 h2 {
@@ -56,11 +56,6 @@ a:hover {
   left: 80px;
 }
 
-.intro {
-  margin-bottom: 40px;
-  font-size: 1.1rem;
-}
-
 .d3content {
   margin: auto 0;
 }
@@ -99,7 +94,6 @@ a:hover {
 .spellItem {
   height: 110px;
   padding: 14px 0;
-  font-size: 0.5rem;
 }
 
 .wand {
