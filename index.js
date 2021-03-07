@@ -38,28 +38,36 @@ const flow_shapes = {
   }
 };
 
-
 // initial viewport size - vw seems to be 10-20 px wider than $(this).width() used below
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
+console.log(vw);
+
 // if the screen seems to be a phone, shrink the "spacer" div to 0
-// also set a time delay = 1.5 seconds (to give a chance for user to scroll)
-// this is totally a workaround to try and improve the mobile experience
-// the better approach would be to detect when the user had scrolled to the
-//   visualizations and begin the initial animations at that time.
-if (vw <= 767) {
+// then set time delays based on which graphs are likely in view
+// on wide screens the delays create a nice sequence
+// on smaller screens (where only one graph is viewable at a time) the delays
+//   are essentially a workaround to improve the experience
+// the better approach for smaller screens would be to detect when the user had
+//   scrolled to the visualizations and begin the animations at that time.
+if (vw <= 767) {  						// likely a phone
 	$(".spacer").css("height","0px");
-	var varDelay = 1500;
-} else {
-	var varDelay = 0;
+	var scatterDelay = 1200;
+	var spellDelay = 0;
+} else if (vw <= 991) {       // likely a tablet
+	var scatterDelay = 1200;
+	var spellDelay = 0;
+} else {											// likely a desktop
+	var scatterDelay = 0;
+	var spellDelay = 1200;
 }
 
 // if the window is resized, change the height of the spacer
 $(window).resize(function() {
-		if ($(this).width() <= 752) {
+		if ($(this).width() <= 752) {    // likely a phone
 			$(".spacer").css("height","0px");
-		} else {
+		} else {											 	// likely a tablet or desktop
 			$(".spacer").css("height","72px");
 		};
 });
@@ -226,6 +234,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.attr("opacity",0)
+			.attr("class",d=> "class"+d.spell)
 			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+
 				(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
@@ -242,14 +251,15 @@ d3.json('top10spellsAugmented.json').then(data => {
          .duration(500)
          .style("opacity", 0);
       })
-			.transition().duration(0)
-				.delay(varDelay)  // if the display seems to be a phone, wait 2 sec
+			.transition().duration(scatterDelay)
+			.transition().filter(d=> ".class"+d.spell)
 		 	.transition().duration(800)  // loading animation (arrive from all over)
 		 		.attr("transform", d=> "translate(" + (x(d.position)-
 					starSize(d.descriptorValue)) + "," + (y(jitter(d.namePosition))-
 					starSize(d.descriptorValue)) + ")")
 				.attr("opacity",1)
 				.delay(d => 800*Math.random() )
+			.transition().duration(1600)
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
 				.attr("stroke-width",2)				// makes the stars appear larger
@@ -282,7 +292,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 		.range([0, graphWidth]);
 
 	const yAxisGroup = graph.append("g")
-		.attr('transform', `translate(${graphWidth+25}, 20)`);
+		.attr('transform', `translate(${graphWidth+31}, 20)`);
 
 	const xAxisGroup = graph.append("g")
 		.attr('transform', `translate(20, ${graphHeight+20})`);
@@ -291,14 +301,14 @@ d3.json('top10spellsAugmented.json').then(data => {
 	yAxisGroup.call(d3.axisLeft(yScaleForAxis))
 		.selectAll("text")
 		.style("text-anchor", "start")
-		.style("font-family", "Poppins")
+		.style("font-family", "Raleway")
 		.style("font-size", 12);
 
 	// Draw the axis
 	xAxisGroup.call(d3.axisBottom(xScaleForAxis))
 		.selectAll("text")
 		.style("text-anchor", "middle")
-		.style("font-family", "Poppins")
+		.style("font-family", "Raleway")
 		.style("font-size", 12);
 
 	// remove the lines and ticks from the axes
@@ -402,11 +412,24 @@ for (ind = 0; ind < 10; ind++) {
          .duration(500)
          .style("opacity", 0);
        })
-			.transition().duration(0)
-				.delay(varDelay)
+			.transition().duration(spellDelay)
 			.transition().duration(300)
 				.attr("opacity",1)
+				// the "d =>" function is necessary here to ensure each gets its own
+				//   random timing
 				.delay( d => 1200*Math.random() )
+
+			.transition().duration(0)			// STARS TWINKLING animation begins here
+				.attr("stroke", "#00000000")  // transparent because stars overlap
+				.attr("stroke-width",2)				// makes the stars appear larger
+				.delay(d => 1200*Math.random())  		// make the stars twinkle "randomly"
+			.transition().duration(400)
+				.attr("fill", d=> colorTwinkle(d.spell))
+				.attr("stroke", d=> colorTwinkle(d.spell))
+			.transition().duration(400)
+				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke-width",1)
+				.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
 				.attr("stroke-width",2)				// makes the stars appear larger

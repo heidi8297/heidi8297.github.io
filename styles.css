@@ -2,8 +2,8 @@ body {
   color: #f5f5f5;
   background-color: #1d1d1d;
   /* background-color: #ffffff; */
-  font-family: 'Poppins', sans-serif;
-  font-weight: 100;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
   font-size: 1rem;
 }
 
@@ -11,8 +11,8 @@ h1 {
   font-size: 4rem;
   font-family: 'Lancelot', sans-serif;
   font-weight: 700;
-  margin-bottom: 60px;
-  padding-top: 50px;
+  margin-bottom: 25px;
+  padding-top: 20px;
 }
 
 h2 {
@@ -50,9 +50,17 @@ a:hover {
   padding: 0 10%;
 }
 
+.container-fluid {
+  margin: 50px auto;
+}
+
+.div1 {
+  margin-bottom: 40px;
+}
+
 .heidi {
   position: relative;
-  bottom: 65px;
+  bottom: 33px;
   left: 80px;
 }
 
@@ -60,8 +68,8 @@ a:hover {
   margin: auto 0;
 }
 
-.container-fluid {
-  margin: 50px auto;
+.div2 {
+  margin-top: 40px;
 }
 
 .one {
@@ -117,8 +125,8 @@ a:hover {
   position: absolute;
   text-align: center;
   width: 250px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 100;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
   height: auto;
   pointer-events: none;
   padding: 2px;
@@ -131,8 +139,8 @@ a:hover {
   position: absolute;
   text-align: left;
   width: 350px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 100;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
   height: auto;
   pointer-events: none;
   padding: 4px;
