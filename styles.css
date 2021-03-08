@@ -5,6 +5,7 @@ body {
   font-family: 'Raleway', sans-serif;
   font-weight: 200;
   font-size: 1rem;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -60,6 +61,7 @@ a:hover {
 
 .heidi {
   position: relative;
+  width: 200px;
   bottom: 33px;
   left: 80px;
 }
@@ -100,13 +102,24 @@ a:hover {
 }
 
 .spellItem {
-  height: 110px;
+  height: 111px;
   padding: 14px 0;
 }
 
 .wand {
   width: 180px;
-  margin-bottom: 0;
+  height: 19px;
+  margin-bottom: 1px;
+  opacity: 0.72;
+}
+
+.wand:hover {
+  width: 200px;
+  opacity: 1;
+}
+
+.wand:focus {
+  outline: none;
 }
 
 .scatter {
@@ -144,10 +157,6 @@ a:hover {
   height: auto;
   pointer-events: none;
   padding: 4px;
-}
-
-.lessMarginTop {
-  margin-top: 70px;
 }
 
 .lumo {
@@ -190,6 +199,10 @@ a:hover {
   color: #DC164E;
 }
 
+.lessMarginTop {
+  margin-top: 70px;
+}
+
 .starLegendImage {
   margin-top: 30px;
   width: 51%;
@@ -198,6 +211,10 @@ a:hover {
 .colorScaleImage {
   margin-top: 0;
   width: 70%;
+}
+
+.textBlock {
+  padding: 0 10%;
 }
 
 .footerLink {

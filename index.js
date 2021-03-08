@@ -1,28 +1,40 @@
 
 // change the fill colors of the wand images (surely there must be a better way
 //   to accomplish this)
-window.onload=function() {   // wait for the page to load before applying styles
-	$("#wand14")[0].contentDocument.getElementById("wand14original")
-		.setAttribute("fill", "#459451");
-	$("#wand02")[0].contentDocument.getElementById("wand02original")
-		.setAttribute("fill", "#04898A");
-	$("#wand03")[0].contentDocument.getElementById("wand03original")
-		.setAttribute("fill", "#0874B0");
-	$("#wand04")[0].contentDocument.getElementById("wand04original")
-		.setAttribute("fill", "#4551B5");
-	$("#wand05")[0].contentDocument.getElementById("wand05original")
-		.setAttribute("fill", "#574AAE");
-	$("#wand08")[0].contentDocument.getElementById("wand08original")
-		.setAttribute("fill", "#6A49AE");
-	$("#wand09")[0].contentDocument.getElementById("wand09original")
-		.setAttribute("fill", "#7940A6");
-	$("#wand12")[0].contentDocument.getElementById("wand12original")
-		.setAttribute("fill", "#843294");
-	$("#wand13")[0].contentDocument.getElementById("wand13original")
-		.setAttribute("fill", "#B50E59");
-	$("#wand06")[0].contentDocument.getElementById("wand06original")
-		.setAttribute("fill", "#B31140");
-};
+// window.onload=function() {   // wait for the page to load before applying styles
+// 	$("#wand14")[0].contentDocument.getElementById("wand14original")
+// 		.setAttribute("fill", "#459451");
+//	$("#wand02")[0].contentDocument.getElementById("wand02original")
+//		.setAttribute("fill", "#04898A");
+// 	$("#wand03")[0].contentDocument.getElementById("wand03original")
+// 		.setAttribute("fill", "#0874B0");
+// 	$("#wand04")[0].contentDocument.getElementById("wand04original")
+// 		.setAttribute("fill", "#4551B5");
+// 	$("#wand05")[0].contentDocument.getElementById("wand05original")
+// 		.setAttribute("fill", "#574AAE");
+// 	$("#wand08")[0].contentDocument.getElementById("wand08original")
+// 		.setAttribute("fill", "#6A49AE");
+// 	$("#wand09")[0].contentDocument.getElementById("wand09original")
+// 		.setAttribute("fill", "#7940A6");
+// 	$("#wand12")[0].contentDocument.getElementById("wand12original")
+// 		.setAttribute("fill", "#843294");
+// 	$("#wand13")[0].contentDocument.getElementById("wand13original")
+// 		.setAttribute("fill", "#B50E59");
+// 	$("#wand06")[0].contentDocument.getElementById("wand06original")
+// 		.setAttribute("fill", "#B31140");
+// };
+
+const spellsFullList = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
+	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"];
+
+const spellsShortList = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc",
+	"Avke"];
+
+// for a given full name, return the shortened name
+const spellShortened = d3.scaleOrdinal()
+	.domain(spellsFullList)
+	.range(spellsShortList);
+
 
 // define my custom shape (for now there is just one, but i'm leaving it open to
 //   add more later if needed)
@@ -40,9 +52,6 @@ const flow_shapes = {
 
 // initial viewport size - vw seems to be 10-20 px wider than $(this).width() used below
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-
-console.log(vw);
 
 // if the screen seems to be a phone, shrink the "spacer" div to 0
 // then set time delays based on which graphs are likely in view
@@ -53,14 +62,19 @@ console.log(vw);
 //   scrolled to the visualizations and begin the animations at that time.
 if (vw <= 767) {  						// likely a phone
 	$(".spacer").css("height","0px");
-	var scatterDelay = 1200;
+	var scatterDelay = 1800;
 	var spellDelay = 0;
+	var scatterDampen = 1.7;
 } else if (vw <= 991) {       // likely a tablet
-	var scatterDelay = 1200;
+	var scatterDelay = 1400;
 	var spellDelay = 0;
+	var scatterDampen = 1.3;
+	$(".textBlock").attr("padding","0 15%");
 } else {											// likely a desktop
 	var scatterDelay = 0;
 	var spellDelay = 1200;
+	var scatterDampen = 1;
+	$(".textBlock").attr("padding","0 20%");
 }
 
 // if the window is resized, change the height of the spacer
@@ -82,7 +96,7 @@ function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
 	if (namePos === 7 && harrySeparate) {
 		return namePos -0.5 + Math.random();  // HP gets more space and more jitter
 	} else {
-		return namePos -0.1 + Math.random()*rangeDefault;
+		return namePos -(0.5*rangeDefault) + Math.random()*rangeDefault;
 	}
 };
 
@@ -107,15 +121,13 @@ function opacityValue(talk) {
 
 // Color scale: give me a spell name, I return a color
 const color = d3.scaleOrdinal()
-	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
-		"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.domain(spellsFullList)
 	.range(["#55CC66","#00BFC0","#00A3FF","#5566FF","#735FF8","#8A58F0","#A24DE4",
 		"#BA3ED4","#F2006C","#EE0044"]);
 
 // Color scale for making the stars sparkle
 const colorTwinkle = d3.scaleOrdinal()
-	.domain(["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
-		"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"])
+	.domain(spellsFullList)
 	.range(["#BCFFC6","#AFF8F8","#B0E2FF","#BFC6FF","#C4BBFF","#D3BDFF","#E4BDFF",
 		"#F5BFFF","#FFB3D7","#FFA8C1"]);
 
@@ -234,7 +246,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.attr("fill",d=>colorFinal(d.spell,d.talkTF))
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.attr("opacity",0)
-			.attr("class",d=> "class"+d.spell)
+			.attr("class",d=> "scatter"+spellShortened(d.spell))
 			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+
 				(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
@@ -253,13 +265,16 @@ d3.json('top10spellsAugmented.json').then(data => {
       })
 			.transition().duration(scatterDelay)
 			.transition().filter(d=> ".class"+d.spell)
-		 	.transition().duration(800)  // loading animation (arrive from all over)
+		 	.transition().duration(scatterDampen*800)  // loading animation (arrive from all over)
 		 		.attr("transform", d=> "translate(" + (x(d.position)-
 					starSize(d.descriptorValue)) + "," + (y(jitter(d.namePosition))-
 					starSize(d.descriptorValue)) + ")")
 				.attr("opacity",1)
-				.delay(d => 800*Math.random() )
+				.delay(d => scatterDampen*800*Math.random() )
 			.transition().duration(1600)
+
+			// the stars twinkling transition needs to be made into a function!
+			//   I didn't have the time to figure that out, so it appears many places
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
 				.attr("stroke-width",2)				// makes the stars appear larger
@@ -338,7 +353,7 @@ const divSpell = d3.select("body").append("div")
 
 // set the dimensions of the graph
 const graphWidthSpell = 240;
-const graphHeightSpell = 30;
+const graphHeightSpell = 29;
 
 // define the x and y scales
 const xSpell = d3.scaleLinear()
@@ -346,15 +361,8 @@ const xSpell = d3.scaleLinear()
 	.range([0,graphWidthSpell]);
 
 const ySpell = d3.scaleLinear()
-	.domain([-0.5,1])
+	.domain([0,1])
 	.range([0,graphHeightSpell]);
-
-
-const spellsFull = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
-	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"]
-const spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc",
-	"Avke"];
-
 
 
 
@@ -362,10 +370,10 @@ const spells = ["Lumo","Acci","Muff","Ridd","Expa","Expe","Impe","Stup","Cruc",
 
 for (ind = 0; ind < 10; ind++) {
 
-	const thisSpell = spellsFull[ind]
+	const thisSpell = spellsFullList[ind]
 
 	// create the svg
-	const svgSpell = d3.select('.canvas'+spells[ind])
+	const svgSpell = d3.select('.canvas'+spellsShortList[ind])
 	  .append('svg')
 	    .attr('width', graphWidthSpell)
 	    .attr('height', graphHeightSpell);
@@ -394,7 +402,7 @@ for (ind = 0; ind < 10; ind++) {
 			.attr("stroke",d => stroke(d.spell,d.talkTF))
 			.attr("opacity",0)
 			.attr("transform", (d,i) => "translate(" + (xSpell(i)-
-				starSize(d.descriptorValue,0.85)) + ","+(jitter(8,false,6))+")")
+				starSize(d.descriptorValue,0.85)) + ","+(jitter(8,false,6)-starSize(d.descriptorValue,0.85))+")")
 			.on("mouseover", function(event,d) {
 				divSpell.transition()
          .duration(200)
@@ -445,4 +453,30 @@ for (ind = 0; ind < 10; ind++) {
 
 	 });  // end of d3.json function
 
-} // end of loop
+}; // end of loop
+
+
+for (ind = 0; ind < 10; ind++) {
+
+	const thisSpellFull = spellsFullList[ind]
+	const thisSpellShort = spellsShortList[ind]
+
+	document.addEventListener('click', function (event) {
+		if (!event.target.closest('.wand'+thisSpellShort)) return;
+		console.log("click!"+thisSpellShort);
+		d3.selectAll(".scatter"+thisSpellShort)
+			.transition().duration(0)			// STARS TWINKLING animation begins here
+				.attr("stroke", "#00000000")  // transparent because stars overlap
+				.attr("stroke-width",4)				// makes the stars appear larger
+				.delay((d,i) => 160*i)  		// make the stars twinkle in sequence
+			.transition().duration(400)
+				.attr("fill", d=> colorTwinkle(d.spell))
+				.attr("stroke", d=> colorTwinkle(d.spell))
+			.transition().duration(400)
+				.attr("fill",d=>colorFinal(d.spell,d.talkTF))
+				.attr("stroke-width",1)
+				.attr("stroke",d => stroke(d.spell,d.talkTF))
+				.delay(2300);
+			}, false);
+
+};
