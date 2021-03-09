@@ -131,6 +131,17 @@ const colorTwinkle = d3.scaleOrdinal()
 	.range(["#BCFFC6","#AFF8F8","#B0E2FF","#BFC6FF","#C4BBFF","#D3BDFF","#E4BDFF",
 		"#F5BFFF","#FFB3D7","#FFA8C1"]);
 
+// Full book names
+const bookName = d3.scaleOrdinal()
+	.domain(["2: CoS","3: PoA","4: GoF","5: OotP","6: HBP","7: DH"])
+	.range(["Chamber of Secrets","Prisoner of Azkaban","Goblet of Fire",
+	"Order of the Phoenix","Half Blood Prince","Deathly Hallows"]);
+
+// Book numbers (I could use substring, but this is more readable)
+const bookNum = d3.scaleOrdinal()
+	.domain(["2: CoS","3: PoA","4: GoF","5: OotP","6: HBP","7: DH"])
+	.range([2,3,4,5,6,7]);
+
 // determine the color based both on spell name and talkTF
 function colorFinal(spellName,talkBool) {
 	if (talkBool === "TRUE") {
@@ -202,7 +213,7 @@ function responsivefy(thisSvg) {
 const svgWidth = 640;
 const svgHeight = 600;
 
-const margin = {top: 0, right: 130, bottom: 50, left: 0};
+const margin = {top: 0, right: 135, bottom: 50, left: 0};
 const graphWidth = svgWidth - margin.left - margin.right;
 const graphHeight = svgHeight - margin.top - margin.bottom;
 
@@ -218,7 +229,7 @@ const graph = svg.append('g')
   .attr('transform',`translate(${margin.left},${margin.top})`);
 
 // Define the div for the tooltip
-const div = d3.select("body").append("div")
+const divScatter = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
@@ -250,16 +261,16 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+
 				(800-1600*Math.random())+")")
 			.on("mouseover", function(event,d) {
-				div.transition()
+				divScatter.transition()
          .duration(200)
          .style("opacity", .8);
-       	div.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+
-					d.classification+" in book "+d.book+".")
+       	divScatter.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+
+					d.classification+" in "+bookName(d.book)+" (book "+bookNum(d.book)+").")
          .style("left", (event.pageX) + "px")
          .style("top", (event.pageY - 28) + "px");
       })
      	.on("mouseout", function(d) {
-       	div.transition()
+       	divScatter.transition()
          .duration(500)
          .style("opacity", 0);
       })
@@ -278,7 +289,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
 				.attr("stroke-width",2)				// makes the stars appear larger
-				.delay(d => 300000*Math.random())  // make the stars twinkle "randomly"
+				.delay(d => 600000*Math.random())  // make the stars twinkle "randomly"
 			.transition().duration(400)
 				.attr("fill", d=> colorTwinkle(d.spell))
 				.attr("stroke", d=> colorTwinkle(d.spell))
@@ -294,8 +305,8 @@ d3.json('top10spellsAugmented.json').then(data => {
 
 	// Create the y Axis - just names that line up with the data
 	const yScaleForAxis = d3.scaleBand()
-		.domain(["Death Eaters, other", "Vincent Crabbe", "Barty Crouch",
-			"Bellatrix Lestrange", "Voldemort", "", "Harry Potter", " ",
+		.domain(["**Death Eaters, other", "**Vincent Crabbe", "**Barty Crouch",
+			"**Bellatrix Lestrange", "**Voldemort", "", "Harry Potter", " ",
 			"Hermione Granger","Remus Lupin","Mrs. Weasley","Ron Weasley",
 			"Neville Longbottom","Severus Snape","Albus Dumbledore","Sirius Black",
 			"Others"])
@@ -409,7 +420,7 @@ for (ind = 0; ind < 10; ind++) {
          .style("opacity", .8);
        	divSpell.html(
 					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+
-					"<br>Book: "+d.book+"<br>Effect: "+d.effect+"<br><br><em>\""+
+					"<br>Book "+d.book.substring(0,1)+": "+bookName(d.book)+"<br>Effect: "+d.effect+"<br><br><em>\""+
 					d.concordance+"\"</em>"+extraText(d.position)
 					)
          .style("left", (event.pageX) + "px")
@@ -441,7 +452,7 @@ for (ind = 0; ind < 10; ind++) {
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
 				.attr("stroke-width",2)				// makes the stars appear larger
-				.delay(d => 600000*Math.random())  // make the stars twinkle "randomly"
+				.delay(d => 300000*Math.random())  // make the stars twinkle "randomly"
 			.transition().duration(400)
 				.attr("fill", d=> colorTwinkle(d.spell))
 				.attr("stroke", d=> colorTwinkle(d.spell))
@@ -456,14 +467,21 @@ for (ind = 0; ind < 10; ind++) {
 }; // end of loop
 
 
+// Define the div for the tooltip
+const divWand = d3.select("body").append("div")
+  .attr("class", "tooltipWand")
+  .style("opacity", 0);
+
+
+// add events to each wand - tooltips and trigger a transition in the scatter plot
 for (ind = 0; ind < 10; ind++) {
 
 	const thisSpellFull = spellsFullList[ind]
 	const thisSpellShort = spellsShortList[ind]
 
+	// trigger transition on click for each wand
 	document.addEventListener('click', function (event) {
 		if (!event.target.closest('.wand'+thisSpellShort)) return;
-		console.log("click!"+thisSpellShort);
 		d3.selectAll(".scatter"+thisSpellShort)
 			.transition().duration(0)			// STARS TWINKLING animation begins here
 				.attr("stroke", "#00000000")  // transparent because stars overlap
@@ -478,5 +496,26 @@ for (ind = 0; ind < 10; ind++) {
 				.attr("stroke",d => stroke(d.spell,d.talkTF))
 				.delay(2300);
 			}, false);
+
+
+	// add tooltips to each wand
+	document.addEventListener("mouseover", function(event){
+		if (!event.target.closest('.wand'+thisSpellShort)) return;
+		divWand.transition()
+		 .duration(200)
+		 .style("opacity", .8);
+		divWand.html("Click to see when "+thisSpellFull+" is used")
+		 .style("left", (event.pageX) + "px")
+		 .style("top", (event.pageY - 28) + "px");
+	})
+
+	document.addEventListener("mouseout", function(event){
+		if (!event.target.closest('.wand'+thisSpellShort)) return;
+		divWand.transition()
+			.duration(500)
+			.style("opacity", 0);
+	})
+
+
 
 };

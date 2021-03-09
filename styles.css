@@ -84,10 +84,6 @@ a:hover {
   font-size: 1.8rem;
 }
 
-.textAsBackground {
-  color: #1d1d1d;
-}
-
 .spellListA {
   padding: 20px 3% 0 0;
 }
@@ -114,7 +110,7 @@ a:hover {
 }
 
 .wand:hover {
-  width: 200px;
+  width: 192px;
   opacity: 1;
 }
 
@@ -151,12 +147,28 @@ a:hover {
   border-radius: 4px;
   position: absolute;
   text-align: left;
-  width: 350px;
+  width: 300px;
   font-family: 'Raleway', sans-serif;
   font-weight: 200;
+  font-size: 0.85rem;
   height: auto;
   pointer-events: none;
   padding: 4px;
+}
+
+.tooltipWand {
+  background: #131313;
+  border: 0;
+  border-radius: 4px;
+  position: absolute;
+  text-align: left;
+  width: 150px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  height: auto;
+  pointer-events: none;
+  padding: 2px;
 }
 
 .lumo {
@@ -205,7 +217,7 @@ a:hover {
 
 .starLegendImage {
   margin-top: 30px;
-  width: 51%;
+  width: 70%;
 }
 
 .colorScaleImage {
