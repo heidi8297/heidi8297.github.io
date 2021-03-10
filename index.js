@@ -69,7 +69,7 @@ if (vw <= 767) {  						// likely a phone
 	$(".spacer").css("height","0px");
 	var scatterDelay = 1800;
 	var scatterDampen = 1.7;
-	var tooltipOffsetSpellX = 150;
+	var tooltipOffsetSpellX = 90;
 	var tooltipOffsetY = 28;
 	var tooltipOffsetScatter = -125;
 } else if (vw <= 991) {       // likely a tablet
