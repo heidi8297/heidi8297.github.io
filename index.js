@@ -53,6 +53,11 @@ const flow_shapes = {
 // initial viewport size - vw seems to be 10-20 px wider than $(this).width() used below
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 
+var spellDelay = 0;
+var tooltipOffsetSpellX = 0;
+var tooltipOffsetY = -28;
+var tooltipOffsetScatter = 0;
+
 // if the screen seems to be a phone, shrink the "spacer" div to 0
 // then set time delays based on which graphs are likely in view
 // on wide screens the delays create a nice sequence
@@ -63,26 +68,40 @@ const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth
 if (vw <= 767) {  						// likely a phone
 	$(".spacer").css("height","0px");
 	var scatterDelay = 1800;
-	var spellDelay = 0;
 	var scatterDampen = 1.7;
+	var tooltipOffsetSpellX = 150;
+	var tooltipOffsetY = 28;
+	var tooltipOffsetScatter = -125;
 } else if (vw <= 991) {       // likely a tablet
 	var scatterDelay = 1400;
-	var spellDelay = 0;
 	var scatterDampen = 1.3;
-	$(".textBlock").attr("padding","0 15%");
 } else {											// likely a desktop
+	$(".textBlock").css("padding","0 20%");
 	var scatterDelay = 0;
 	var spellDelay = 1200;
 	var scatterDampen = 1;
-	$(".textBlock").attr("padding","0 20%");
 }
 
-// if the window is resized, change the height of the spacer
+// if the window is resized, change the formatting values accordingly
 $(window).resize(function() {
 		if ($(this).width() <= 752) {    // likely a phone
 			$(".spacer").css("height","0px");
-		} else {											 	// likely a tablet or desktop
+			$(".textBlock").css("padding","0 10%");
+			// var tooltipOffsetSpellX = 150;
+			// var tooltipOffsetY = 28;
+			// var tooltipOffsetScatter = -125;
+		} else if ($(this).width() <= 976) {	// likely a tablet
 			$(".spacer").css("height","72px");
+			$(".textBlock").css("padding","0 10%");
+			// var tooltipOffsetSpellX = 0;
+			// var tooltipOffsetY = -28;
+			// var tooltipOffsetScatter = 0;
+		} else {														// likely a desktop
+			$(".spacer").css("height","72px");
+			$(".textBlock").css("padding","0 20%");
+			// var tooltipOffsetSpellX = 0;
+			// var tooltipOffsetY = -28;
+			// var tooltipOffsetScatter = 0;
 		};
 });
 
@@ -230,7 +249,7 @@ const graph = svg.append('g')
 
 // Define the div for the tooltip
 const divScatter = d3.select("body").append("div")
-  .attr("class", "tooltip")
+  .attr("class", "tooltip tooltipScatter")
   .style("opacity", 0);
 
 
@@ -266,8 +285,8 @@ d3.json('top10spellsAugmented.json').then(data => {
          .style("opacity", .8);
        	divScatter.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+
 					d.classification+" in "+bookName(d.book)+" (book "+bookNum(d.book)+").")
-         .style("left", (event.pageX) + "px")
-         .style("top", (event.pageY - 28) + "px");
+         .style("left", (event.pageX + tooltipOffsetScatter) + "px")
+         .style("top", (event.pageY + tooltipOffsetY) + "px");
       })
      	.on("mouseout", function(d) {
        	divScatter.transition()
@@ -342,12 +361,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 	yAxisGroup.selectAll('.tick').selectAll('line').remove();
 	xAxisGroup.select('.domain').attr('stroke-width', 0);
 	xAxisGroup.selectAll('.tick').selectAll('line').remove();
-
-
 })
-
-
-
 
 
 
@@ -359,7 +373,7 @@ d3.json('top10spellsAugmented.json').then(data => {
 
 // Define the div for the tooltip
 const divSpell = d3.select("body").append("div")
-	.attr("class", "tooltipSpell")
+	.attr("class", "tooltip tooltipSpell")
 	.style("opacity", 0);
 
 // set the dimensions of the graph
@@ -423,8 +437,8 @@ for (ind = 0; ind < 10; ind++) {
 					"<br>Book "+d.book.substring(0,1)+": "+bookName(d.book)+"<br>Effect: "+d.effect+"<br><br><em>\""+
 					d.concordance+"\"</em>"+extraText(d.position)
 					)
-         .style("left", (event.pageX) + "px")
-         .style("top", (event.pageY - 28) + "px");
+         .style("left", (event.pageX - tooltipOffsetSpellX) + "px")
+         .style("top", (event.pageY + tooltipOffsetY) + "px");
        })
      .on("mouseout", function(d) {
        divSpell.transition()
@@ -469,7 +483,7 @@ for (ind = 0; ind < 10; ind++) {
 
 // Define the div for the tooltip
 const divWand = d3.select("body").append("div")
-  .attr("class", "tooltipWand")
+  .attr("class", "tooltip tooltipWand")
   .style("opacity", 0);
 
 
@@ -503,10 +517,11 @@ for (ind = 0; ind < 10; ind++) {
 		if (!event.target.closest('.wand'+thisSpellShort)) return;
 		divWand.transition()
 		 .duration(200)
-		 .style("opacity", .8);
+		 .style("opacity", .8)
+		 .delay(300);
 		divWand.html("Click to see when "+thisSpellFull+" is used")
 		 .style("left", (event.pageX) + "px")
-		 .style("top", (event.pageY - 28) + "px");
+		 .style("top", (event.pageY + 15) + "px");
 	})
 
 	document.addEventListener("mouseout", function(event){
@@ -515,7 +530,5 @@ for (ind = 0; ind < 10; ind++) {
 			.duration(500)
 			.style("opacity", 0);
 	})
-
-
 
 };

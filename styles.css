@@ -131,44 +131,28 @@ a:hover {
   background: #131313;
   border: 0;
   border-radius: 4px;
-  position: absolute;
-  text-align: center;
-  width: 250px;
   font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
   font-weight: 200;
   height: auto;
+  padding: 3px;
   pointer-events: none;
-  padding: 2px;
+  position: absolute;
+}
+
+.tooltipScatter {
+  text-align: center;
+  width: 250px;
 }
 
 .tooltipSpell {
-  background: #131313;
-  border: 0;
-  border-radius: 4px;
-  position: absolute;
   text-align: left;
   width: 300px;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 200;
-  font-size: 0.85rem;
-  height: auto;
-  pointer-events: none;
-  padding: 4px;
 }
 
 .tooltipWand {
-  background: #131313;
-  border: 0;
-  border-radius: 4px;
-  position: absolute;
   text-align: left;
   width: 150px;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 200;
-  font-size: 0.85rem;
-  height: auto;
-  pointer-events: none;
-  padding: 2px;
 }
 
 .lumo {
