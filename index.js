@@ -182,7 +182,7 @@ function stroke(spellName,talkBool) {
 // create special tooltip add-on(s)
 function extraText(thisPosition) {
 	if (thisPosition === 762170) {
-		return "<br><br><em>***Technically Dolores Umbridge was not a Death Eater,"+
+		return "<br><br><em>Technically Dolores Umbridge was not a Death Eater,"+
 		" but her behavior was so despicable, she may as well have been</em>";
 	} else {
 		return "";
@@ -284,7 +284,7 @@ d3.json('top10spellsAugmented.json').then(data => {
          .duration(200)
          .style("opacity", .8);
        	divScatter.html(d.spellcaster+ " "+spellAction(d.talkTF)+" the "+d.spell+" "+
-					d.classification+" in "+bookName(d.book)+" (book "+bookNum(d.book)+").")
+					d.classification+" in "+bookName(d.book)+" (book "+bookNum(d.book)+")."+extraText(d.position))
          .style("left", (event.pageX + tooltipOffsetScatter) + "px")
          .style("top", (event.pageY + tooltipOffsetY) + "px");
       })
@@ -435,7 +435,7 @@ for (ind = 0; ind < 10; ind++) {
        	divSpell.html(
 					"Spellcaster: "+d.spellcaster+"<br>Emphasis descriptor: "+d.descriptor+
 					"<br>Book "+d.book.substring(0,1)+": "+bookName(d.book)+"<br>Effect: "+d.effect+"<br><br><em>\""+
-					d.concordance+"\"</em>"+extraText(d.position)
+					d.concordance+"\"</em>"
 					)
          .style("left", (event.pageX - tooltipOffsetSpellX) + "px")
          .style("top", (event.pageY + tooltipOffsetY) + "px");
