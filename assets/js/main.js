@@ -185,7 +185,7 @@ function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
 // Color scale: give me a spell name, I return a color
 const color = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-	.range(["#FFF29C","#FFF29C","#FED16F","#FF9E6A","#FF867B","#E87493","#E272C7","#D280F8",
+	.range(["#FFEE8F","#FFEE8F","#FED16F","#FF9E6A","#FF867B","#E87493","#E272C7","#D280F8",
 		"#AA7AF5","#6D9BFE","#77DBFD","#8DEEC7","#C3E6A6"]);
 
 
