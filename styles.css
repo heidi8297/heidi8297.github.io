@@ -119,6 +119,12 @@ section {
   position: relative;
 }
 
+/* be careful with this one - as adjustments are made to the viz, will need to check
+and make sure the svg is still positioned well */
+.canvas svg {
+  overflow: visible;
+}
+
 
 /* for particularly wide screens, shrink the canvas so it fits on the screen */
 @media only screen and (min-aspect-ratio: 5/3) {
