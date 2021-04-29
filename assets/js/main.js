@@ -1,9 +1,5 @@
-/**
-* Template Name: MyResume - v4.1.0
-* Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+
+
 (function() {
   "use strict";
 
@@ -182,18 +178,18 @@ function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
 	return namePos -(0.5*rangeDefault) + Math.random()*rangeDefault;
 };
 
-// Color scale: give me a spell name, I return a color
+// Color scale: give me a number, I return a color
 const color = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-	.range(["#FFEE8F","#FFEE8F","#FED16F","#FF9E6A","#FF867B","#E87493","#E272C7","#D280F8",
-		"#AA7AF5","#6D9BFE","#77DBFD","#8DEEC7","#C3E6A6"]);
+	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+		"#7c97ff","#58b2ff","#77DBFD","#7fecd3","#C3E6A6"]);
 
 
+// used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
-
 const randVal = Math.random();
 
-// make the rainbow start or end with yellow most of the time (cause that's my jam)
+// make the rainbow start or end with yellow most of the time ('cause that's my jam)
 if (randVal < 0.3) {
   colorOffset = 0.2;
 } else if (randVal > 0.7) {
@@ -239,7 +235,9 @@ function responsivefy(thisSvg) {
 
 
 
-//  CREATE THE SCATTER PLOT
+const timeoutLength = 9000;
+
+//  CREATE THE D3 ANIMATION
 const svgWidth = 900;
 const svgHeight = 600;
 
@@ -258,7 +256,6 @@ const graph = svg.append('g')
   .attr('height',graphHeight)
   .attr('transform',`translate(${margin.left},${margin.top})`);
 
-
 d3.json('circles.json').then(data => {
 
   // define the x and y scales
@@ -271,24 +268,29 @@ d3.json('circles.json').then(data => {
     .range([0,graphHeight]);
 
 
-	// find the existing paths (stars) in the html
-	const circles = graph.selectAll("circle")
+	// find the existing circles in the html
+	const circles = graph.selectAll("circle")   // need to make this more specific...
 		.data(data);
 
-	// add stars for the remaining data points
+	// add circles for the remaining data points (position them above the svg)
 	circles.enter()
 		.append("circle")
       .attr('cy', -200 )
       .attr('cx', d=> x(d.histogramX))
       .attr('r', 9)
-			.attr("fill",(d,i)=>color(Math.round(i/12 + 2*Math.random() -1 + colorOffset)))
-			.attr("opacity",0.8)
+      // define the class as a number from 1-12 - we will use it to set the color and for animations
+      .attr('class',(d,i) => (Math.round(i/12 + 2*Math.random() -1 + colorOffset)))
+      .attr('fill',function(d,i) {return color(+d3.select(this).attr("class"))})
+			.attr('opacity',0.8)
 
-      .transition().duration(1000)
-        .delay(d=> 80*d.histogramY +300*Math.random() )
-        .ease(d3.easeBounceOut)
-        .attr('cy', d=> graphHeight - y(d.histogramY) );
+    // "bounce" the circles into place
+    .transition().duration(1000)
+      .delay(d=> 80*d.histogramY +300*Math.random() )
+      .ease(d3.easeBounceOut)
+      .attr('cy', d=> graphHeight - y(d.histogramY) );
 
+
+  // resize the circles and move them into their scatter-plot positioning
   d3.selectAll("circle")
     .transition().duration(1200)
         .delay(d=> 4200+1100*Math.random())
@@ -298,15 +300,146 @@ d3.json('circles.json').then(data => {
         .attr('r',d=>5+25*Math.random())
         .attr("opacity", d=>0.25+0.6*Math.random())
         ;
-      // .attr("transform", d=> "translate(" + x(d.position) + "," + y(jitter(d.namePosition)) + ")");
-			// .attr("transform", (d,i) => "translate("+(800-1600*Math.random())+","+
-			// 	(800-1600*Math.random())+")")
-			// .transition().filter(d=> ".class"+d.spell)
-		 	// .transition().duration(800)  // loading animation (arrive from all over)
-		 	// 	.attr("transform", d=> "translate(" + x(d.position) + "," + y(jitter(d.namePosition)) + ")")
-			// 	.attr("opacity",1)
-			// 	.delay(d => 800*Math.random() );
+
+  // sort and reposition the circles into color-specific positions around a larger circle
+  d3.selectAll("circle")
+    .transition().duration(1000)
+      .delay(timeoutLength-1400)
+      .attr('r',d=>6+10*Math.random())
+      .attr('opacity',0.2)
+      .attr('cx', function(d) { return graphWidth/2  + 1.2*200*Math.cos(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
+      .attr('cy', function(d) { return graphHeight/2 + 1.2*200*Math.sin(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
+
+    // constrict toward the center of the larger circle (to mimic the behavior of the force graph)
+    .transition().duration(400)
+      .attr('cx', function(d) { return graphWidth/2  + 0.9*200*Math.cos(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
+      .attr('cy', function(d) { return graphHeight/2 + 0.9*200*Math.sin(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
+      ;
+
+  // fade the circles to be invisible - make way for the forceCollision layout (below)
+  d3.selectAll("circle")
+    .transition().duration(200)
+      .delay(timeoutLength)
+      .attr("opacity",0);
+
+});
 
 
 
-})
+
+// D3 force layout (for last portion of the loading animation)
+
+setTimeout(function(){
+
+  var widthForce = 900,
+      heightForce = 600,
+      padding = 1.5, // separation between nodes
+      maxRadius = 12;
+
+
+  var n = 150, // total number of nodes
+      m = 12; // number of distinct clusters
+
+  // The largest node for each cluster.
+  var clusters = new Array(m);
+
+
+  var nodes = d3.range(n).map(function () {
+    var i = Math.floor(Math.random() * m),
+        r = 1.3*Math.sqrt(( (i+colorOffset)%12  + 1) / m * -Math.log(Math.random())) * maxRadius,
+        d = {
+          cluster: i,
+          radius: r,
+          x: widthForce/2  +1.2*200*Math.cos((i+colorOffset) / m * 2*Math.PI)  -0.5 + Math.random(),
+          y: heightForce/2 +1.2*200*Math.sin((i+colorOffset) / m * 2*Math.PI)  -0.5 + Math.random()
+        };
+    if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
+    console.log("i:"+i+", r:"+r);
+    return d;
+  });
+
+  var maxRad = d3.max(nodes, d => d.radius ),
+    maxStrength = 0.15;
+
+
+  var simulation = d3.forceSimulation()
+    // pull toward mouse (see 'mousemove' handler below)
+    .force('attract', d3.forceAttract()
+      .target([widthForce/2, heightForce/2])
+      .strength( d => 0.007+1.2*Math.pow((d.radius / maxRad) * maxStrength, 2) ))
+
+    // cluster by section
+    .force('cluster', d3.forceCluster()
+      .centers(d => clusters[d.cluster] )
+      .strength(1.25)
+      .centerInertia(0.1))
+
+    // apply collision with padding
+    .force('collide', d3.forceCollide( d=> d.radius + padding )
+      .strength(1.5))
+
+    .on('tick', layoutTick)
+    .nodes(nodes);
+
+
+  // add svg to designated div in the DOM
+  var svgForce = d3.select('.canvasForce').append('svg')
+      .attr('width', widthForce)
+      .attr('height', heightForce)
+      .call(responsivefy);
+
+
+  // add circle for each entry in nodes
+  var node = svgForce.selectAll('circle')
+    .data(nodes)
+    .enter().append('circle')
+      .style('fill', d => color(d.cluster+1) )
+      .style('opacity',0.8)
+      .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended)
+      );
+
+  // allow the user to click and drag each circle
+  function dragstarted (event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged (event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+
+  function dragended (event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  // make the clusters follow the mouse...
+  svgForce.on('mousemove', function (event) {
+      simulation.force('attract').target(d3.pointer(event));
+      simulation
+        .alphaTarget(0.3)
+        .restart();
+    });
+
+  // ramp up collision strength to provide smooth transition
+  var transitionTime = 3000;
+  var t = d3.timer(function (elapsed) {
+    var dt = elapsed / transitionTime;
+    simulation.force('collide').strength(Math.pow(dt, 2) * 0.7);
+    if (dt >= 1.0) t.stop();
+  });
+
+  function layoutTick (e) {
+    node
+      .attr('cx', d => d.x )
+      .attr('cy', d => d.y )
+      .attr('r', d => d.radius );
+  }
+
+},timeoutLength);

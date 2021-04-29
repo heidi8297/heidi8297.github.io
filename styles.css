@@ -19,7 +19,8 @@ h4 {
 }
 
 a {
-  color: #222222;
+  /* color: #222222; */
+  color: #394F8D;
 }
 
 a:hover {
@@ -107,6 +108,7 @@ section {
   font-size: 2.5rem;
   line-height: 1.5;
   margin-top: 10%;
+  pointer-events: none;
   position: absolute;
   top: 24%;
   left: 50%;
@@ -119,16 +121,23 @@ section {
   position: relative;
 }
 
+/* this div will be layered directly on top of the "canvas" div */
+.canvasForce {
+  position: relative;
+  bottom: calc(100vw * 0.5066); /* shift up by the height of the "canvas" element */
+}
+
+
 /* be careful with this one - as adjustments are made to the viz, will need to check
 and make sure the svg is still positioned well */
-.canvas svg {
+.canvas svg, .canvasForce svg {
   overflow: visible;
 }
 
 
 /* for particularly wide screens, shrink the canvas so it fits on the screen */
 @media only screen and (min-aspect-ratio: 5/3) {
-  .canvas svg {
+  .canvas svg, .canvasForce svg {
     padding: 0 8% 14% 8%;
   }
 }
@@ -138,7 +147,7 @@ and make sure the svg is still positioned well */
     font-size: 2rem;
     top: 50%;
   }
-  .canvas {
+  .canvas, .canvasForce {
     position: relative;
   }
 }
@@ -148,7 +157,7 @@ and make sure the svg is still positioned well */
     font-size: 1.7rem;
     top: 50%;
   }
-  .canvas {
+  .canvas, .canvasForce {
     position: relative;
   }
 }
@@ -437,7 +446,7 @@ and make sure the svg is still positioned well */
 .quote {
   position: absolute;
   font-size: 8rem;
-  color: #888888;
+  color: #85A0EA;
   opacity: 0.4;
   font-family: 'Proza Libre', sans-serif;
   left: 12%;
@@ -466,6 +475,10 @@ and make sure the svg is still positioned well */
 .tableauLink {
   position: relative;
   bottom: 3px;
+}
+
+.tableauIcon {
+  fill: #394F8D;
 }
 
 
