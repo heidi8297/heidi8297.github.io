@@ -1,0 +1,19 @@
+{
+  "name": "heidi8297.github.io",
+  "version": "1.0.0",
+  "description": "Harry Potter Spells",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heidi8297/heidi8297.github.io.git"
+  },
+  "author": "Heidi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heidi8297/heidi8297.github.io/issues"
+  },
+  "homepage": "https://github.com/heidi8297/heidi8297.github.io#readme"
+}
