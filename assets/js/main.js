@@ -275,7 +275,7 @@ d3.json('circles.json').then(data => {
 	// add circles for the remaining data points (position them above the svg)
 	circles.enter()
 		.append("circle")
-      .attr('cy', -200 )
+      .attr('cy', -210 )
       .attr('cx', d=> x(d.histogramX))
       .attr('r', 9)
       // define the class as a number from 1-12 - we will use it to set the color and for animations
@@ -354,7 +354,6 @@ setTimeout(function(){
           y: heightForce/2 +1.2*200*Math.sin((i+colorOffset) / m * 2*Math.PI)  -0.5 + Math.random()
         };
     if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
-    console.log("i:"+i+", r:"+r);
     return d;
   });
 

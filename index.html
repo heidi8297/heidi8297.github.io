@@ -2,6 +2,16 @@
 <html lang="en" dir="ltr">
 
 <head>
+
+  <!-- Load the fonts faster to prevent/minimize FOUT -->
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Pompiere']
+      }
+    });
+  </script>
   <meta charset="utf-8">
   <title>Heidi Stockton</title>
 
@@ -50,7 +60,7 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Pompiere&family=Proza+Libre:wght@500&family=Raleway:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Pompiere&family=Proza+Libre:wght@500&family=Raleway:wght@100;400;700&display=swap" rel="stylesheet">
 
 </head>
 
