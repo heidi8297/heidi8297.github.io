@@ -58,7 +58,7 @@
   })
 
   /**
-   * Scrool with ofset on links with a class name .scrollto
+   * Scrool with offset on links with a class name .scrollto
    */
   on('click', '.scrollto', function(e) {
     if (select(this.hash)) {
@@ -76,7 +76,7 @@
   }, true)
 
   /**
-   * Scroll with ofset on page load with hash links in the url
+   * Scroll with offset on page load with hash links in the url
    */
   window.addEventListener('load', () => {
     if (window.location.hash) {
@@ -160,7 +160,7 @@
 
 
 
-// ======================   D3 stuff =========================
+// ======================   D3 loading animation   =========================
 
 
 
@@ -235,7 +235,7 @@ function responsivefy(thisSvg) {
 
 
 
-const timeoutLength = 9000;
+const timeoutLength = 8800;
 
 //  CREATE THE D3 ANIMATION
 const svgWidth = 900;
@@ -275,7 +275,7 @@ d3.json('circles.json').then(data => {
 	// add circles for the remaining data points (position them above the svg)
 	circles.enter()
 		.append("circle")
-      .attr('cy', -210 )
+      .attr('cy', -200 )
       .attr('cx', d=> x(d.histogramX))
       .attr('r', 9)
       // define the class as a number from 1-12 - we will use it to set the color and for animations
@@ -304,14 +304,18 @@ d3.json('circles.json').then(data => {
   // sort and reposition the circles into color-specific positions around a larger circle
   d3.selectAll("circle")
     .transition().duration(1000)
-      .delay(timeoutLength-1400)
+      .delay(timeoutLength-1600)
+      .ease(d3.easePolyInOut.exponent(3))
       .attr('r',d=>6+10*Math.random())
       .attr('opacity',0.2)
       .attr('cx', function(d) { return graphWidth/2  + 1.2*200*Math.cos(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
       .attr('cy', function(d) { return graphHeight/2 + 1.2*200*Math.sin(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
 
     // constrict toward the center of the larger circle (to mimic the behavior of the force graph)
-    .transition().duration(400)
+    .transition().duration(800)
+      .delay(d => 200*Math.random())
+      .ease(d3.easeCubicInOut)
+      .attr('opacity',0.8)
       .attr('cx', function(d) { return graphWidth/2  + 0.9*200*Math.cos(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
       .attr('cy', function(d) { return graphHeight/2 + 0.9*200*Math.sin(  (+d3.select(this).attr("class")-1 + colorOffset)  / 12 * 2*Math.PI)  } )
       ;

@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Pompiere', sans-serif;
+  font-family: 'Pompiere', Tahoma, sans-serif;
   font-weight: bold;
   color: #222222;
 }
@@ -114,6 +114,11 @@ section {
   left: 50%;
   transform: translateX(-50%);
 }
+
+/* font-family: Tahoma
+font-size: 26px
+line-height: 2.3
+letter-spacing: 0.15px; */
 
 
 /* D3 viz animation */
