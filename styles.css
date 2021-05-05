@@ -19,8 +19,8 @@ h4 {
 }
 
 a {
-  /* color: #222222; */
-  color: #394F8D;
+  /* likely should keep this the same color as the 'tableauIcon' color below */
+  color: #2C3D6D;
 }
 
 a:hover {
@@ -74,6 +74,7 @@ section {
 .navbar-brand {
   font-family: "Raleway", sans-serif;
   font-size: 0.9rem;
+  padding: 0 12px;
 }
 
 .navbar-light .navbar-brand {
@@ -115,6 +116,8 @@ section {
   transform: translateX(-50%);
 }
 
+
+/* If I figure out how to implement it, these are the settings for a great fallback font: */
 /* font-family: Tahoma
 font-size: 26px
 line-height: 2.3
@@ -483,7 +486,8 @@ and make sure the svg is still positioned well */
 }
 
 .tableauIcon {
-  fill: #394F8D;
+  /* likely should keep this the same color as the 'a' color above */
+  fill: #2C3D6D;
 }
 
 
