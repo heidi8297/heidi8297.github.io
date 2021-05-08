@@ -1,4 +1,13 @@
 
+var treeFile = "DMOrgChart.json";
+
+var initialOffsetX = 120,
+  initialOffsetY = 0;
+
+if (treeFile === "DMOrgChart.json") {
+  initialOffsetX = 90;
+  initialOffsetY = 45;
+}
 
 // this function makes our svg responsive to the size of the container/screen!
 // provided by Ben Clinkinbeard and Brendan Sudol
@@ -147,10 +156,10 @@ function childCircleRadius(childCount) {
 }
 
 // read in a 'flattened' json file (one object per node)
-function renderTree() {d3.json("NikeOrgChart.json").then(function(flatData) {
+function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   // call an initial zoom event to move the graph into view (without this, JD's name gets cut off)
-  svg.call(zoom.transform,d3.zoomIdentity.scale(1).translate(120,0));
+  svg.call(zoom.transform,d3.zoomIdentity.scale(1).translate(initialOffsetX,initialOffsetY));
 
   // create a hierarchical json file
   var treeData = d3.stratify()
@@ -296,7 +305,7 @@ function renderTree() {d3.json("NikeOrgChart.json").then(function(flatData) {
       .attr("text-anchor", d => d.children || d._children ? "end" : "start")
       .text(d => d.data.data.display_name.substring(0,20))
       .style("font-weight",function(d) {
-        if (d._children) {
+        if (treeFile === "NikeOrgChart.json"  && (d._children || d.children)) {
           var counts = { "children": 0, "fte": 0 };
 
           function getCounts(parent) {

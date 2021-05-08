@@ -1,2 +1,2 @@
 # heidi8297.github.io
-Harry Potter Spells
+Heidi Stockton's Portfolio website
