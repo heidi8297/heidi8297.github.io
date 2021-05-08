@@ -98,5 +98,5 @@ section {
 }
 
 .footerLink:hover, .tableauLink svg:hover {
-  color: #5B87FF;
+  fill: #5B87FF;
 }
