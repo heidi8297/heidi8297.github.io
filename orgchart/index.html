@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Nike Org</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- primary style sheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+
+</head>
+
+
+<body>
+  <div class="main">
+
+    <h1>ORG CHART EXPLORE TOOL</h1>
+    <form class="roleForm" action="" method="get">
+      <label for="role1">Where are all of the </label>
+      <input class="inputText" type="text" name="rolename1" value="VISUALIZATION" style="color:#4C70D6; font-family:'Spectral', sans-serif; font-weight: bold;">
+      <label for="role2"> and </label>
+      <input class="inputText" type="text" name="rolename2" value="DATA SCIENTIST" style="color:#FDA943; font-family:'Spectral', sans-serif; font-weight: bold;">
+      <label for="button"> roles?</label>&nbsp;&nbsp;
+      <input class="btn btn-outline-secondary btn-sm" type="button" name="button" value="Update" onClick="formChanged()">
+      &emsp;&emsp;&emsp;Click individual nodes to expand/collapse.
+    </form>
+
+    <div class="org"></div>
+
+  </div>
+
+
+  <div class="div5" id="contactMe">
+    <a class="footerLink" href="http://heidistockton.com"><i class="fas fa-home"></i></a>
+    <a class="footerLink" href="https://linkedin.com/in/heidistockton/" target="_blank"><i class="fab fa-linkedin"></i></a>
+    <a class="footerLink" href="https://github.com/heidi8297/" target="_blank"><i class="fab fa-github-alt"></i></a>
+    <a class="footerLink" href="https://public.tableau.com/profile/heidi.stockton/" target="_blank" class="tableauLink">
+      <svg class="tableauIconSpells" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="24px" height="24px">
+        <path
+          d="M 23.5 0 L 23.5 4.5 L 19.5 4.5 L 19.5 6.5 L 23.5 6.5 L 23.5 11 L 25.5 11 L 25.5 6.5 L 29.5 6.5 L 29.5 4.5 L 25.5 4.5 L 25.5 0 L 23.5 0 z M 11 5 L 11 11 L 5 11 L 5 13 L 11 13 L 11 19 L 13 19 L 13 13 L 19 13 L 19 11 L 13 11 L 13 5 L 11 5 z M 36 5 L 36 11 L 30 11 L 30 13 L 36 13 L 36 19 L 38 19 L 38 13 L 44 13 L 44 11 L 38 11 L 38 5 L 36 5 z M 23 16 L 23 23 L 16 23 L 16 26 L 23 26 L 23 33 L 26 33 L 26 26 L 33 26 L 33 23 L 26 23 L 26 16 L 23 16 z M 5 19 L 5 23.5 L 1 23.5 L 1 25.5 L 5 25.5 L 5 30 L 7 30 L 7 25.5 L 11 25.5 L 11 23.5 L 7 23.5 L 7 19 L 5 19 z M 43 19 L 43 23.5 L 39 23.5 L 39 25.5 L 43 25.5 L 43 30 L 45 30 L 45 25.5 L 49 25.5 L 49 23.5 L 45 23.5 L 45 19 L 43 19 z M 11 29 L 11 35 L 5 35 L 5 37 L 11 37 L 11 43 L 13 43 L 13 37 L 19 37 L 19 35 L 13 35 L 13 29 L 11 29 z M 36 29 L 36 35 L 30 35 L 30 37 L 36 37 L 36 43 L 38 43 L 38 37 L 44 37 L 44 35 L 38 35 L 38 29 L 36 29 z M 23.5 38 L 23.5 42.5 L 19.5 42.5 L 19.5 44.5 L 23.5 44.5 L 23.5 49 L 25.5 49 L 25.5 44.5 L 29.5 44.5 L 29.5 42.5 L 25.5 42.5 L 25.5 38 L 23.5 38 z" />
+      </svg>
+    </a>
+  </div>
+
+
+
+  <!-- load the d3.js library -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+
+  <!-- load the javascript to render the org chart -->
+  <script src="main.js" charset="utf-8"></script>
+</body>
+
+</html>

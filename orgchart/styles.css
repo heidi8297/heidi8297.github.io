@@ -1,0 +1,119 @@
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Spectral', sans-serif;
+  font-weight: bold;
+}
+
+h1 {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+h4 {
+  margin-top: 10px;
+  font-size: 0.83rem;
+}
+
+a {
+  /* likely should keep this the same color as the 'tableauIcon' color below */
+  color: #2C3D6D;
+}
+
+a:hover {
+  color: #5B87FF;
+}
+
+.footerLink:hover {
+  fill: #5B87FF;
+}
+
+.main {
+  margin: 2% 10% 7% 10%;
+  padding: 0% 2% 10px 2%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #e5e5e5;
+}
+
+
+/* Format the inputs/html form */
+.roleForm {
+  font-family: 'Spectral', sans-serif;
+  font-weight: normal;
+  font-size: 0.83rem;
+}
+
+.button {
+  font-family: 'Spectral', sans-serif;
+  font-weight: normal;
+  font-size: 0.83rem;
+}
+
+.inputText {
+  text-align: center;
+  font-weight: bold;
+}
+
+
+/* Format the org chart */
+.org {
+  margin-top: 30px;
+}
+
+.node circle {
+  fill: #fff;
+}
+
+.node text {
+  font: 11.5px sans-serif;
+  font-family: 'Spectral', sans-serif;
+  letter-spacing: -1px;
+}
+
+.link {
+  fill: none;
+  stroke: #e5e5e5;
+  stroke-width: 2px;
+}
+
+.tooltip {
+  background: #D4D4D4;
+  border: 0;
+  border-radius: 4px;
+  font-family: 'Spectral', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  height: auto;
+  letter-spacing: -1px;
+  padding: 3px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.tooltipCircle {
+  text-align: center;
+  width: 250px;
+}
+
+/* Contact Me */
+#contactMe {
+  background-color: white;
+  height: 200px;
+  padding: 60px 12%;
+  text-align: center;
+}
+
+#contactMe a {
+  padding: 26px;
+  font-size: 1.4rem;
+}
+
+.tableauLink {
+  position: relative;
+  bottom: 3px;
+}
+
+.tableauIcon {
+  /* likely should keep this the same color as the 'a' color above */
+  fill: #2C3D6D;
+}
