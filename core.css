@@ -1,0 +1,102 @@
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Pompiere', Tahoma, sans-serif;
+  font-weight: bold;
+  color: #222222;
+}
+
+p {
+  font-family: 'Raleway', sans-serif;
+  color: #222222;
+  font-size: 1rem;
+}
+
+a {
+  /* likely should keep this the same color as the 'footerLink' color below */
+  color: #2C3D6D;
+}
+
+a:hover {
+  color: #5B87FF;
+}
+
+
+
+
+/*--------------------------------------------------------------
+# Sections General
+--------------------------------------------------------------*/
+section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.section-title {
+  padding-bottom: 30px;
+}
+
+
+
+
+/*--------------------------------------------------------------
+# Navigation bar
+--------------------------------------------------------------*/
+
+.ml-auto, .mx-auto {
+    margin-left: auto!important;
+}
+
+.navbar {
+  padding: 0 0 4.5rem;
+}
+
+.navbar-brand {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.9rem;
+  padding: 0 12px;
+}
+
+.navbar-light .navbar-brand {
+    color: rgba(0,0,0,.5);
+}
+
+.nav-item {
+  padding: 0 8px;
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  font-family: "Raleway", sans-serif;
+}
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# Contact Me footer
+--------------------------------------------------------------*/
+#contactMe {
+  background-color: white;
+  height: 200px;
+  padding: 60px 12%;
+  text-align: center;
+}
+
+#contactMe a {
+  padding: 26px;
+  font-size: 1.4rem;
+}
+
+.tableauLink {
+  position: relative;
+  bottom: 3px;
+}
+
+.footerLink {
+  fill: #2C3D6D;
+}
+
+.footerLink:hover, .tableauLink svg:hover {
+  color: #5B87FF;
+}
