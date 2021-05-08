@@ -1,7 +1,6 @@
 body {
   color: #f5f5f5;
   background-color: #1d1d1d;
-  /* background-color: #ffffff; */
   font-family: 'Raleway', sans-serif;
   font-weight: 200;
   font-size: 1rem;
@@ -218,7 +217,7 @@ a:hover {
   font-size: 1.4rem;
 }
 
-.footerLink svg:hover {
+.tableauLink svg:hover {
   fill: #EEB547;
 }
 

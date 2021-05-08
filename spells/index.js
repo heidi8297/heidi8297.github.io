@@ -1,28 +1,4 @@
 
-// change the fill colors of the wand images (surely there must be a better way
-//   to accomplish this)
-// window.onload=function() {   // wait for the page to load before applying styles
-// 	$("#wand14")[0].contentDocument.getElementById("wand14original")
-// 		.setAttribute("fill", "#459451");
-//	$("#wand02")[0].contentDocument.getElementById("wand02original")
-//		.setAttribute("fill", "#04898A");
-// 	$("#wand03")[0].contentDocument.getElementById("wand03original")
-// 		.setAttribute("fill", "#0874B0");
-// 	$("#wand04")[0].contentDocument.getElementById("wand04original")
-// 		.setAttribute("fill", "#4551B5");
-// 	$("#wand05")[0].contentDocument.getElementById("wand05original")
-// 		.setAttribute("fill", "#574AAE");
-// 	$("#wand08")[0].contentDocument.getElementById("wand08original")
-// 		.setAttribute("fill", "#6A49AE");
-// 	$("#wand09")[0].contentDocument.getElementById("wand09original")
-// 		.setAttribute("fill", "#7940A6");
-// 	$("#wand12")[0].contentDocument.getElementById("wand12original")
-// 		.setAttribute("fill", "#843294");
-// 	$("#wand13")[0].contentDocument.getElementById("wand13original")
-// 		.setAttribute("fill", "#B50E59");
-// 	$("#wand06")[0].contentDocument.getElementById("wand06original")
-// 		.setAttribute("fill", "#B31140");
-// };
 
 const spellsFullList = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
 	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"];
@@ -87,21 +63,12 @@ $(window).resize(function() {
 		if ($(this).width() <= 752) {    // likely a phone
 			$(".spacer").css("height","0px");
 			$(".textBlock").css("padding","0 10%");
-			// var tooltipOffsetSpellX = 150;
-			// var tooltipOffsetY = 28;
-			// var tooltipOffsetScatter = -125;
 		} else if ($(this).width() <= 976) {	// likely a tablet
 			$(".spacer").css("height","72px");
 			$(".textBlock").css("padding","0 10%");
-			// var tooltipOffsetSpellX = 0;
-			// var tooltipOffsetY = -28;
-			// var tooltipOffsetScatter = 0;
 		} else {														// likely a desktop
 			$(".spacer").css("height","72px");
 			$(".textBlock").css("padding","0 20%");
-			// var tooltipOffsetSpellX = 0;
-			// var tooltipOffsetY = -28;
-			// var tooltipOffsetScatter = 0;
 		};
 });
 
