@@ -64,7 +64,6 @@ function responsivefy(thisSvg,maxWidth=4000) {
     const w = Math.min(maxWidth,parseInt(container.style('width')));
     thisSvg.attr('width', w);
     thisSvg.attr('height', Math.round(w / aspect));
-    console.log("new w:",w,"new h:",Math.round(w / aspect));
   }
 }
 
@@ -189,7 +188,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   let teamLeaders = [];
   let role1Titles = {};
   let role2Titles = {};
-  root.each(function(d,i) {
+  root.each(function(d) {
     const thisTitle = d.data.data.title.replace(".","");
     const empIsFTE = (d.data.data.display_name.includes("(ETW") ? false : true)
     if (thisTitle.includes(rolename1) || thisTitle.includes(rolename2)) {
@@ -221,10 +220,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       console.log(d.data.data.display_name,"-",thisTitle);
       let lastTeamCount = 0;
       let leaderFound = false;
-      for (var i = 0; i < leaderCount; i++) {
+      for (var iLead = 0; iLead < leaderCount; iLead++) {
         if (leaderFound) { return }
-        teamCount = leaders[i].descendants().length;
-        console.log(leaders[i].data.data.display_name,"teamCount:",teamCount);
+        teamCount = leaders[iLead].descendants().length;
+        console.log(leaders[iLead].data.data.display_name,"teamCount:",teamCount);
         if (teamCount > 35) {  // once we get a team size larger than 35, it's time to compare
           let identifiedLeader;
           let identifiedTeamCount;
@@ -232,13 +231,13 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           const teamProx = Math.abs(teamCount/35 - 35/teamCount);
 
           if (teamProx < lastTeamProx) {
-            if (!teamLeaders.includes(leaders[i]) && !teamLeaders.includes(leaders[i].parent)){
-              identifiedLeader = leaders[i];
+            if (!teamLeaders.includes(leaders[iLead]) && !teamLeaders.includes(leaders[iLead].parent)){
+              identifiedLeader = leaders[iLead];
               identifiedTeamCount = teamCount;
             }
           } else {
-            if (!teamLeaders.includes(leaders[i-1]) && !teamLeaders.includes(leaders[i-1].parent)){
-              identifiedLeader = leaders[i-1];
+            if (!teamLeaders.includes(leaders[iLead-1]) && !teamLeaders.includes(leaders[iLead-1].parent)){
+              identifiedLeader = leaders[iLead-1];
               identifiedTeamCount = lastTeamCount;
             }
           }
@@ -318,8 +317,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         .attr("id",d=>"teamGraphs-"+d.data.data.user_ntid);
 
   // Add content to the individual team cards
-  for (var i = 0; i < teamLeaders.length; i++) {
-    const attributes = teamLeaders[i].data.data;
+  for (var iLead = 0; iLead < teamLeaders.length; iLead++) {
+    const attributes = teamLeaders[iLead].data.data;
     const roleCountTotal = attributes.role1Count + attributes.role2Count;
     console.log(attributes.display_name,"(",roleCountTotal,")");
     const thisTeamCard = d3.select("."+attributes.user_ntid);
