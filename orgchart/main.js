@@ -12,6 +12,7 @@ var treeFile = "DMOrgChart.json";
 var initialOffsetX = 120,
   initialOffsetY = 0;
 
+// change the things that are specific to the dummy org chart data
 if (treeFile === "DMOrgChart.json") {
   initialOffsetX = 90;
   initialOffsetY = 45;
@@ -21,6 +22,13 @@ if (treeFile === "DMOrgChart.json") {
   inputRole2.value = "COUNSEL";
 }
 
+function range(start, end) {
+    var ans = [];
+    for (let i = start; i <= end; i++) {
+        ans.push(i);
+    }
+    return ans;
+}
 
 // this function makes our svg responsive to the size of the container/screen!
 // provided by Ben Clinkinbeard and Brendan Sudol
@@ -86,7 +94,7 @@ var margin = {
   width = 1060 - margin.left - margin.right,
   height = 600 - margin.top - margin.bottom;
 
-
+// initiate the zoom
 var zoom = d3.zoom().on("zoom", function(event) {
   svg.attr("transform", event.transform)
 });
@@ -141,12 +149,12 @@ function colorCircle(dataArray) {
 
 // define the radius of the "child" circles that show up around parent nodes
 function childCircleRadius(childCount) {
-  if (childCount < 10) {
+  if (childCount < 9) {
     return 2.2
   } else if (childCount < 20) {
     return 1.6
   } else {
-    return 1.2
+    return 1.4
   }
 }
 
@@ -177,17 +185,39 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // --------------------------------------------------------------------------------------
   // BEFORE collapsing the nodes, run some calculations to help identify relevant teams
   // --------------------------------------------------------------------------------------
-  const alreadyCapturedEmps = [];
-  const teamLeaders = [];
+  let teamLeaders = [];
+  let role1Titles = {};
+  let role2Titles = {};
   root.each(function(d,i) {
-    if (alreadyCapturedEmps.includes(d)) {
-      return
-    }
-    thisTitle = d.data.data.title;
-    if (thisTitle.includes(rolename1)) {
-      console.log(d.data.data.display_name,"-",thisTitle);
+    const thisTitle = d.data.data.title.replace(".","");
+    const empIsFTE = (d.data.data.display_name.includes("(ETW") ? false : true)
+    if (thisTitle.includes(rolename1) || thisTitle.includes(rolename2)) {
+
+      // record titles of FTEs
+      if (empIsFTE && thisTitle.includes(rolename1)) {
+        if (thisTitle in role1Titles) {
+          role1Titles[thisTitle]++;
+        } else {
+          role1Titles[thisTitle] = 1;
+        }
+      }
+      if (empIsFTE && thisTitle.includes(rolename2)) {
+        if (thisTitle in role2Titles) {
+          role2Titles[thisTitle]++;
+        } else {
+          role2Titles[thisTitle] = 1;
+        }
+      }
+
       const leaders = d.ancestors();
-      const leaderCount = Math.min(leaders.length,5);
+      const leaderCount = leaders.length;
+      for (var k = 0; k < leaderCount; k++) {
+        if (teamLeaders.includes(leaders[k])) {
+          return  // if we already captured one of their leaders, skip to the next employee
+        }
+      }
+
+      console.log(d.data.data.display_name,"-",thisTitle);
       let lastTeamCount = 0;
       let leaderFound = false;
       for (var i = 0; i < leaderCount; i++) {
@@ -240,7 +270,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
             }
             identifiedLeader.data.data.role1Count = role1Count;
-            identifiedLeader.data.data.role2Count = role1Count;
+            identifiedLeader.data.data.role2Count = role2Count;
             identifiedLeader.data.data.fteCount = fteCount;
             identifiedLeader.data.data.vpCount = vpCount;
             identifiedLeader.data.data.srdrCount = srdrCount;
@@ -253,17 +283,68 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           lastTeamCount = teamCount;
         }
       }
-
-      alreadyCapturedEmps.push(d);
     }
     // if (i%1000 === 0) {console.log(i)}
   });
   console.log("teamLeaders:");
   console.log(teamLeaders);
-  console.log(alreadyCapturedEmps);
+  console.log(role1Titles);
+  console.log(role2Titles);
   var endTime = new Date();
   console.log(endTime-startTime,"elapsed milliseconds");
 
+  teamLeaders.sort(function(a, b){
+    return b.data.data.role1Count + b.data.data.role2Count
+      - (a.data.data.role1Count + a.data.data.role2Count)
+  });
+
+  // GET RID OF ANY TEAM LEADERS WITH TOO FEW ROLES OF INTEREST
+  teamLeaders = teamLeaders.filter(leader =>
+    (leader.data.data.role1Count + leader.data.data.role2Count) > 2
+  );
+
+  // initiate the individual team cards
+  d3.select(".teamCards .row").selectAll("div")
+    .data(teamLeaders)
+    .join("div")
+      .attr("class","col-12 col-md-6 col-xl-4")
+      .append("div")
+        .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.data.user_ntid);
+
+  // Add content to the individual team cards
+  for (var i = 0; i < teamLeaders.length; i++) {
+    const attributes = teamLeaders[i].data.data;
+    const roleCountTotal = attributes.role1Count + attributes.role2Count;
+    console.log(attributes.display_name,"(",roleCountTotal,")");
+    const thisTeamCard = d3.select("."+attributes.user_ntid);
+
+    thisTeamCard.append("h5")
+      .text(attributes.display_name);
+
+    thisTeamCard.append("svg")
+      .attr("width", 200)
+      .attr("height", 100)
+      .attr("class", "teamGraphs "+attributes.user_ntid )
+      .call(responsivefy);
+
+    thisTeamCard.select("svg").selectAll("circle .role1")
+      .data(range(1,attributes.role1Count))
+      .join("circle")
+        .attr("cx", d => d*13)
+        .attr("cy", 32)
+        .style("fill","#4C70D6")
+        .attr("r", 5)
+        .attr("class","role1");
+
+    thisTeamCard.select("svg").selectAll("circle .role2")
+      .data(range(1,attributes.role2Count))
+      .join("circle")
+        .attr("cx", d => d*13)
+        .attr("cy", 32 + (attributes.role1Count>0 ? 20 : 0))
+        .style("fill","#FDA943")
+        .attr("r", 5)
+        .attr("class","role2");
+  }
 
 
 
@@ -412,6 +493,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           }
           getCounts(d.data);
           if (counts["fte"]/counts["children"] > 0.75) {
+            return "normal" ///////////////////////////////////// turned this feature off for now
             return "bold"
           }
         }
