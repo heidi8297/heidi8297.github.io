@@ -35,13 +35,14 @@ a:hover {
 
 .main {
   margin: 2% 10% 7% 10%;
-  padding: 0% 2% 10px 2%;
+  padding: 1px 2% 10px 2%;
 }
 
 .orgChart {
-  border-style: solid;
+  /* border-style: solid;
   border-width: 2px;
-  border-color: #e5e5e5;
+  border-color: #e5e5e5; */
+  box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
 
 
@@ -107,9 +108,10 @@ a:hover {
 /* Team cards */
 .block {
   height: 100px;
-  background: #EEE;
+  background: white;
   margin-bottom: 30px;
   padding: 5px;
+  box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
 
 .teamGraphs {

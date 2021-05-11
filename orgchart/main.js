@@ -31,8 +31,8 @@ function range(start, end) {
 }
 
 // this function makes our svg responsive to the size of the container/screen!
-// provided by Ben Clinkinbeard and Brendan Sudol
-function responsivefy(thisSvg) {
+// initial version provided by Ben Clinkinbeard and Brendan Sudol
+function responsivefy(thisSvg,maxWidth=4000) {
   // container will be the DOM element that the svg is appended to
   // we then measure the container and find its aspect ratio
   const container = d3.select(thisSvg.node().parentNode),
@@ -61,9 +61,10 @@ function responsivefy(thisSvg) {
   // gets the width of the container and resizes the svg to fill it
   // while maintaining a consistent aspect ratio
   function resize() {
-    const w = parseInt(container.style('width'));
+    const w = Math.min(maxWidth,parseInt(container.style('width')));
     thisSvg.attr('width', w);
     thisSvg.attr('height', Math.round(w / aspect));
+    console.log("new w:",w,"new h:",Math.round(w / aspect));
   }
 }
 
@@ -248,6 +249,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             identifiedLeader.data.data.teamSize = identifiedTeamCount;
 
 
+
             // calculate how many role1 and role2 titles are under the identified leader
             let role1Count = 0;
             let role2Count = 0;
@@ -303,13 +305,17 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     (leader.data.data.role1Count + leader.data.data.role2Count) > 2
   );
 
+  // clear contents from team cards section
+  d3.select(".teamCards .row").html("");
+
   // initiate the individual team cards
-  d3.select(".teamCards .row").selectAll("div")
+  d3.select(".teamCards .row").selectAll("div.teamCard")
     .data(teamLeaders)
     .join("div")
-      .attr("class","col-12 col-md-6 col-xl-4")
+      .attr("class","col-12 col-md-6 col-xl-4 teamCard")
       .append("div")
-        .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.data.user_ntid);
+        .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.data.user_ntid)
+        .attr("id",d=>"teamGraphs-"+d.data.data.user_ntid);
 
   // Add content to the individual team cards
   for (var i = 0; i < teamLeaders.length; i++) {
@@ -325,7 +331,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .attr("width", 200)
       .attr("height", 100)
       .attr("class", "teamGraphs "+attributes.user_ntid )
-      .call(responsivefy);
+      .call(responsivefy,maxWidth=400);
 
     thisTeamCard.select("svg").selectAll("circle .role1")
       .data(range(1,attributes.role1Count))
