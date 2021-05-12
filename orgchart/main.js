@@ -114,7 +114,7 @@ var svg = d3.select(".org").append("svg")
   .attr("transform", "translate(" +
     margin.left + "," + margin.top + ")");
 
-var i = 0,
+var iNode = 0,
   duration = 750,
   root;
 
@@ -285,10 +285,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
               if (!thisName.includes(etwText)) {fteCount++};
 
             }
-            // role1s.sort(emp => emp.data.data.display_name.includes(etwText))  THIS DOESN'T WORK YET
-            identifiedLeader.data.data.role1s = role1s.sort(emp => emp.data.data.display_name.includes(etwText));
+            identifiedLeader.data.data.role1s = role1s.sort(emp => (emp.data.data.display_name.includes(etwText) ? 1 : -1));
             identifiedLeader.data.data.role1Count = role1Count;
             identifiedLeader.data.data.role1FteCount = role1FteCount;
+            identifiedLeader.data.data.role2s = role2s.sort(emp => (emp.data.data.display_name.includes(etwText) ? 1 : -1));
             identifiedLeader.data.data.role2Count = role2Count;
             identifiedLeader.data.data.role2FteCount = role2FteCount;
             identifiedLeader.data.data.fteCount = fteCount;
@@ -341,33 +341,34 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     const roleCountTotal = attributes.role1Count + attributes.role2Count;
     console.log(attributes.display_name,"(",roleCountTotal,")");
     const thisTeamCard = d3.select("."+attributes.user_ntid);
+    const rowCount = 25;
 
     thisTeamCard.append("h5")
       .text(attributes.display_name);
 
     thisTeamCard.append("svg")
       .attr("width", 200)
-      .attr("height", 100)
+      .attr("height", 80)
       .attr("class", "teamGraphs "+attributes.user_ntid )
       .call(responsivefy,maxWidth=400);
 
-    thisTeamCard.select("svg").selectAll("circle .role1")
-      .data(range(1,attributes.role1Count))
+    thisTeamCard.select("svg").selectAll("circle .role1.emp")
+      .data(attributes.role1s)
       .join("circle")
-        .attr("cx", d => d*13)
-        .attr("cy", 32)
-        .style("fill",d=> ( d <= attributes.role1FteCount ? "#4C70D6" :"#B4C2F1" ))
-        .attr("r", 5)
-        .attr("class","role1");
+        .attr("cx", (d,iRole) => 8+(iRole*7.5)%(rowCount*7.5))
+        .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
+        .style("fill",d=> ( d.data.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
+        .attr("r", 3)
+        .attr("class","role1 emp");
 
-    thisTeamCard.select("svg").selectAll("circle .role2")
-      .data(range(1,attributes.role2Count))
+    thisTeamCard.select("svg").selectAll("circle .role2.emp")
+      .data(attributes.role2s)
       .join("circle")
-        .attr("cx", d => d*13)
-        .attr("cy", 32 + (attributes.role1Count>0 ? 20 : 0))
-        .style("fill",d=> ( d <= attributes.role2FteCount ? "#FDA943" :"#FFDBAE" ))
-        .attr("r", 5)
-        .attr("class","role2");
+        .attr("cx", (d,iRole) => 8+(iRole*7.5)%(rowCount*7.5))
+        .attr("cy", (d,iRole) => 30 + (attributes.role1Count>0 ? 13+9*Math.floor(attributes.role1Count/rowCount) : 0) )
+        .style("fill",d=> ( d.data.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
+        .attr("r", 3)
+        .attr("class","role2 emp");
   }
 
 
@@ -427,7 +428,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
     // update the nodes...
     var node = svg.selectAll('g.node')
-      .data(nodes, d => d.id || (d.id = ++i));
+      .data(nodes, d => d.id || (d.id = ++iNode));
 
     // enter any new nodes at the parent's previous position
     var nodeEnter = node.enter().append('g')

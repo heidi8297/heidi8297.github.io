@@ -57,9 +57,11 @@ a:hover {
   font-size: 0.83rem;
 }
 
-.button {
+.updateButton {
   font-weight: normal;
   font-size: 0.83rem;
+  position: relative;
+  bottom: 3px;
 }
 
 .inputText {
