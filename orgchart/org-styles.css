@@ -1,5 +1,9 @@
+body {
+  font-family: 'Quattrocento', serif;
+}
+
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Spectral', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-weight: bold;
 }
 
@@ -39,29 +43,36 @@ a:hover {
 }
 
 .orgChart {
-  /* border-style: solid;
-  border-width: 2px;
-  border-color: #e5e5e5; */
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
 
 
 /* Format the inputs/html form */
 .roleForm {
-  font-family: 'Spectral', sans-serif;
   font-weight: normal;
   font-size: 0.83rem;
 }
 
 .button {
-  font-family: 'Spectral', sans-serif;
   font-weight: normal;
   font-size: 0.83rem;
 }
 
 .inputText {
+  font-family: 'Oswald', serif;
   text-align: center;
   font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.inputRole1 {
+  color:#4C70D6;
+}
+
+.inputRole2 {
+  color:#FDA943;
 }
 
 
@@ -76,8 +87,7 @@ a:hover {
 
 .node text {
   font: 11.5px sans-serif;
-  font-family: 'Spectral', sans-serif;
-  letter-spacing: -1px;
+  font-family: 'Quattrocento', serif;
 }
 
 .link {
@@ -90,7 +100,6 @@ a:hover {
   background: #D4D4D4;
   border: 0;
   border-radius: 4px;
-  font-family: 'Spectral', sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
   height: auto;
@@ -112,6 +121,10 @@ a:hover {
   margin-bottom: 30px;
   padding: 5px;
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
+}
+
+.block h5 {
+  font-family: 'Quattrocento', serif;
 }
 
 .teamGraphs {

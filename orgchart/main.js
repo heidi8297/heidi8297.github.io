@@ -69,12 +69,12 @@ function responsivefy(thisSvg,maxWidth=4000) {
 
 
 
-var rolename1 = document.getElementsByName("rolename1")[0].value;
-var rolename2 = document.getElementsByName("rolename2")[0].value;
+var rolename1 = document.getElementsByName("rolename1")[0].value.toUpperCase();
+var rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
 
 function formChanged() {
-  rolename1 = document.getElementsByName("rolename1")[0].value;
-  rolename2 = document.getElementsByName("rolename2")[0].value;
+  rolename1 = document.getElementsByName("rolename1")[0].value.toUpperCase();
+  rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
   renderTree();
 }
 
