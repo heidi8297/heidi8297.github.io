@@ -10,7 +10,8 @@ var startTime = new Date();
 var treeFile = "DMOrgChart.json";
 
 var initialOffsetX = 120,
-  initialOffsetY = 0;
+  initialOffsetY = 0,
+  etwText = "(ETW";
 
 // change the things that are specific to the dummy org chart data
 if (treeFile === "DMOrgChart.json") {
@@ -20,6 +21,8 @@ if (treeFile === "DMOrgChart.json") {
   inputRole1.value = "ACTUARY";
   inputRole2 = document.querySelector(".inputRole2");
   inputRole2.value = "COUNSEL";
+  etwText = "ER";
+
 }
 
 function range(start, end) {
@@ -127,19 +130,19 @@ var treemap = d3.tree().size([height, width]);
 // define the color of each individual node based on role and status (FTE/ETW)
 function colorCircle(dataArray) {
   if (dataArray.title.includes(rolename1)) {
-    if (dataArray.display_name.includes("(ETW")) {
+    if (dataArray.display_name.includes(etwText)) {
       return "#B4C2F1"  // #B4C2F1   #AFE3D5
     } else {
       return "#4C70D6"  // #4C70D6   #70D0B9
     }
   } else if (dataArray.title.includes(rolename2)) {
-    if (dataArray.display_name.includes("(ETW")) {
+    if (dataArray.display_name.includes(etwText)) {
       return "#FFDBAE"  // #FFDBAE   #FFBEAC
     } else {
       return "#FDA943"  // #FDA943   #FF9473
     }
   } else {
-    if (dataArray.display_name.includes("(ETW")) {
+    if (dataArray.display_name.includes(etwText)) {
       return "#CCC"
     } else {
       return "#999"
@@ -190,7 +193,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   let role2Titles = {};
   root.each(function(d) {
     const thisTitle = d.data.data.title.replace(".","");
-    const empIsFTE = (d.data.data.display_name.includes("(ETW") ? false : true)
+    const empIsFTE = (d.data.data.display_name.includes(etwText) ? false : true)
     if (thisTitle.includes(rolename1) || thisTitle.includes(rolename2)) {
 
       // record titles of FTEs
@@ -250,8 +253,12 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
             // calculate how many role1 and role2 titles are under the identified leader
+            let role1s = [];
+            let role2s = [];   // THIS STILL NEEDS TO BE APPENDED BELOW
             let role1Count = 0;
             let role2Count = 0;
+            let role1FteCount = 0;
+            let role2FteCount = 0;
             let fteCount = 0;
             let vpCount = 0;
             let srdrCount = 0;
@@ -260,18 +267,30 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
               const thisEmp = identifiedLeader.descendants()[j];
               const thisTitle = thisEmp.data.data.title;
               const thisName = thisEmp.data.data.display_name;
-              if (thisTitle.includes(rolename1)) {role1Count++};
-              if (thisTitle.includes(rolename2)) {role2Count++};
+              if (thisTitle.includes(rolename1)) {
+                role1Count++;
+                role1s.push(thisEmp);
+                if (!thisName.includes(etwText)) {role1FteCount++}
+              };
+              if (thisTitle.includes(rolename2)) {
+                role2Count++;
+                role2s.push(thisEmp);
+                if (!thisName.includes(etwText)) {role2FteCount++}
+              };
               if (thisTitle.includes("VP ")) {vpCount++};
               if (thisTitle.includes("SENIOR DIRECTOR")) {srdrCount++};
               if (thisTitle.includes("SR DIR")) {srdrCount++};
               if (thisTitle.includes("PRINCIPAL")) {ebandCount++};
               if (thisTitle.includes("DIR")) {ebandCount++};
-              if (!thisName.includes("(ETW")) {fteCount++};
+              if (!thisName.includes(etwText)) {fteCount++};
 
             }
+            // role1s.sort(emp => emp.data.data.display_name.includes(etwText))  THIS DOESN'T WORK YET
+            identifiedLeader.data.data.role1s = role1s.sort(emp => emp.data.data.display_name.includes(etwText));
             identifiedLeader.data.data.role1Count = role1Count;
+            identifiedLeader.data.data.role1FteCount = role1FteCount;
             identifiedLeader.data.data.role2Count = role2Count;
+            identifiedLeader.data.data.role2FteCount = role2FteCount;
             identifiedLeader.data.data.fteCount = fteCount;
             identifiedLeader.data.data.vpCount = vpCount;
             identifiedLeader.data.data.srdrCount = srdrCount;
@@ -302,7 +321,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // GET RID OF ANY TEAM LEADERS WITH TOO FEW ROLES OF INTEREST
   teamLeaders = teamLeaders.filter(leader =>
     (leader.data.data.role1Count + leader.data.data.role2Count) > 2
-  );
+  ).slice(0,30);
 
   // clear contents from team cards section
   d3.select(".teamCards .row").html("");
@@ -337,7 +356,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", d => d*13)
         .attr("cy", 32)
-        .style("fill","#4C70D6")
+        .style("fill",d=> ( d <= attributes.role1FteCount ? "#4C70D6" :"#B4C2F1" ))
         .attr("r", 5)
         .attr("class","role1");
 
@@ -346,7 +365,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", d => d*13)
         .attr("cy", 32 + (attributes.role1Count>0 ? 20 : 0))
-        .style("fill","#FDA943")
+        .style("fill",d=> ( d <= attributes.role2FteCount ? "#FDA943" :"#FFDBAE" ))
         .attr("r", 5)
         .attr("class","role2");
   }
@@ -490,7 +509,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             if (Array.isArray(parent.children)) {
               counts["children"] += parent.children.length;
               parent.children.forEach(function(child) {
-                counts["fte"] += (!child.data.display_name.includes("(ETW") ? 1 : 0);
+                counts["fte"] += (!child.data.display_name.includes(etwText) ? 1 : 0);
                 if (Array.isArray(child.children)) {  getCounts(child)  }
               });
             }

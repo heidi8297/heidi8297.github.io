@@ -1,4 +1,4 @@
-body {
+body, p {
   font-family: 'Quattrocento', serif;
 }
 
@@ -22,6 +22,10 @@ h5 {
   font-size: 0.83rem;
   font-weight: normal;
   margin-bottom: 0rem;
+}
+
+p {
+  font-size: 0.83rem;
 }
 
 a {
@@ -116,7 +120,7 @@ a:hover {
 
 /* Team cards */
 .block {
-  height: 100px;
+  /* height: 100px; */
   background: white;
   margin-bottom: 30px;
   padding: 5px;
