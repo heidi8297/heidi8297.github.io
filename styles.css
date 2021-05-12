@@ -257,10 +257,18 @@ and make sure the svg is still positioned well */
 .portfolio .portfolio-wrap .portfolio-info p {
   color: #45505b;
   font-size: 14px;
-  text-transform: uppercase;
-  padding: 0;
+  padding: 5px;
   margin: 0;
 }
+
+.portfolio .portfolio-wrap .portfolio-info p.tech {
+  text-transform: uppercase;
+}
+
+.portfolio .portfolio-wrap .portfolio-info p.desc {
+  font-family: 'Raleway', sans-serif;
+}
+
 
 .portfolio .portfolio-wrap .portfolio-links {
   text-align: center;

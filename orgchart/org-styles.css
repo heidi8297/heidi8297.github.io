@@ -1,4 +1,4 @@
-body, p {
+body, p, .tooltip {
   font-family: 'Quattrocento', serif;
 }
 
@@ -106,19 +106,20 @@ a:hover {
   background: #D4D4D4;
   border: 0;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 400;
   height: auto;
-  letter-spacing: -1px;
+  letter-spacing: 0px;
   padding: 3px;
   pointer-events: none;
   position: absolute;
 }
 
-.tooltipCircle {
+.tooltipTree, .tooltipEmp {
   text-align: center;
   width: 250px;
 }
+
 
 /* Team cards */
 .block {

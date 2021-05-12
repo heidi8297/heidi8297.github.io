@@ -78,6 +78,8 @@ var rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
 function formChanged() {
   rolename1 = document.getElementsByName("rolename1")[0].value.toUpperCase();
   rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
+  rolename1 = (rolename1 === "" ? "sdjkadjskladsds" : rolename1);
+  rolename2 = (rolename2 === "" ? "sdjkadjskladsds" : rolename2);
   renderTree();
 }
 
@@ -118,10 +120,15 @@ var iNode = 0,
   duration = 750,
   root;
 
-// Define the div for the tooltip
-const divCircle = d3.select("body").append("div")
-  .attr("class", "tooltip tooltipCircle")
+// Define the divs for the tooltips
+const tooltipTree = d3.select("body").append("div")
+  .attr("class", "tooltip tooltipTree")
   .style("opacity", 0);
+
+const tooltipEmp = d3.select("body").append("div")
+  .attr("class", "tooltip tooltipEmp")
+  .style("opacity", 0);
+
 
 // declares a tree layout and assigns the size
 var treemap = d3.tree().size([height, width]);
@@ -191,6 +198,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   let teamLeaders = [];
   let role1Titles = {};
   let role2Titles = {};
+
   root.each(function(d) {
     const thisTitle = d.data.data.title.replace(".","");
     const empIsFTE = (d.data.data.display_name.includes(etwText) ? false : true)
@@ -359,16 +367,43 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
         .style("fill",d=> ( d.data.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
         .attr("r", 3)
-        .attr("class","role1 emp");
+        .attr("class","role1 emp")
+        .on("mouseover", function(event,d) {
+          tooltipEmp.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltipEmp.html(d.data.data.display_name+"<br>"+d.data.data.title)
+            .style("left", (event.pageX + 6) + "px")
+            .style("top", (event.pageY - 12) + "px");
+        })
+        .on("mouseout", function(d) {
+          tooltipEmp.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
 
     thisTeamCard.select("svg").selectAll("circle .role2.emp")
       .data(attributes.role2s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.5)%(rowCount*7.5))
-        .attr("cy", (d,iRole) => 30 + (attributes.role1Count>0 ? 13+9*Math.floor(attributes.role1Count/rowCount) : 0) )
+        .attr("cy", (d,iRole) => 30 + (attributes.role1Count>0 ? 13+9*Math.floor(iRole/rowCount) : 0) )
         .style("fill",d=> ( d.data.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
         .attr("r", 3)
-        .attr("class","role2 emp");
+        .attr("class","role2 emp")
+        .on("mouseover", function(event,d) {
+          tooltipEmp.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltipEmp.html(d.data.data.display_name+"<br>"+d.data.data.title)
+            .style("left", (event.pageX + 6) + "px")
+            .style("top", (event.pageY - 12) + "px");
+        })
+        .on("mouseout", function(d) {
+          tooltipEmp.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
   }
 
 
@@ -548,15 +583,15 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
       // tooltip
       .on("mouseover", function(event,d) {
-        divCircle.transition()
+        tooltipTree.transition()
           .duration(200)
           .style("opacity", .9);
-        divCircle.html(d.data.data.title)
+        tooltipTree.html(d.data.data.title)
           .style("left", (event.pageX + 6) + "px")
           .style("top", (event.pageY - 12) + "px");
       })
       .on("mouseout", function(d) {
-        divCircle.transition()
+        tooltipTree.transition()
          .duration(500)
          .style("opacity", 0);
       });
