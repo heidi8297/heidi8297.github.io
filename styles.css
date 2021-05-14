@@ -193,8 +193,9 @@ and make sure the svg is still positioned well */
   cursor: pointer;
   display: inline-block;
   padding: 10px 15px;
+  font-family: 'Raleway', sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
   color: #272829;

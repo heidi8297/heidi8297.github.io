@@ -15,7 +15,7 @@ a {
   color: #2C3D6D;
 }
 
-a:hover {
+a:hover, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-brand:hover {
   color: #5B87FF;
 }
 
