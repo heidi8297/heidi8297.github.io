@@ -46,6 +46,10 @@ a:hover {
   padding: 1px 2% 10px 2%;
 }
 
+.orgForce {
+  margin: 0%;
+}
+
 .orgChart {
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
