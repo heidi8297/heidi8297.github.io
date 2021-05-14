@@ -290,6 +290,38 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   root.each(function(d) {
     // this line makes it so that the tree re-renders appropriately when entering new search terms
     d.id = iNode ++;
+
+    // add some auxiliary data to each node
+    d.data.teamSize = d.descendants().length;  // includes parent/leader
+    d.data.fteCount = 0;                       // includes parent/leader
+    d.data.role1Count = 0;                     // does NOT include parent/leader
+    d.data.role2Count = 0;                     // does NOT include parent/leader
+    d.data.role12Nodes = [];                   // does NOT include parent/leader
+    d.descendants().forEach(function(desc){
+      if (!desc.data.display_name.includes(etwText)) {d.data.fteCount++};
+      if (d === desc) {return} // the remaining counts shouldn't include the parent/leader
+      if (desc.data.title.includes(rolename1)) {d.data.role1Count++};
+      if (desc.data.title.includes(rolename2)) {d.data.role2Count++};
+      if (desc.data.title.includes(rolename1) || desc.data.title.includes(rolename2)) {
+        d.data.role12Nodes.push(desc);
+      };
+    });
+
+    // this sort function doesn't seem to work so I'm not using it yet
+    // d.data.role12Nodes.sort(function(emp) {
+    //   if (emp.data.title.includes(rolename1) && !emp.data.display_name.includes(etwText)){
+    //     console.log(emp.data.display_name,emp.data.title);
+    //     return 1
+    //   } else if (emp.data.title.includes(rolename1)) {
+    //     return 2
+    //   } else if (emp.data.title.includes(rolename2) && !emp.data.display_name.includes(etwText)) {
+    //     return 3
+    //   } else if (emp.data.title.includes(rolename2)) {
+    //     return 4
+    //   }
+    // });
+
+
     const thisTitle = d.data.title.replace(".","");
     const empIsFTE = (d.data.display_name.includes(etwText) ? false : true)
     if (thisTitle.includes(rolename1) || thisTitle.includes(rolename2)) {
@@ -316,7 +348,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         // if we already captured one of their leaders, skip to the next employee
         if (teamLeaders.includes(leaders[k])) { return }
       }
-      console.log(iNode,thisTitle);
 
       let lastTeamCount = 0;
       let leaderFound = false;
@@ -351,47 +382,27 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             // calculate how many role1 and role2 titles are under the identified leader
             let role1s = [];
             let role2s = [];
-            let role1Count = 0;
-            let role2Count = 0;
-            let role1FteCount = 0;
-            let role2FteCount = 0;
-            let fteCount = 0;
             let vpCount = 0;
             let srdrCount = 0;
             let ebandCount = 0;
             for (var j = 0; j < identifiedTeamCount; j++ ) {
               const thisEmp = identifiedLeader.descendants()[j];
               const thisTitle = thisEmp.data.title;
-              const thisName = thisEmp.data.display_name;
-              if (thisTitle.includes(rolename1)) {
-                role1Count++;
-                role1s.push(thisEmp);
-                if (!thisName.includes(etwText)) {role1FteCount++}
-              };
-              if (thisTitle.includes(rolename2)) {
-                role2Count++;
-                role2s.push(thisEmp);
-                if (!thisName.includes(etwText)) {role2FteCount++}
-              };
+              if (thisTitle.includes(rolename1)) { role1s.push(thisEmp) };
+              if (thisTitle.includes(rolename2)) { role2s.push(thisEmp) };
               if (thisTitle.includes("VP ")) {vpCount++};
               if (thisTitle.includes("SENIOR DIRECTOR")) {srdrCount++};
               if (thisTitle.includes("SR DIR")) {srdrCount++};
               if (thisTitle.includes("PRINCIPAL")) {ebandCount++};
               if (thisTitle.includes("DIR")) {ebandCount++};
-              if (!thisName.includes(etwText)) {fteCount++};
 
             }
             identifiedLeader.data.role1s = role1s.sort(emp => (emp.data.display_name.includes(etwText) ? 1 : -1));
-            identifiedLeader.data.role1Count = role1Count;
-            identifiedLeader.data.role1FteCount = role1FteCount;
             identifiedLeader.data.role2s = role2s.sort(emp => (emp.data.display_name.includes(etwText) ? 1 : -1));
-            identifiedLeader.data.role2Count = role2Count;
-            identifiedLeader.data.role2FteCount = role2FteCount;
-            identifiedLeader.data.fteCount = fteCount;
             identifiedLeader.data.vpCount = vpCount;
             identifiedLeader.data.srdrCount = srdrCount;
             identifiedLeader.data.ebandCount = ebandCount;
-            identifiedLeader.data.ftePercent = Math.round(1000*fteCount/identifiedTeamCount)/1000;
+            identifiedLeader.data.ftePercent = Math.round(1000*identifiedLeader.data.fteCount/identifiedTeamCount)/1000;
 
           };
 
@@ -576,54 +587,29 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     // add circles to each node that has children matching role1 or role2
     // there CERTAINLY is a better/cleaner way to do this, I just haven't found it yet
     nodeEnter.append("g")
-
-
       .attr('fill', function(d, i) {
         if (d._children || d.children) {
 
+          // create a list of colors for the child "easter egg" nodes
+          let myColorList = [];
+          d.data.role12Nodes.forEach(function(thisNode){
+            myColorList.push(colorCircle(thisNode.data))
+          });
+          myColorList.sort();
+          // this "shift" allows the circles to lay better when there are a lot of them (in most cases)
+          myColorList = shift(myColorList,1,Math.ceil(myColorList.length/12));
 
+          // populate one entry in indexData for each role1 and role2 identified
+          var indexData = Array.from({length: d.data.role1Count+d.data.role2Count}, (_, i) => i);  // [0,1,2,...]
 
-          var counts = { "children": 0, "role1": 0, "role2": 0, "role12Nodes":[], "role12Colors":[] };
-
-          function getCounts(parent) {
-            let allChildren = (parent.children ? parent.children : (parent._children ? parent._children : null ));
-            if (Array.isArray(allChildren) ) {
-              counts["children"] += allChildren.length;
-              allChildren.forEach(function(child) {
-                counts["role1"] += (child.data.title.includes(rolename1) ? 1 : 0);
-                counts["role2"] += (child.data.title.includes(rolename2) ? 1 : 0);
-                if (child.data.title.includes(rolename1)) {
-                  counts["role12Colors"].push(colorCircle(child.data))
-                }
-                if (child.data.title.includes(rolename2)) {
-                  counts["role12Colors"].push(colorCircle(child.data))
-                }
-                if (Array.isArray(child.children) || Array.isArray(child._children) ) {
-                  getCounts(child)
-                }
-              });
-            }
-            return counts;
-          }
-          getCounts(d);
-
-          // populate one entry in "role12Nodes" for each role1 and role2 identified
-          counts["role12Nodes"] = Array.from({length: counts["role1"]+counts["role2"]}, (_, i) => i);  // [0,1,2,...]
-
-
-          var dataCounts = counts;
-          var data = counts["role12Nodes"];
-          counts["role12Colors"].sort();
-          counts["role12Colors"] = shift(counts["role12Colors"],1,4);
           var childrenCircles = d3.select(this).selectAll(".childrenCircle")
-            .data(data)
+            .data(indexData)
             .join("g");
           childrenCircles.append("circle")
-            .style("fill", (d,i) => counts["role12Colors"][i])
-            .attr("cx", (d,i) => 8* Math.cos( 2*Math.PI * i  / counts["role12Nodes"].length ) )
-            .attr("cy", (d,i) => 8* Math.sin( 2*Math.PI * i  / counts["role12Nodes"].length ) )
-            .attr("r", childCircleRadius(counts["role12Nodes"].length));
-
+            .style("fill", (d,i) => myColorList[i])
+            .attr("cx", (d,i) => 8* Math.cos( 2*Math.PI * i  / indexData.length ) )
+            .attr("cy", (d,i) => 8* Math.sin( 2*Math.PI * i  / indexData.length ) )
+            .attr("r", childCircleRadius(indexData.length));
         }
         return "black";
       })
@@ -636,21 +622,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .text(d => d.data.display_name.substring(0,20))
       .style("font-weight",function(d) {
         if (treeFile === "NikeOrgChart.json"  && (d._children || d.children)) {
-          var counts = { "children": 0, "fte": 0 };
-
-          function getCounts(parent) {
-            if (Array.isArray(parent.children)) {
-              counts["children"] += parent.children.length;
-              parent.children.forEach(function(child) {
-                counts["fte"] += (!child.data.display_name.includes(etwText) ? 1 : 0);
-                if (Array.isArray(child.children)) {  getCounts(child)  }
-              });
-            }
-            return counts;
-          }
-          getCounts(d.data);
-          if (counts["fte"]/counts["children"] > 0.75) {
-            return "normal" ///////////////////////////////////// suppressing this feature for now
+          if (d.data.fteCount/d.data.teamSize > 0.75) {
+            return "normal" ////////////////////////// suppressing this feature for now
             return "bold"
           }
         }
