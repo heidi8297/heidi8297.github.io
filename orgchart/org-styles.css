@@ -45,7 +45,7 @@ a:hover {
 }
 
 .main {
-  margin: 2% 10% 7% 10%;
+  margin: 2.5% 10% 7% 10%;
   padding: 1px 2% 10px 2%;
 }
 
@@ -111,21 +111,17 @@ a:hover {
 }
 
 .tooltip {
-  background: #D4D4D4;
+  background: #E5E5E5;
   border: 0;
   border-radius: 4px;
   font-size: 0.9rem;
   font-weight: 400;
   height: auto;
   letter-spacing: 0px;
-  padding: 3px;
+  padding: 3px 6px;
   pointer-events: none;
   position: absolute;
-}
-
-.tooltipTree, .tooltipEmp {
-  text-align: center;
-  width: 250px;
+  text-align: left;
 }
 
 
@@ -145,13 +141,13 @@ a:hover {
 .block h5 {
   font-family: 'Quattrocento', serif;
   font-weight: bold;
-  margin: 4px 4px 1.5px 4px;
+  margin: 6px 6px 1.5px 6px;
   font-size: 0.9rem
 }
 
 h5.leaderTitle {
   font-weight: 400;
-  margin: 1.5px 4px;
+  margin: 1.5px 6px;
   font-size: 0.78rem;
   /* font-style: italic; */
 }
@@ -159,8 +155,8 @@ h5.leaderTitle {
 .teamGraphs {
   position: relative;
   right: 5px;
-  bottom: 20px;
-  margin-bottom: -20px;
+  bottom: 35px;
+  margin-bottom: -25px;
 }
 
 
@@ -190,7 +186,7 @@ h5.leaderTitle {
 
 /* Contact Me */
 #contactMe {
-  background-color: white;
+  background-color: #f8f8f8;
   height: 200px;
   padding: 60px 12%;
   text-align: center;

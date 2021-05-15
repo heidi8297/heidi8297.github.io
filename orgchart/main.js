@@ -19,9 +19,9 @@ if (treeFile === "DMOrgChart.json") {
   initialOffsetX = 90;
   initialOffsetY = 45;
   inputRole1 = document.querySelector(".inputRole1");
-  inputRole1.value = "ACTUARY";
+  inputRole1.value = "COMPLIANCE";
   inputRole2 = document.querySelector(".inputRole2");
-  inputRole2.value = "COUNSEL";
+  inputRole2.value = "RISK";
   etwText = "ER";
 }
 
@@ -61,7 +61,8 @@ function range(start, end) {
 }
 
 // Creating Pie generator
-var pie = d3.pie();
+var pie = d3.pie()
+  .sort(null);
 
 // Creating arc
 var arc = d3.arc()
@@ -346,10 +347,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
       let lastTeamCount = 0;
       let leaderFound = false;
-      for (var iLead = 0; iLead < leaderCount; iLead++) {
+      leaders.forEach(function(thisLeader, iLead) {
         if (leaderFound) { return }
-        teamCount = leaders[iLead].descendants().length;
-        console.log(leaders[iLead].data.display_name,"teamCount:",teamCount);
+        teamCount = thisLeader.descendants().length;
+        console.log(thisLeader.data.display_name,"teamCount:",teamCount);
         if (teamCount > 35) {  // once we get a team size larger than 35, it's time to compare
           let identifiedLeader;
           let identifiedTeamCount;
@@ -357,8 +358,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           const teamProx = Math.abs(teamCount/35 - 35/teamCount);
 
           if (teamProx < lastTeamProx) {
-            if (!teamLeaders.includes(leaders[iLead]) && !teamLeaders.includes(leaders[iLead].parent)){
-              identifiedLeader = leaders[iLead];
+            if (!teamLeaders.includes(thisLeader) && !teamLeaders.includes(thisLeader.parent)){
+              identifiedLeader = thisLeader;
               identifiedTeamCount = teamCount;
             }
           } else {
@@ -366,6 +367,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
               identifiedLeader = leaders[iLead-1];
               identifiedTeamCount = lastTeamCount;
             }
+          }
+
+          if (thisLeader.depth <= 1) {
+            identifiedLeader = leaders[iLead-1];
+            identifiedTeamCount = lastTeamCount;
           }
 
           leaderFound = true;
@@ -404,9 +410,12 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         } else {
           lastTeamCount = teamCount;
         }
-      }
-    }
-  });
+      })
+      // } // end of loop over teamLeaders
+
+
+    }  // end of looping over role 1 / role 2
+  }); // end of root.each
   console.log("teamLeaders:");
   console.log(teamLeaders);
   console.log(role1Titles);
@@ -464,7 +473,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .text("TEAM SIZE")
       .attr("class","teamSizeLabel")
       .attr("text-anchor", "middle")
-      .attr("transform", "translate(25,25)")
+      .attr("transform", "translate(175,5)")
       .append('svg:tspan')
       .text(thisLeader.data.teamSize)
       .attr("class","teamSize")
@@ -477,7 +486,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     var arcs = teamSvg.selectAll("arc")
       .data(pie(pieData))
       .join("g")
-      .attr("transform", "translate(25,66)");
+      .attr("transform", "translate(175,55)");
 
     arcs.append("path")
       .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
@@ -500,10 +509,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     thisTeamCard.select("svg").selectAll("circle .role1.emp")
       .data(thisLeader.data.role1s)
       .join("circle")
-        .attr("cx", (d,iRole) => 53+(iRole*7.4)%(rowCount*7.4))
+        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
-        .attr("r", 2.9)
+        .attr("r", 2.8)
         .attr("class","role1 emp")
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
@@ -523,10 +532,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     thisTeamCard.select("svg").selectAll("circle .role2.emp")
       .data(thisLeader.data.role2s)
       .join("circle")
-        .attr("cx", (d,iRole) => 53+(iRole*7.4)%(rowCount*7.4))
+        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
-        .attr("r", 2.9)
+        .attr("r", 2.8)
         .attr("class","role2 emp")
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
