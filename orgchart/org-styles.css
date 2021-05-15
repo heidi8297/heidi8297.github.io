@@ -1,10 +1,13 @@
 body, p, .tooltip {
   font-family: 'Quattrocento', serif;
+  color: #222222;
+  background-color: #f8f8f8;
 }
 
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Oswald', sans-serif;
   font-weight: bold;
+  color: #222222;
 }
 
 h1 {
@@ -52,6 +55,7 @@ a:hover {
 
 .orgChart {
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
+  background-color: #FFFFFF;
 }
 
 
@@ -126,8 +130,12 @@ a:hover {
 
 
 /* Team cards */
+
+.teamCards p {
+  margin-bottom: 30px;
+}
+
 .block {
-  /* height: 100px; */
   background: white;
   margin-bottom: 30px;
   padding: 5px;
@@ -136,12 +144,48 @@ a:hover {
 
 .block h5 {
   font-family: 'Quattrocento', serif;
+  font-weight: bold;
+  margin: 4px 4px 1.5px 4px;
+  font-size: 0.9rem
+}
+
+h5.leaderTitle {
+  font-weight: 400;
+  margin: 1.5px 4px;
+  font-size: 0.78rem;
+  /* font-style: italic; */
 }
 
 .teamGraphs {
   position: relative;
   right: 5px;
   bottom: 20px;
+  margin-bottom: -20px;
+}
+
+
+.teamSizeLabel {
+  font-family: 'Quattrocento', sans-serif;
+  color: #222222;
+  font-size: 0.4rem;
+}
+
+.teamSize {
+  font-family: 'Oswald', sans-serif;
+  color: #222222;
+  font-size: 0.83rem;
+}
+
+.teamFte {
+  font-family: 'Quattrocento', sans-serif;
+  color: #222222;
+  font-size: 0.55rem;
+}
+
+.teamFteLabel {
+  font-family: 'Quattrocento', sans-serif;
+  color: #222222;
+  font-size: 0.45rem;
 }
 
 /* Contact Me */

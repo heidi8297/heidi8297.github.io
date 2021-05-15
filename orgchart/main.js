@@ -60,6 +60,15 @@ function range(start, end) {
     return ans;
 }
 
+// Creating Pie generator
+var pie = d3.pie();
+
+// Creating arc
+var arc = d3.arc()
+  .innerRadius(14)
+  .outerRadius(18);
+
+
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
 function responsivefy(thisSvg,maxWidth=4000) {
@@ -307,20 +316,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       };
     });
 
-    // this sort function doesn't seem to work so I'm not using it yet
-    // d.data.role12Nodes.sort(function(emp) {
-    //   if (emp.data.title.includes(rolename1) && !emp.data.display_name.includes(etwText)){
-    //     console.log(emp.data.display_name,emp.data.title);
-    //     return 1
-    //   } else if (emp.data.title.includes(rolename1)) {
-    //     return 2
-    //   } else if (emp.data.title.includes(rolename2) && !emp.data.display_name.includes(etwText)) {
-    //     return 3
-    //   } else if (emp.data.title.includes(rolename2)) {
-    //     return 4
-    //   }
-    // });
-
 
     const thisTitle = d.data.title.replace(".","");
     const empIsFTE = (d.data.display_name.includes(etwText) ? false : true)
@@ -442,32 +437,73 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         .attr("id",d=>"teamGraphs-"+d.data.user_ntid);
 
   // Add content to the individual team cards
-  for (var iLead = 0; iLead < teamLeaders.length; iLead++) {
-    const attributes = teamLeaders[iLead].data;
-    const roleCountTotal = attributes.role1Count + attributes.role2Count;
-    console.log(attributes.display_name,"(",roleCountTotal,")");
-    const thisTeamCard = d3.select("."+attributes.user_ntid);
-    const rowCount = 25;
+
+  teamLeaders.forEach(function(thisLeader) {
+    // const attributes = thisLeader.data;
+    const roleCountTotal = thisLeader.data.role1Count + thisLeader.data.role2Count;
+    console.log(thisLeader.data.display_name,"(",roleCountTotal,")");
+    const thisTeamCard = d3.select("."+thisLeader.data.user_ntid);
+    const rowCount = 20;
 
     // add leader name
     thisTeamCard.append("h5")
-      .text(attributes.display_name);
+      .text(thisLeader.data.display_name);
+
+    thisTeamCard.append("h5")
+      .text(thisLeader.data.title)
+      .attr("class","leaderTitle");
 
     // add an svg so we can add shapes
-    thisTeamCard.append("svg")
+    const teamSvg = thisTeamCard.append("svg")
       .attr("width", 200)
-      .attr("height", 80)
-      .attr("class", "teamGraphs "+attributes.user_ntid )
+      .attr("height", 90)
+      .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
       .call(responsivefy,maxWidth=400);
+
+    teamSvg.append("text")
+      .text("TEAM SIZE")
+      .attr("class","teamSizeLabel")
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate(25,25)")
+      .append('svg:tspan')
+      .text(thisLeader.data.teamSize)
+      .attr("class","teamSize")
+      .attr("text-anchor","middle")
+      .attr("x",0)
+      .attr("dy", 15)
+
+    var pieData = [thisLeader.data.ftePercent,1-thisLeader.data.ftePercent];
+
+    var arcs = teamSvg.selectAll("arc")
+      .data(pie(pieData))
+      .join("g")
+      .attr("transform", "translate(25,66)");
+
+    arcs.append("path")
+      .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
+      .attr("d", arc);
+
+
+    arcs.append("text")
+      .text(Math.round(100*thisLeader.data.ftePercent)+"%")
+      .attr("class","teamFte")
+      .attr("text-anchor", "middle")
+      .attr("dy",-1)
+      .append('svg:tspan')
+      .attr('x', 0)
+      .attr('dy', 8)
+      .attr("class","teamFteLabel")
+      .text("FTE");
+
 
     // add a circle for each employee of role 1
     thisTeamCard.select("svg").selectAll("circle .role1.emp")
-      .data(attributes.role1s)
+      .data(thisLeader.data.role1s)
       .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.5)%(rowCount*7.5))
+        .attr("cx", (d,iRole) => 53+(iRole*7.4)%(rowCount*7.4))
         .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
-        .attr("r", 3)
+        .attr("r", 2.9)
         .attr("class","role1 emp")
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
@@ -485,12 +521,12 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
     // add a circle for each employee of role 2
     thisTeamCard.select("svg").selectAll("circle .role2.emp")
-      .data(attributes.role2s)
+      .data(thisLeader.data.role2s)
       .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.5)%(rowCount*7.5))
-        .attr("cy", (d,iRole) => 30 + (attributes.role1Count>0 ? 13 + 9*Math.floor(attributes.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
+        .attr("cx", (d,iRole) => 53+(iRole*7.4)%(rowCount*7.4))
+        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
-        .attr("r", 3)
+        .attr("r", 2.9)
         .attr("class","role2 emp")
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
@@ -506,9 +542,9 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             .style("opacity", 0);
         });
 
-  }
 
 
+  });
 
 
 
