@@ -24,8 +24,10 @@
 
 
 <body>
-  <div class="main orgForce">
 
+  <div class="main orgForce">
+    <img id="forceGif" src="ForceTree.gif" alt="force directed hierarchy image" />
+    <img class="whiteBox" src="WhiteBox.png" alt="white box">
   </div>
   <div class="main orgChart">
 
@@ -40,17 +42,33 @@
       &emsp;&emsp;&emsp;Click individual nodes to expand/collapse.
     </form>
 
-    <div class="org" id="orgChart"></div>
+    <div class="orgChartArea" id="orgChart"></div>
 
   </div>
 
+  <div class="main roleSummary">
+    <h1>ROLE SUMMARY</h1>
+    <p>Teams with three or more roles of interest (limit 30 teams).</p>
+    <div class="summaryGraphArea">
+      <div class="row">
+        <div class="col-12 col-md-6 col-xl-4 roleGraph role1">
 
+        </div>
+        <div class="col-12 col-md-6 col-xl-4 roleGraph role2">
+
+        </div>
+        <div class="col-12 col-md-6 col-xl-4 roleGraph titles">
+
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <div class="main teamCards">
     <h1>TEAMS OF INTEREST</h1>
     <p>Teams with three or more roles of interest (limit 30 teams).</p>
     <div class="row">
-
     </div>
   </div>
 
