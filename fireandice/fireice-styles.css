@@ -1,0 +1,70 @@
+body, p, .tooltip {
+  font-family: 'Raleway', serif;
+  color: #222222;
+  background-color: #f8f8f8;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Cinzel', sans-serif;
+  color: #222222;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+p {
+  font-size: 1rem;
+}
+
+a {
+  /* likely should keep this the same color as the 'tableauIcon' color below */
+  color: #2C3D6D;
+}
+
+a:hover {
+  color: #5B87FF;
+}
+
+.footerLink:hover {
+  fill: #5B87FF;
+}
+
+.main {
+  margin: 2.5% 9% 7% 9%;
+  padding: 1px 1% 10px 1%;
+}
+
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", sans-serif;
+}
+/* svg {
+  margin: 0 auto;
+  display:  table;
+} */
+.area {
+  fill:  steelblue;
+  fill-opacity:  .5;
+}
+.tick circle {
+  fill: none;
+  stroke:  #888;
+}
+.tick line {
+  stroke: #888;
+}
+.tick text {
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+
+/* Contact Me */
+#contactMe {
+  background-color: #f8f8f8;
+  height: 200px;
+  padding: 60px 12%;
+  text-align: center;
+}
