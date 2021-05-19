@@ -5,19 +5,50 @@
 // pulled in a snippet from Rob Schmuecker's example to enable auto-sizing the height of the tree
 // http://bl.ocks.org/robschmuecker/7880033
 
-
 var startTime = new Date();
 
 var treeFile = "DMOrgChart.json";
+const animationDelay = 1000;
+const idealTeamSize = 35;
+
+const forceImage = d3.select("#forceGif");
+const whiteBox = d3.select(".whiteBox");
+const removeStuff = d3.selectAll(".orgForce img");
+
+whiteBox.transition()
+  .duration(500)
+  .delay(animationDelay)
+  .style("opacity",1);
+
+forceImage.transition()
+  .duration(10)
+  .delay(500 + animationDelay)
+  .attr("height",0)
+  .style("opacity",0);
+
+whiteBox.transition()
+  .duration(800)
+  .delay(700 + animationDelay)
+  .style("opacity",0);
+
+removeStuff.transition()
+  .duration(1)
+  .delay(1500+animationDelay)
+  .remove();
+
+
+
 
 var initialOffsetX = 120,
   initialOffsetY = 0,
-  etwText = "(ETW";
+  etwText = "(ETW",
+  heightScale = 0.51;
 
 // change the things that are specific to the dummy org chart data
 if (treeFile === "DMOrgChart.json") {
   initialOffsetX = 90;
   initialOffsetY = 45;
+  heightScale = 0.44;
   inputRole1 = document.querySelector(".inputRole1");
   inputRole1.value = "COMPLIANCE";
   inputRole2 = document.querySelector(".inputRole2");
@@ -145,7 +176,7 @@ var zoom = d3.zoom().on("zoom", function(event) {
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select(".org").append("svg")
+var svg = d3.select(".orgChartArea").append("svg")
   .attr("width", width + margin.right + margin.left)
   .attr("height", height + margin.top + margin.bottom)
   .call(zoom)
@@ -283,7 +314,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     (flatData);
 
   // define the initial placement of the root
-  root.x0 = height / 2.25;  // no idea why 2.25 works better than 2 here
+  root.x0 = height * heightScale;  // no idea why 2.25 works better than 2 here
   root.y0 = 0;
 
 
@@ -292,8 +323,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // BEFORE collapsing the nodes, run some calculations to help identify relevant teams
   // --------------------------------------------------------------------------------------
   let teamLeaders = [];
-  let role1Titles = {};
-  let role2Titles = {};
+  let role12Titles = {};
 
   // this line makes it so that the root node re-renders after entering new search terms
   root.id = iNode ++;
@@ -323,18 +353,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     if (thisTitle.includes(rolename1) || thisTitle.includes(rolename2)) {
 
       // record titles of FTEs
-      if (empIsFTE && thisTitle.includes(rolename1)) {
-        if (thisTitle in role1Titles) {
-          role1Titles[thisTitle]++;
+      if (empIsFTE && (thisTitle.includes(rolename1) || thisTitle.includes(rolename2))) {
+        if (thisTitle in role12Titles) {
+          role12Titles[thisTitle]++;
         } else {
-          role1Titles[thisTitle] = 1;
-        }
-      }
-      if (empIsFTE && thisTitle.includes(rolename2)) {
-        if (thisTitle in role2Titles) {
-          role2Titles[thisTitle]++;
-        } else {
-          role2Titles[thisTitle] = 1;
+          role12Titles[thisTitle] = 1;
         }
       }
 
@@ -351,11 +374,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         if (leaderFound) { return }
         teamCount = thisLeader.descendants().length;
         console.log(thisLeader.data.display_name,"teamCount:",teamCount);
-        if (teamCount > 35) {  // once we get a team size larger than 35, it's time to compare
+        if (teamCount > idealTeamSize) {  // once we get a team size larger than idealTeamSize, it's time to compare
           let identifiedLeader;
           let identifiedTeamCount;
-          const lastTeamProx = Math.abs(lastTeamCount/35 - 35/lastTeamCount);
-          const teamProx = Math.abs(teamCount/35 - 35/teamCount);
+          const lastTeamProx = Math.abs(lastTeamCount/idealTeamSize - idealTeamSize/lastTeamCount);
+          const teamProx = Math.abs(teamCount/idealTeamSize - idealTeamSize/teamCount);
 
           if (teamProx < lastTeamProx) {
             if (!teamLeaders.includes(thisLeader) && !teamLeaders.includes(thisLeader.parent)){
@@ -369,9 +392,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             }
           }
 
-          if (thisLeader.depth <= 1) {
+          if (thisLeader.depth <= 1 || thisLeader.height >= 5 || thisLeader.data.teamSize > idealTeamSize*7 ) {
             identifiedLeader = leaders[iLead-1];
             identifiedTeamCount = lastTeamCount;
+            console.log("not this leader",thisLeader.data.display_name);
           }
 
           leaderFound = true;
@@ -418,8 +442,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   }); // end of root.each
   console.log("teamLeaders:");
   console.log(teamLeaders);
-  console.log(role1Titles);
-  console.log(role2Titles);
+  console.log(role12Titles);
+  console.log(Object.entries(role12Titles).sort(function(titlePairA,titlePairB){return titlePairB[1] - titlePairA[1]}));
   var endTime = new Date();
   console.log(endTime-startTime,"elapsed milliseconds");
 
@@ -469,6 +493,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
       .call(responsivefy,maxWidth=400);
 
+    // add "team size" count
     teamSvg.append("text")
       .text("TEAM SIZE")
       .attr("class","teamSizeLabel")
@@ -477,33 +502,30 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .append('svg:tspan')
       .text(thisLeader.data.teamSize)
       .attr("class","teamSize")
-      .attr("text-anchor","middle")
       .attr("x",0)
       .attr("dy", 15)
 
+    // add the donut chart
     var pieData = [thisLeader.data.ftePercent,1-thisLeader.data.ftePercent];
-
     var arcs = teamSvg.selectAll("arc")
       .data(pie(pieData))
       .join("g")
       .attr("transform", "translate(175,55)");
-
     arcs.append("path")
       .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
       .attr("d", arc);
 
-
+    // label the donut chart
     arcs.append("text")
       .text(Math.round(100*thisLeader.data.ftePercent)+"%")
       .attr("class","teamFte")
       .attr("text-anchor", "middle")
-      .attr("dy",-1)
+      .attr("dy",2)
       .append('svg:tspan')
-      .attr('x', 0)
-      .attr('dy', 8)
+      .text("FTE")
       .attr("class","teamFteLabel")
-      .text("FTE");
-
+      .attr('x', 0)
+      .attr('dy', 8);
 
     // add a circle for each employee of role 1
     thisTeamCard.select("svg").selectAll("circle .role1.emp")
@@ -701,7 +723,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         tooltipTree.transition()
           .duration(200)
           .style("opacity", .9);
-        tooltipTree.html(d.data.title)
+        tooltipTree.html(d.data.title+(d.data.teamSize > 1 ? "<br>Team Size: "+d.data.teamSize : ""))
           .style("left", (event.pageX + 6) + "px")
           .style("top", (event.pageY - 12) + "px");
       })
@@ -797,4 +819,5 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
 })};
-renderTree()
+window.setTimeout(renderTree, 1200 + animationDelay);
+// renderTree()
