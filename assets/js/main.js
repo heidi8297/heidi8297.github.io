@@ -194,39 +194,57 @@ if (randVal < 0.3) {
 }
 
 
-// this function makes our graph responsive to the size of the container/screen!
-function responsivefy(thisSvg) {
-  // container will be the DOM element that the svg is appended to
-  // we then measure the container and find its aspect ratio
+// generate randomized data
+function genRandomHist([theseDataGen, thisValueKeeper],numValues,centerVal,stDev,maxVal) {
+  [...Array(numValues).keys()].forEach(function(index) {
+    let xValue = -1;
+    while (xValue < 1 || xValue > 36 || thisValueKeeper[xValue] > maxVal) {
+      xValue = Math.round(d3.randomNormal(centerVal, stDev)())
+    }
+    if (xValue in thisValueKeeper) {
+      thisValueKeeper[xValue]++;
+    } else {
+      thisValueKeeper[xValue] = 1
+    }
+    theseDataGen.push([xValue, thisValueKeeper[xValue]]);
+  });
+  return [theseDataGen, thisValueKeeper];
+}
+
+// build a "random" histogram in a shape that works well for the design
+const randDist1 = genRandomHist([[],{}],30,6,1.3,26);
+const randDist2 = genRandomHist(randDist1,13,6,0.3,26);
+const randDist3 = genRandomHist(randDist2,13,6,2.4,26);
+
+const randDist4 = genRandomHist(randDist3,37,31,1.3,30);
+const randDist5 = genRandomHist(randDist4,14,31,0.3,30);
+const randDist6 = genRandomHist(randDist5,17,31,2.1,30);
+
+const randDist7 = genRandomHist(randDist6,8,13,3.4,10);
+const randDist8 = genRandomHist(randDist7,4,34,1.2,30);
+const randDist9 = genRandomHist(randDist8,4,2,1.2,30);
+
+let dataGen = randDist9[0].sort((a,b) => a[0]*100 + a[1] - b[0]*100 - b[1]);
+
+
+// this function makes our svg responsive to the size of the container/screen!
+// initial version provided by Ben Clinkinbeard and Brendan Sudol
+function responsivefy(thisSvg,maxWidth=4000) {
   const container = d3.select(thisSvg.node().parentNode),
-      width = parseInt(thisSvg.style('width'), 10),
-      height = parseInt(thisSvg.style('height'), 10),
-      aspect = width / height;
-
-  // set viewBox attribute to the initial size control scaling without
-	//   preserveAspectRatio
-  // resize svg on inital page load
+    width = parseInt(thisSvg.style('width'), 10),
+    height = parseInt(thisSvg.style('height'), 10),
+    aspect = width / height;
   thisSvg.attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMinYMid')
-      .call(resize);
-
-  // add a listener so the chart will be resized when the window resizes
-  // multiple listeners for the same event type requires a namespace, i.e.,
-	//   'click.foo'
-  // api docs: https://goo.gl/F3ZCFr
+    .attr('preserveAspectRatio', 'xMinYMid')
+    .call(resize);
   d3.select(window).on(
-      'resize.' + container.attr('id'),
-      resize
+    'resize.' + container.attr('id'),
+    resize
   );
-
-  // this is the code that resizes the chart
-  // it will be called on load and in response to window resizes
-  // gets the width of the container and resizes the svg to fill it
-  // while maintaining a consistent aspect ratio
   function resize() {
-      const w = parseInt(container.style('width'));
-      thisSvg.attr('width', w);
-      thisSvg.attr('height', Math.round(w / aspect));
+    const w = Math.min(maxWidth,parseInt(container.style('width')));
+    thisSvg.attr('width', w);
+    thisSvg.attr('height', Math.round(w / aspect));
   }
 }
 
@@ -255,13 +273,21 @@ const graph = svg.append('g')
 
 d3.json('circles.json').then(data => {
 
+  // overwrite the existing histogram values with the randomly generated ones
+  [...Array(140).keys()].forEach(function(index) {
+    data[index].histogramX = dataGen[index][0];
+    data[index].histogramY = dataGen[index][1];
+  });
+
   // define the x and y scales
   const x = d3.scaleLinear()
-    .domain([0,d3.max(data,d=>d.histogramX)])
+    // .domain([0,d3.max(data,d=>d.histogramX)])
+    .domain([0,36])
     .range([0,graphWidth]);
 
   const y = d3.scaleLinear()
-    .domain([0,d3.max(data,d=>d.histogramY)])
+    // .domain([0,d3.max(data,d=>d.histogramY)])
+    .domain([0,30])
     .range([0,graphHeight]);
 
 
