@@ -29,17 +29,17 @@ let width, height;
 
 // Data
 let data = [];
-const days = d3.timeDay.range(new Date(2016, 10, 1), new Date(2017, 10, 31));
+const days = d3.timeDay.range(new Date(2016, 10, 30), new Date(2017, 11, 2));
 
 // Scales
 const xScale = d3.scaleTime()
     .domain(d3.extent(days))
-    .range([0, Math.PI * 2]);
+    .range([0+0.1585*Math.PI, Math.PI * 2 +0.1585*Math.PI]);
 
 var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
 
 const yScale = d3.scaleRadial()
-    .domain([0, 90]);
+    .domain([0, 140]);
 
 // Generators
 const areaGenerator = d3.areaRadial()
@@ -122,6 +122,21 @@ function redraw(resizing){  d3.csv("PDXWeatherDaily20162017.csv").then( function
 
   yAxisTextBottom.attr("y", d => -yScale(d));
 
+  svg.append("radialGradient")
+    .attr("id", "temperature-gradient")
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("cx", 0).attr("cy", 0).attr("r",yScale(35))
+    .attr("fx", 0).attr("fy", 0).attr("fr",yScale(80))
+  .selectAll("stop")
+    .data([
+      {offset: "0%", color: "#FF6A00"},
+      {offset: "40%", color: "#B8AFA6"},
+      {offset: "100%", color: "#21BEE9"}
+    ])
+  .enter().append("stop")
+    .attr("offset", function(d) { return d.offset; })
+    .attr("stop-color", function(d) { return d.color; });
+
   // General update pattern for the area, whose data changes
   const area = g.selectAll(".area")
       .data([flatData]);
@@ -147,8 +162,7 @@ function redraw(resizing){  d3.csv("PDXWeatherDaily20162017.csv").then( function
   lineAve.enter().append("path")
     .attr("d", lineGenerator)
     .attr("class","lineAverage")
-    .attr("fill", "none")
-    .attr("stroke", "black");
+    .attr("fill", "none");
 
   });
 

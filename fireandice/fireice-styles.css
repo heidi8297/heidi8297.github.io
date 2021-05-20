@@ -51,14 +51,14 @@ body {
   display:  table;
 } */
 .area {
-  fill:  #C2C2C2;
+  fill:  #D8D8D8;
   fill-opacity:  .5;
 }
 
 .lineAverage {
   fill: none;
-  stroke-width: 2px;
-  stroke: #666666;
+  stroke-width: 2.5px;
+  stroke: url(#temperature-gradient);
 }
 
 .tick circle {
