@@ -150,7 +150,7 @@ a:hover {
 /* Role summary statistics */
 
 .summaryGraphArea {
-  height: 400px;
+  height: 200px;
   background-color: white;
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
