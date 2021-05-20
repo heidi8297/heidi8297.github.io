@@ -58,31 +58,25 @@ if (treeFile === "DMOrgChart.json") {
 
 // may get rid of this function at some point - keeping it here for later use
 drag = simulation => {
-
   function dragstarted(event, d) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
-
   function dragged(event, d) {
     d.fx = event.x;
     d.fy = event.y;
   }
-
   function dragended(event, d) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
   }
-
   return d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended);
 }
-
-
 function range(start, end) {
     var ans = [];
     for (let i = start; i <= end; i++) {
@@ -104,33 +98,17 @@ var arc = d3.arc()
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
 function responsivefy(thisSvg,maxWidth=4000) {
-  // container will be the DOM element that the svg is appended to
-  // we then measure the container and find its aspect ratio
   const container = d3.select(thisSvg.node().parentNode),
     width = parseInt(thisSvg.style('width'), 10),
     height = parseInt(thisSvg.style('height'), 10),
     aspect = width / height;
-
-  // set viewBox attribute to the initial size control scaling without
-  // preserveAspectRatio
-  // resize svg on inital page load
   thisSvg.attr('viewBox', `0 0 ${width} ${height}`)
     .attr('preserveAspectRatio', 'xMinYMid')
     .call(resize);
-
-  // add a listener so the chart will be resized when the window resizes
-  // multiple listeners for the same event type requires a namespace, i.e.,
-  // 'click.foo'
-  // api docs: https://goo.gl/F3ZCFr
   d3.select(window).on(
     'resize.' + container.attr('id'),
     resize
   );
-
-  // this is the code that resizes the chart
-  // it will be called on load and in response to window resizes
-  // gets the width of the container and resizes the svg to fill it
-  // while maintaining a consistent aspect ratio
   function resize() {
     const w = Math.min(maxWidth,parseInt(container.style('width')));
     thisSvg.attr('width', w);

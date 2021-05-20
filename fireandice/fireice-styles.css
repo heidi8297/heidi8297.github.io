@@ -1,7 +1,7 @@
 body, p, .tooltip {
   font-family: 'Raleway', serif;
   color: #222222;
-  background-color: #f8f8f8;
+  background-color: #F2F5F7;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -40,14 +40,27 @@ body {
   margin: 0;
   font-family: "Helvetica Neue", sans-serif;
 }
+
+
+.radialChart {
+  text-align: center;
+}
+
 /* svg {
   margin: 0 auto;
   display:  table;
 } */
 .area {
-  fill:  steelblue;
+  fill:  #C2C2C2;
   fill-opacity:  .5;
 }
+
+.lineAverage {
+  fill: none;
+  stroke-width: 2px;
+  stroke: #666666;
+}
+
 .tick circle {
   fill: none;
   stroke:  #888;
@@ -63,7 +76,7 @@ body {
 
 /* Contact Me */
 #contactMe {
-  background-color: #f8f8f8;
+  background-color: #F2F5F7;
   height: 200px;
   padding: 60px 12%;
   text-align: center;
