@@ -1,6 +1,12 @@
 // original radial area chart example pulled from Harry Stevens
 // https://bl.ocks.org/HarryStevens/8b14e4a0bed88724926a9a0a63e7eb3b
 
+
+const fireRad = 210;
+const labelRad = 340;
+const bubbleRad = 200;
+
+
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
 function responsivefy(thisSvg,maxWidth=4000) {
@@ -56,8 +62,6 @@ const xScaleReal = d3.scaleTime()
 const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
 const parseFireDate = d3.timeParse("%e-%b-%y");
 
-console.log(  xScaleReal(parseFireDate("13-Aug-17"))/Math.PI  );
-
 const yScale = d3.scaleRadial()
     .domain([5, 300]);
 
@@ -95,18 +99,18 @@ xAxisTicks.append("line")
 g.selectAll("path.monthLabel")
   .data(d3.timeMonth.every(1).range(...d3.extent(days)))
   .enter().append("path")
-  .attr("id",d=>"label"+`${d3.timeFormat("%B")(d)}`)
+  .attr("id",d=>"label"+`${d3.timeFormat("%B%Y")(d)}`)
   .attr("class", "monthLabel")
-  .attr("d", (d,i) => circPath(580,i,12));
+  .attr("d", (d,i) => circPath(labelRad,i,12));
 
 g.selectAll("text.monthLabel")
   .data(d3.timeMonth.every(1).range(...d3.extent(days)))
   .enter().append("text")
   .attr("class","monthLabel")
   .append("textPath")
-  .attr("xlink:href",d=>"#label"+`${d3.timeFormat("%B")(d)}`)
+  .attr("xlink:href",d=>"#label"+`${d3.timeFormat("%B%Y")(d)}`)
   .attr("startOffset","50%")
-  .text(d=>`${d3.timeFormat("%b %G")(d)}`);
+  .text(d=>`${d3.timeFormat("%b %Y")(d)}`);
 
 const yAxis = g.append("g")
     .attr("class", "axis");
@@ -199,8 +203,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .data(flatData)
     .enter().append("circle")
     .attr("class","fireice")
-    .attr("cx", d=> 390*Math.cos(xScaleReal(parseTime(d.DATE))))
-    .attr("cy", d=> 390*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("cx", d=> bubbleRad*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("cy", d=> bubbleRad*Math.sin(xScaleReal(parseTime(d.DATE))))
     .attr("r", d=> 10*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation))
     .attr("opacity",0.7)
     .attr("fill","#86E0E9")
@@ -215,16 +219,18 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     .data(fireData)
     .enter().append("line")
     .attr("class","wildfire")
-    .attr("x1", d => 380*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("y1", d => 380*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("x2", d => (380+0.0016*parseFloat(d.AcresBurned.replace(/,/g, '')))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
-    .attr("y2", d => (380+0.0016*parseFloat(d.AcresBurned.replace(/,/g, '')))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
+    .attr("x1", d => fireRad*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("y1", d => fireRad*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("x2", d => (fireRad+0.0016*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
+    .attr("y2", d => (fireRad+0.0016*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
-  g.selectAll("svg.fireIcon")
+  g.selectAll("path.fireIcon")
     .data(fireData)
-    .enter().append("svg")
+    .enter().append("path")
     .attr("class","fireIcon")
-    .attr("d",firePath);
+    .attr("d",firePath)
+    .attr("opacity",0.9)
+    .attr("transform",d=>`translate (${(fireRad+8+0.0016*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(fireRad+8+0.0016*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.06) translate (${-110},${-168})`);
 
     console.log(fireData);
 

@@ -90,6 +90,10 @@ line.wildfire {
   stroke-width: 4;
 }
 
+path.fireIcon {
+  fill: #FFA865;
+}
+
 /* Contact Me */
 #contactMe {
   background-color: #F2F5F7;
