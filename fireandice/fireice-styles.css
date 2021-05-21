@@ -35,6 +35,9 @@ a:hover {
   padding: 1px 1% 10px 1%;
 }
 
+.main.headerSection {
+  margin: 2.5% 9% 4% 9%;
+}
 
 body {
   margin: 0;
@@ -46,10 +49,6 @@ body {
   text-align: center;
 }
 
-/* svg {
-  margin: 0 auto;
-  display:  table;
-} */
 .area {
   fill:  #D8D8D8;
   fill-opacity:  .5;
@@ -66,13 +65,30 @@ body {
   stroke:  #888;
 }
 .tick line {
-  stroke: #888;
+  stroke: #E4E4E4;
 }
 .tick text {
   font-size: 12px;
   text-anchor: middle;
 }
 
+
+path.monthLabel {
+  fill: none;
+  stroke: none;
+}
+
+text.monthLabel {
+  font-size: 0.92rem;
+  font-family: 'Raleway', sans-serif;
+  text-anchor: middle;
+  color: #444444;
+}
+
+line.wildfire {
+  stroke: #FFA865;
+  stroke-width: 4;
+}
 
 /* Contact Me */
 #contactMe {
