@@ -2,10 +2,11 @@
 // https://bl.ocks.org/HarryStevens/8b14e4a0bed88724926a9a0a63e7eb3b
 
 
-const fireRad = 210;
-const labelRad = 340;
-const bubbleRad = 200;
-const fireScale = 0.0014;
+const fireRad = 110;
+const labelRad = 100;
+const bubbleRad = 115;
+const bubbleRad2 = 4.6;
+const fireScale = 0.0004;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -63,8 +64,8 @@ const xScaleReal = d3.scaleTime()
 const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
 const parseFireDate = d3.timeParse("%e-%b-%y");
 
-const yScale = d3.scaleRadial()
-    .domain([5, 300]);
+const yScale = d3.scaleLinear()
+  .domain([0, 80]);
 
 // Generators
 const areaGenerator = d3.areaRadial()
@@ -95,29 +96,11 @@ const xAxisTicks = xAxis.selectAll(".tick")
 xAxisTicks.append("line")
     .attr("y2", 680);
 
-// add month labels and make them follow the curvature of the circle
-// https://www.visualcinnamon.com/2015/09/placing-text-on-arcs/
-g.selectAll("path.monthLabel")
-  .data(d3.timeMonth.every(1).range(...d3.extent(days)))
-  .enter().append("path")
-  .attr("id",d=>"label"+`${d3.timeFormat("%B%Y")(d)}`)
-  .attr("class", "monthLabel")
-  .attr("d", (d,i) => circPath(labelRad,i,12));
-
-g.selectAll("text.monthLabel")
-  .data(d3.timeMonth.every(1).range(...d3.extent(days)))
-  .enter().append("text")
-  .attr("class","monthLabel")
-  .append("textPath")
-  .attr("xlink:href",d=>"#label"+`${d3.timeFormat("%B%Y")(d)}`)
-  .attr("startOffset","50%")
-  .text(d=>`${d3.timeFormat("%b %Y")(d)}`);
-
 const yAxis = g.append("g")
     .attr("class", "axis");
 
 const yAxisTicks = yAxis.selectAll(".tick")
-    .data(yScale.ticks(4).slice(1))
+    .data(yScale.ticks(0).slice(1))
   .enter().append("g")
     .attr("class", "tick");
 
@@ -138,9 +121,9 @@ redraw();
 function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatData) {
   const diameter = Math.min(innerWidth, innerHeight);
   width = 1.3*(diameter - margin.left - margin.right);
-  height = diameter - margin.top - margin.bottom;
+  height = (diameter - margin.top - margin.bottom);
 
-  yScale.range([0, height / 2]);
+  yScale.range([0, height / 3.5]);
 
   svg.attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -155,6 +138,25 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
         const rotated = geometric.pointRotate(point, 270 + angle);
         return `translate(${rotated}) rotate(${angle})`;
       });
+
+  // add month labels and make them follow the curvature of the circle
+  // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs/
+  g.selectAll("path.monthLabel")
+    .data(d3.timeMonth.every(1).range(...d3.extent(days)))
+    .enter().append("path")
+    .attr("id",d=>"label"+`${d3.timeFormat("%B%Y")(d)}`)
+    .attr("class", "monthLabel")
+    .attr("d", (d,i) => circPath(yScale(labelRad),i,12));
+
+  g.selectAll("text.monthLabel")
+    .data(d3.timeMonth.every(1).range(...d3.extent(days)))
+    .enter().append("text")
+    .attr("class","monthLabel")
+    .append("textPath")
+    .style("font-size", yScale(4.5).toString()+"px")
+    .attr("xlink:href",d=>"#label"+`${d3.timeFormat("%B%Y")(d)}`)
+    .attr("startOffset","50%")
+    .text(d=>`${d3.timeFormat("%b %Y")(d)}`);
 
   yAxisCircles.attr("r", d => yScale(d));
 
@@ -204,9 +206,9 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .data(flatData)
     .enter().append("circle")
     .attr("class","fireice")
-    .attr("cx", d=> bubbleRad*Math.cos(xScaleReal(parseTime(d.DATE))))
-    .attr("cy", d=> bubbleRad*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("r", d=> 10*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation))
+    .attr("cx", d=> yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("cy", d=> yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)))
     .attr("opacity",0.7)
     .attr("fill","#86E0E9")
 
@@ -225,10 +227,10 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
       else if (d.DaysUntilContainment <= 100) { return "wildfire level3" }
       else { return "wildfire level4"}
     } )
-    .attr("x1", d => fireRad*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("y1", d => fireRad*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("x2", d => (fireRad+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
-    .attr("y2", d => (fireRad+fireScale*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
+    .attr("x1", d => yScale(fireRad)*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("y1", d => yScale(fireRad)*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("x2", d => (yScale(fireRad+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
+    .attr("y2", d => (yScale(fireRad+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
   g.selectAll("path.fireIcon")
     .data(fireData)
@@ -241,7 +243,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(yScale(fireRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(fireRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
 
     console.log(fireData);
 

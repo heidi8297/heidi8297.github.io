@@ -366,7 +366,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             }
           }
 
-          if (thisLeader.depth <= 1 || thisLeader.height >= 5 || thisLeader.data.teamSize > idealTeamSize*7 ) {
+          if (thisLeader.depth <= 1 || thisLeader.height >= 5 || thisLeader.data.teamSize > idealTeamSize*6 ) {
             identifiedLeader = leaders[iLead-1];
             identifiedTeamCount = lastTeamCount;
             console.log("not this leader",thisLeader.data.display_name);
