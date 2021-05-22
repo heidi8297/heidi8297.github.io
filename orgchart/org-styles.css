@@ -172,6 +172,10 @@ a:hover {
   transform: translate(10px,83px);
 }
 
+.roleFtePct {
+  font-size: 0.71rem;
+  font-family: 'Oswald', sans-serif;
+}
 
 
 

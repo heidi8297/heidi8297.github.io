@@ -19,6 +19,9 @@ const color1A = "#4C70D6";
 const color1B = "#B4C2F1";
 const color2A = "#FDA943";
 const color2B = "#FFDBAE";
+const color3A = "#999";
+const color3B = "#CCC";
+const color3C = "#DDD";
 
 whiteBox.transition()
   .duration(500)
@@ -142,12 +145,7 @@ function shift(arr, direction, n) {
 }
 
 // Set the dimensions and margins of the diagram
-var margin = {
-    top: 20,
-    right: 80,
-    bottom: 20,
-    left: 80
-  },
+var margin = {top: 20, right: 80, bottom: 20, left: 80},
   width = 1060 - margin.left - margin.right,
   height = 600 - margin.top - margin.bottom;
 
@@ -202,9 +200,9 @@ function colorCircle(dataArray) {
     }
   } else {
     if (dataArray.display_name.includes(etwText)) {
-      return "#CCC"
+      return color3B
     } else {
-      return "#999"
+      return color3A
     }
   }
 }
@@ -421,8 +419,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   }); // end of root.each
   console.log("teamLeaders:");
   console.log(teamLeaders);
+  role12Titles = Object.entries(role12Titles).sort(function(titlePairA,titlePairB){return titlePairB[1] - titlePairA[1]});
   console.log(role12Titles);
-  console.log(Object.entries(role12Titles).sort(function(titlePairA,titlePairB){return titlePairB[1] - titlePairA[1]}));
   var endTime = new Date();
   console.log(endTime-startTime,"elapsed milliseconds");
 
@@ -740,7 +738,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // label the donut chart
   arcs1.append("text")
     .text(Math.round(100*(role1FteCount/root.data.role1Count))+"%")
-    .attr("class","role1Fte")
+    .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
     .append('svg:tspan')
@@ -749,7 +747,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr('x', 0)
     .attr('dy', 8);
 
-  // add donut chart to represent FTE % for role 1
+  // add donut chart to represent FTE % for role 2
   const pieDataRole2 = [role2FteCount,root.data.role2Count-role2FteCount];
   const arcs2 = role2Svg.selectAll("arc")
     .data(pie(pieDataRole2))
@@ -762,7 +760,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // label the donut chart
   arcs2.append("text")
     .text(Math.round(100*(role2FteCount/root.data.role2Count))+"%")
-    .attr("class","role2Fte")
+    .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
     .append('svg:tspan')
@@ -770,6 +768,40 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr("class","teamFteLabel")
     .attr('x', 0)
     .attr('dy', 8);
+
+
+
+
+  // Parse the Data
+  console.log(role12Titles);
+
+  var barMargin = {top: 30, right: 10, bottom: 10, left: 10};
+  barSvg = roleTitleSvg.append("g")
+    .attr("transform", "translate(" + barMargin.left + "," + barMargin.top + ")");
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain([0, d3.max(role12Titles.slice(0, 10),d=>d[1])])
+    .range([ 0, 200 - barMargin.left - barMargin.right]);
+
+  // Y axis
+  var y = d3.scaleBand()
+    .range([ 0, 90 - barMargin.top - barMargin.bottom ])
+    .domain(role12Titles.slice(0, 10).map(function(d) { return d[0]; }))
+    .padding(.1);
+
+  //Bars
+  barSvg.selectAll("myRect")
+    .data(role12Titles.slice(0, 10))
+    .enter()
+    .append("rect")
+    .attr("x", x(0) )
+    .attr("y", function(d) { return y(d[0]); })
+    .attr("width", function(d) { return x(d[1]); })
+    .attr("height", y.bandwidth() )
+    .attr("fill", d=> ( d[0].includes(rolename1) ? color1A : color2A ));
+
+
 
 
 
@@ -833,7 +865,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("g")
       .attr("transform", "translate(175,55)");
     arcs.append("path")
-      .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
+      .attr("fill", (data, i) => i===0 ? color3A : color3C)
       .attr("d", arc);
 
     // label the donut chart
@@ -854,7 +886,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : color1A ))
         .attr("r", 2.8)
         .attr("class","role1 emp")
         .on("mouseover", function(event,d) {
@@ -877,7 +909,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : color2A ))
         .attr("r", 2.8)
         .attr("class","role2 emp")
         .on("mouseover", function(event,d) {
