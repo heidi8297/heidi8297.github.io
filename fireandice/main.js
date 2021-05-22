@@ -219,7 +219,12 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
   g.selectAll("line.wildfire")
     .data(fireData)
     .enter().append("line")
-    .attr("class","wildfire")
+    .attr("class",function(d) {
+      if (d.DaysUntilContainment <= 31) {return "wildfire level1"}
+      else if (d.DaysUntilContainment <= 70) {return "wildfire level2"}
+      else if (d.DaysUntilContainment <= 100) { return "wildfire level3" }
+      else { return "wildfire level4"}
+    } )
     .attr("x1", d => fireRad*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
     .attr("y1", d => fireRad*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
     .attr("x2", d => (fireRad+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
@@ -228,7 +233,12 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
   g.selectAll("path.fireIcon")
     .data(fireData)
     .enter().append("path")
-    .attr("class","fireIcon")
+    .attr("class",function(d) {
+      if (d.DaysUntilContainment <= 31) {return "fireIcon level1"}
+      else if (d.DaysUntilContainment <= 70) {return "fireIcon level2"}
+      else if (d.DaysUntilContainment <= 100) { return "fireIcon level3" }
+      else { return "fireIcon level4"}
+    } )
     .attr("d",firePath)
     .attr("opacity",0.9)
     .attr("transform",d=>`translate (${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);

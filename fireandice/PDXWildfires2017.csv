@@ -1,14 +1,14 @@
-﻿WildfireName,NationalForest,AcresBurned,StartDate,ContainmentDate,Notes
-Milli Fire,Deschutes National Forest,24079,11-Aug-17,24-Sep-17,Cause:Lighting
-Cinder Butte Fire,Bureau of Land Management,52462,2-Aug-17,10-Aug-17,Cause:Unknown/Man caused
-Desolation Fire,Ochoco National Forest,4512,9-Sep-17,Unknown,Cause:Lightning holdover fire
-High Cascades Complex,Rogue River–Siskiyou National Forest Fremont–Winema National Forest Umpqua National Forest Crater Lake National Park,27476,13-Aug-17,"approx. October 15, 2017",Cause:Lighting/Natural
-Horse Creek Complex,Willamette National Forest,42489,10-Aug-17,"approx. September 27, 2017",Cause:Lighting
-Staley Fire,Willamette National Forest,2300,9-Aug-17,"approx. December 1, 2017",Cause:Lighting
-Jones Fire,Willamette National Forest,10114,10-Aug-17,"approx. October 14, 2017",Cause:Lightning/Natural
-Whitewater Fire,Willamette National Forest,14451,23-Jul-17,31-Oct-17,Cause:Lightning/Natural
-Umpqua North Complex,Umpqua National Forest,43158,11-Aug-17,"approx. October 30, 2017",Cause:Unknown
-Falcon Complex,Umpqua National Forest,2935,8-Aug-17,15-Sep-17,Cause:Lightning/Natural
-Chetco Bar Fire,Rogue River–Siskiyou National Forest,191125,12-Jul-17,2-Nov-17,"Cause:Lightning, 8th largest fire in Oregon’s recorded history"
-Miller Complex,Rogue River–Siskiyou National Forest,39715,14-Aug-17,9-Nov-17,Cause:Lightning
-Eagle Creek Fire,Columbia River Gorge National Scenic Area,48831,2-Sep-17,30-Nov-17,Cause:Human
+﻿WildfireName,NationalForest,AcresBurned,StartDate,ContainmentDate,DaysUntilContainment,Notes,,
+Milli Fire,Deschutes National Forest,24079,11-Aug-17,24-Sep-17,13,Cause:Lighting,,
+Cinder Butte Fire,Bureau of Land Management,52462,2-Aug-17,10-Aug-17,8,Cause:Unknown/Man caused,,
+Desolation Fire,Ochoco National Forest,4512,9-Sep-17,Unknown,31,Cause:Lightning holdover fire,,
+High Cascades Complex,Rogue River–Siskiyou National Forest Fremont–Winema National Forest Umpqua National Forest Crater Lake National Park,27476,13-Aug-17,"approx. October 15, 2017",63,Cause:Lighting/Natural,,
+Horse Creek Complex,Willamette National Forest,42489,10-Aug-17,"approx. September 27, 2017",48,Cause:Lighting,,
+Staley Fire,Willamette National Forest,2300,9-Aug-17,"approx. December 1, 2017",114,Cause:Lighting,,
+Jones Fire,Willamette National Forest,10114,10-Aug-17,"approx. October 14, 2017",65,Cause:Lightning/Natural,,
+Whitewater Fire,Willamette National Forest,14451,23-Jul-17,31-Oct-17,100,Cause:Lightning/Natural,,
+Umpqua North Complex,Umpqua National Forest,43158,11-Aug-17,"approx. October 30, 2017",80,Cause:Unknown,,
+Falcon Complex,Umpqua National Forest,2935,8-Aug-17,15-Sep-17,38,Cause:Lightning/Natural,,
+Chetco Bar Fire,Rogue River–Siskiyou National Forest,191125,12-Jul-17,2-Nov-17,113,"Cause:Lightning, 8th largest fire in Oregon’s recorded history",,
+Miller Complex,Rogue River–Siskiyou National Forest,39715,14-Aug-17,9-Nov-17,87,Cause:Lightning,,
+Eagle Creek Fire,Columbia River Gorge National Scenic Area,48831,2-Sep-17,30-Nov-17,89,Cause:Human,,

@@ -86,13 +86,26 @@ text.monthLabel {
 }
 
 line.wildfire {
-  stroke: #FFA865;
   stroke-width: 3;
 }
 
-path.fireIcon {
+line.wildfire.level1, path.fireIcon.level1 {
+  stroke: #FFA865;
   fill: #FFA865;
 }
+line.wildfire.level2, path.fireIcon.level2 {
+  stroke: #FF7D19;
+  fill: #FF7D19;
+}
+line.wildfire.level3, path.fireIcon.level3 {
+  stroke: #FF6A19;
+  fill: #FF6A19;
+}
+line.wildfire.level4, path.fireIcon.level4 {
+  stroke: #FF5619;
+  fill: #FF5619;
+}
+
 
 /* Contact Me */
 #contactMe {
