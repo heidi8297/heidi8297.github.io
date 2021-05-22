@@ -103,12 +103,14 @@ a:hover {
   letter-spacing: 1px;
 }
 
-.inputRole1 {
-  color:#4C70D6;
+.inputRole1, .role1 .roleCountLg {
+  color: #4C70D6;
+  fill: #4C70D6;
 }
 
-.inputRole2 {
-  color:#FDA943;
+.inputRole2, .role2 .roleCountLg {
+  color: #FDA943;
+  fill: #FDA943;
 }
 
 
@@ -150,10 +152,32 @@ a:hover {
 /* Role summary statistics */
 
 .summaryGraphArea {
-  height: 200px;
   background-color: white;
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
+
+.roleGraph text {
+
+}
+
+.roleCountLg {
+  font-size: 2.5rem;
+  font-family: 'Oswald', sans-serif;
+  transform: translate(10px,50px);
+}
+
+.roleCountDesc {
+  font-size: 0.65rem;
+  font-family: 'Quattrocento', serif;
+  transform: translate(10px,68px);
+}
+
+.roleCountDesc.next {
+  transform: translate(10px,83px);
+}
+
+
+
 
 /* Team cards */
 

@@ -185,15 +185,15 @@ var treemap = d3.tree().size([height, width]);
 function colorCircle(dataArray) {
   if (dataArray.title.includes(rolename1)) {
     if (dataArray.display_name.includes(etwText)) {
-      return "#B4C2F1"  // #B4C2F1   #AFE3D5
+      return "#B4C2F1"
     } else {
-      return "#4C70D6"  // #4C70D6   #70D0B9
+      return "#4C70D6"
     }
   } else if (dataArray.title.includes(rolename2)) {
     if (dataArray.display_name.includes(etwText)) {
-      return "#FFDBAE"  // #FFDBAE   #FFBEAC
+      return "#FFDBAE"
     } else {
-      return "#FDA943"  // #FDA943   #FF9473
+      return "#FDA943"
     }
   } else {
     if (dataArray.display_name.includes(etwText)) {
@@ -214,10 +214,6 @@ function childCircleRadius(childCount) {
     return 1.4
   }
 }
-
-
-// initiate an array to stash the root into (for later use)
-var globalRootKeeper = {"root":''};
 
 
 
@@ -435,127 +431,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     (leader.data.role1Count + leader.data.role2Count) > 2
   ).slice(0,30);
 
-  // clear contents from team cards section
-  d3.select(".teamCards .row").html("");
-
-  // initiate the individual team cards
-  d3.select(".teamCards .row").selectAll("div.teamCard")
-    .data(teamLeaders)
-    .join("div")
-      .attr("class","col-12 col-md-6 col-xl-4 teamCard")
-      .append("div")
-        .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.user_ntid)
-        .attr("id",d=>"teamGraphs-"+d.data.user_ntid);
-
-  // Add content to the individual team cards
-
-  teamLeaders.forEach(function(thisLeader) {
-    // const attributes = thisLeader.data;
-    const roleCountTotal = thisLeader.data.role1Count + thisLeader.data.role2Count;
-    console.log(thisLeader.data.display_name,"(",roleCountTotal,")");
-    const thisTeamCard = d3.select("."+thisLeader.data.user_ntid);
-    const rowCount = 20;
-
-    // add leader name
-    thisTeamCard.append("h5")
-      .text(thisLeader.data.display_name);
-
-    thisTeamCard.append("h5")
-      .text(thisLeader.data.title)
-      .attr("class","leaderTitle");
-
-    // add an svg so we can add shapes
-    const teamSvg = thisTeamCard.append("svg")
-      .attr("width", 200)
-      .attr("height", 90)
-      .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
-      .call(responsivefy,maxWidth=400);
-
-    // add "team size" count
-    teamSvg.append("text")
-      .text("TEAM SIZE")
-      .attr("class","teamSizeLabel")
-      .attr("text-anchor", "middle")
-      .attr("transform", "translate(175,5)")
-      .append('svg:tspan')
-      .text(thisLeader.data.teamSize)
-      .attr("class","teamSize")
-      .attr("x",0)
-      .attr("dy", 15)
-
-    // add the donut chart
-    var pieData = [thisLeader.data.ftePercent,1-thisLeader.data.ftePercent];
-    var arcs = teamSvg.selectAll("arc")
-      .data(pie(pieData))
-      .join("g")
-      .attr("transform", "translate(175,55)");
-    arcs.append("path")
-      .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
-      .attr("d", arc);
-
-    // label the donut chart
-    arcs.append("text")
-      .text(Math.round(100*thisLeader.data.ftePercent)+"%")
-      .attr("class","teamFte")
-      .attr("text-anchor", "middle")
-      .attr("dy",2)
-      .append('svg:tspan')
-      .text("FTE")
-      .attr("class","teamFteLabel")
-      .attr('x', 0)
-      .attr('dy', 8);
-
-    // add a circle for each employee of role 1
-    thisTeamCard.select("svg").selectAll("circle .role1.emp")
-      .data(thisLeader.data.role1s)
-      .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
-        .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
-        .attr("r", 2.8)
-        .attr("class","role1 emp")
-        .on("mouseover", function(event,d) {
-          tooltipEmp.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
-            .style("left", (event.pageX + 6) + "px")
-            .style("top", (event.pageY - 12) + "px");
-        })
-        .on("mouseout", function(d) {
-          tooltipEmp.transition()
-            .duration(500)
-            .style("opacity", 0);
-        });
-
-    // add a circle for each employee of role 2
-    thisTeamCard.select("svg").selectAll("circle .role2.emp")
-      .data(thisLeader.data.role2s)
-      .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
-        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
-        .attr("r", 2.8)
-        .attr("class","role2 emp")
-        .on("mouseover", function(event,d) {
-          tooltipEmp.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
-            .style("left", (event.pageX + 6) + "px")
-            .style("top", (event.pageY - 12) + "px");
-        })
-        .on("mouseout", function(d) {
-          tooltipEmp.transition()
-            .duration(500)
-            .style("opacity", 0);
-        });
 
 
-
-  });
-
-
+  // --------------------------------------------------------------------------------------
+  // RENDER THE ORG CHART TREE
+  // --------------------------------------------------------------------------------------
 
   // collapse after the second level
   root.children.forEach(collapse);
@@ -772,12 +652,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
     // creates a curved (diagonal) path from parent to the child nodes
     function diagonal(s, d) {
-
-      path = `M ${s.y} ${s.x}
-          C ${(s.y + d.y) / 2} ${s.x},
-            ${(s.y + d.y) / 2} ${d.x},
-            ${d.y} ${d.x}`
-
+      path = `M ${s.y} ${s.x} C ${(s.y + d.y) / 2} ${s.x}, ${(s.y + d.y) / 2} ${d.x}, ${d.y} ${d.x}`
       return path
     }
 
@@ -796,6 +671,182 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   }
 
 
+  // --------------------------------------------------------------------------------------
+  // CREATE ROLE SUMMARY
+  // --------------------------------------------------------------------------------------
+  console.log("role summary notes");
+  console.log(root.data.role1Count);
+  console.log(root.data.role2Count);
+  console.log(root.data.role12Nodes);
+
+  const role1Svg = d3.select(".roleGraph.role1").append("svg")
+    .attr("width", 200)
+    .attr("height", 90)
+    .call(responsivefy,maxWidth=400);
+  const role2Svg = d3.select(".roleGraph.role2").append("svg")
+    .attr("width", 200)
+    .attr("height", 90)
+    .call(responsivefy,maxWidth=400);
+  const roleTitleSvg = d3.select(".roleGraph.titles").append("svg")
+    .attr("width", 200)
+    .attr("height", 90)
+    .call(responsivefy,maxWidth=400);
+
+  role1Svg.append("text")
+    .text(root.data.role1Count)
+    .attr("class","roleCountLg");
+  role2Svg.append("text")
+    .text(root.data.role2Count)
+    .attr("class","roleCountLg");
+  role1Svg.append("text")
+    .text(rolename1 +" roles")
+    .attr("class","roleCountDesc");
+  role1Svg.append("text")
+    .text("in the organization")
+    .attr("class","roleCountDesc next");
+  role2Svg.append("text")
+    .text(rolename2 +" roles")
+    .attr("class","roleCountDesc");
+  role2Svg.append("text")
+    .text("in the organization")
+    .attr("class","roleCountDesc next");
+
+  const pieDataRole1 = [0.3,0.7];
+  const arcs = role1Svg.selectAll("arc")
+    .data(pie(pieDataRole1))
+    .join("g")
+    .attr("transform", "translate(135,55)");
+  arcs.append("path")
+    .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
+    .attr("d", arc);
+
+
+
+  // --------------------------------------------------------------------------------------
+  // CREATE INDIVIDUAL TEAM CARDS
+  // --------------------------------------------------------------------------------------
+
+  // clear contents from team cards section
+  d3.select(".teamCards .row").html("");
+
+  // initiate the individual team cards
+  d3.select(".teamCards .row").selectAll("div.teamCard")
+    .data(teamLeaders)
+    .join("div")
+      .attr("class","col-12 col-md-6 col-xl-4 teamCard")
+      .append("div")
+        .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.user_ntid)
+        .attr("id",d=>"teamGraphs-"+d.data.user_ntid);
+
+
+  // Add content to the individual team cards
+  teamLeaders.forEach(function(thisLeader) {
+    // const attributes = thisLeader.data;
+    const roleCountTotal = thisLeader.data.role1Count + thisLeader.data.role2Count;
+    console.log(thisLeader.data.display_name,"(",roleCountTotal,")");
+    const thisTeamCard = d3.select("."+thisLeader.data.user_ntid);
+    const rowCount = 20;
+
+    // add leader name
+    thisTeamCard.append("h5")
+      .text(thisLeader.data.display_name);
+
+    thisTeamCard.append("h5")
+      .text(thisLeader.data.title)
+      .attr("class","leaderTitle");
+
+    // add an svg so we can add shapes
+    const teamSvg = thisTeamCard.append("svg")
+      .attr("width", 200)
+      .attr("height", 90)
+      .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
+      .call(responsivefy,maxWidth=400);
+
+    // add "team size" count
+    teamSvg.append("text")
+      .text("TEAM SIZE")
+      .attr("class","teamSizeLabel")
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate(175,5)")
+      .append('svg:tspan')
+      .text(thisLeader.data.teamSize)
+      .attr("class","teamSize")
+      .attr("x",0)
+      .attr("dy", 15)
+
+    // add the donut chart
+    const pieData = [thisLeader.data.ftePercent,1-thisLeader.data.ftePercent];
+    const arcs = teamSvg.selectAll("arc")
+      .data(pie(pieData))
+      .join("g")
+      .attr("transform", "translate(175,55)");
+    arcs.append("path")
+      .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
+      .attr("d", arc);
+
+    // label the donut chart
+    arcs.append("text")
+      .text(Math.round(100*thisLeader.data.ftePercent)+"%")
+      .attr("class","teamFte")
+      .attr("text-anchor", "middle")
+      .attr("dy",2)
+      .append('svg:tspan')
+      .text("FTE")
+      .attr("class","teamFteLabel")
+      .attr('x', 0)
+      .attr('dy', 8);
+
+    // add a circle for each employee of role 1
+    thisTeamCard.select("svg").selectAll("circle .role1.emp")
+      .data(thisLeader.data.role1s)
+      .join("circle")
+        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
+        .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#B4C2F1" :"#4C70D6" ))
+        .attr("r", 2.8)
+        .attr("class","role1 emp")
+        .on("mouseover", function(event,d) {
+          tooltipEmp.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
+            .style("left", (event.pageX + 6) + "px")
+            .style("top", (event.pageY - 12) + "px");
+        })
+        .on("mouseout", function(d) {
+          tooltipEmp.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+    // add a circle for each employee of role 2
+    thisTeamCard.select("svg").selectAll("circle .role2.emp")
+      .data(thisLeader.data.role2s)
+      .join("circle")
+        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
+        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? "#FFDBAE" :"#FDA943" ))
+        .attr("r", 2.8)
+        .attr("class","role2 emp")
+        .on("mouseover", function(event,d) {
+          tooltipEmp.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
+            .style("left", (event.pageX + 6) + "px")
+            .style("top", (event.pageY - 12) + "px");
+        })
+        .on("mouseout", function(d) {
+          tooltipEmp.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+
+
+  });  // end of team cards section
+
+
+
 })};
 window.setTimeout(renderTree, 1200 + animationDelay);
-// renderTree()

@@ -5,6 +5,7 @@
 const fireRad = 210;
 const labelRad = 340;
 const bubbleRad = 200;
+const fireScale = 0.0014;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -136,7 +137,7 @@ redraw();
 
 function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatData) {
   const diameter = Math.min(innerWidth, innerHeight);
-  width = diameter - margin.left - margin.right;
+  width = 1.3*(diameter - margin.left - margin.right);
   height = diameter - margin.top - margin.bottom;
 
   yScale.range([0, height / 2]);
@@ -221,8 +222,8 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     .attr("class","wildfire")
     .attr("x1", d => fireRad*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
     .attr("y1", d => fireRad*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("x2", d => (fireRad+0.0016*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
-    .attr("y2", d => (fireRad+0.0016*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
+    .attr("x2", d => (fireRad+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
+    .attr("y2", d => (fireRad+fireScale*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
   g.selectAll("path.fireIcon")
     .data(fireData)
@@ -230,7 +231,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     .attr("class","fireIcon")
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(fireRad+8+0.0016*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(fireRad+8+0.0016*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.06) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(fireRad+8+fireScale*parseFloat(d.AcresBurned))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
 
     console.log(fireData);
 
