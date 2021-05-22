@@ -15,6 +15,11 @@ const forceImage = d3.select("#forceGif");
 const whiteBox = d3.select(".whiteBox");
 const removeStuff = d3.selectAll(".orgForce img");
 
+const color1A = "#4C70D6";
+const color1B = "#B4C2F1";
+const color2A = "#FDA943";
+const color2B = "#FFDBAE";
+
 whiteBox.transition()
   .duration(500)
   .delay(animationDelay)
@@ -185,15 +190,15 @@ var treemap = d3.tree().size([height, width]);
 function colorCircle(dataArray) {
   if (dataArray.title.includes(rolename1)) {
     if (dataArray.display_name.includes(etwText)) {
-      return "#B4C2F1"
+      return color1B
     } else {
-      return "#4C70D6"
+      return color1A
     }
   } else if (dataArray.title.includes(rolename2)) {
     if (dataArray.display_name.includes(etwText)) {
-      return "#FFDBAE"
+      return color2B
     } else {
-      return "#FDA943"
+      return color2A
     }
   } else {
     if (dataArray.display_name.includes(etwText)) {
@@ -679,6 +684,17 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   console.log(root.data.role2Count);
   console.log(root.data.role12Nodes);
 
+  let role1FteCount = 0;
+  let role2FteCount = 0;
+  root.data.role12Nodes.forEach(function(thisEmp) {
+    if (thisEmp.data.title.includes(rolename1) && !thisEmp.data.display_name.includes(etwText)){
+      role1FteCount++;
+    }
+    if (thisEmp.data.title.includes(rolename2) && !thisEmp.data.display_name.includes(etwText)){
+      role2FteCount++;
+    }
+  });
+
   const role1Svg = d3.select(".roleGraph.role1").append("svg")
     .attr("width", 200)
     .attr("height", 90)
@@ -711,14 +727,50 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .text("in the organization")
     .attr("class","roleCountDesc next");
 
-  const pieDataRole1 = [0.3,0.7];
-  const arcs = role1Svg.selectAll("arc")
+  // add donut chart to represent FTE % for role 1
+  const pieDataRole1 = [role1FteCount,root.data.role1Count-role1FteCount];
+  const arcs1 = role1Svg.selectAll("arc")
     .data(pie(pieDataRole1))
     .join("g")
-    .attr("transform", "translate(135,55)");
-  arcs.append("path")
-    .attr("fill", (data, i) => i===0 ? "#999" : "#DDD")
-    .attr("d", arc);
+    .attr("transform", "translate(135,50)");
+  arcs1.append("path")
+    .attr("fill", (data, i) => i===0 ? color1A : color1B )
+    .attr("d", d3.arc().innerRadius(17).outerRadius(22));
+
+  // label the donut chart
+  arcs1.append("text")
+    .text(Math.round(100*(role1FteCount/root.data.role1Count))+"%")
+    .attr("class","role1Fte")
+    .attr("text-anchor", "middle")
+    .attr("dy",2)
+    .append('svg:tspan')
+    .text("FTE")
+    .attr("class","teamFteLabel")
+    .attr('x', 0)
+    .attr('dy', 8);
+
+  // add donut chart to represent FTE % for role 1
+  const pieDataRole2 = [role2FteCount,root.data.role2Count-role2FteCount];
+  const arcs2 = role2Svg.selectAll("arc")
+    .data(pie(pieDataRole2))
+    .join("g")
+    .attr("transform", "translate(135,50)");
+  arcs2.append("path")
+    .attr("fill", (data, i) => i===0 ? color2A : color2B )
+    .attr("d", d3.arc().innerRadius(17).outerRadius(22));
+
+  // label the donut chart
+  arcs2.append("text")
+    .text(Math.round(100*(role2FteCount/root.data.role2Count))+"%")
+    .attr("class","role2Fte")
+    .attr("text-anchor", "middle")
+    .attr("dy",2)
+    .append('svg:tspan')
+    .text("FTE")
+    .attr("class","teamFteLabel")
+    .attr('x', 0)
+    .attr('dy', 8);
+
 
 
 
