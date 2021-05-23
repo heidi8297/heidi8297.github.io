@@ -547,18 +547,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .attr("dy", ".35em")
       .attr("x", d => d.children || d._children ? -13 : 13)
       .attr("text-anchor", d => d.children || d._children ? "end" : "start")
-      .text(d => d.data.display_name.substring(0,20))
-      .style("font-weight",function(d) {
-        if (treeFile === "NikeOrgChart.json"  && (d._children || d.children)) {
-          if (d.data.fteCount/d.data.teamSize > 0.75) {
-            return "normal" ////////////////////////// suppressing this feature for now
-            return "bold"
-          }
-        }
-        return "normal"
-
-      })
-      ;
+      .text(d => d.data.display_name.substring(0,20));
 
 
     // UPDATE
@@ -682,6 +671,12 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   console.log(root.data.role2Count);
   console.log(root.data.role12Nodes);
 
+  // clear contents from roleGraph divs
+  d3.select(".roleGraph.role1").html("");
+  d3.select(".roleGraph.role2").html("");
+  d3.select(".roleGraph.titles").html("");
+
+  // calculate role-specific fte counts for usage in graphs (might want to move this higher)
   let role1FteCount = 0;
   let role2FteCount = 0;
   root.data.role12Nodes.forEach(function(thisEmp) {
@@ -693,19 +688,24 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     }
   });
 
-  const role1Svg = d3.select(".roleGraph.role1").append("svg")
+  // initiate svgs for each section
+  const role1Svg = d3.select(".roleGraph.role1").attr("id", "role1Svg")
+    .append("svg")
     .attr("width", 200)
-    .attr("height", 90)
+    .attr("height", 110)
     .call(responsivefy,maxWidth=400);
-  const role2Svg = d3.select(".roleGraph.role2").append("svg")
+  const role2Svg = d3.select(".roleGraph.role2").attr("id", "role2Svg")
+    .append("svg")
     .attr("width", 200)
-    .attr("height", 90)
+    .attr("height", 110)
     .call(responsivefy,maxWidth=400);
-  const roleTitleSvg = d3.select(".roleGraph.titles").append("svg")
+  const roleTitleSvg = d3.select(".roleGraph.titles").attr("id", "roleTitleSvg")
+    .append("svg")
     .attr("width", 200)
-    .attr("height", 90)
+    .attr("height", 110)
     .call(responsivefy,maxWidth=400);
 
+  // add labels to the role summaries
   role1Svg.append("text")
     .text(root.data.role1Count)
     .attr("class","roleCountLg");
@@ -770,10 +770,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr('dy', 8);
 
 
-
-
-  // Parse the Data
-  console.log(role12Titles);
+  // create a bar chart of top job titles
 
   var barMargin = {top: 30, right: 10, bottom: 10, left: 10};
   barSvg = roleTitleSvg.append("g")
@@ -781,20 +778,19 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   // Add X axis
   var x = d3.scaleLinear()
-    .domain([0, d3.max(role12Titles.slice(0, 10),d=>d[1])])
+    .domain([0, d3.max(role12Titles.slice(0, 8),d=>d[1])])
     .range([ 0, 200 - barMargin.left - barMargin.right]);
 
   // Y axis
   var y = d3.scaleBand()
-    .range([ 0, 90 - barMargin.top - barMargin.bottom ])
-    .domain(role12Titles.slice(0, 10).map(function(d) { return d[0]; }))
-    .padding(.1);
+    .range([ 0, 110 - barMargin.top - barMargin.bottom ])
+    .domain(role12Titles.slice(0, 8).map(function(d) { return d[0]; }))
+    .padding(.2);
 
   //Bars
-  barSvg.selectAll("myRect")
-    .data(role12Titles.slice(0, 10))
-    .enter()
-    .append("rect")
+  barSvg.selectAll("rect")
+    .data(role12Titles.slice(0, 8))
+    .join("rect")
     .attr("x", x(0) )
     .attr("y", function(d) { return y(d[0]); })
     .attr("width", function(d) { return x(d[1]); })

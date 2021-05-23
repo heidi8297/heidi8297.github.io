@@ -86,6 +86,11 @@ text.monthLabel {
 
 line.wildfire {
   stroke-width: 3;
+  opacity: 0.8;
+}
+
+path.wildfire {
+  opacity: 0.8;
 }
 
 line.wildfire.level1, path.fireIcon.level1 {
