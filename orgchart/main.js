@@ -717,17 +717,17 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .append("svg")
     .attr("width", 200)
     .attr("height", 110)
-    .call(responsivefy,maxWidth=400);
+    .call(responsivefy,maxWidth=460);
   const role2Svg = d3.select(".roleGraph.role2").attr("id", "role2Svg")
     .append("svg")
     .attr("width", 200)
     .attr("height", 110)
-    .call(responsivefy,maxWidth=400);
+    .call(responsivefy,maxWidth=460);
   const roleTitleSvg = d3.select(".roleGraph.titles").attr("id", "roleTitleSvg")
     .append("svg")
     .attr("width", 200)
     .attr("height", 110)
-    .call(responsivefy,maxWidth=400);
+    .call(responsivefy,maxWidth=460);
 
   // add labels to the role summaries
   role1Svg.append("text")
@@ -794,9 +794,9 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr('dy', 8);
 
 
-  // create a bar chart of top job titles
 
-  var barMargin = {top: 30, right: 10, bottom: 10, left: 10};
+  // create a bar chart of top job titles
+  var barMargin = {top: 22, right: 10, bottom: 8, left: 10};
   barSvg = roleTitleSvg.append("g")
     .attr("transform", "translate(" + barMargin.left + "," + barMargin.top + ")");
 
@@ -811,18 +811,38 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .domain(role12Titles.slice(0, 8).map(function(d) { return d[0]; }))
     .padding(.2);
 
-  //Bars
+  // background bars
   barSvg.selectAll("rect")
     .data(role12Titles.slice(0, 8))
     .join("rect")
+    .attr("x", x(0) )
+    .attr("y", function(d) { return y(d[0]); })
+    .attr("width", 200 - barMargin.left - barMargin.right)
+    .attr("height", y.bandwidth() )
+    .attr("fill","#DDD");
+
+  //Bars
+  barSvg.selectAll("rect.dt")
+    .data(role12Titles.slice(0, 8))
+    .join("rect")
+    .attr("class","dt")
     .attr("x", x(0) )
     .attr("y", function(d) { return y(d[0]); })
     .attr("width", function(d) { return x(d[1]); })
     .attr("height", y.bandwidth() )
     .attr("fill", d=> ( d[0].includes(rolename1) ? "url(#role1Gradient)" : "url(#role2Gradient)" ));
 
+  // add job titles to the bars
+  barSvg.selectAll("text")
+    .data(role12Titles.slice(0, 8))
+    .join("text")
+    .text(d=> d[0] + "  -  ("+d[1]+")")
+    .attr("x", 2)
+    .attr("y", function(d) { return y(d[0])+6; });
 
-
+  roleTitleSvg.append("text")
+    .attr("class","barTitle")
+    .text("Top Job Titles (FTE only)");
 
 
 
