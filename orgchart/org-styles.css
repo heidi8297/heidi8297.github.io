@@ -278,32 +278,31 @@ rect.dt {
 
 /* Team cards */
 
-.main p {
+.main p {  /* description below section title */
   margin-bottom: 30px;
 }
 
-.block {
+.block {  /* team card div */
   background-color: white;
   margin-bottom: 30px;
   padding: 5px;
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
 
-.block h5 {
+.block h5 {  /* display-name of leader */
   font-family: 'Quattrocento', serif;
   font-weight: bold;
   margin: 6px 6px 1.5px 6px;
-  font-size: 0.9rem
+  font-size: 0.9rem;
 }
 
-h5.leaderTitle {
+h5.titleText {  /* job title of leader */
   font-weight: 400;
   margin: 1.5px 6px;
   font-size: 0.78rem;
-  /* font-style: italic; */
 }
 
-.teamGraphs {
+.teamGraphs {  /* main svg of individual team card */
   position: relative;
   right: 5px;
   bottom: 35px;
@@ -334,6 +333,18 @@ h5.leaderTitle {
   color: #222222;
   font-size: 0.4rem;
 }
+
+.tooltip .empName {
+  font-family: 'Quattrocento', serif;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.tooltip .titleText {
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+
 
 /* Contact Me */
 #contactMe {

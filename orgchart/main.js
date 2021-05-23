@@ -877,7 +877,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
     thisTeamCard.append("h5")
       .text(thisLeader.data.title)
-      .attr("class","leaderTitle");
+      .attr("class","titleText");
 
     // add an svg so we can add shapes
     const teamSvg = thisTeamCard.append("svg")
@@ -933,7 +933,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           tooltipEmp.transition()
             .duration(200)
             .style("opacity", .9);
-          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
+          tooltipEmp.html("<span class='empName'>"+d.data.display_name+
+            "</span><br><span class='titleText'>"+d.data.title+"</span>")
             .style("left", (event.pageX + 6) + "px")
             .style("top", (event.pageY - 12) + "px");
         })
@@ -956,7 +957,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           tooltipEmp.transition()
             .duration(200)
             .style("opacity", .9);
-          tooltipEmp.html(d.data.display_name+"<br>"+d.data.title)
+          tooltipEmp.html("<span class='empName'>"+d.data.display_name+
+            "</span><br><span class='titleText'>"+d.data.title+"</span>")
             .style("left", (event.pageX + 6) + "px")
             .style("top", (event.pageY - 12) + "px");
         })
