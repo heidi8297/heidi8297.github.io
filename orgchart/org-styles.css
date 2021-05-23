@@ -49,6 +49,9 @@ a:hover {
   padding: 1px 1% 10px 1%;
 }
 
+
+/* Force graph and loading animation */
+
 .orgForce {
   margin: 0%;
 }
@@ -70,6 +73,26 @@ a:hover {
   height: 100%;
   object-fit: cover;
   opacity: 0;
+}
+
+
+/* Org chart */
+
+
+#role1Gradient .stop-left {
+  stop-color: #4C70D6;
+}
+
+#role1Gradient .stop-right {
+  stop-color: #00A7E9;
+}
+
+#role2Gradient .stop-left {
+  stop-color: #F58555;
+}
+
+#role2Gradient .stop-right {
+  stop-color: #FCCF31;
 }
 
 .orgChartArea {
@@ -94,6 +117,39 @@ a:hover {
   bottom: 3px;
 }
 
+
+.inputRole1, .inputRole2 {
+  color:transparent;
+}
+
+.inputRole1::placeholder {
+  background: linear-gradient(90deg, #4C70D6, #00A7E9);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.inputRole1:not(:placeholder-shown)  {
+  background: linear-gradient(90deg, #4C70D6, #00A7E9);
+  -webkit-background-clip: text, padding-box;
+          background-clip: text, padding-box;
+  -webkit-text-fill-color: transparent;
+}
+
+.inputRole2::placeholder {
+  background: linear-gradient(90deg, #F58555, #FCCF31);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.inputRole2:not(:placeholder-shown)  {
+  background: linear-gradient(90deg, #F58555, #FCCF31);
+  -webkit-background-clip: text, padding-box;
+          background-clip: text, padding-box;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
 .inputText {
   font-family: 'Oswald', serif;
   text-align: center;
@@ -104,14 +160,19 @@ a:hover {
 }
 
 .inputRole1, .role1 .roleCountLg {
-  color: #4C70D6;
-  fill: #4C70D6;
+  /* color: #4C70D6; */
+  /* fill: #4C70D6; */
+  fill: url(#role1Gradient);
+  color: url(#role1Gradient);
 }
 
 .inputRole2, .role2 .roleCountLg {
-  color: #FDA943;
-  fill: #FDA943;
+  /* color: #FDA943;
+  fill: #FDA943; */
+  fill: url(#role2Gradient);
+  color: url(#role2Gradient);
 }
+
 
 
 /* Format the org chart */
@@ -188,8 +249,9 @@ a:hover {
 }
 
 .role1Svg, .role2Svg, .roleTitleSvg {
-  position: absolute;
-  left:0; top:0; width:100%; height:100%;
+  position: relative;
+  right: 5px;
+  /* left:0; top:0; width:100%; height:100%; */
   margin: 2px 5px;
 }
 

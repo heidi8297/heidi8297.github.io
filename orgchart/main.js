@@ -170,6 +170,30 @@ var iNode = 0,
   duration = 750,
   root;
 
+// Create the svg:defs element
+var svgDefs = svg.append('defs');
+
+// define a gradient for role 1
+var role1Gradient = svgDefs.append('linearGradient')
+    .attr('id', 'role1Gradient');
+role1Gradient.append('stop')
+    .attr('class', 'stop-left')
+    .attr('offset', '0.15');
+role1Gradient.append('stop')
+    .attr('class', 'stop-right')
+    .attr('offset', '1');
+
+// define a gradient for role 2
+var role2Gradient = svgDefs.append('linearGradient')
+    .attr('id', 'role2Gradient');
+role2Gradient.append('stop')
+    .attr('class', 'stop-left')
+    .attr('offset', '0.15');
+role2Gradient.append('stop')
+    .attr('class', 'stop-right')
+    .attr('offset', '1');
+
+
 // Define the divs for the tooltips
 const tooltipTree = d3.select("body").append("div")
   .attr("class", "tooltip tooltipTree")
@@ -190,13 +214,13 @@ function colorCircle(dataArray) {
     if (dataArray.display_name.includes(etwText)) {
       return color1B
     } else {
-      return color1A
+      return "url(#role1Gradient)"
     }
   } else if (dataArray.title.includes(rolename2)) {
     if (dataArray.display_name.includes(etwText)) {
       return color2B
     } else {
-      return color2A
+      return "url(#role2Gradient)"
     }
   } else {
     if (dataArray.display_name.includes(etwText)) {
@@ -732,7 +756,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("g")
     .attr("transform", "translate(135,50)");
   arcs1.append("path")
-    .attr("fill", (data, i) => i===0 ? color1A : color1B )
+    .attr("fill", (data, i) => i===0 ? "url(#role1Gradient)" : color1B )
     .attr("d", d3.arc().innerRadius(17).outerRadius(22));
 
   // label the donut chart
@@ -754,7 +778,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("g")
     .attr("transform", "translate(135,50)");
   arcs2.append("path")
-    .attr("fill", (data, i) => i===0 ? color2A : color2B )
+    .attr("fill", (data, i) => i===0 ? "url(#role2Gradient)" : color2B )
     .attr("d", d3.arc().innerRadius(17).outerRadius(22));
 
   // label the donut chart
@@ -795,7 +819,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr("y", function(d) { return y(d[0]); })
     .attr("width", function(d) { return x(d[1]); })
     .attr("height", y.bandwidth() )
-    .attr("fill", d=> ( d[0].includes(rolename1) ? color1A : color2A ));
+    .attr("fill", d=> ( d[0].includes(rolename1) ? "url(#role1Gradient)" : "url(#role2Gradient)" ));
 
 
 
@@ -882,7 +906,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : color1A ))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : "url(#role1Gradient)" ))
         .attr("r", 2.8)
         .attr("class","role1 emp")
         .on("mouseover", function(event,d) {
@@ -905,7 +929,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
         .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : color2A ))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : "url(#role2Gradient)" ))
         .attr("r", 2.8)
         .attr("class","role2 emp")
         .on("mouseover", function(event,d) {
