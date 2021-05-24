@@ -160,16 +160,12 @@ a:hover {
   letter-spacing: 1px;
 }
 
-.inputRole1, .role1 .roleCountLg {
-  /* color: #4C70D6; */
-  /* fill: #4C70D6; */
+.inputRole1, .role1 .roleCountLg, .empCounts .role1 {
   fill: url(#role1Gradient);
   color: url(#role1Gradient);
 }
 
-.inputRole2, .role2 .roleCountLg {
-  /* color: #FDA943;
-  fill: #FDA943; */
+.inputRole2, .role2 .roleCountLg, .empCounts .role2 {
   fill: url(#role2Gradient);
   color: url(#role2Gradient);
 }
@@ -311,13 +307,13 @@ h5.titleText {  /* job title of leader */
 }
 
 
-.teamSizeLabel {
+.teamSizeLabel, .teamHeaders {
   font-family: 'Quattrocento', sans-serif;
   color: #222222;
   font-size: 0.4rem;
 }
 
-.teamSize {
+.teamSize, .empCounts {
   font-family: 'Oswald', sans-serif;
   color: #222222;
   font-size: 0.83rem;
@@ -344,6 +340,10 @@ h5.titleText {  /* job title of leader */
 .tooltip .titleText {
   font-weight: 400;
   font-size: 0.78rem;
+}
+
+.teamCards path {
+  opacity: 0.88;
 }
 
 
