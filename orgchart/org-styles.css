@@ -247,8 +247,14 @@ a:hover {
 }
 
 .roleFtePct {
-  font-size: 0.71rem;
+  font-size: 0.88rem;
   font-family: 'Oswald', sans-serif;
+}
+
+.teamFteLabel {
+  font-family: 'Quattrocento', sans-serif;
+  color: #222222;
+  font-size: 0.5rem;
 }
 
 .role1Svg, .role2Svg, .roleTitleSvg {
@@ -275,11 +281,15 @@ rect.dt {
 
 /* Team cards */
 
+.main.teamCards {
+  margin-bottom: 2.5%;
+}
+
 .main p {  /* description below section title */
   margin-bottom: 30px;
 }
 
-.block {  /* team card div */
+.block {  /* individual team card div */
   background-color: white;
   margin-bottom: 30px;
   padding: 5px;
@@ -306,6 +316,9 @@ h5.titleText {  /* job title of leader */
   margin-bottom: -25px;
 }
 
+.teamGraphs circle:hover {
+  fill: red;
+}
 
 .teamSizeLabel, .teamHeaders {
   font-family: 'Quattrocento', sans-serif;
@@ -323,12 +336,6 @@ h5.titleText {  /* job title of leader */
   font-family: 'Oswald', sans-serif;
   color: #222222;
   font-size: 0.55rem;
-}
-
-.teamFteLabel {
-  font-family: 'Quattrocento', sans-serif;
-  color: #222222;
-  font-size: 0.4rem;
 }
 
 .tooltip .empName {

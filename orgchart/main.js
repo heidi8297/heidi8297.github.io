@@ -9,7 +9,7 @@ var startTime = new Date();
 
 var treeFile = "DMOrgChart.json";
 const animationDelay = 0;
-const idealTeamSize = 105;
+const idealTeamSize = 35;
 
 const forceImage = d3.select("#forceGif");
 const whiteBox = d3.select(".whiteBox");
@@ -102,11 +102,6 @@ function range(start, end) {
 // Creating Pie generator
 var pie = d3.pie()
   .sort(null);
-
-// Creating arc
-var arc = d3.arc()
-  .innerRadius(14)
-  .outerRadius(18);
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -335,9 +330,9 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     // add some auxiliary data to each node
     d.data.teamSize = d.descendants().length;  // includes parent/leader
     d.data.fteCount = 0;                       // includes parent/leader
-    d.data.role1Count = 0;                     // does NOT include parent/leader
-    d.data.role2Count = 0;                     // does NOT include parent/leader
     d.data.role12Nodes = [];                   // does NOT include parent/leader
+    d.data.role1CountLead = 0;                 // includes parent/leader
+    d.data.role2CountLead = 0;                 // includes parent/leader
     d.data.role1FteCount = 0;                  // includes parent/leader
     d.data.role2FteCount = 0;                  // includes parent/leader
     d.descendants().forEach(function(desc){
@@ -345,9 +340,9 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       if (descIsFTE) {d.data.fteCount++};
       if (descIsFTE && desc.data.title.includes(rolename1)) {d.data.role1FteCount++};
       if (descIsFTE && desc.data.title.includes(rolename2)) {d.data.role2FteCount++};
+      if (desc.data.title.includes(rolename1)) {d.data.role1CountLead++};
+      if (desc.data.title.includes(rolename2)) {d.data.role2CountLead++};
       if (d === desc) {return} // the remaining counts shouldn't include the parent/leader
-      if (desc.data.title.includes(rolename1)) {d.data.role1Count++};
-      if (desc.data.title.includes(rolename2)) {d.data.role2Count++};
       if (desc.data.title.includes(rolename1) || desc.data.title.includes(rolename2)) {
         d.data.role12Nodes.push(desc);
       };
@@ -452,13 +447,13 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   console.log(endTime-startTime,"elapsed milliseconds");
 
   teamLeaders.sort(function(a, b){
-    return b.data.role1Count + b.data.role2Count
-      - (a.data.role1Count + a.data.role2Count)
+    return b.data.role1CountLead + b.data.role2CountLead
+      - (a.data.role1CountLead + a.data.role2CountLead)
   });
 
   // get rid of any team leaders with too few roles of interest (also limit to 30)
   teamLeaders = teamLeaders.filter(leader =>
-    (leader.data.role1Count + leader.data.role2Count) > 2
+    (leader.data.role1CountLead + leader.data.role2CountLead) > 2
   ).slice(0,30);
 
 
@@ -555,7 +550,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           myColorList = shift(myColorList,-1,Math.ceil(myColorList.length/12));
 
           // populate one entry in indexData for each role1 and role2 identified
-          var indexData = Array.from({length: d.data.role1Count+d.data.role2Count}, (_, i) => i);  // [0,1,2,...]
+          var indexData = Array.from({length: d.data.role12Nodes.length}, (_, i) => i);  // [0,1,2,...]
 
           var childrenCircles = d3.select(this).selectAll(".childrenCircle")
             .data(indexData)
@@ -693,10 +688,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // --------------------------------------------------------------------------------------
   // CREATE ROLE SUMMARY
   // --------------------------------------------------------------------------------------
-  console.log("role summary notes");
-  console.log(root.data.role1Count);
-  console.log(root.data.role2Count);
-  console.log(root.data.role12Nodes);
 
   // clear contents from roleGraph divs
   d3.select(".roleGraph.role1").html("");
@@ -722,10 +713,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   // add labels to the role summaries
   role1Svg.append("text")
-    .text(root.data.role1Count)
+    .text(root.data.role1CountLead)
     .attr("class","roleCountLg");
   role2Svg.append("text")
-    .text(root.data.role2Count)
+    .text(root.data.role2CountLead)
     .attr("class","roleCountLg");
   role1Svg.append("text")
     .text(rolename1 +" roles")
@@ -741,48 +732,54 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr("class","roleCountDesc next");
 
   // add donut chart to represent FTE % for role 1
-  const pieDataRole1 = [root.data.role1FteCount,root.data.role1Count-root.data.role1FteCount];
+  const pieDataRole1 = [root.data.role1FteCount,root.data.role1CountLead-root.data.role1FteCount];
   const arcs1 = role1Svg.selectAll("arc")
     .data(pie(pieDataRole1))
     .join("g")
-    .attr("transform", "translate(135,50)");
+    .attr("transform", "translate(143,53)");
   arcs1.append("path")
     .attr("fill", (data, i) => i===0 ? color1A : color1B )
-    .attr("d", d3.arc().innerRadius(17).outerRadius(22));
+    .attr("d", d3.arc().innerRadius(21).outerRadius(28));
 
   // label the donut chart
   arcs1.append("text")
-    .text(Math.round(100*(root.data.role1FteCount/root.data.role1Count))+"%")
+    .text(function() {
+      if (root.data.role1CountLead === 0) {return ""}
+      else {return Math.round(100*(root.data.role1FteCount/root.data.role1CountLead))+"%"}
+    })
     .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
     .append('svg:tspan')
-    .text("FTE")
+    .text(root.data.role1CountLead === 0 ? "" : "FTE")
     .attr("class","teamFteLabel")
     .attr('x', 0)
-    .attr('dy', 8);
+    .attr('dy', 11);
 
   // add donut chart to represent FTE % for role 2
-  const pieDataRole2 = [root.data.role2FteCount,root.data.role2Count-root.data.role2FteCount];
+  const pieDataRole2 = [root.data.role2FteCount,root.data.role2CountLead-root.data.role2FteCount];
   const arcs2 = role2Svg.selectAll("arc")
     .data(pie(pieDataRole2))
     .join("g")
-    .attr("transform", "translate(135,50)");
+    .attr("transform", "translate(143,53)");
   arcs2.append("path")
     .attr("fill", (data, i) => i===0 ? color2A : color2B )
-    .attr("d", d3.arc().innerRadius(17).outerRadius(22));
+    .attr("d", d3.arc().innerRadius(21).outerRadius(28));
 
   // label the donut chart
   arcs2.append("text")
-    .text(Math.round(100*(root.data.role2FteCount/root.data.role2Count))+"%")
+    .text(function() {
+      if (root.data.role2CountLead === 0) {return ""}
+      else {return Math.round(100*(root.data.role2FteCount/root.data.role2CountLead))+"%"}
+    })
     .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
     .append('svg:tspan')
-    .text("FTE")
+    .text(root.data.role2CountLead === 0 ? "" : "FTE")
     .attr("class","teamFteLabel")
     .attr('x', 0)
-    .attr('dy', 8);
+    .attr('dy', 11);
 
 
 
@@ -856,8 +853,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   // Add content to the individual team cards
   teamLeaders.forEach(function(thisLeader) {
-    const roleCountTotal = thisLeader.data.role1Count + thisLeader.data.role2Count;
-    console.log(thisLeader.data.display_name,"(",roleCountTotal,")");
     const thisTeamCard = d3.select("."+thisLeader.data.user_ntid);
     const rowCount = 20;
 
@@ -903,20 +898,20 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
 
-    const spacer = 32;
+    const spacer = 33;
 
     // add headers for the subsections
     const subSectionHeaders = teamSvg.append("text")
-      .text("TEAM SIZE")
+      .text("TEAM TOTAL")
       .attr("class","teamHeaders")
       .attr("text-anchor", "start")
-      .attr("transform", "translate(160,5)")
-    if (thisLeader.data.role1Count > 0) {
+      .attr("transform", "translate(158,5)")
+    if (thisLeader.data.role1CountLead > 0) {
       subSectionHeaders.append('svg:tspan')
       .text(rolename1)
       .attr("x",0).attr("dy", spacer);
     }
-    if (thisLeader.data.role2Count > 0) {
+    if (thisLeader.data.role2CountLead > 0) {
       subSectionHeaders.append('svg:tspan')
       .text(rolename2)
       .attr("x",0).attr("dy", spacer);
@@ -927,16 +922,16 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .text(thisLeader.data.teamSize)
       .attr("class","empCounts")
       .attr("text-anchor", "start")
-      .attr("transform", "translate(160,23)")
-    if (thisLeader.data.role1Count > 0) {
+      .attr("transform", "translate(158,23)")
+    if (thisLeader.data.role1CountLead > 0) {
       empCounts.append('svg:tspan')
-      .text(thisLeader.data.role1Count)
+      .text(thisLeader.data.role1CountLead)
       .attr("class", "role1")
       .attr("x",0).attr("dy", spacer);
     }
-    if (thisLeader.data.role2Count > 0) {
+    if (thisLeader.data.role2CountLead > 0) {
       empCounts.append('svg:tspan')
-      .text(thisLeader.data.role2Count)
+      .text(thisLeader.data.role2CountLead)
       .attr("class", "role2")
       .attr("x",0).attr("dy", spacer);
     }
@@ -947,7 +942,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     const arcsT = teamSvg.selectAll("arc")
       .data(pie(pieDataT))
       .join("g")
-      .attr("transform", "translate(195,17.5)");
+      .attr("transform", "translate(193,17.5)");
     arcsT.append("path")
       .attr("fill", (data, i) => i===0 ? color3A : color3C)
       .attr("d", d3.arc().innerRadius(6).outerRadius(9.5));
@@ -959,37 +954,37 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .attr("dy",3);
 
     // add donut chart for role1
-    if (thisLeader.data.role1Count > 0) {
-      const pieData1 = [thisLeader.data.role1FteCount,thisLeader.data.role1Count - thisLeader.data.role1FteCount];
+    if (thisLeader.data.role1CountLead > 0) {
+      const pieData1 = [thisLeader.data.role1FteCount,thisLeader.data.role1CountLead - thisLeader.data.role1FteCount];
       const arcs1 = teamSvg.selectAll("arc")
         .data(pie(pieData1))
         .join("g")
-        .attr("transform", `translate(195,${17.5+spacer})`);
+        .attr("transform", `translate(193,${17.5+spacer})`);
       arcs1.append("path")
         .attr("fill", (data, i) => i===0 ? color1A : color1B)
         .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
       // label the donut chart
       arcs1.append("text")
-        .text(Math.round(100*(thisLeader.data.role1FteCount/thisLeader.data.role1Count))+"%")
+        .text(Math.round(100*(thisLeader.data.role1FteCount/thisLeader.data.role1CountLead))+"%")
         .attr("class","teamFte")
         .attr("text-anchor", "middle")
         .attr("dy",3);
     }
 
     // add donut chart for role2
-    const spacer2 = (thisLeader.data.role1Count > 0 ? spacer*2 : spacer);
-    if (thisLeader.data.role2Count > 0) {
-      const pieData2 = [thisLeader.data.role2FteCount,thisLeader.data.role2Count - thisLeader.data.role2FteCount];
+    const spacer2 = (thisLeader.data.role1CountLead > 0 ? spacer*2 : spacer);
+    if (thisLeader.data.role2CountLead > 0) {
+      const pieData2 = [thisLeader.data.role2FteCount,thisLeader.data.role2CountLead - thisLeader.data.role2FteCount];
       const arcs2 = teamSvg.selectAll("arc")
         .data(pie(pieData2))
         .join("g")
-        .attr("transform", `translate(195,${17.5+spacer2})`);
+        .attr("transform", `translate(193,${17.5+spacer2})`);
       arcs2.append("path")
         .attr("fill", (data, i) => i===0 ? color2A : color2B)
         .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
       // label the donut chart
       arcs2.append("text")
-        .text(Math.round(100*(thisLeader.data.role2FteCount/thisLeader.data.role2Count))+"%")
+        .text(Math.round(100*(thisLeader.data.role2FteCount/thisLeader.data.role2CountLead))+"%")
         .attr("class","teamFte")
         .attr("text-anchor", "middle")
         .attr("dy",3);
@@ -1003,7 +998,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     thisTeamCard.select("svg").selectAll("circle .role1.emp")
       .data(thisLeader.data.role1s)
       .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
+        .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))
         .attr("cy", (d,iRole) => 30 + 8.5*Math.floor(iRole/rowCount))
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : color1A ))
         .attr("r", 2.8)
@@ -1027,8 +1022,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     thisTeamCard.select("svg").selectAll("circle .role2.emp")
       .data(thisLeader.data.role2s)
       .join("circle")
-        .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
-        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 8.5*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 8.5*Math.floor(iRole/rowCount) )
+        .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))
+        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1CountLead>0 ? 13 + 8.5*Math.floor(thisLeader.data.role1CountLead/rowCount) : 0) + 8.5*Math.floor(iRole/rowCount) )
         .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : color2A ))
         .attr("r", 2.8)
         .attr("class","role2 emp")
