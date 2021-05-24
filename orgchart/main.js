@@ -738,7 +738,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("g")
     .attr("transform", "translate(143,53)");
   arcs1.append("path")
-    .attr("fill", (data, i) => i===0 ? color1A : color1B )
+    .attr("class", (data, i) => i===0 ? "role1 fte" : "role1 etw")
     .attr("d", d3.arc().innerRadius(21).outerRadius(28));
 
   // label the donut chart
@@ -763,7 +763,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("g")
     .attr("transform", "translate(143,53)");
   arcs2.append("path")
-    .attr("fill", (data, i) => i===0 ? color2A : color2B )
+    .attr("class", (data, i) => i===0 ? "role2 fte" : "role2 etw")
     .attr("d", d3.arc().innerRadius(21).outerRadius(28));
 
   // label the donut chart
@@ -818,7 +818,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr("y", d => y(d[0]) )
     .attr("width", d => x(d[1]) )
     .attr("height", y.bandwidth() )
-    .attr("fill", d=> ( d[0].includes(rolename1) ? color1A : color2A ));
+    .attr("class", d=> ( d[0].includes(rolename1) ? "role1 fte" : "role2 fte" ));
 
   // add job titles to the bars
   barSvg.selectAll("text")
@@ -961,7 +961,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         .join("g")
         .attr("transform", `translate(193,${17.5+spacer})`);
       arcs1.append("path")
-        .attr("fill", (data, i) => i===0 ? color1A : color1B)
+        .attr("class", (data, i) => i===0 ? "role1 fte" : "role1 etw")
         .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
       // label the donut chart
       arcs1.append("text")
@@ -980,7 +980,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         .join("g")
         .attr("transform", `translate(193,${17.5+spacer2})`);
       arcs2.append("path")
-        .attr("fill", (data, i) => i===0 ? color2A : color2B)
+        .attr("class", (data, i) => i===0 ? "role2 fte" : "role2 etw")
         .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
       // label the donut chart
       arcs2.append("text")
@@ -995,14 +995,13 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
     // add a circle for each employee of role 1
-    thisTeamCard.select("svg").selectAll("circle .role1.emp")
+    teamSvg.selectAll("circle .role1.emp")
       .data(thisLeader.data.role1s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))
         .attr("cy", (d,iRole) => 30 + 8.5*Math.floor(iRole/rowCount))
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : color1A ))
         .attr("r", 2.8)
-        .attr("class","role1 emp")
+        .attr("class",d=> ( d.data.display_name.includes(etwText) ? "role1 etw" : "role1 fte" ))
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
             .duration(200)
@@ -1019,14 +1018,13 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         });
 
     // add a circle for each employee of role 2
-    thisTeamCard.select("svg").selectAll("circle .role2.emp")
+    teamSvg.selectAll("circle .role2.emp")
       .data(thisLeader.data.role2s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))
         .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1CountLead>0 ? 13 + 8.5*Math.floor(thisLeader.data.role1CountLead/rowCount) : 0) + 8.5*Math.floor(iRole/rowCount) )
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : color2A ))
         .attr("r", 2.8)
-        .attr("class","role2 emp")
+        .attr("class",d=> ( d.data.display_name.includes(etwText) ? "role2 etw" : "role2 fte" ))
         .on("mouseover", function(event,d) {
           tooltipEmp.transition()
             .duration(200)

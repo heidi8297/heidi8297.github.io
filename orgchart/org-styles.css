@@ -160,14 +160,22 @@ a:hover {
   letter-spacing: 1px;
 }
 
-.inputRole1, .role1 .roleCountLg, .empCounts .role1 {
+.inputRole1, .role1 .roleCountLg, .empCounts .role1, .role1.fte {
   fill: url(#role1Gradient);
   color: url(#role1Gradient);
 }
 
-.inputRole2, .role2 .roleCountLg, .empCounts .role2 {
+.inputRole2, .role2 .roleCountLg, .empCounts .role2, .role2.fte {
   fill: url(#role2Gradient);
   color: url(#role2Gradient);
+}
+
+.role1.etw {
+  fill: #9EBEF2;
+}
+
+.role2.etw {
+  fill: #FFDBAE;
 }
 
 
@@ -314,10 +322,6 @@ h5.titleText {  /* job title of leader */
   right: 5px;
   bottom: 35px;
   margin-bottom: -25px;
-}
-
-.teamGraphs circle:hover {
-  fill: red;
 }
 
 .teamSizeLabel, .teamHeaders {
