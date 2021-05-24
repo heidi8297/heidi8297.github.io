@@ -24,7 +24,7 @@ h4 {
 h5 {
   font-size: 0.83rem;
   font-weight: normal;
-  margin-bottom: 0rem;
+  margin-bottom: 0;
 }
 
 p {
@@ -53,7 +53,7 @@ a:hover {
 /* Force graph and loading animation */
 
 .orgForce {
-  margin: 0%;
+  margin: 0;
 }
 
 #forceGif {
@@ -92,7 +92,7 @@ a:hover {
 }
 
 #role2Gradient .stop-right {
-  stop-color: #FCCF31;
+  stop-color: #FCD441;
 }
 
 .orgChartArea {
@@ -137,13 +137,13 @@ a:hover {
 }
 
 .inputRole2::placeholder {
-  background: linear-gradient(90deg, #F58555, #FCCF31);
+  background: linear-gradient(90deg, #F58555, #FCD441);
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .inputRole2:not(:placeholder-shown)  {
-  background: linear-gradient(90deg, #F58555, #FCCF31);
+  background: linear-gradient(90deg, #F58555, #FCD441);
   -webkit-background-clip: text, padding-box;
           background-clip: text, padding-box;
   -webkit-text-fill-color: transparent;
@@ -204,6 +204,7 @@ a:hover {
   font-weight: 400;
   height: auto;
   letter-spacing: 0px;
+  opacity: 0;
   padding: 3px 6px;
   pointer-events: none;
   position: absolute;
@@ -265,8 +266,8 @@ a:hover {
 }
 
 .roleGraph.titles .barTitle {
-  font-size: 0.6rem;
-  font-family: 'Quattrocento', serif;
+  font-size: 0.55rem;
+  font-family: 'Oswald', sans-serif;
   transform: translate(10px,15px);
 }
 

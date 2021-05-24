@@ -9,19 +9,25 @@ var startTime = new Date();
 
 var treeFile = "DMOrgChart.json";
 const animationDelay = 1000;
-const idealTeamSize = 35;
+const idealTeamSize = 105;
 
 const forceImage = d3.select("#forceGif");
 const whiteBox = d3.select(".whiteBox");
 const removeStuff = d3.selectAll(".orgForce img");
 
-const color1A = "#4C70D6";
-const color1B = "#B4C2F1";
-const color2A = "#FDA943";
+const color1A = "url(#role1Gradient)";
+const color1B = "#9EBEF2";
+const color2A = "url(#role2Gradient)";
 const color2B = "#FFDBAE";
 const color3A = "#999";
 const color3B = "#CCC";
 const color3C = "#DDD";
+const colorOrder = {
+  "url(#role1Gradient)" : 1,
+  "#9EBEF2" : 2,
+  "url(#role2Gradient)" : 3,
+  "#FFDBAE" : 4
+};
 
 whiteBox.transition()
   .duration(500)
@@ -61,7 +67,7 @@ if (treeFile === "DMOrgChart.json") {
   inputRole1.value = "COMPLIANCE";
   inputRole2 = document.querySelector(".inputRole2");
   inputRole2.value = "RISK";
-  etwText = "ER";
+  etwText = "(TMP";
 }
 
 // may get rid of this function at some point - keeping it here for later use
@@ -126,12 +132,12 @@ function responsivefy(thisSvg,maxWidth=4000) {
 
 
 
-var rolename1 = document.getElementsByName("rolename1")[0].value.toUpperCase();
-var rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
+var rolename1 = document.getElementsByName("rolename1")[0].value.trim().toUpperCase();
+var rolename2 = document.getElementsByName("rolename2")[0].value.trim().toUpperCase();
 
 function formChanged() {
-  rolename1 = document.getElementsByName("rolename1")[0].value.toUpperCase();
-  rolename2 = document.getElementsByName("rolename2")[0].value.toUpperCase();
+  rolename1 = document.getElementsByName("rolename1")[0].value.trim().toUpperCase();
+  rolename2 = document.getElementsByName("rolename2")[0].value.trim().toUpperCase();
   rolename1 = (rolename1 === "" ? "sdjkadjskladsds" : rolename1);
   rolename2 = (rolename2 === "" ? "sdjkadjskladsds" : rolename2);
   console.log("form changed",rolename1,rolename2);
@@ -196,12 +202,11 @@ role2Gradient.append('stop')
 
 // Define the divs for the tooltips
 const tooltipTree = d3.select("body").append("div")
-  .attr("class", "tooltip tooltipTree")
-  .style("opacity", 0);
-
+  .attr("class", "tooltip tooltipTree");
 const tooltipEmp = d3.select("body").append("div")
-  .attr("class", "tooltip tooltipEmp")
-  .style("opacity", 0);
+  .attr("class", "tooltip tooltipEmp");
+const tooltipAnc = d3.select("body").append("div")
+  .attr("class", "tooltip tooltipAnc");
 
 
 // declares a tree layout and assigns the size
@@ -214,13 +219,13 @@ function colorCircle(dataArray) {
     if (dataArray.display_name.includes(etwText)) {
       return color1B
     } else {
-      return "url(#role1Gradient)"
+      return color1A
     }
   } else if (dataArray.title.includes(rolename2)) {
     if (dataArray.display_name.includes(etwText)) {
       return color2B
     } else {
-      return "url(#role2Gradient)"
+      return color2A
     }
   } else {
     if (dataArray.display_name.includes(etwText)) {
@@ -233,19 +238,14 @@ function colorCircle(dataArray) {
 
 // define the radius of the "child" circles that show up around parent nodes
 function childCircleRadius(childCount) {
-  if (childCount < 9) {
-    return 2.2
-  } else if (childCount < 20) {
-    return 1.6
-  } else {
-    return 1.4
-  }
+  if (childCount < 9) { return 2.2 }
+  else if (childCount < 20) { return 1.6 }
+  else { return 1.4 }
 }
 
 
 
 function renderForceTree() { d3.json(treeFile).then( function(flatData) {
-  // chart = {
     var forceData = d3.stratify()
       .id(d => d.user_ntid)
       .parentId(d => d.manager_ntid)
@@ -404,6 +404,22 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             teamLeaders.push(identifiedLeader);
             identifiedLeader.data.teamSize = identifiedTeamCount;
 
+            let ancestry = "";
+            identifiedLeader.ancestors().forEach(function(fancyLeader) {
+              ancestry = fancyLeader.data.display_name+ " > "+ancestry;
+            })
+
+            // calculate role-specific fte counts
+            let role1FteCount = 0;
+            let role2FteCount = 0;
+            identifiedLeader.data.role12Nodes.forEach(function(thisEmp) {
+              if (thisEmp.data.title.includes(rolename1) && !thisEmp.data.display_name.includes(etwText)){
+                role1FteCount++;
+              }
+              if (thisEmp.data.title.includes(rolename2) && !thisEmp.data.display_name.includes(etwText)){
+                role2FteCount++;
+              }
+            });
 
             // calculate how many role1 and role2 titles are under the identified leader
             let role1s = [];
@@ -411,8 +427,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
             let vpCount = 0;
             let srdrCount = 0;
             let ebandCount = 0;
-            for (var j = 0; j < identifiedTeamCount; j++ ) {
-              const thisEmp = identifiedLeader.descendants()[j];
+            identifiedLeader.descendants().forEach(function(thisEmp) {
               const thisTitle = thisEmp.data.title;
               if (thisTitle.includes(rolename1)) { role1s.push(thisEmp) };
               if (thisTitle.includes(rolename2)) { role2s.push(thisEmp) };
@@ -421,15 +436,16 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
               if (thisTitle.includes("SR DIR")) {srdrCount++};
               if (thisTitle.includes("PRINCIPAL")) {ebandCount++};
               if (thisTitle.includes("DIR")) {ebandCount++};
-
-            }
+            })
             identifiedLeader.data.role1s = role1s.sort(emp => (emp.data.display_name.includes(etwText) ? 1 : -1));
             identifiedLeader.data.role2s = role2s.sort(emp => (emp.data.display_name.includes(etwText) ? 1 : -1));
+            identifiedLeader.data.role1FteCount = role1FteCount;
+            identifiedLeader.data.role2FteCount = role2FteCount;
             identifiedLeader.data.vpCount = vpCount;
             identifiedLeader.data.srdrCount = srdrCount;
             identifiedLeader.data.ebandCount = ebandCount;
             identifiedLeader.data.ftePercent = Math.round(1000*identifiedLeader.data.fteCount/identifiedTeamCount)/1000;
-
+            identifiedLeader.data.ancestry = ancestry.slice(0,-3);
           };
 
         } else {
@@ -547,9 +563,9 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           d.data.role12Nodes.forEach(function(thisNode){
             myColorList.push(colorCircle(thisNode.data))
           });
-          myColorList.sort();
+          myColorList.sort((a,b) => colorOrder[a] - colorOrder[b]);
           // this "shift" allows the circles to lay better when there are a lot of them (in most cases)
-          myColorList = shift(myColorList,1,Math.ceil(myColorList.length/12));
+          myColorList = shift(myColorList,-1,Math.ceil(myColorList.length/12));
 
           // populate one entry in indexData for each role1 and role2 identified
           var indexData = Array.from({length: d.data.role1Count+d.data.role2Count}, (_, i) => i);  // [0,1,2,...]
@@ -700,18 +716,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   d3.select(".roleGraph.role2").html("");
   d3.select(".roleGraph.titles").html("");
 
-  // calculate role-specific fte counts for usage in graphs (might want to move this higher)
-  let role1FteCount = 0;
-  let role2FteCount = 0;
-  root.data.role12Nodes.forEach(function(thisEmp) {
-    if (thisEmp.data.title.includes(rolename1) && !thisEmp.data.display_name.includes(etwText)){
-      role1FteCount++;
-    }
-    if (thisEmp.data.title.includes(rolename2) && !thisEmp.data.display_name.includes(etwText)){
-      role2FteCount++;
-    }
-  });
-
   // initiate svgs for each section
   const role1Svg = d3.select(".roleGraph.role1").attr("id", "role1Svg")
     .append("svg")
@@ -750,18 +754,18 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr("class","roleCountDesc next");
 
   // add donut chart to represent FTE % for role 1
-  const pieDataRole1 = [role1FteCount,root.data.role1Count-role1FteCount];
+  const pieDataRole1 = [root.data.role1FteCount,root.data.role1Count-root.data.role1FteCount];
   const arcs1 = role1Svg.selectAll("arc")
     .data(pie(pieDataRole1))
     .join("g")
     .attr("transform", "translate(135,50)");
   arcs1.append("path")
-    .attr("fill", (data, i) => i===0 ? "url(#role1Gradient)" : color1B )
+    .attr("fill", (data, i) => i===0 ? color1A : color1B )
     .attr("d", d3.arc().innerRadius(17).outerRadius(22));
 
   // label the donut chart
   arcs1.append("text")
-    .text(Math.round(100*(role1FteCount/root.data.role1Count))+"%")
+    .text(Math.round(100*(root.data.role1FteCount/root.data.role1Count))+"%")
     .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
@@ -772,18 +776,18 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .attr('dy', 8);
 
   // add donut chart to represent FTE % for role 2
-  const pieDataRole2 = [role2FteCount,root.data.role2Count-role2FteCount];
+  const pieDataRole2 = [root.data.role2FteCount,root.data.role2Count-root.data.role2FteCount];
   const arcs2 = role2Svg.selectAll("arc")
     .data(pie(pieDataRole2))
     .join("g")
     .attr("transform", "translate(135,50)");
   arcs2.append("path")
-    .attr("fill", (data, i) => i===0 ? "url(#role2Gradient)" : color2B )
+    .attr("fill", (data, i) => i===0 ? color2A : color2B )
     .attr("d", d3.arc().innerRadius(17).outerRadius(22));
 
   // label the donut chart
   arcs2.append("text")
-    .text(Math.round(100*(role2FteCount/root.data.role2Count))+"%")
+    .text(Math.round(100*(root.data.role2FteCount/root.data.role2Count))+"%")
     .attr("class","roleFtePct")
     .attr("text-anchor", "middle")
     .attr("dy",2)
@@ -796,7 +800,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
   // create a bar chart of top job titles
-  var barMargin = {top: 22, right: 10, bottom: 8, left: 10};
+  var barMargin = {top: 20, right: 10, bottom: 8, left: 10};
   barSvg = roleTitleSvg.append("g")
     .attr("transform", "translate(" + barMargin.left + "," + barMargin.top + ")");
 
@@ -808,18 +812,18 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // Y axis
   var y = d3.scaleBand()
     .range([ 0, 110 - barMargin.top - barMargin.bottom ])
-    .domain(role12Titles.slice(0, 8).map(function(d) { return d[0]; }))
-    .padding(.2);
+    .domain(role12Titles.slice(0, 8).map(d => d[0] ))
+    .padding(.25);
 
   // background bars
   barSvg.selectAll("rect")
     .data(role12Titles.slice(0, 8))
     .join("rect")
     .attr("x", x(0) )
-    .attr("y", function(d) { return y(d[0]); })
+    .attr("y", d => y(d[0]) )
     .attr("width", 200 - barMargin.left - barMargin.right)
     .attr("height", y.bandwidth() )
-    .attr("fill","#DDD");
+    .attr("fill","#EEE");
 
   //Bars
   barSvg.selectAll("rect.dt")
@@ -827,10 +831,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("rect")
     .attr("class","dt")
     .attr("x", x(0) )
-    .attr("y", function(d) { return y(d[0]); })
-    .attr("width", function(d) { return x(d[1]); })
+    .attr("y", d => y(d[0]) )
+    .attr("width", d => x(d[1]) )
     .attr("height", y.bandwidth() )
-    .attr("fill", d=> ( d[0].includes(rolename1) ? "url(#role1Gradient)" : "url(#role2Gradient)" ));
+    .attr("fill", d=> ( d[0].includes(rolename1) ? color1A : color2A ));
 
   // add job titles to the bars
   barSvg.selectAll("text")
@@ -838,11 +842,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     .join("text")
     .text(d=> d[0] + "  -  ("+d[1]+")")
     .attr("x", 2)
-    .attr("y", function(d) { return y(d[0])+6; });
+    .attr("y", d => y(d[0])+6 );
 
   roleTitleSvg.append("text")
     .attr("class","barTitle")
-    .text("Top Job Titles (FTE only)");
+    .text("TOP JOB TITLES (FTE)");
 
 
 
@@ -865,7 +869,6 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   // Add content to the individual team cards
   teamLeaders.forEach(function(thisLeader) {
-    // const attributes = thisLeader.data;
     const roleCountTotal = thisLeader.data.role1Count + thisLeader.data.role2Count;
     console.log(thisLeader.data.display_name,"(",roleCountTotal,")");
     const thisTeamCard = d3.select("."+thisLeader.data.user_ntid);
@@ -885,6 +888,31 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .attr("height", 90)
       .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
       .call(responsivefy,maxWidth=400);
+
+    // create an invisible rectangle to enable a tooltip for the leader name;
+    teamSvg.append("rect")
+      .attr("x", 0 )
+      .attr("y", 0 )
+      .attr("width", 150)
+      .attr("height", 18 )
+      .attr("fill","#eee")
+      .attr("opacity",0)
+
+      // tooltip
+      .on("mouseover", function(event,d) {
+        tooltipAnc.transition()
+          .duration(200)
+          .style("opacity", 0.9);
+        tooltipAnc.html(thisLeader.data.ancestry)
+          .style("left", (event.pageX + 6) + "px")
+          .style("top", (event.pageY - 12) + "px");
+      })
+      .on("mouseout", function(d) {
+        tooltipAnc.transition()
+         .duration(500)
+         .style("opacity", 0);
+      });;
+
 
     // add "team size" count
     teamSvg.append("text")
@@ -925,8 +953,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .data(thisLeader.data.role1s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
-        .attr("cy", (d,iRole) => 30 + 9*Math.floor(iRole/rowCount))
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : "url(#role1Gradient)" ))
+        .attr("cy", (d,iRole) => 30 + 8.5*Math.floor(iRole/rowCount))
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color1B : color1A ))
         .attr("r", 2.8)
         .attr("class","role1 emp")
         .on("mouseover", function(event,d) {
@@ -949,8 +977,8 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .data(thisLeader.data.role2s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.3)%(rowCount*7.3))
-        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 9*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 9*Math.floor(iRole/rowCount) )
-        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : "url(#role2Gradient)" ))
+        .attr("cy", (d,iRole) => 30 + (thisLeader.data.role1Count>0 ? 13 + 8.5*Math.floor(thisLeader.data.role1Count/rowCount) : 0) + 8.5*Math.floor(iRole/rowCount) )
+        .style("fill",d=> ( d.data.display_name.includes(etwText) ? color2B : color2A ))
         .attr("r", 2.8)
         .attr("class","role2 emp")
         .on("mouseover", function(event,d) {
