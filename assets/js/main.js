@@ -176,10 +176,10 @@ function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
 };
 
 // Color scale: give me a number, I return a color
-const color = d3.scaleOrdinal()
-	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
-		"#7c97ff","#58b2ff","#77DBFD","#7fecd3","#C3E6A6"]);
+// const color = d3.scaleOrdinal()
+// 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
+// 	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+// 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6"]);
 
 
 // used to create semi-randomness in the color order
@@ -265,6 +265,63 @@ const svg = d3.select('.canvas')
     .attr('width', svgWidth)
     .attr('height', svgHeight)
 		.call(responsivefy);
+
+
+// DEFINE A SET OF GRADIENTS
+// Create the svg:defs element
+var svgDefs = svg.append('defs');
+
+// define 12 gradients
+var grad01 = svgDefs.append('linearGradient').attr('id', 'grad01');
+grad01.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad01.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad02 = svgDefs.append('linearGradient').attr('id', 'grad02');
+grad02.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad02.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad03 = svgDefs.append('linearGradient').attr('id', 'grad03');
+grad03.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad03.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad04 = svgDefs.append('linearGradient').attr('id', 'grad04');
+grad04.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad04.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad05 = svgDefs.append('linearGradient').attr('id', 'grad05');
+grad05.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad05.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad06 = svgDefs.append('linearGradient').attr('id', 'grad06');
+grad06.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad06.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad07 = svgDefs.append('linearGradient').attr('id', 'grad07');
+grad07.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad07.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad08 = svgDefs.append('linearGradient').attr('id', 'grad08');
+grad08.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad08.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad09 = svgDefs.append('linearGradient').attr('id', 'grad09');
+grad09.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad09.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad10 = svgDefs.append('linearGradient').attr('id', 'grad10');
+grad10.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad10.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad11 = svgDefs.append('linearGradient').attr('id', 'grad11');
+grad11.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad11.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+var grad12 = svgDefs.append('linearGradient').attr('id', 'grad12');
+grad12.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
+grad12.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
+
+
+// Color scale: give me a number, I return a color
+// const color = d3.scaleOrdinal()
+// 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
+// 	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+// 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6"]);
+
+const color = d3.scaleOrdinal()
+	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
+	.range(["url(#grad01)","url(#grad01)","url(#grad02)","url(#grad03)","url(#grad04)","url(#grad05)","url(#grad06)",
+		"url(#grad07)","url(#grad08)","url(#grad09)","url(#grad10)","url(#grad11)","url(#grad12)"]);
+
+
 
 const graph = svg.append('g')
   .attr('width',graphWidth)

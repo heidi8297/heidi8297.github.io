@@ -67,13 +67,40 @@ letter-spacing: 0.15px; */
 /* D3 viz animation */
 .canvas {
   position: relative;
+  height: 80%;
 }
 
 /* this div will be layered directly on top of the "canvas" div */
 .canvasForce {
   position: relative;
-  bottom: calc(100vw * 0.5066); /* shift up by the height of the "canvas" element */
+  height: 80%;
+  bottom: 80%; /* shift up by the height of the "canvas" element */
 }
+
+#grad01 .stop-left {stop-color: #FFEE88;}
+#grad01 .stop-right {stop-color: #FFE06E;}
+#grad02 .stop-left {stop-color: #ffcc6d;}
+#grad02 .stop-right {stop-color: #FFB751;}
+#grad03 .stop-left {stop-color: #FFAC69;}
+#grad03 .stop-right {stop-color: #FF9751;}
+#grad04 .stop-left {stop-color: #ff9473;}
+#grad04 .stop-right {stop-color: #FF7C5E;}
+#grad05 .stop-left {stop-color: #fe8187;}
+#grad05 .stop-right {stop-color: #FE707E;}
+#grad06 .stop-left {stop-color: #E37FD8;}
+#grad06 .stop-right {stop-color: #E374DC;}
+#grad07 .stop-left {stop-color: #ad8aff;}
+#grad07 .stop-right {stop-color: #9875FF;}
+#grad08 .stop-left {stop-color: #7C97FF;}
+#grad08 .stop-right {stop-color: #638DFF;}
+#grad09 .stop-left {stop-color: #66B9FF;}
+#grad09 .stop-right {stop-color: #4ABDFF;}
+#grad10 .stop-left {stop-color: #77DBFD;}
+#grad10 .stop-right {stop-color: #56E4FD;}
+#grad11 .stop-left {stop-color: #83E8D0;}
+#grad11 .stop-right {stop-color: #66E8BD;}
+#grad12 .stop-left {stop-color: #C3E6A6;}
+#grad12 .stop-right {stop-color: #BFE68C;}
 
 
 /* be careful with this one - as adjustments are made to the viz, will need to check
@@ -82,11 +109,12 @@ and make sure the svg is still positioned well */
   overflow: visible;
 }
 
+.container {   display: flex;   justify-content: center; }
 
 /* for particularly wide screens, shrink the canvas so it fits on the screen */
 @media only screen and (min-aspect-ratio: 5/3) {
   .canvas svg, .canvasForce svg {
-    padding: 0 8% 14% 8%;
+    padding: 0 8% 13% 8%;
   }
 }
 
