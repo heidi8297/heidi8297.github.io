@@ -109,7 +109,10 @@ and make sure the svg is still positioned well */
   overflow: visible;
 }
 
-.container {   display: flex;   justify-content: center; }
+.svgContain {
+  display: flex;
+  justify-content: center;
+}
 
 /* for particularly wide screens, shrink the canvas so it fits on the screen */
 @media only screen and (min-aspect-ratio: 5/3) {
@@ -146,7 +149,7 @@ and make sure the svg is still positioned well */
 # About Me
 --------------------------------------------------------------*/
 #aboutMe {
-  background-color: #DEE7FF;
+  background-image: linear-gradient(#DEEDFF, #DEE2FF);
   padding: calc(7% + 10px) 12%;
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
 }
@@ -351,7 +354,7 @@ and make sure the svg is still positioned well */
 --------------------------------------------------------------*/
 
 #testimonial-carousel, .carousel-inner.heidis-carousel  {
-  background-color: #DEE7FF;
+  background-image: linear-gradient(#DEEDFF, #DEE2FF);
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
   height: 330px;
 }
