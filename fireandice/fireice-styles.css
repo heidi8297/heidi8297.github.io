@@ -87,6 +87,11 @@ text.monthLabel {
 #gradRain .stop-left {stop-color: #87E0E9;}
 #gradRain .stop-right {stop-color: #74B8C9;}
 
+#gradHaze .stop-1 {stop-color: #7F7F7F44;}
+#gradHaze .stop-2 {stop-color: #ACACAC44;}
+#gradHaze .stop-3 {stop-color: #D9D9D919;}
+#gradHaze .stop-4 {stop-color: #D9D9D901;}
+
 line.snow {
   stroke-width: 3;
   opacity: 0.8;

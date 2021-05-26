@@ -7,6 +7,8 @@ const snowRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
 const bubbleRad2 = 4.6;
+const hazeRad = 140;
+const hazeRad2 = 5;
 const fireScale = 0.0004;
 const snowScale = 8;
 const iceScale = snowScale*12;
@@ -95,6 +97,11 @@ var svgDefs = svg.append('defs');
 var gradRain = svgDefs.append('linearGradient').attr('id', 'gradRain');
 gradRain.append('stop').attr('class', 'stop-left').attr('offset', '0.15');
 gradRain.append('stop').attr('class', 'stop-right').attr('offset', '0.85');
+var gradHaze = svgDefs.append('radialGradient').attr('id', 'gradHaze');
+gradHaze.append('stop').attr('class', 'stop-1').attr('offset', '0.04');
+gradHaze.append('stop').attr('class', 'stop-2').attr('offset', '0.31');
+gradHaze.append('stop').attr('class', 'stop-3').attr('offset', '0.76');
+gradHaze.append('stop').attr('class', 'stop-4').attr('offset', '0.91');
 
 
 const xAxis = g.append("g")
@@ -216,6 +223,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   console.log(flatData);
 
+  // add circles to represent precipitation
   g.selectAll("circle.fireice")
     .data(flatData)
     .enter().append("circle")
@@ -225,6 +233,17 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)))
     .attr("opacity",0.7)
     .attr("fill","url(#gradRain)");
+
+
+  // add circles to represent smoke or haze
+  g.selectAll("circle.haze")
+    .data(flatData)
+    .enter().append("circle")
+    .attr("class","haze")
+    .attr("cx", d=> yScale(hazeRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("cy", d=> yScale(hazeRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("r", d=> yScale(hazeRad2*(d.HazeSourceCount === "" ? 0 : d.HazeSourceCount)))
+    .attr("fill","url(#gradHaze)");
 
   // add lines for snow
   g.selectAll("line.snow")
