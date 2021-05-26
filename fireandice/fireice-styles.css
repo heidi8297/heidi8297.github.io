@@ -84,6 +84,21 @@ text.monthLabel {
   color: #444444;
 }
 
+#gradRain .stop-left {stop-color: #87E0E9;}
+#gradRain .stop-right {stop-color: #74B8C9;}
+
+line.snow {
+  stroke-width: 3;
+  opacity: 0.8;
+  stroke: #23A9DA;
+}
+
+line.ice {
+  stroke-width: 3;
+  opacity: 0.8;
+  stroke: #238ADA;
+}
+
 line.wildfire {
   stroke-width: 3;
   opacity: 0.8;

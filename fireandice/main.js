@@ -3,10 +3,13 @@
 
 
 const fireRad = 110;
+const snowRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
 const bubbleRad2 = 4.6;
 const fireScale = 0.0004;
+const snowScale = 8;
+const iceScale = snowScale*12;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -82,6 +85,17 @@ const lineGenerator = d3.lineRadial()
 // Elements
 const svg = d3.select(".radialChart").append("svg");
 const g = svg.append("g");
+
+
+// DEFINE A SET OF GRADIENTS
+// Create the svg:defs element
+var svgDefs = svg.append('defs');
+
+// define gradients
+var gradRain = svgDefs.append('linearGradient').attr('id', 'gradRain');
+gradRain.append('stop').attr('class', 'stop-left').attr('offset', '0.15');
+gradRain.append('stop').attr('class', 'stop-right').attr('offset', '0.85');
+
 
 const xAxis = g.append("g")
     .attr("class", "axis");
@@ -210,9 +224,32 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("cy", d=> yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
     .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)))
     .attr("opacity",0.7)
-    .attr("fill","#86E0E9")
+    .attr("fill","url(#gradRain)");
 
-  });
+  // add lines for snow
+  g.selectAll("line.snow")
+    .data(flatData)
+    .enter().append("line")
+    .attr("class", "snow" )
+    .attr("x1", d => yScale(snowRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("y1", d => yScale(snowRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("x2", d => (yScale(snowRad+snowScale*parseFloat(d.DailySnowfall === "" ? 0 : d.DailySnowfall )))*Math.cos(xScaleReal(parseTime(d.DATE))) )
+    .attr("y2", d => (yScale(snowRad+snowScale*parseFloat(d.DailySnowfall === "" ? 0 : d.DailySnowfall )))*Math.sin(xScaleReal(parseTime(d.DATE))) );
+
+  // add lines for ice
+  g.selectAll("line.ice")
+    .data(flatData)
+    .enter().append("line")
+    .attr("class", "ice" )
+    .attr("x1", d => yScale(snowRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("y1", d => yScale(snowRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("x2", d => (yScale(snowRad+iceScale*parseFloat(d.IceInches === "" ? 0 : d.IceInches )))*Math.cos(xScaleReal(parseTime(d.DATE))) )
+    .attr("y2", d => (yScale(snowRad+iceScale*parseFloat(d.IceInches === "" ? 0 : d.IceInches )))*Math.sin(xScaleReal(parseTime(d.DATE))) );
+
+
+  });  // ???
+
+
 }  // end of flatData / csv loading
 
 
