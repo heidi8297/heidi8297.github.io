@@ -90,7 +90,16 @@ text.monthLabel {
 #gradHaze .stop-1 {stop-color: #7F7F7F44;}
 #gradHaze .stop-2 {stop-color: #ACACAC44;}
 #gradHaze .stop-3 {stop-color: #D9D9D919;}
-#gradHaze .stop-4 {stop-color: #D9D9D901;}
+#gradHaze .stop-4 {stop-color: #D9D9D915;}
+
+circle.fireice {
+  opacity: 0.7;
+  fill: url(#gradRain);
+}
+
+circle.haze {
+  fill: url(#gradHaze);
+}
 
 line.snow {
   stroke-width: 3;
@@ -98,10 +107,20 @@ line.snow {
   stroke: #23A9DA;
 }
 
+path.snow {
+  opacity: 0.8;
+  fill: #23A9DA;
+}
+
 line.ice {
   stroke-width: 3;
   opacity: 0.8;
   stroke: #238ADA;
+}
+
+path.ice {
+  opacity: 0.8;
+  fill: #238ADA;
 }
 
 line.wildfire {

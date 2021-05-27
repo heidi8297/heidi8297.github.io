@@ -2,16 +2,14 @@
 // https://bl.ocks.org/HarryStevens/8b14e4a0bed88724926a9a0a63e7eb3b
 
 
-const fireRad = 110;
-const snowRad = 110;
+const lineRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
 const bubbleRad2 = 4.6;
 const hazeRad = 140;
 const hazeRad2 = 5;
 const fireScale = 0.0004;
-const snowScale = 8;
-const iceScale = snowScale*12;
+const iceScale = 87;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -225,45 +223,63 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   // add circles to represent precipitation
   g.selectAll("circle.fireice")
-    .data(flatData)
-    .enter().append("circle")
+    .data(flatData).enter()
+    .append("circle")
     .attr("class","fireice")
     .attr("cx", d=> yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
     .attr("cy", d=> yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)))
-    .attr("opacity",0.7)
-    .attr("fill","url(#gradRain)");
+    .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)));
 
 
   // add circles to represent smoke or haze
   g.selectAll("circle.haze")
-    .data(flatData)
-    .enter().append("circle")
+    .data(flatData).enter()
+    .filter(d => d.HazeSourceCount !== "")
+    .append("circle")
     .attr("class","haze")
     .attr("cx", d=> yScale(hazeRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
     .attr("cy", d=> yScale(hazeRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("r", d=> yScale(hazeRad2*(d.HazeSourceCount === "" ? 0 : d.HazeSourceCount)))
-    .attr("fill","url(#gradHaze)");
+    .attr("r", d=> yScale(hazeRad2*(d.HazeSourceCount)));
 
   // add lines for snow
   g.selectAll("line.snow")
-    .data(flatData)
-    .enter().append("line")
+    .data(flatData).enter()
+    .filter(d => d.DailySnowfallWE !== "")
+    .append("line")
     .attr("class", "snow" )
-    .attr("x1", d => yScale(snowRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
-    .attr("y1", d => yScale(snowRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("x2", d => (yScale(snowRad+snowScale*parseFloat(d.DailySnowfall === "" ? 0 : d.DailySnowfall )))*Math.cos(xScaleReal(parseTime(d.DATE))) )
-    .attr("y2", d => (yScale(snowRad+snowScale*parseFloat(d.DailySnowfall === "" ? 0 : d.DailySnowfall )))*Math.sin(xScaleReal(parseTime(d.DATE))) );
+    .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("x2", d => (yScale(lineRad+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE))) )
+    .attr("y2", d => (yScale(lineRad+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE))) );
 
   // add lines for ice
   g.selectAll("line.ice")
-    .data(flatData)
-    .enter().append("line")
+    .data(flatData).enter()
+    .filter(d => d.IceInches !== "")
+    .append("line")
     .attr("class", "ice" )
-    .attr("x1", d => yScale(snowRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
-    .attr("y1", d => yScale(snowRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("x2", d => (yScale(snowRad+iceScale*parseFloat(d.IceInches === "" ? 0 : d.IceInches )))*Math.cos(xScaleReal(parseTime(d.DATE))) )
-    .attr("y2", d => (yScale(snowRad+iceScale*parseFloat(d.IceInches === "" ? 0 : d.IceInches )))*Math.sin(xScaleReal(parseTime(d.DATE))) );
+    .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
+    .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
+    .attr("x2", d => (yScale(lineRad+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE))) )
+    .attr("y2", d => (yScale(lineRad+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE))) );
+
+  // add snowflake icons
+  g.selectAll("path.snow")
+    .data(flatData).enter()
+    .filter(d => d.DailySnowfallWE !== "")
+    .append("path")
+    .attr("class", "snow")
+    .attr("d",snowPath)
+    .attr("transform",d=>`translate (${(yScale(lineRad+3+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.04) translate (${-224},${-256})`);
+
+  // add icicle icons
+  g.selectAll("path.ice")
+    .data(flatData).enter()
+    .filter(d => d.IceInches !== "")
+    .append("path")
+    .attr("class", "ice")
+    .attr("d",icePath)
+    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.033) translate (${-256},${-256})`);
 
 
   });  // ???
@@ -274,23 +290,25 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
 d3.csv("PDXWildfires2017.csv").then( function(fireData) {
 
+  yScale.range([0, height / 3.5]);  // this is set twice to prevent issues with async
+
   g.selectAll("line.wildfire")
-    .data(fireData)
-    .enter().append("line")
+    .data(fireData).enter()
+    .append("line")
     .attr("class",function(d) {
       if (d.DaysUntilContainment <= 31) {return "wildfire level1"}
       else if (d.DaysUntilContainment <= 70) {return "wildfire level2"}
       else if (d.DaysUntilContainment <= 100) { return "wildfire level3" }
       else { return "wildfire level4"}
     } )
-    .attr("x1", d => yScale(fireRad)*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("y1", d => yScale(fireRad)*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("x2", d => (yScale(fireRad+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
-    .attr("y2", d => (yScale(fireRad+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
+    .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
+    .attr("x2", d => (yScale(lineRad+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
+    .attr("y2", d => (yScale(lineRad+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
   g.selectAll("path.fireIcon")
-    .data(fireData)
-    .enter().append("path")
+    .data(fireData).enter()
+    .append("path")
     .attr("class",function(d) {
       if (d.DaysUntilContainment <= 31) {return "fireIcon level1"}
       else if (d.DaysUntilContainment <= 70) {return "fireIcon level2"}
@@ -299,7 +317,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(yScale(fireRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(fireRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
 
     console.log(fireData);
 
