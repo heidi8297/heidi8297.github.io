@@ -5,11 +5,11 @@
 const lineRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
-const bubbleRad2 = 4.6;
-const hazeRad = 140;
-const hazeRad2 = 5;
+const bubbleRad2 = 0.14;
+const hazeRad = 138;
+const hazeRad2 = 4;
 const fireScale = 0.0004;
-const iceScale = 87;
+const iceScale = 86;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -43,6 +43,9 @@ const firePath = "m 61.604534,334.8 c 0.58,0.37 0.91,0.55 0.91,0.55 z m 93.78999
 const snowPath = "M440.3 345.2l-33.8-19.5 26-7c8.2-2.2 13.1-10.7 10.9-18.9l-4-14.9c-2.2-8.2-10.7-13.1-18.9-10.9l-70.8 19-63.9-37 63.8-36.9 70.8 19c8.2 2.2 16.7-2.7 18.9-10.9l4-14.9c2.2-8.2-2.7-16.7-10.9-18.9l-26-7 33.8-19.5c7.4-4.3 9.9-13.7 5.7-21.1L430.4 119c-4.3-7.4-13.7-9.9-21.1-5.7l-33.8 19.5 7-26c2.2-8.2-2.7-16.7-10.9-18.9l-14.9-4c-8.2-2.2-16.7 2.7-18.9 10.9l-19 70.8-62.8 36.2v-77.5l53.7-53.7c6.2-6.2 6.2-16.4 0-22.6l-11.3-11.3c-6.2-6.2-16.4-6.2-22.6 0L256 56.4V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v40.4l-19.7-19.7c-6.2-6.2-16.4-6.2-22.6 0L138.3 48c-6.3 6.2-6.3 16.4 0 22.6l53.7 53.7v77.5l-62.8-36.2-19-70.8c-2.2-8.2-10.7-13.1-18.9-10.9l-14.9 4c-8.2 2.2-13.1 10.7-10.9 18.9l7 26-33.8-19.5c-7.4-4.3-16.8-1.7-21.1 5.7L2.1 145.7c-4.3 7.4-1.7 16.8 5.7 21.1l33.8 19.5-26 7c-8.3 2.2-13.2 10.7-11 19l4 14.9c2.2 8.2 10.7 13.1 18.9 10.9l70.8-19 63.8 36.9-63.8 36.9-70.8-19c-8.2-2.2-16.7 2.7-18.9 10.9l-4 14.9c-2.2 8.2 2.7 16.7 10.9 18.9l26 7-33.8 19.6c-7.4 4.3-9.9 13.7-5.7 21.1l15.5 26.8c4.3 7.4 13.7 9.9 21.1 5.7l33.8-19.5-7 26c-2.2 8.2 2.7 16.7 10.9 18.9l14.9 4c8.2 2.2 16.7-2.7 18.9-10.9l19-70.8 62.8-36.2v77.5l-53.7 53.7c-6.3 6.2-6.3 16.4 0 22.6l11.3 11.3c6.2 6.2 16.4 6.2 22.6 0l19.7-19.7V496c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-40.4l19.7 19.7c6.2 6.2 16.4 6.2 22.6 0l11.3-11.3c6.2-6.2 6.2-16.4 0-22.6L256 387.7v-77.5l62.8 36.2 19 70.8c2.2 8.2 10.7 13.1 18.9 10.9l14.9-4c8.2-2.2 13.1-10.7 10.9-18.9l-7-26 33.8 19.5c7.4 4.3 16.8 1.7 21.1-5.7l15.5-26.8c4.3-7.3 1.8-16.8-5.6-21z";
 
 const icePath = "M511.4 37.9C515.1 18.2 500 0 480 0H32C10.6 0-4.8 20.7 1.4 41.2l87.1 273.4c2.5 7.2 12.7 7.2 15.1 0L140 190.5l44.2 187.3c1.9 8.3 13.7 8.3 15.6 0l46.5-196.9 34.1 133.4c2.3 7.6 13 7.6 15.3 0l45.8-172.5 66.7 363.8c1.7 8.6 14 8.6 15.7 0l87.5-467.7z"
+
+const rainPath = "m 288,256 c 53,0 96,-42.1 96,-94 C 384,122 326.9,41.3 300.8,6.4 294.4,-2.1 281.6,-2.1 275.2,6.4 249.1,41.3 192,122 192,162 c 0,51.9 43,94 96,94 z";
+
 
 // Dimensions
 const margin = {left: 10, right: 10, top: 10, bottom: 10};
@@ -97,9 +100,9 @@ gradRain.append('stop').attr('class', 'stop-left').attr('offset', '0.15');
 gradRain.append('stop').attr('class', 'stop-right').attr('offset', '0.85');
 var gradHaze = svgDefs.append('radialGradient').attr('id', 'gradHaze');
 gradHaze.append('stop').attr('class', 'stop-1').attr('offset', '0.04');
-gradHaze.append('stop').attr('class', 'stop-2').attr('offset', '0.31');
+gradHaze.append('stop').attr('class', 'stop-2').attr('offset', '0.51');
 gradHaze.append('stop').attr('class', 'stop-3').attr('offset', '0.76');
-gradHaze.append('stop').attr('class', 'stop-4').attr('offset', '0.91');
+gradHaze.append('stop').attr('class', 'stop-4').attr('offset', '0.99');
 
 
 const xAxis = g.append("g")
@@ -111,9 +114,6 @@ const xAxisTicks = xAxis.selectAll(".tick")
     .data(d3.timeMonth.every(1).range(...d3.extent(days)))
   .enter().append("g")
     .attr("class", "tick");
-
-xAxisTicks.append("line")
-    .attr("y2", 680);
 
 const yAxis = g.append("g")
     .attr("class", "axis");
@@ -143,6 +143,9 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
   height = (diameter - margin.top - margin.bottom);
 
   yScale.range([0, height / 3.5]);
+
+  xAxisTicks.append("line")
+      .attr("y2", yScale(680));
 
   svg.attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -221,14 +224,15 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   console.log(flatData);
 
-  // add circles to represent precipitation
-  g.selectAll("circle.fireice")
+  // add teardrop icons for precipitation
+  g.selectAll("path.rain")
     .data(flatData).enter()
-    .append("circle")
-    .attr("class","fireice")
-    .attr("cx", d=> yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
-    .attr("cy", d=> yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
-    .attr("r", d=> yScale(bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation)));
+    .filter(d => d.DailyPrecipitation !== "")
+    .append("path")
+    .attr("class", "rain")
+    .attr("d",rainPath)
+    .attr("transform",d=>`translate (${yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE)))},${yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))+10}) scale(${bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation )}) translate (${-96},${-128})`);
+
 
 
   // add circles to represent smoke or haze
@@ -270,7 +274,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "snow")
     .attr("d",snowPath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+3+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.04) translate (${-224},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.05) translate (${-224},${-256})`);
 
   // add icicle icons
   g.selectAll("path.ice")
@@ -279,7 +283,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "ice")
     .attr("d",icePath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.033) translate (${-256},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.039) translate (${-256},${-256})`);
 
 
   });  // ???
@@ -317,8 +321,12 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.055) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.074) translate (${-110},${-168})`);
 
     console.log(fireData);
 
 });
+
+// add annotations
+g.append("text")
+  .text("Unexpected snowfall on December 14th led to a city-wide gridlock for the afternoon commute.  It took me 4.5 hours to get home including a 2 mile walk in the snow.")
