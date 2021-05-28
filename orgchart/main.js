@@ -29,26 +29,26 @@ const colorOrder = {
   "#FFDBAE" : 4
 };
 
-whiteBox.transition()
-  .duration(500)
-  .delay(animationDelay)
-  .style("opacity",1);
-
-forceImage.transition()
-  .duration(10)
-  .delay(500 + animationDelay)
-  .attr("height",0)
-  .style("opacity",0);
-
-whiteBox.transition()
-  .duration(800)
-  .delay(700 + animationDelay)
-  .style("opacity",0);
-
-removeStuff.transition()
-  .duration(1)
-  .delay(1500+animationDelay)
-  .remove();
+// whiteBox.transition()
+//   .duration(500)
+//   .delay(animationDelay)
+//   .style("opacity",1);
+//
+// forceImage.transition()
+//   .duration(10)
+//   .delay(500 + animationDelay)
+//   .attr("height",0)
+//   .style("opacity",0);
+//
+// whiteBox.transition()
+//   .duration(800)
+//   .delay(700 + animationDelay)
+//   .style("opacity",0);
+//
+// removeStuff.transition()
+//   .duration(1)
+//   .delay(1500+animationDelay)
+//   .remove();
 
 
 
@@ -1047,4 +1047,4 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
 })};
-window.setTimeout(renderTree, 1200 + animationDelay);
+window.setTimeout(renderTree, animationDelay);
