@@ -866,7 +866,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
     // add an svg so we can add shapes
     const teamSvg = thisTeamCard.append("svg")
-      .attr("width", 209)
+      .attr("width", 215)
       .attr("height", 95)
       .attr("class", "teamGraphs "+thisLeader.data.user_ntid )
       .call(responsivefy,maxWidth=400);
@@ -905,7 +905,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .text("TEAM TOTAL")
       .attr("class","teamHeaders")
       .attr("text-anchor", "start")
-      .attr("transform", "translate(158,5)")
+      .attr("transform", "translate(159,5)")
     if (thisLeader.data.role1CountLead > 0) {
       subSectionHeaders.append('svg:tspan')
       .text(rolename1)
@@ -922,7 +922,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       .text(thisLeader.data.teamSize)
       .attr("class","empCounts")
       .attr("text-anchor", "start")
-      .attr("transform", "translate(158,23)")
+      .attr("transform", "translate(159,23)")
     if (thisLeader.data.role1CountLead > 0) {
       empCounts.append('svg:tspan')
       .text(thisLeader.data.role1CountLead)
@@ -942,16 +942,21 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
     const arcsT = teamSvg.selectAll("arc")
       .data(pie(pieDataT))
       .join("g")
-      .attr("transform", "translate(193,17.5)");
+      .attr("transform", "translate(196,17.5)");
     arcsT.append("path")
       .attr("fill", (data, i) => i===0 ? color3A : color3C)
-      .attr("d", d3.arc().innerRadius(6).outerRadius(9.5));
+      .attr("d", d3.arc().innerRadius(6).outerRadius(9.8));
     // label the donut chart
     arcsT.append("text")
       .text(Math.round(100*thisLeader.data.ftePercent)+"%")
       .attr("class","teamFte")
       .attr("text-anchor", "middle")
-      .attr("dy",3);
+      .attr("dy",1.1)
+      .append('svg:tspan')
+      .text("FTE")
+      .attr("class","teamFteLabel")
+      .attr('x', 0)
+      .attr('dy', 6);
 
     // add donut chart for role1
     if (thisLeader.data.role1CountLead > 0) {
@@ -959,16 +964,21 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       const arcs1 = teamSvg.selectAll("arc")
         .data(pie(pieData1))
         .join("g")
-        .attr("transform", `translate(193,${17.5+spacer})`);
+        .attr("transform", `translate(196,${17.5+spacer})`);
       arcs1.append("path")
         .attr("class", (data, i) => i===0 ? "role1 fte" : "role1 etw")
-        .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
+        .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.8));
       // label the donut chart
       arcs1.append("text")
         .text(Math.round(100*(thisLeader.data.role1FteCount/thisLeader.data.role1CountLead))+"%")
         .attr("class","teamFte")
         .attr("text-anchor", "middle")
-        .attr("dy",3);
+        .attr("dy",1.1)
+        .append('svg:tspan')
+        .text("FTE")
+        .attr("class","teamFteLabel")
+        .attr('x', 0)
+        .attr('dy', 6);
     }
 
     // add donut chart for role2
@@ -978,16 +988,21 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       const arcs2 = teamSvg.selectAll("arc")
         .data(pie(pieData2))
         .join("g")
-        .attr("transform", `translate(193,${17.5+spacer2})`);
+        .attr("transform", `translate(196,${17.5+spacer2})`);
       arcs2.append("path")
         .attr("class", (data, i) => i===0 ? "role2 fte" : "role2 etw")
-        .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.5));
+        .attr("d", d3.arc().innerRadius(5.8).outerRadius(9.8));
       // label the donut chart
       arcs2.append("text")
         .text(Math.round(100*(thisLeader.data.role2FteCount/thisLeader.data.role2CountLead))+"%")
         .attr("class","teamFte")
         .attr("text-anchor", "middle")
-        .attr("dy",3);
+        .attr("dy",1.1)
+        .append('svg:tspan')
+        .text("FTE")
+        .attr("class","teamFteLabel")
+        .attr('x', 0)
+        .attr('dy', 6);
     }
 
 
