@@ -2,14 +2,19 @@
 // https://bl.ocks.org/HarryStevens/8b14e4a0bed88724926a9a0a63e7eb3b
 
 
+// define a set of scalars for scaling the different elements of the viz
+// this way they can be adjusted in one place
 const lineRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
-const bubbleRad2 = 0.14;
+const bubbleRad2 = 0.06;
 const hazeRad = 138;
 const hazeRad2 = 4;
-const fireScale = 0.0004;
+const fireLineScale = 0.0004;
+const fireIconScale = 0.025;
 const iceScale = 86;
+const iceIconScale = 0.012;
+const snowIconScale = 0.015;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -33,11 +38,77 @@ function responsivefy(thisSvg,maxWidth=4000) {
   }
 }
 
+// define some functions for creating "text wrap" for svg text elements
+// functions from Carys Mills
+// https://medium.com/@CarysMills/wrapping-svg-text-without-svg-2-ecbfb58f7ba4
+function getTextWidth(text, font = "500 12px sans-serif") {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  context.font = font;
+  return context.measureText(text).width;
+}
+function breakString(word, maxWidth, hyphenCharacter='-') {
+  const characters = word.split("");
+  const lines = [];
+  let currentLine = "";
+  characters.forEach((character, index) => {
+    const nextLine = `${currentLine}${character}`;
+    const lineWidth = getTextWidth(nextLine);
+    if (lineWidth >= maxWidth) {
+      const currentCharacter = index + 1;
+      const isLastLine = characters.length === currentCharacter;
+      const hyphenatedNextLine = `${nextLine}${hyphenCharacter}`;
+      lines.push(isLastLine ? nextLine : hyphenatedNextLine);
+      currentLine = "";
+    } else {
+      currentLine = nextLine;
+    }
+  });
+  return { hyphenatedStrings: lines, remainingWord: currentLine };
+}
+function wrapLabel(label, maxWidth) {
+  const words = label.split(" ");
+  const completedLines = [];
+  let nextLine = "";
+  words.forEach((word, index) => {
+    const wordLength = getTextWidth(`${word} `);
+    const nextLineLength = getTextWidth(nextLine);
+    if (wordLength > maxWidth) {
+      const { hyphenatedStrings, remainingWord } = breakString(word, maxWidth);
+      completedLines.push(nextLine, ...hyphenatedStrings);
+      nextLine = remainingWord;
+    } else if (nextLineLength + wordLength >= maxWidth) {
+      completedLines.push(nextLine);
+      nextLine = word;
+    } else {
+      nextLine = [nextLine, word].filter(Boolean).join(" ");
+    }
+    const currentWord = index + 1;
+    const isLastWord = currentWord === words.length;
+    if (isLastWord) {
+      completedLines.push(nextLine);
+    }
+  });
+  return completedLines.filter(line => line !== "");
+}
+const label = wrapLabel("supercalifragilisticexpialidocious", 20);
+console.log(label);
+// becomes ["supe-", "rcali-", "frag-", "ilistic-", "expi-", "alido-", "ciou-", "s"]
+// const wrappedText = label.map((word, index) => (
+//   <tspan x={0} dy={index === 0 ? 0 : 14}>
+//     {word}
+//   </tspan>
+// ));
+
+
+
 // define a circular svg path
 function circPath(radiusX,i,n) {
   return `M${radiusX*Math.cos(2*Math.PI*(i-3)/n)},${radiusX*Math.sin(2*Math.PI*(i-3)/n)} A ${radiusX}, ${radiusX}, 0, 0,1, ${radiusX*Math.cos(2*Math.PI*(i-2)/n)},${radiusX*Math.sin(2*Math.PI*(i-2)/n)}`
 }
 
+// define the icon paths
+// icons all from FontAwesome
 const firePath = "m 61.604534,334.8 c 0.58,0.37 0.91,0.55 0.91,0.55 z m 93.789996,0.55 0.17,-0.13 c -0.19,0.13 -0.26,0.18 -0.17,0.13 z m 3.13,-158.18 c -16.24,-4.15 50.41,-82.89 -68.049996,-177.17 0,0 15.539996,49.38 -62.83,159.57 -74.27,104.35 23.46,168.73 34,175.23 -6.73,-4.35 -47.4,-35.7 9.55,-128.64 11,-18.3 25.53,-34.87 43.499996,-72.16 0,0 15.91,22.45 7.6,71.13 -12.46,73.6 53.84,52.51 54.84,53.54 22.75,26.78 -17.72,73.51 -21.58,76.55 5.49,-3.65 117.71,-78 33,-188.1 -5.99,6.01 -13.8,34.2 -30.03,30.05 z";
 
 const snowPath = "M440.3 345.2l-33.8-19.5 26-7c8.2-2.2 13.1-10.7 10.9-18.9l-4-14.9c-2.2-8.2-10.7-13.1-18.9-10.9l-70.8 19-63.9-37 63.8-36.9 70.8 19c8.2 2.2 16.7-2.7 18.9-10.9l4-14.9c2.2-8.2-2.7-16.7-10.9-18.9l-26-7 33.8-19.5c7.4-4.3 9.9-13.7 5.7-21.1L430.4 119c-4.3-7.4-13.7-9.9-21.1-5.7l-33.8 19.5 7-26c2.2-8.2-2.7-16.7-10.9-18.9l-14.9-4c-8.2-2.2-16.7 2.7-18.9 10.9l-19 70.8-62.8 36.2v-77.5l53.7-53.7c6.2-6.2 6.2-16.4 0-22.6l-11.3-11.3c-6.2-6.2-16.4-6.2-22.6 0L256 56.4V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v40.4l-19.7-19.7c-6.2-6.2-16.4-6.2-22.6 0L138.3 48c-6.3 6.2-6.3 16.4 0 22.6l53.7 53.7v77.5l-62.8-36.2-19-70.8c-2.2-8.2-10.7-13.1-18.9-10.9l-14.9 4c-8.2 2.2-13.1 10.7-10.9 18.9l7 26-33.8-19.5c-7.4-4.3-16.8-1.7-21.1 5.7L2.1 145.7c-4.3 7.4-1.7 16.8 5.7 21.1l33.8 19.5-26 7c-8.3 2.2-13.2 10.7-11 19l4 14.9c2.2 8.2 10.7 13.1 18.9 10.9l70.8-19 63.8 36.9-63.8 36.9-70.8-19c-8.2-2.2-16.7 2.7-18.9 10.9l-4 14.9c-2.2 8.2 2.7 16.7 10.9 18.9l26 7-33.8 19.6c-7.4 4.3-9.9 13.7-5.7 21.1l15.5 26.8c4.3 7.4 13.7 9.9 21.1 5.7l33.8-19.5-7 26c-2.2 8.2 2.7 16.7 10.9 18.9l14.9 4c8.2 2.2 16.7-2.7 18.9-10.9l19-70.8 62.8-36.2v77.5l-53.7 53.7c-6.3 6.2-6.3 16.4 0 22.6l11.3 11.3c6.2 6.2 16.4 6.2 22.6 0l19.7-19.7V496c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-40.4l19.7 19.7c6.2 6.2 16.4 6.2 22.6 0l11.3-11.3c6.2-6.2 6.2-16.4 0-22.6L256 387.7v-77.5l62.8 36.2 19 70.8c2.2 8.2 10.7 13.1 18.9 10.9l14.9-4c8.2-2.2 13.1-10.7 10.9-18.9l-7-26 33.8 19.5c7.4 4.3 16.8 1.7 21.1-5.7l15.5-26.8c4.3-7.3 1.8-16.8-5.6-21z";
@@ -72,6 +143,12 @@ const parseFireDate = d3.timeParse("%e-%b-%y");
 
 const yScale = d3.scaleLinear()
   .domain([0, 80]);
+
+const diameter = Math.min(innerWidth, innerHeight);
+width = 1.35*(diameter - margin.left - margin.right);
+height = (diameter - margin.top - margin.bottom);
+
+yScale.range([0, height / 3.5]);
 
 // Generators
 const areaGenerator = d3.areaRadial()
@@ -138,11 +215,6 @@ redraw();
 
 
 function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatData) {
-  const diameter = Math.min(innerWidth, innerHeight);
-  width = 1.3*(diameter - margin.left - margin.right);
-  height = (diameter - margin.top - margin.bottom);
-
-  yScale.range([0, height / 3.5]);
 
   xAxisTicks.append("line")
       .attr("y2", yScale(680));
@@ -153,13 +225,12 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   g.attr("transform", `translate(${margin.left + width / 2}, ${margin.top + height / 2})`);
 
-  xAxisTicks
-      .attr("transform", (d, i, e) => {
-        const point = [width / 2, 0];
-        const angle = i / e.length * 360;
-        const rotated = geometric.pointRotate(point, 270 + angle);
-        return `translate(${rotated}) rotate(${angle})`;
-      });
+  xAxisTicks.attr("transform", (d, i, e) => {
+    const point = [width / 2, 0];
+    const angle = i / e.length * 360;
+    const rotated = geometric.pointRotate(point, 270 + angle);
+    return `translate(${rotated}) rotate(${angle})`;
+  });
 
   // add month labels and make them follow the curvature of the circle
   // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs/
@@ -181,9 +252,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .text(d=>`${d3.timeFormat("%b %Y")(d)}`);
 
   yAxisCircles.attr("r", d => yScale(d));
-
   yAxisTextTop.attr("y", d => yScale(d));
-
   yAxisTextBottom.attr("y", d => -yScale(d));
 
   // create the color gradient for the temperature line graph
@@ -231,9 +300,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "rain")
     .attr("d",rainPath)
-    .attr("transform",d=>`translate (${yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE)))},${yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))+10}) scale(${bubbleRad2*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation )}) translate (${-96},${-128})`);
-
-
+    .attr("transform",d=>`translate (${yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE)))},${yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(bubbleRad2)*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation )}) translate (${-285},${-128})`);
 
   // add circles to represent smoke or haze
   g.selectAll("circle.haze")
@@ -274,7 +341,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "snow")
     .attr("d",snowPath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.05) translate (${-224},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(snowIconScale)}) translate (${-224},${-256})`);
 
   // add icicle icons
   g.selectAll("path.ice")
@@ -283,18 +350,14 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "ice")
     .attr("d",icePath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(.039) translate (${-256},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(iceIconScale)}) translate (${-256},${-256})`);
 
+  });  // end of flatData / csv loading
 
-  });  // ???
-
-
-}  // end of flatData / csv loading
+}  // end of redraw() function
 
 
 d3.csv("PDXWildfires2017.csv").then( function(fireData) {
-
-  yScale.range([0, height / 3.5]);  // this is set twice to prevent issues with async
 
   g.selectAll("line.wildfire")
     .data(fireData).enter()
@@ -307,8 +370,8 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseFireDate(d.StartDate))))
     .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseFireDate(d.StartDate))))
-    .attr("x2", d => (yScale(lineRad+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
-    .attr("y2", d => (yScale(lineRad+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
+    .attr("x2", d => (yScale(lineRad+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
+    .attr("y2", d => (yScale(lineRad+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
   g.selectAll("path.fireIcon")
     .data(fireData).enter()
@@ -321,12 +384,55 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(.074) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(${yScale(fireIconScale)}) translate (${-110},${-168})`);
 
     console.log(fireData);
 
 });
 
 // add annotations
-g.append("text")
-  .text("Unexpected snowfall on December 14th led to a city-wide gridlock for the afternoon commute.  It took me 4.5 hours to get home including a 2 mile walk in the snow.")
+
+const annotSnowpocText = wrapLabel("Unexpected snowfall on December 14th led to a city-wide gridlock for the afternoon commute.  It took me 4.5 hours to get home including a 2 mile walk in the snow.",230);
+
+const annotSnowpoc = g.append("g")
+  .attr("class","annotation snowpoc");
+
+const annotSnowpocSpans = annotSnowpoc.append("text")
+  .attr("y", yScale(-140));
+
+annotSnowpocText.forEach(function(string) {
+  annotSnowpocSpans.append('svg:tspan')
+  .text(string)
+  .attr('x', yScale(110))
+  .attr('dy', yScale(5))
+});
+
+annotSnowpoc.append("line")
+  .attr("class","annotation snowpoc")
+  .attr("x1", yScale(91))
+  .attr("y1", yScale(-95))
+  .attr("x2", yScale(108))
+  .attr("y2", yScale(-124));
+
+
+const annotFireGorgeText = wrapLabel("The devastating Eagle Creek Fire began on September 2nd after someone ignited fireworks during a burn ban.", 170)
+
+const annotFireGorge = g.append("g")
+  .attr("class","annotation gorge");
+
+const annotFireGorgeSpans = annotFireGorge.append("text")
+  .attr("y", yScale(-115));
+
+annotFireGorgeText.forEach(function(string) {
+  annotFireGorgeSpans.append('svg:tspan')
+  .text(string)
+  .attr('x', yScale(-191))
+  .attr('dy', yScale(5))
+});
+
+annotFireGorge.append("line")
+  .attr("class","annotation gorge")
+  .attr("x1", yScale(-123))
+  .attr("y1", yScale(-77))
+  .attr("x2", yScale(-154))
+  .attr("y2", yScale(-95));

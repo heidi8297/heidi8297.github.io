@@ -11,6 +11,7 @@ h1,h2,h3,h4,h5,h6 {
 
 h1 {
   font-size: 4rem;
+  margin-bottom: 17px;
 }
 
 h1 span.titleFire {
@@ -24,13 +25,14 @@ h1 span.titleAnd {
 }
 
 h1 span.titleIce {
-  background: -webkit-linear-gradient(#40ddde 10%, #2474DF 90%);
+  background: -webkit-linear-gradient(#61dee3 10%, #2474DF 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 p {
   font-size: 1rem;
+  margin-bottom: 0px;
 }
 
 a {
@@ -109,7 +111,7 @@ text.monthLabel {
 #gradHaze .stop-4 {stop-color: #C0C0C015;}
 
 path.rain {
-  opacity: 0.7;
+  opacity: 0.5;
   fill: url(#gradRain);
 }
 
@@ -165,6 +167,15 @@ line.wildfire.level4, path.fireIcon.level4 {
   fill: #FF5619;
 }
 
+line.annotation {
+  stroke-width: 1;
+  stroke: #555555;
+}
+
+.annotation {
+  font-family: 'Raleway', serif;
+  color: #222222;
+}
 
 /* Contact Me */
 #contactMe {
