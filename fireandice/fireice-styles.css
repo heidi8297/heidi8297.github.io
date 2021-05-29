@@ -120,7 +120,6 @@ circle.haze {
 }
 
 line.snow {
-  stroke-width: 5;
   opacity: 0.8;
   stroke: #23A9DA;
 }
@@ -131,7 +130,6 @@ path.snow {
 }
 
 line.ice {
-  stroke-width: 5;
   opacity: 0.8;
   stroke: #238ADA;
 }
@@ -142,7 +140,6 @@ path.ice {
 }
 
 line.wildfire {
-  stroke-width: 5;
   opacity: 0.8;
 }
 

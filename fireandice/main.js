@@ -15,6 +15,8 @@ const fireIconScale = 0.025;
 const iceScale = 86;
 const iceIconScale = 0.012;
 const snowIconScale = 0.015;
+const lineWidth = 1.5;
+const annotSize = 0.25;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -91,18 +93,10 @@ function wrapLabel(label, maxWidth) {
   });
   return completedLines.filter(line => line !== "");
 }
-const label = wrapLabel("supercalifragilisticexpialidocious", 20);
-console.log(label);
-// becomes ["supe-", "rcali-", "frag-", "ilistic-", "expi-", "alido-", "ciou-", "s"]
-// const wrappedText = label.map((word, index) => (
-//   <tspan x={0} dy={index === 0 ? 0 : 14}>
-//     {word}
-//   </tspan>
-// ));
 
 
 
-// define a circular svg path
+// define a circular svg (arc) path for month labels
 function circPath(radiusX,i,n) {
   return `M${radiusX*Math.cos(2*Math.PI*(i-3)/n)},${radiusX*Math.sin(2*Math.PI*(i-3)/n)} A ${radiusX}, ${radiusX}, 0, 0,1, ${radiusX*Math.cos(2*Math.PI*(i-2)/n)},${radiusX*Math.sin(2*Math.PI*(i-2)/n)}`
 }
@@ -317,6 +311,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .data(flatData).enter()
     .filter(d => d.DailySnowfallWE !== "")
     .append("line")
+    .attr("stroke-width",yScale(lineWidth))
     .attr("class", "snow" )
     .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
     .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
@@ -328,6 +323,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .data(flatData).enter()
     .filter(d => d.IceInches !== "")
     .append("line")
+    .attr("stroke-width",yScale(lineWidth))
     .attr("class", "ice" )
     .attr("x1", d => yScale(lineRad)*Math.cos(xScaleReal(parseTime(d.DATE))))
     .attr("y1", d => yScale(lineRad)*Math.sin(xScaleReal(parseTime(d.DATE))))
@@ -362,6 +358,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
   g.selectAll("line.wildfire")
     .data(fireData).enter()
     .append("line")
+    .attr("stroke-width",yScale(lineWidth))
     .attr("class",function(d) {
       if (d.DaysUntilContainment <= 31) {return "wildfire level1"}
       else if (d.DaysUntilContainment <= 70) {return "wildfire level2"}
@@ -403,6 +400,7 @@ const annotSnowpocSpans = annotSnowpoc.append("text")
 annotSnowpocText.forEach(function(string) {
   annotSnowpocSpans.append('svg:tspan')
   .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
   .attr('x', yScale(110))
   .attr('dy', yScale(5))
 });
@@ -426,6 +424,7 @@ const annotFireGorgeSpans = annotFireGorge.append("text")
 annotFireGorgeText.forEach(function(string) {
   annotFireGorgeSpans.append('svg:tspan')
   .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
   .attr('x', yScale(-191))
   .attr('dy', yScale(5))
 });
