@@ -653,3 +653,32 @@ legendSnow.append("line")
   .attr("y1", yScale(-43))
   .attr("x2", yScale(153))
   .attr("y2", yScale(-30));
+
+
+// define attribution texts for the bottom-right of the legend overlay
+const attributions = legendOverlay.append("g").attr("class","legend attributions");
+
+attributions.append("text")
+  .attr("y", yScale(145))
+  .attr("text-anchor","end")
+  .append("svg:tspan")
+  .text("Icons from FontAwesome")
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(190))
+  .attr('dy', yScale(-6))
+  .append("svg:tspan")
+  .text("Data from NOAA, Wikipedia")
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(190))
+  .attr('dy', yScale(-6))
+  .append("svg:tspan")
+
+
+
+
+// add mouseover event to show legend overlay
+var item = document.getElementById("infoIcon");
+item.addEventListener("mouseover", show, false);
+item.addEventListener("mouseout", hide, false);
+function show() {legendOverlay.style("opacity",1)}
+function hide() {legendOverlay.style("opacity",0)}

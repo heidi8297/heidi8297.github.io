@@ -1,6 +1,9 @@
-body, p, .tooltip {
+p, .tooltip {
   font-family: 'Raleway', serif;
   color: #222222;
+}
+
+body {
   background-color: #F2F5F7;
 }
 
@@ -32,7 +35,7 @@ h1 span.titleIce {
 
 p {
   font-size: 1rem;
-  margin-bottom: 0px;
+  margin-bottom: 6px;
 }
 
 a {
@@ -55,6 +58,19 @@ a:hover {
 
 .main.headerSection {
   margin: 2.5% 9% 4% 9%;
+}
+
+
+p.info {
+  font-size: 2.3rem;
+  width: 82%;
+  background-color: none;
+  position: absolute;
+  text-align: right;
+}
+
+.info .fa-info-circle {
+  color: #525252;
 }
 
 body {
@@ -175,7 +191,7 @@ line.annotation {
 }
 
 .legendOverlay {
-  opacity: 1;
+  opacity: 0;
 }
 
 .legend {
