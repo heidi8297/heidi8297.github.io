@@ -7,7 +7,7 @@
 const lineRad = 110;
 const labelRad = 100;
 const bubbleRad = 115;
-const bubbleRad2 = 0.06;
+const bubbleRad2 = 0.05;
 const hazeRad = 138;
 const hazeRad2 = 4;
 const fireLineScale = 0.0004;
@@ -16,7 +16,7 @@ const iceScale = 86;
 const iceIconScale = 0.012;
 const snowIconScale = 0.015;
 const lineWidth = 1.5;
-const annotSize = 0.25;
+const annotSize = 0.28;
 
 
 // this function makes our svg responsive to the size of the container/screen!
@@ -158,7 +158,7 @@ const lineGenerator = d3.lineRadial()
 
 // Elements
 const svg = d3.select(".radialChart").append("svg");
-const g = svg.append("g");
+const g = svg.append("g").attr("class","centered");
 
 
 // DEFINE A SET OF GRADIENTS
@@ -228,14 +228,15 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   // add month labels and make them follow the curvature of the circle
   // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs/
-  g.selectAll("path.monthLabel")
+  const monthLabels = g.append("g").attr("class","monthLabels");
+  monthLabels.selectAll("path.monthLabel")
     .data(d3.timeMonth.every(1).range(...d3.extent(days)))
     .enter().append("path")
     .attr("id",d=>"label"+`${d3.timeFormat("%B%Y")(d)}`)
     .attr("class", "monthLabel")
     .attr("d", (d,i) => circPath(yScale(labelRad),i,12));
 
-  g.selectAll("text.monthLabel")
+  monthLabels.selectAll("text.monthLabel")
     .data(d3.timeMonth.every(1).range(...d3.extent(days)))
     .enter().append("text")
     .attr("class","monthLabel")
@@ -266,11 +267,12 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("stop-color", function(d) { return d.color; });
 
   // area chart for high/low temperature data
-  const area = g.selectAll(".area")
+  const areaGroup = g.append("g").attr("class","areaGroup");
+  const area = areaGroup.selectAll(".area")
       .data([flatData]);
 
   // line chart for average temperature data
-  const lineAve = g.selectAll(".lineAverage")
+  const lineAve = areaGroup.selectAll(".lineAverage")
       .data([flatData]);
 
   area.attr("d", areaGenerator);
@@ -288,7 +290,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
   console.log(flatData);
 
   // add teardrop icons for precipitation
-  g.selectAll("path.rain")
+  const rainGroup = g.append("g").attr("class","rainGroup");
+  rainGroup.selectAll("path.rain")
     .data(flatData).enter()
     .filter(d => d.DailyPrecipitation !== "")
     .append("path")
@@ -297,7 +300,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("transform",d=>`translate (${yScale(bubbleRad)*Math.cos(xScaleReal(parseTime(d.DATE)))},${yScale(bubbleRad)*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(bubbleRad2)*(d.DailyPrecipitation === "T" ? 0.001 : d.DailyPrecipitation )}) translate (${-285},${-128})`);
 
   // add circles to represent smoke or haze
-  g.selectAll("circle.haze")
+  const hazeGroup = g.append("g").attr("class","hazeGroup");
+  hazeGroup.selectAll("circle.haze")
     .data(flatData).enter()
     .filter(d => d.HazeSourceCount !== "")
     .append("circle")
@@ -307,7 +311,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("r", d=> yScale(hazeRad2*(d.HazeSourceCount)));
 
   // add lines for snow
-  g.selectAll("line.snow")
+  const snowLines = g.append("g").attr("class","snowLines");
+  snowLines.selectAll("line.snow")
     .data(flatData).enter()
     .filter(d => d.DailySnowfallWE !== "")
     .append("line")
@@ -319,7 +324,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("y2", d => (yScale(lineRad+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE))) );
 
   // add lines for ice
-  g.selectAll("line.ice")
+  const iceLines = g.append("g").attr("class","iceLines");
+  iceLines.selectAll("line.ice")
     .data(flatData).enter()
     .filter(d => d.IceInches !== "")
     .append("line")
@@ -331,7 +337,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("y2", d => (yScale(lineRad+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE))) );
 
   // add snowflake icons
-  g.selectAll("path.snow")
+  const snowflakeGroup = g.append("g").attr("class","snowflakes");
+  snowflakeGroup.selectAll("path.snow")
     .data(flatData).enter()
     .filter(d => d.DailySnowfallWE !== "")
     .append("path")
@@ -340,13 +347,16 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(snowIconScale)}) translate (${-224},${-256})`);
 
   // add icicle icons
-  g.selectAll("path.ice")
+  const icicleGroup = g.append("g").attr("class","icicles");
+  icicleGroup.selectAll("path.ice")
     .data(flatData).enter()
     .filter(d => d.IceInches !== "")
     .append("path")
     .attr("class", "ice")
     .attr("d",icePath)
     .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(iceIconScale)}) translate (${-256},${-256})`);
+
+  d3.select(".legendOverlay").raise();  // bring the legend overlay group to the front of the svg
 
   });  // end of flatData / csv loading
 
@@ -355,7 +365,8 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
 d3.csv("PDXWildfires2017.csv").then( function(fireData) {
 
-  g.selectAll("line.wildfire")
+  const fireGroup = g.append("g").attr("class","fireGroup");
+  fireGroup.selectAll("line.wildfire")
     .data(fireData).enter()
     .append("line")
     .attr("stroke-width",yScale(lineWidth))
@@ -370,7 +381,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     .attr("x2", d => (yScale(lineRad+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate))) )
     .attr("y2", d => (yScale(lineRad+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate))) );
 
-  g.selectAll("path.fireIcon")
+  fireGroup.selectAll("path.fireIcon")
     .data(fireData).enter()
     .append("path")
     .attr("class",function(d) {
@@ -383,9 +394,62 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     .attr("opacity",0.9)
     .attr("transform",d=>`translate (${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(${yScale(fireIconScale)}) translate (${-110},${-168})`);
 
-    console.log(fireData);
+  d3.select(".legendOverlay").raise();  // bring the legend overlay group to the front of the svg
 
 });
+
+
+
+
+
+// add arc-annotations
+
+//The start date number and end date number of the months in a year
+var monthData = [
+  {month: "November", startDateID: 0, 	endDateID: 1},
+  {month: "December",	startDateID: 2, 	endDateID: 3},
+  {month: "January", 	startDateID: 4, 	endDateID: 5},
+  {month: "February", startDateID: 6, 	endDateID: 7},
+  {month: "March", 	startDateID: 8, 	endDateID: 9},
+  {month: "April", 	startDateID: 10, 	endDateID: 11},
+  {month: "May", 		startDateID: 12, 	endDateID: 13},
+  {month: "June", 	startDateID: 14, 	endDateID: 15},
+  {month: "July", 	startDateID: 16, 	endDateID: 17},
+  {month: "August", 	startDateID: 18, 	endDateID: 19},
+  {month: "September",startDateID: 20, 	endDateID: 21},
+  {month: "October", 	startDateID: 22, 	endDateID: 23}
+];
+
+//Creates a function that makes SVG paths in the shape of arcs with the specified inner and outer radius
+var arc = d3.arc()
+  .innerRadius(width*0.75/2)
+  .outerRadius(width*0.75/2 + 17);
+
+//Creates function that will turn the month data into start and end angles
+var pie = d3.pie()
+  .value(function(d) { return d.endDateID - d.startDateID; })
+  .sort(null);
+
+const warmestMonthAnnot = g.append("g").attr("class","warmestMonthAnnot")
+console.log(pie(monthData));
+//Draw the arcs themselves
+warmestMonthAnnot.selectAll(".monthArc")
+	.data(pie(monthData))
+  .enter().filter(d => d.data.month === "August" || d.data.month == "November")
+  .append("path")
+	.attr("class", "monthArc")
+	.attr("id", function(d,i) { return "monthArc_"+i; })
+  .attr("d", arc);
+	// .attr("d", function(d) {
+  //   if (d.data.month === "August") {
+  //     const augArc = d3.arc().innerRadius(width*0.75/2).outerRadius(width*0.75/2 + 17);
+  //     console.log(augArc);
+  //     return augArc;
+  //   } else {
+  //     return d3.arc().innerRadius(width*0.75/2).outerRadius(width*0.75/2 + 17);
+  //   }
+  // });
+
 
 // add annotations
 
@@ -401,7 +465,7 @@ annotSnowpocText.forEach(function(string) {
   annotSnowpocSpans.append('svg:tspan')
   .text(string)
   .attr("font-size",yScale(annotSize).toString()+"rem")
-  .attr('x', yScale(110))
+  .attr('x', yScale(101))
   .attr('dy', yScale(5))
 });
 
@@ -409,7 +473,7 @@ annotSnowpoc.append("line")
   .attr("class","annotation snowpoc")
   .attr("x1", yScale(91))
   .attr("y1", yScale(-95))
-  .attr("x2", yScale(108))
+  .attr("x2", yScale(99))
   .attr("y2", yScale(-124));
 
 
@@ -435,3 +499,157 @@ annotFireGorge.append("line")
   .attr("y1", yScale(-77))
   .attr("x2", yScale(-154))
   .attr("y2", yScale(-95));
+
+
+
+// add legend overlay
+const legendOverlay = g.append("g").attr("class","legendOverlay");
+legendOverlay.append("rect")
+  .attr("x",yScale(-192))
+  .attr("y",yScale(-144))
+  .attr("width",yScale(192*2))
+  .attr("height",yScale(144*2))
+  .style("fill","black")
+  .attr("opacity",0.56)
+  .attr("opacity",0.56);
+
+// legend description for temperature line/area chart
+legendTempText = wrapLabel("Line shows daily average temperature (degrees F), area shows high/low daily temperatures.", 130);
+const legendTemp = legendOverlay.append("g")
+  .attr("class","legend temp");
+const legendTempSpans = legendTemp.append("text")
+  .attr("y", yScale(0));
+legendTempText.forEach(function(string) {
+  legendTempSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(-40))
+  .attr('dy', yScale(5))
+});
+legendTemp.append("line")
+  .attr("class","legend temp")
+  .attr("x1", yScale(-53))
+  .attr("y1", yScale(25))
+  .attr("x2", yScale(-42))
+  .attr("y2", yScale(13));
+
+// legend description for fire lines
+legendFireText = wrapLabel("Orange lines represent wildfires in Oregon - length indicates number of acres burned.  The Chetno Bar fire shown here burned 191,125 acres (8th largest in OR history).", 150);
+const legendFire = legendOverlay.append("g")
+  .attr("class","legend fire");
+const legendFireSpans = legendFire.append("text")
+  .attr("y", yScale(-10));
+legendFireText.forEach(function(string) {
+  legendFireSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(-190))
+  .attr('dy', yScale(5))
+});
+legendFire.append("line")
+  .attr("class","legend fire")
+  .attr("x1", yScale(-148))
+  .attr("y1", yScale(22))
+  .attr("x2", yScale(-133))
+  .attr("y2", yScale(45));
+
+// legend description for fire colors
+legendContText = wrapLabel("Color indicates time to containment (darker = longer) ranging from 8 to 114 days.  This one took 113 days.", 160);
+const legendCont = legendOverlay.append("g")
+  .attr("class","legend cont");
+const legendContSpans = legendCont.append("text")
+  .attr("y", yScale(70));
+legendContText.forEach(function(string) {
+  legendContSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(-150))
+  .attr('dy', yScale(5))
+});
+legendCont.append("line")
+  .attr("class","legend cont")
+  .attr("x1", yScale(-150))
+  .attr("y1", yScale(57))
+  .attr("x2", yScale(-140))
+  .attr("y2", yScale(70));
+
+// legend description for teardrops (precipitation)
+legendRainText = wrapLabel("Raindrop shapes indicate precipitation amounts (inches).  This large raindrop represents 2.19\", the single wettest day in February in Portland.", 150);
+const legendRain = legendOverlay.append("g")
+  .attr("class","legend rain");
+const legendRainSpans = legendRain.append("text")
+  .attr("y", yScale(35));
+legendRainText.forEach(function(string) {
+  legendRainSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(130))
+  .attr('dy', yScale(5))
+});
+legendRain.append("line")
+  .attr("class","legend rain")
+  .attr("x1", yScale(125))
+  .attr("y1", yScale(21))
+  .attr("x2", yScale(136))
+  .attr("y2", yScale(34));
+
+// legend description for haze circles
+legendHazeText = wrapLabel("The hazy grey circles represent days when haze and/or smoke was detected.  Size indicates how many sources (out of 3) recorded haze or smoke on that day.", 200);
+const legendHaze = legendOverlay.append("g")
+  .attr("class","legend haze");
+const legendHazeSpans = legendHaze.append("text")
+  .attr("y", yScale(-140));
+legendHazeText.forEach(function(string) {
+  legendHazeSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(-140))
+  .attr('dy', yScale(5))
+});
+legendHaze.append("line")
+  .attr("class","legend haze")
+  .attr("x1", yScale(-110))
+  .attr("y1", yScale(-110))
+  .attr("x2", yScale(-100))
+  .attr("y2", yScale(-100));
+
+
+// legend description for snow/ice lines
+legendIceText = wrapLabel("Blue lines indicate quantities of ice and snow (in equivalent inches of water).", 155);
+const legendIce = legendOverlay.append("g")
+  .attr("class","legend ice");
+const legendIceSpans = legendIce.append("text")
+  .attr("y", yScale(-100));
+legendIceText.forEach(function(string) {
+  legendIceSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(127))
+  .attr('dy', yScale(5))
+});
+legendIce.append("line")
+  .attr("class","legend ice")
+  .attr("x1", yScale(106))
+  .attr("y1", yScale(-93))
+  .attr("x2", yScale(124))
+  .attr("y2", yScale(-90));
+
+// legend (annotation) description for the snowiest day
+legendSnowText = wrapLabel("10.64 inches of snow (0.89\" water equivalent) recorded January 11th.", 110);
+const legendSnow = legendOverlay.append("g")
+  .attr("class","legend snow");
+const legendSnowSpans = legendSnow.append("text")
+  .attr("y", yScale(-30));
+legendSnowText.forEach(function(string) {
+  legendSnowSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(147))
+  .attr('dy', yScale(5))
+});
+legendSnow.append("line")
+  .attr("class","legend snow")
+  .attr("x1", yScale(149))
+  .attr("y1", yScale(-43))
+  .attr("x2", yScale(153))
+  .attr("y2", yScale(-30));

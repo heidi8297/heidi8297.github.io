@@ -81,6 +81,16 @@ body.gif {
   opacity: 0;
 }
 
+.storyText {
+  margin: 5%;
+  height: 80%;
+}
+
+.roleFormAnim {
+  text-align: center;
+}
+
+
 
 /* Org chart */
 

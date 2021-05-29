@@ -1,11 +1,11 @@
-let redirect_Page = () => {
+let redirect_Page = (timeout) => {
     let tID = setTimeout(function () {
         window.location.href = "http://heidistockton.com/orgchart";
         window.clearTimeout(tID);		// clear time out.
-    }, 50000000);
+    }, timeout);
 }
 
-redirect_Page();
+redirect_Page(50000000);
 
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
@@ -94,12 +94,10 @@ const storyLines = [
 ]
 
 
-svg = d3.select("body").append("svg")
+svg = d3.select(".storyText").append("svg")
   .attr("width", 900)
   .attr("height", 600)
   .call(responsivefy);
-
-console.log(svg);
 
 svg.selectAll("text")
   .data(storyLines)
@@ -111,10 +109,10 @@ svg.selectAll("text")
   .transition()
     .delay(2000)
   .transition()
-    .duration(500)
-    .delay((d,i) => 6000*i)
+    .duration(1000)
+    .delay((d,i) => 7000*i)
     .attr("opacity",1)
   .transition()
-    .duration(500)
+    .duration(1000)
     .delay((d,i) => 5000)
     .attr("opacity",0);

@@ -241,11 +241,10 @@ function childCircleRadius(childCount) {
 
 
 function renderForceTree() { d3.json(treeFile).then( function(flatData) {
-    var forceData = d3.stratify()
+    var rootForce = d3.stratify()
       .id(d => d.user_ntid)
       .parentId(d => d.manager_ntid)
       (flatData);
-    const rootForce = d3.hierarchy(forceData);
     const linksForce = rootForce.links();
     const nodesForce = rootForce.descendants();
 
