@@ -125,7 +125,6 @@ body {
 
 .lineAverage {
   fill: none;
-  stroke-width: 2.1px;
   stroke: url(#temperature-gradient);
 }
 
@@ -213,7 +212,7 @@ line.wildfire.level4, path.fireIcon.level4 {
 
 line.annotation {
   stroke-width: 1;
-  stroke: #555555;
+  stroke: #666666;
 }
 
 .annotation {

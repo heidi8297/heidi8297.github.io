@@ -54,7 +54,7 @@ a:hover {
 
 body.gif {
   background-image: url("/orgchart/ForceTree.gif");
-  height: 500px; /* You must set a specified height */
+  height: 90vh; /* You must set a specified height */
   background-size: cover; /* Resize the background image to cover the entire container */
 }
 
@@ -86,9 +86,30 @@ body.gif {
   height: 80%;
 }
 
-.roleFormAnim {
+.formAnim {
   text-align: center;
 }
+
+.main.storyP {
+  height: 80%;
+}
+
+.main.storyP p {
+  text-align: center;
+  background-color: #f8f8f8BB;
+  margin: 20% 10% 10% 10%;
+}
+
+.singleLine {
+  display: none;
+  font-size: 2rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* .singleLine.first {
+  display: inline-block;
+} */
+
 
 
 

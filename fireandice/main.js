@@ -285,6 +285,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
   lineAve.enter().append("path")
     .attr("d", lineGenerator)
     .attr("class","lineAverage")
+    .attr("stroke-width", yScale(0.9).toString()+"px")
     .attr("fill", "none");
 
   console.log(flatData);
@@ -449,6 +450,25 @@ annotSnowpoc.transition()
   .delay(6000)
   .style("opacity",1);
 
+// ice storms
+const annotStormText = wrapLabel("Imagine an entire city coated in half an inch of solid ice.  Now imagine that happening several times in the course of a few weeks.  That was the winter of 2016/2017.",140);
+const annotStorm = g.append("g")
+  .attr("class","annotation storm")
+  .style("opacity",0);
+const annotStormSpans = annotStorm.append("text")
+  .attr("y", yScale(-15));
+annotStormText.forEach(function(string) {
+  annotStormSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(139))
+  .attr('dy', yScale(5))
+});
+annotStorm.transition()
+  .duration(1000)
+  .delay(10000)
+  .style("opacity",1);
+
 // Warmest August on record
 const annotAugText = wrapLabel("Warmest August on record", 100)
 const annotAug = g.append("g")
@@ -466,7 +486,7 @@ annotAugText.forEach(function(string) {
 });
 annotAug.transition()
   .duration(1000)
-  .delay(10000)
+  .delay(14000)
   .style("opacity",1);
 
 // Eagle Creek fire
@@ -491,7 +511,7 @@ annotFireGorge.append("line")
   .attr("y2", yScale(-77));
 annotFireGorge.transition()
   .duration(1000)
-  .delay(13000)
+  .delay(16500)
   .style("opacity",1);
 
 
@@ -567,7 +587,7 @@ legendCont.append("line")
   .attr("y2", yScale(70));
 
 // legend description for teardrops (precipitation)
-legendRainText = wrapLabel("Raindrop shapes indicate precipitation amounts (inches).  This large raindrop represents 2.19'', the wettest day ever recorded in February in Portland.", 150);
+legendRainText = wrapLabel("Raindrop sizes indicate precipitation amounts (inches).  This large raindrop represents 2.19'', the wettest day ever recorded in February in Portland.", 150);
 const legendRain = legendOverlay.append("g")
   .attr("class","legend rain");
 const legendRainSpans = legendRain.append("text")
@@ -632,7 +652,7 @@ legendSnowText = wrapLabel("10.64'' of snow (0.89'' water equivalent) recorded J
 const legendSnow = legendOverlay.append("g")
   .attr("class","legend snow");
 const legendSnowSpans = legendSnow.append("text")
-  .attr("y", yScale(-30));
+  .attr("y", yScale(-38));
 legendSnowText.forEach(function(string) {
   legendSnowSpans.append('svg:tspan')
   .text(string)
@@ -643,9 +663,9 @@ legendSnowText.forEach(function(string) {
 legendSnow.append("line")
   .attr("class","legend snow")
   .attr("x1", yScale(149))
-  .attr("y1", yScale(-43))
+  .attr("y1", yScale(-45))
   .attr("x2", yScale(153))
-  .attr("y2", yScale(-30));
+  .attr("y2", yScale(-38));
 
 
 // define attribution texts for the bottom-right of the legend overlay

@@ -93,45 +93,23 @@ const storyLines = [
   {line:"Then scroll to see the teams that those people are a part of to put everything in context."}
 ]
 
+$(document).ready(function() {
 
-svg = d3.select(".storyText").append("svg")
-  .attr("width", 900)
-  .attr("height", 600)
-  .call(responsivefy);
+  var arr = $(".singleLine");
+  var arrLen = arr.length;
+  var i = 0;
 
-svg.selectAll("text")
-  .data(storyLines)
-  .join("text")
-  .selectAll("tspan")
-    .data( d=> wrapLabel(d.line,400))
-    .join("tspan")
-    .text(d => d)
-    .attr("class","tspanText")
-    .attr('x', 30)
-    .attr('dy', (d,i) => i*20)
-    .attr("opacity",1);
-    // .transition()
-    //   .delay(2000)
-    // .transition()
-    //   .duration(1000)
-    //   .delay((d,i) => 7000*i)
-    //   .attr("opacity",1)
-    // .transition()
-    //   .duration(1000)
-    //   .delay((d,i) => 5000)
-    //   .attr("opacity",0);
+  $(".singleLine.first").fadeIn(1000);
 
-  // .text(d => d.line)
-  // .attr("x", 30)
-  // .attr("y", 30)
-  // .attr("opacity",0)
-  // .transition()
-  //   .delay(2000)
-  // .transition()
-  //   .duration(1000)
-  //   .delay((d,i) => 7000*i)
-  //   .attr("opacity",1)
-  // .transition()
-  //   .duration(1000)
-  //   .delay((d,i) => 5000)
-  //   .attr("opacity",0);
+  setInterval(function(){
+    $(".singleLine").fadeOut(1000);
+
+    setTimeout(function(){
+      $(arr[i]).fadeIn(1000);
+    }, 1200);
+    i === arrLen ? i = 0 : i++;
+  }, 6000);
+
+
+
+});
