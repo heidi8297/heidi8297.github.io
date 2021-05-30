@@ -343,8 +343,9 @@
 }
 
 .glightbox-mobile .glightbox-container .gslide-title {
-  color: #fff;
-  font-size: 1em;
+  color: #f5f5f5;
+  font-family: 'Raleway'
+  font-size: 0.92em;
 }
 
 .glightbox-mobile .glightbox-container .gslide-desc {
@@ -377,6 +378,10 @@
 
 .gdesc-open .gdesc-inner {
   padding-bottom: 30px;
+}
+
+.gdesc-inner {
+  background-color: #161616;
 }
 
 .gdesc-closed .gslide-media {
@@ -506,8 +511,8 @@ iframe.wait-autoplay {
 .glightbox-clean .gslide-title {
   font-size: 1em;
   font-weight: normal;
-  font-family: arial;
-  color: #000;
+  font-family: 'Raleway', sans-serif;
+  color: #f5f5f5;
   margin-bottom: 19px;
   line-height: 1.4em;
 }
@@ -515,7 +520,7 @@ iframe.wait-autoplay {
 .glightbox-clean .gslide-desc {
   font-size: 0.86em;
   margin-bottom: 0;
-  font-family: arial;
+  font-family: 'Raleway', sans-serif;
   line-height: 1.4em;
 }
 

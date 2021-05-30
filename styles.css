@@ -149,7 +149,7 @@ and make sure the svg is still positioned well */
 # About Me
 --------------------------------------------------------------*/
 #aboutMe {
-  background-image: linear-gradient(#DEEDFF, #DEE2FF);
+  background-image: linear-gradient(#DEEEFF, #DEE1FF);
   padding: calc(7% + 10px) 12%;
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
 }
@@ -354,7 +354,7 @@ and make sure the svg is still positioned well */
 --------------------------------------------------------------*/
 
 #testimonial-carousel, .carousel-inner.heidis-carousel  {
-  background-image: linear-gradient(#DEEDFF, #DEE2FF);
+  background-image: linear-gradient(#DEEEFF, #DEE1FF);
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
   height: 330px;
 }
