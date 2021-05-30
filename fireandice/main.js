@@ -691,7 +691,40 @@ attributions.append("text")
 
 // add mouseover event to show legend overlay
 var item = document.getElementById("infoIcon");
-item.addEventListener("mouseover", show, false);
-item.addEventListener("mouseout", hide, false);
+var infoState = "hide";
+item.addEventListener("click", showHide, false);
 function show() {legendOverlay.style("opacity",1)}
 function hide() {legendOverlay.style("opacity",0)}
+function showHide() {
+  if (infoState === "hide") {
+    infoState = "show";
+    show();
+  } else {
+    infoState = "hide";
+    hide();
+  }
+}
+
+// Define the div for a tooltip for the information button
+const divInfo = d3.select("body").append("div")
+  .attr("class", "tooltip tooltipInfo")
+  .style("opacity", 0);
+
+// add tooltip to info button
+document.addEventListener("mouseover", function(event){
+  if (!event.target.closest("#infoIcon")) return;
+  divInfo.transition()
+   .duration(200)
+   .style("opacity", .8)
+   .delay(200);
+  divInfo.html("See how to read this viz")
+   .style("left", (event.pageX - 65) + "px")
+   .style("top", (event.pageY + 35) + "px");
+})
+
+document.addEventListener("mouseout", function(event){
+  if (!event.target.closest("#infoIcon")) return;
+  divInfo.transition()
+    .duration(500)
+    .style("opacity", 0);
+})

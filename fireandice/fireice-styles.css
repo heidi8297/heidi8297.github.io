@@ -108,6 +108,10 @@ p.info {
   color: #626262;
 }
 
+.info .fa-info-circle:hover {
+  color: #343434;
+}
+
 body {
   margin: 0;
   font-family: "Helvetica Neue", sans-serif;
@@ -232,6 +236,21 @@ line.annotation {
 line.legend, line.legend.ice {
   stroke: white;
 }
+
+.tooltip {
+  background: #6F6F6F;
+  border: 0;
+  border-radius: 4px;
+  color: #f8f8f8;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 200;
+  height: auto;
+  padding: 3px;
+  pointer-events: none;
+  position: absolute;
+}
+
 
 
 /* Contact Me */
