@@ -344,7 +344,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "snow")
     .attr("d",snowPath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(snowIconScale)}) translate (${-224},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+5+iceScale*parseFloat(d.DailySnowfallWE)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+5+iceScale*parseFloat(d.DailySnowfallWE)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(snowIconScale)}) translate (${-224},${-256})`);
 
   // add icicle icons
   const icicleGroup = g.append("g").attr("class","icicles");
@@ -354,7 +354,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
     .append("path")
     .attr("class", "ice")
     .attr("d",icePath)
-    .attr("transform",d=>`translate (${(yScale(lineRad+2.5+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+3+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(iceIconScale)}) translate (${-256},${-256})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+4+iceScale*parseFloat(d.IceInches)))*Math.cos(xScaleReal(parseTime(d.DATE)))},${(yScale(lineRad+4+iceScale*parseFloat(d.IceInches)))*Math.sin(xScaleReal(parseTime(d.DATE)))})  rotate (${(180/Math.PI)*xScale(parseTime(d.DATE))}) scale(${yScale(iceIconScale)}) translate (${-256},${-256})`);
 
   d3.select(".legendOverlay").raise();  // bring the legend overlay group to the front of the svg
 
@@ -392,7 +392,7 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
     } )
     .attr("d",firePath)
     .attr("opacity",0.9)
-    .attr("transform",d=>`translate (${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+3+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(${yScale(fireIconScale)}) translate (${-110},${-168})`);
+    .attr("transform",d=>`translate (${(yScale(lineRad+5+fireLineScale*parseFloat(d.AcresBurned)))*Math.cos(xScaleReal(parseFireDate(d.StartDate)))},${(yScale(lineRad+5+fireLineScale*parseFloat(d.AcresBurned)))*Math.sin(xScaleReal(parseFireDate(d.StartDate)))})  rotate (${(180/Math.PI)*xScale(parseFireDate(d.StartDate))}) scale(${yScale(fireIconScale)}) translate (${-110},${-168})`);
 
   d3.select(".legendOverlay").raise();  // bring the legend overlay group to the front of the svg
 

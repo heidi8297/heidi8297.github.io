@@ -166,6 +166,7 @@ circle.haze {
 line.snow {
   opacity: 0.8;
   stroke: #23A9DA;
+  stroke-linecap: round;
 }
 
 path.snow {
@@ -176,6 +177,7 @@ path.snow {
 line.ice {
   opacity: 0.8;
   stroke: #238ADA;
+  stroke-linecap: round;
 }
 
 path.ice {
@@ -185,6 +187,7 @@ path.ice {
 
 line.wildfire {
   opacity: 0.8;
+  stroke-linecap: round;
 }
 
 path.wildfire {
