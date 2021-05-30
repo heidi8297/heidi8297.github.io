@@ -215,7 +215,7 @@ function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatDat
 
   svg.attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .call(responsivefy, 1000);
+    .call(responsivefy, 1200);
 
   g.attr("transform", `translate(${margin.left + width / 2}, ${margin.top + height / 2})`);
 
@@ -402,65 +402,35 @@ d3.csv("PDXWildfires2017.csv").then( function(fireData) {
 
 
 
-// add arc-annotations
-
-//The start date number and end date number of the months in a year
-var monthData = [
-  {month: "November", startDateID: 0, 	endDateID: 1},
-  {month: "December",	startDateID: 2, 	endDateID: 3},
-  {month: "January", 	startDateID: 4, 	endDateID: 5},
-  {month: "February", startDateID: 6, 	endDateID: 7},
-  {month: "March", 	startDateID: 8, 	endDateID: 9},
-  {month: "April", 	startDateID: 10, 	endDateID: 11},
-  {month: "May", 		startDateID: 12, 	endDateID: 13},
-  {month: "June", 	startDateID: 14, 	endDateID: 15},
-  {month: "July", 	startDateID: 16, 	endDateID: 17},
-  {month: "August", 	startDateID: 18, 	endDateID: 19},
-  {month: "September",startDateID: 20, 	endDateID: 21},
-  {month: "October", 	startDateID: 22, 	endDateID: 23}
-];
-
-//Creates a function that makes SVG paths in the shape of arcs with the specified inner and outer radius
-var arc = d3.arc()
-  .innerRadius(width*0.75/2)
-  .outerRadius(width*0.75/2 + 17);
-
-//Creates function that will turn the month data into start and end angles
-var pie = d3.pie()
-  .value(function(d) { return d.endDateID - d.startDateID; })
-  .sort(null);
-
-const warmestMonthAnnot = g.append("g").attr("class","warmestMonthAnnot")
-console.log(pie(monthData));
-//Draw the arcs themselves
-warmestMonthAnnot.selectAll(".monthArc")
-	.data(pie(monthData))
-  .enter().filter(d => d.data.month === "August" || d.data.month == "November")
-  .append("path")
-	.attr("class", "monthArc")
-	.attr("id", function(d,i) { return "monthArc_"+i; })
-  .attr("d", arc);
-	// .attr("d", function(d) {
-  //   if (d.data.month === "August") {
-  //     const augArc = d3.arc().innerRadius(width*0.75/2).outerRadius(width*0.75/2 + 17);
-  //     console.log(augArc);
-  //     return augArc;
-  //   } else {
-  //     return d3.arc().innerRadius(width*0.75/2).outerRadius(width*0.75/2 + 17);
-  //   }
-  // });
-
-
 // add annotations
 
+// Warmest November on record
+const annotNovText = wrapLabel("Warmest November on record", 110)
+const annotNov = g.append("g")
+  .attr("class","annotation nov");
+const annotNovSpans = annotNov.append("text")
+  .attr("y", yScale(-140))
+  .attr("text-anchor","middle")
+  .style("opacity",0);
+annotNovText.forEach(function(string) {
+  annotNovSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(36))
+  .attr('dy', yScale(5))
+});
+annotNovSpans.transition()
+  .duration(1000)
+  .delay(3000)
+  .style("opacity",1);
+
+// city-wide gridlock due to unexpected snow
 const annotSnowpocText = wrapLabel("Unexpected snowfall on December 14th led to a city-wide gridlock for the afternoon commute.  It took me 4.5 hours to get home including a 2 mile walk in the snow.",230);
-
 const annotSnowpoc = g.append("g")
-  .attr("class","annotation snowpoc");
-
+  .attr("class","annotation snowpoc")
+  .style("opacity",0);
 const annotSnowpocSpans = annotSnowpoc.append("text")
   .attr("y", yScale(-140));
-
 annotSnowpocText.forEach(function(string) {
   annotSnowpocSpans.append('svg:tspan')
   .text(string)
@@ -468,23 +438,44 @@ annotSnowpocText.forEach(function(string) {
   .attr('x', yScale(101))
   .attr('dy', yScale(5))
 });
-
 annotSnowpoc.append("line")
   .attr("class","annotation snowpoc")
   .attr("x1", yScale(91))
   .attr("y1", yScale(-95))
   .attr("x2", yScale(99))
   .attr("y2", yScale(-124));
+annotSnowpoc.transition()
+  .duration(1000)
+  .delay(6000)
+  .style("opacity",1);
 
+// Warmest August on record
+const annotAugText = wrapLabel("Warmest August on record", 100)
+const annotAug = g.append("g")
+  .attr("class","annotation aug")
+  .style("opacity",0);
+const annotAugSpans = annotAug.append("text")
+  .attr("y", yScale(-50))
+  .attr("text-anchor","middle");
+annotAugText.forEach(function(string) {
+  annotAugSpans.append('svg:tspan')
+  .text(string)
+  .attr("font-size",yScale(annotSize).toString()+"rem")
+  .attr('x', yScale(-170))
+  .attr('dy', yScale(5))
+});
+annotAug.transition()
+  .duration(1000)
+  .delay(10000)
+  .style("opacity",1);
 
+// Eagle Creek fire
 const annotFireGorgeText = wrapLabel("The devastating Eagle Creek Fire began on September 2nd after someone ignited fireworks during a burn ban.", 170)
-
 const annotFireGorge = g.append("g")
-  .attr("class","annotation gorge");
-
+  .attr("class","annotation gorge")
+  .style("opacity",0);
 const annotFireGorgeSpans = annotFireGorge.append("text")
   .attr("y", yScale(-115));
-
 annotFireGorgeText.forEach(function(string) {
   annotFireGorgeSpans.append('svg:tspan')
   .text(string)
@@ -492,13 +483,16 @@ annotFireGorgeText.forEach(function(string) {
   .attr('x', yScale(-191))
   .attr('dy', yScale(5))
 });
-
 annotFireGorge.append("line")
   .attr("class","annotation gorge")
-  .attr("x1", yScale(-123))
-  .attr("y1", yScale(-77))
-  .attr("x2", yScale(-154))
-  .attr("y2", yScale(-95));
+  .attr("x1", yScale(-150))
+  .attr("y1", yScale(-97))
+  .attr("x2", yScale(-123))
+  .attr("y2", yScale(-77));
+annotFireGorge.transition()
+  .duration(1000)
+  .delay(13000)
+  .style("opacity",1);
 
 
 
@@ -510,7 +504,6 @@ legendOverlay.append("rect")
   .attr("width",yScale(192*2))
   .attr("height",yScale(144*2))
   .style("fill","black")
-  .attr("opacity",0.56)
   .attr("opacity",0.56);
 
 // legend description for temperature line/area chart
@@ -574,7 +567,7 @@ legendCont.append("line")
   .attr("y2", yScale(70));
 
 // legend description for teardrops (precipitation)
-legendRainText = wrapLabel("Raindrop shapes indicate precipitation amounts (inches).  This large raindrop represents 2.19\", the single wettest day in February in Portland.", 150);
+legendRainText = wrapLabel("Raindrop shapes indicate precipitation amounts (inches).  This large raindrop represents 2.19'', the wettest day ever recorded in February in Portland.", 150);
 const legendRain = legendOverlay.append("g")
   .attr("class","legend rain");
 const legendRainSpans = legendRain.append("text")
@@ -635,7 +628,7 @@ legendIce.append("line")
   .attr("y2", yScale(-90));
 
 // legend (annotation) description for the snowiest day
-legendSnowText = wrapLabel("10.64 inches of snow (0.89\" water equivalent) recorded January 11th.", 110);
+legendSnowText = wrapLabel("10.64'' of snow (0.89'' water equivalent) recorded January 11th.", 110);
 const legendSnow = legendOverlay.append("g")
   .attr("class","legend snow");
 const legendSnowSpans = legendSnow.append("text")

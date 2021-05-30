@@ -35,7 +35,7 @@ h1 span.titleIce {
 
 p {
   font-size: 1rem;
-  margin-bottom: 6px;
+  margin-bottom: 0px;
 }
 
 a {
@@ -57,12 +57,47 @@ a:hover {
 }
 
 .main.headerSection {
-  margin: 2.5% 9% 4% 9%;
+  margin: 4.5% 9% 4% 9%;
+}
+
+.descMobile {
+  display: none;
+}
+.descLine1, .descLine2 {
+  display: inline-block;
+}
+
+@media (max-width: 1000px) {
+  .main.headerSection {
+    width: 77%;
+  }
+  .descMobile {
+    display: inline-block;
+  }
+  .descLine1, .descLine2 {
+    display: none;
+  }
+  #infoIcon .svg-inline--fa {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .main.headerSection {
+    width: 68%;
+  }
+  #infoIcon .svg-inline--fa {
+    font-size: 3rem;
+  }
+  #contactMe a {
+    padding: 14px;
+    font-size: 1.6rem;
+  }
 }
 
 
 p.info {
-  font-size: 2.3rem;
+  font-size: 2rem;
   width: 82%;
   background-color: none;
   position: absolute;
@@ -70,7 +105,7 @@ p.info {
 }
 
 .info .fa-info-circle {
-  color: #525252;
+  color: #626262;
 }
 
 body {
@@ -94,17 +129,10 @@ body {
   stroke: url(#temperature-gradient);
 }
 
-.tick circle {
-  fill: none;
-  stroke:  #888;
-}
 .tick line {
   stroke: #E4E4E4;
 }
-.tick text {
-  font-size: 12px;
-  text-anchor: middle;
-}
+
 
 
 path.monthLabel {
@@ -124,7 +152,7 @@ text.monthLabel {
 #gradHaze .stop-1 {stop-color: #2F2F2F30;}
 #gradHaze .stop-2 {stop-color: #8C8C8C30;}
 #gradHaze .stop-3 {stop-color: #B9B9B930;}
-#gradHaze .stop-4 {stop-color: #C0C0C015;}
+#gradHaze .stop-4 {stop-color: #C5C5C516;}
 
 path.rain {
   opacity: 0.5;
@@ -208,6 +236,6 @@ line.legend, line.legend.ice {
 #contactMe {
   background-color: #F2F5F7;
   height: 200px;
-  padding: 60px 12%;
+  padding: 40px 12% 60px 12%;
   text-align: center;
 }
