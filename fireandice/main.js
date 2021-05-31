@@ -490,7 +490,7 @@ annotAug.transition()
   .style("opacity",1);
 
 // Eagle Creek fire
-const annotFireGorgeText = wrapLabel("The devastating Eagle Creek Fire began on September 2nd after someone ignited fireworks during a burn ban.", 170)
+const annotFireGorgeText = wrapLabel("The devastating Eagle Creek Fire began on September 2nd after someone ignited fireworks during a burn ban.", 160)
 const annotFireGorge = g.append("g")
   .attr("class","annotation gorge")
   .style("opacity",0);
@@ -505,8 +505,8 @@ annotFireGorgeText.forEach(function(string) {
 });
 annotFireGorge.append("line")
   .attr("class","annotation gorge")
-  .attr("x1", yScale(-150))
-  .attr("y1", yScale(-97))
+  .attr("x1", yScale(-145))
+  .attr("y1", yScale(-94))
   .attr("x2", yScale(-123))
   .attr("y2", yScale(-77));
 annotFireGorge.transition()
@@ -689,7 +689,7 @@ attributions.append("text")
 
 
 
-// add mouseover event to show legend overlay
+// add click event to show legend overlay
 var item = document.getElementById("infoIcon");
 var infoState = "hide";
 item.addEventListener("click", showHide, false);
