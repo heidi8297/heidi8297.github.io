@@ -18,6 +18,7 @@
   <!-- primary style sheet -->
   <link rel="stylesheet" href="/core.css" type="text/css">
   <link rel="stylesheet" href="org-styles.css" type="text/css">
+  <link rel="stylesheet" href="slider.css" type="text/css">
 
   <!-- Font Awesome -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
@@ -35,6 +36,7 @@
   <div class="main orgChart">
 
     <h1>ORG CHART EXPLORE TOOL</h1>
+    <p class="info"><span id="infoIcon"><i class="fas fa-info-circle"></i></span></p>
     <form class="roleForm" action="" method="get">
       <label for="role1">Where are all of the </label>
       <input class="inputText inputRole1" type="text" name="rolename1" value="VISUALIZATION">
@@ -42,17 +44,42 @@
       <input class="inputText inputRole2" type="text" name="rolename2" value="DATA SCIENTIST">
       <label for="button"> roles?</label>&nbsp;&nbsp;
       <input class="btn btn-outline-secondary btn-sm updateButton" type="button" name="button" value="Update" onClick="formChanged()">
-      &emsp;&emsp;&emsp;Click individual nodes to expand/collapse.
     </form>
-
+    <p>Click individual nodes to expand/collapse.</p>
+    <div class="legendPop">
+      <object class="legendCircles" type="image/svg+xml" data="OrgChartLegendCircles.svg">
+        <img class="legendCirclesImg" src="OrgChartLegendCircles.svg" alt="">
+      </object>
+      <div class="legendContainer">
+        <div class="legendDraw">
+        </div>
+      </div>
+    </div>
     <div class="orgChartArea" id="orgChart"></div>
 
   </div>
 
   <div class="main roleSummary">
+    <!-- <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-8 roleSummaryTitle">
+          <h1>ROLE SUMMARY</h1>
+          <p>Teams with three or more roles of interest (limit 30 teams).</p>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="range-slider">
+            <form class="roleForm" action="" method="get">
+              <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
+              <span class="range-slider__value">0</span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
     <h1>ROLE SUMMARY</h1>
     <p>Teams with three or more roles of interest (limit 30 teams).</p>
-    <div class="summaryGraphArea">
+    <div class="container summaryGraphArea">
       <div class="row">
         <div class="col-12 col-md-6 col-xl-4 roleGraph role1">
 
@@ -69,9 +96,27 @@
   </div>
 
   <div class="main teamCards">
-    <h1>TEAMS OF INTEREST</h1>
-    <p>Teams with three or more roles of interest (limit 30 teams).</p>
-    <div class="row">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-8 roleSummaryTitle">
+          <h1>TEAMS OF INTEREST</h1>
+          <p>Teams with three or more roles of interest (limit 30 teams).</p>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="range-slider">
+            <form class="roleForm" action="" method="get">
+              <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
+              <span class="range-slider__value">0</span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <h1>TEAMS OF INTEREST</h1>
+    <p>Teams with three or more roles of interest (limit 30 teams).</p> -->
+    <div class="row teams">
     </div>
   </div>
 
@@ -92,6 +137,12 @@
 
   <!-- load the d3.js library -->
   <script src="https://d3js.org/d3.v6.min.js"></script>
+
+  <!-- load jQuery -->
+  <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
 
   <!-- load the javascript to render the org chart -->
   <script src="main.js" charset="utf-8"></script>

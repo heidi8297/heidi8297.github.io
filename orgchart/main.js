@@ -9,7 +9,9 @@ var startTime = new Date();
 
 var treeFile = "DMOrgChart.json";
 const animationDelay = 0;
-const idealTeamSize = 35;
+var idealTeamSize = document.getElementsByName("inputTeamSize")[0].value;
+console.log('team');
+console.log(idealTeamSize);
 
 const forceImage = d3.select("#forceGif");
 const whiteBox = d3.select(".whiteBox");
@@ -28,29 +30,6 @@ const colorOrder = {
   "url(#role2Gradient)" : 3,
   "#FFDBAE" : 4
 };
-
-// whiteBox.transition()
-//   .duration(500)
-//   .delay(animationDelay)
-//   .style("opacity",1);
-//
-// forceImage.transition()
-//   .duration(10)
-//   .delay(500 + animationDelay)
-//   .attr("height",0)
-//   .style("opacity",0);
-//
-// whiteBox.transition()
-//   .duration(800)
-//   .delay(700 + animationDelay)
-//   .style("opacity",0);
-//
-// removeStuff.transition()
-//   .duration(1)
-//   .delay(1500+animationDelay)
-//   .remove();
-
-
 
 
 var initialOffsetX = 120,
@@ -135,6 +114,7 @@ function formChanged() {
   rolename2 = document.getElementsByName("rolename2")[0].value.trim().toUpperCase();
   rolename1 = (rolename1 === "" ? "sdjkadjskladsds" : rolename1);
   rolename2 = (rolename2 === "" ? "sdjkadjskladsds" : rolename2);
+  idealTeamSize = document.getElementsByName("inputTeamSize")[0].value;
   console.log("form changed",rolename1,rolename2);
   renderTree();
 }
@@ -838,10 +818,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   // --------------------------------------------------------------------------------------
 
   // clear contents from team cards section
-  d3.select(".teamCards .row").html("");
+  d3.select(".teamCards .row.teams").html("");
 
   // initiate the individual team cards
-  d3.select(".teamCards .row").selectAll("div.teamCard")
+  d3.select(".teamCards .row.teams").selectAll("div.teamCard")
     .data(teamLeaders)
     .join("div")
       .attr("class","col-12 col-md-6 col-xl-4 teamCard")
@@ -1062,3 +1042,104 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 })};
 window.setTimeout(renderTree, animationDelay);
+
+
+
+// add input range slider for ideal team size
+// code for slider originally from Sean Stopnik  https://css-tricks.com/value-bubbles-for-range-inputs/
+var rangeSlider = function(){
+  var slider = $('.range-slider'),
+      range = $('.range-slider__range'),
+      value = $('.range-slider__value');
+
+  slider.each(function(){
+
+    value.each(function(){
+      var value = $(this).prev().attr('value');
+      $(this).html(value);
+    });
+
+    range.on('input', function(){
+      $(this).next(value).html(this.value);
+    });
+  });
+};
+
+rangeSlider();
+
+
+
+// create color legend
+legendColorSvg = d3.select(".legendDraw").append("svg")
+  .attr("width", 150)
+  .attr("height", 85)
+  .call(responsivefy)
+  .append("g");
+legendColorSvg.append("text")
+  .attr("x",10).attr("y",10).attr("class","legendText")
+  .text("FTE");
+legendColorSvg.append("text")
+  .attr("x",35).attr("y",10).attr("class","legendText")
+  .text("TMP");
+legendColorSvg.append("text")
+  .attr("x",56).attr("y",30).attr("dy",3).attr("class","legendTextRole")
+  .text(rolename1);
+legendColorSvg.append("text")
+  .attr("x",56).attr("y",50).attr("dy",3).attr("class","legendTextRole")
+  .text(rolename2);
+legendColorSvg.append("text")
+  .attr("x",56).attr("y",70).attr("dy",3).attr("class","legendTextRole")
+  .text("OTHER");
+legendColorSvg.append("circle")
+  .attr("cx",10).attr("cy",30).attr("r",7).attr("class","role1 fte");
+legendColorSvg.append("circle")
+  .attr("cx",10).attr("cy",50).attr("r",7).attr("class","role2 fte");
+legendColorSvg.append("circle")
+  .attr("cx",10).attr("cy",70).attr("r",7).attr("class","roleOther fte");
+legendColorSvg.append("circle")
+  .attr("cx",35).attr("cy",30).attr("r",7).attr("class","role1 etw");
+legendColorSvg.append("circle")
+  .attr("cx",35).attr("cy",50).attr("r",7).attr("class","role2 etw");
+legendColorSvg.append("circle")
+  .attr("cx",35).attr("cy",70).attr("r",7).attr("class","roleOther etw");
+
+
+// add click event to show legend overlay
+var item = document.getElementById("infoIcon");
+var infoState = "hide";
+item.addEventListener("click", showHide, false);
+function show() {d3.select(".legendPop").style("opacity",1)}
+function hide() {d3.select(".legendPop").style("opacity",0)}
+function showHide() {
+  if (infoState === "hide") {
+    infoState = "show";
+    show();
+  } else {
+    infoState = "hide";
+    hide();
+  }
+}
+
+// Define the div for a tooltip for the information button
+const divInfo = d3.select("body").append("div")
+  .attr("class", "tooltip tooltipInfo")
+  .style("opacity", 0);
+
+// add tooltip to info button
+document.addEventListener("mouseover", function(event){
+  if (!event.target.closest("#infoIcon")) return;
+  divInfo.transition()
+   .duration(200)
+   .style("opacity", .8)
+   .delay(200);
+  divInfo.html("See how to read this viz")
+   .style("left", (event.pageX - 65) + "px")
+   .style("top", (event.pageY + 35) + "px");
+})
+
+document.addEventListener("mouseout", function(event){
+  if (!event.target.closest("#infoIcon")) return;
+  divInfo.transition()
+    .duration(500)
+    .style("opacity", 0);
+})

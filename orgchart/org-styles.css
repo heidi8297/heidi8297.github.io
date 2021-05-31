@@ -153,37 +153,16 @@ body.gif {
 
 
 .inputRole1, .inputRole2 {
-  color:transparent;
   width: 200px;
 }
 
-.inputRole1::placeholder {
-  background: linear-gradient(90deg, #4C70D6, #00A7E9);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.inputRole1:not(:placeholder-shown)  {
-  background: linear-gradient(90deg, #4C70D6, #00A7E9);
-  -webkit-background-clip: text, padding-box;
-          background-clip: text, padding-box;
-  -webkit-text-fill-color: transparent;
+.inputRole1 {
+  color:  #2688e2;
 }
 
-.inputRole2::placeholder {
-  background: linear-gradient(90deg, #F58555, #FCD441);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
+.inputRole2 {
+  color: #ffa349;
 }
-.inputRole2:not(:placeholder-shown)  {
-  background: linear-gradient(90deg, #F58555, #FCD441);
-  -webkit-background-clip: text, padding-box;
-          background-clip: text, padding-box;
-  -webkit-text-fill-color: transparent;
-}
-
-
 
 .inputText {
   font-family: 'Oswald', serif;
@@ -194,12 +173,12 @@ body.gif {
   letter-spacing: 1px;
 }
 
-.inputRole1, .role1 .roleCountLg, .empCounts .role1, .role1.fte {
+.role1 .roleCountLg, .empCounts .role1, .role1.fte {
   fill: url(#role1Gradient);
   color: url(#role1Gradient);
 }
 
-.inputRole2, .role2 .roleCountLg, .empCounts .role2, .role2.fte {
+.role2 .roleCountLg, .empCounts .role2, .role2.fte {
   fill: url(#role2Gradient);
   color: url(#role2Gradient);
 }
@@ -207,10 +186,61 @@ body.gif {
 .role1.etw {
   fill: #9EBEF2;
 }
-
 .role2.etw {
   fill: #FFDBAE;
 }
+.roleOther.fte {
+  fill: #999999;
+}
+.roleOther.etw {
+  fill: #CCCCCC;
+}
+
+/* Info icon / legend pop out */
+p.info {
+  font-size: 2rem;
+  width: 80%;
+  background-color: #ffffff00;
+  position: absolute;
+  text-align: right;
+}
+
+.info .fa-info-circle {
+  color: #626262;
+}
+
+.info .fa-info-circle:hover {
+  color: #343434;
+}
+
+.legendPop {
+  position: absolute;
+  right: 10%;
+  width: 25%;
+  opacity: 0;
+  text-align: center;
+  background-color: white;
+  box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
+}
+.legendContainer {
+  width: 80%;
+  margin: 10px;
+  display: inline-block;
+}
+.legendCircles {
+  width: 90%;
+  margin: 10px;
+}
+
+.legendText {
+  text-anchor: middle;
+  font-size: 0.5rem;
+}
+.legendTextRole {
+  text-anchor: left;
+  font-size: 0.5rem;
+}
+
 
 
 
@@ -251,6 +281,10 @@ body.gif {
 
 
 /* Role summary statistics */
+
+.roleSummaryTitle {
+  padding: 0px;
+}
 
 .summaryGraphArea {
   background-color: white;
@@ -316,7 +350,7 @@ body.gif {
 }
 
 rect.dt {
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 
@@ -392,7 +426,7 @@ h5.titleText {  /* job title of leader */
 }
 
 .teamCards g path {
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 
