@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="291.87024mm"
+   height="133.23053mm"
+   viewBox="0 0 291.87024 133.23053"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)"
+   sodipodi:docname="OrgChartLegend.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient890-7">
+      <stop
+         style="stop-color:#4c70d6;stop-opacity:1"
+         offset="0"
+         id="stop886" />
+      <stop
+         style="stop-color:#00a7e9;stop-opacity:0.99823534"
+         offset="1"
+         id="stop888" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient890-7"
+       id="linearGradient860"
+       x1="99.645088"
+       y1="75.595238"
+       x2="116.55729"
+       y2="74.839287"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-43.618454,52.160717)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient890-7"
+       id="linearGradient860-7"
+       x1="-352.56567"
+       y1="-142.80388"
+       x2="-278.27997"
+       y2="-142.80386"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,236.4604,165.53947)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient890-7"
+       id="linearGradient964"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,214.122,203.48829)"
+       x1="-358.27997"
+       y1="-139.94673"
+       x2="-278.27997"
+       y2="-142.80386" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient890-7"
+       id="linearGradient970"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,168.61364,203.48828)"
+       x1="-355.42282"
+       y1="-139.94673"
+       x2="-278.27997"
+       y2="-142.80386" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="384.97636"
+     inkscape:cy="321.31421"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1462"
+     inkscape:window-height="943"
+     inkscape:window-x="36"
+     inkscape:window-y="217"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-48.607746,-63.152283)">
+    <circle
+       style="opacity:0.999;fill:#999999;fill-opacity:1;stroke:#d9d9d9;stroke-width:0.217047"
+       id="path833"
+       cy="126.24406"
+       cx="106.09792"
+       r="28.00234" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient860);fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="path833-4"
+       cy="126.99999"
+       cx="61.458935"
+       r="12.851189" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient860-7);fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="path833-4-9"
+       cy="126.99999"
+       cx="150.73689"
+       r="12.851189" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient964);fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="circle962"
+       cy="164.94882"
+       cx="128.39853"
+       r="12.851189" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient970);fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="circle968"
+       cy="164.94882"
+       cx="82.890182"
+       r="12.851189" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:#9ebef2;fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="circle974"
+       cy="87.539299"
+       cx="82.890182"
+       r="12.851189" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:#9ebef2;fill-opacity:1;stroke:none;stroke-width:0.281252"
+       id="circle1015"
+       cy="87.539299"
+       cx="128.39853"
+       r="12.851189" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Raleway;-inkscape-font-specification:'Raleway, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="177.51006"
+       y="70.983925"
+       id="text1021"><tspan
+         sodipodi:role="line"
+         id="tspan1023"
+         x="177.51006"
+         y="70.983925">Color of large circle indicates</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1025"
+         x="177.51006"
+         y="84.213051">role of the person shown</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Raleway;-inkscape-font-specification:'Raleway, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="177.79581"
+       y="106.50014"
+       id="text1021-8"><tspan
+         sodipodi:role="line"
+         id="tspan1048"
+         x="177.79581"
+         y="106.50014">Smaller circles represent</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1050"
+         x="177.79581"
+         y="119.72926">persons with roles of interest</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1052"
+         x="177.79581"
+         y="132.95839">who belong on this team</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Raleway;-inkscape-font-specification:'Raleway, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="177.71114"
+       y="155.35136"
+       id="text1021-8-1"><tspan
+         sodipodi:role="line"
+         id="tspan1078"
+         x="177.71114"
+         y="155.35136">In this case the person does</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1080"
+         x="177.71114"
+         y="168.58049">not hold a role of interest, but has</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1082"
+         x="177.71114"
+         y="181.80962">6 roles of interest on their team:</tspan><tspan
+         sodipodi:role="line"
+         id="tspan1084"
+         x="177.71114"
+         y="195.03874">4 FTE and 2 TMP.</tspan></text>
+  </g>
+</svg>
