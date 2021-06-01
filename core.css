@@ -79,21 +79,30 @@ section {
 #contactMe {
   background-color: white;
   height: 200px;
-  padding: 60px 12%;
+  padding: 70px 12%;
   text-align: center;
 }
 
 #contactMe a {
   padding: 26px;
   font-size: 1.4rem;
+  text-decoration: none;
+}
+
+#contactMe .githubLink {
+  font-size: 1.53rem;
 }
 
 @media (max-width: 700px) {
   #contactMe a {
-    padding: 14px;
+    padding: 3%;
     font-size: 1.6rem;
   }
+  #contactMe .githubLink {
+    font-size: 1.74rem;
+  }
 }
+
 
 .tableauLink {
   position: relative;

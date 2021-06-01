@@ -792,12 +792,11 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   barSvg.selectAll("rect.dt")
     .data(role12Titles.slice(0, 8))
     .join("rect")
-    .attr("class","dt")
     .attr("x", x(0) )
     .attr("y", d => y(d[0]) )
     .attr("width", d => x(d[1]) )
     .attr("height", y.bandwidth() )
-    .attr("class", d=> ( d[0].includes(rolename1) ? "role1 fte" : "role2 fte" ));
+    .attr("class", d=> ( d[0].includes(rolename1) ? "dt role1 fte" : "dt role2 fte" ));
 
   // add job titles to the bars
   barSvg.selectAll("text")

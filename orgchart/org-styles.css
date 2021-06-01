@@ -367,8 +367,8 @@ p.info {
   transform: translate(10px,15px);
 }
 
-rect.dt {
-  opacity: 0.75;
+.roleGraph rect {
+  opacity: 0.83;
 }
 
 
@@ -466,16 +466,13 @@ h5.titleText {  /* job title of leader */
 }
 
 .teamCards g path {
-  opacity: 0.75;
+  opacity: 0.83;
 }
 
 
 /* Contact Me */
 #contactMe {
   background-color: #f8f8f8;
-  height: 200px;
-  padding: 60px 12%;
-  text-align: center;
 }
 
 

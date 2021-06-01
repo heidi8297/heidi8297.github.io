@@ -233,9 +233,14 @@ a:hover {
   fill: #EED8AD;
 }
 
-#bottomContainer {   /* For some reason this styling didn't work as a class (had to change to an id) */
+/* #bottomContainer {
   background-color: #151515;
   text-align: center;
   padding: 50px;
+  margin: 100px 0 0 0;
+} */
+
+#contactMe {
+  background-color: #151515;
   margin: 100px 0 0 0;
 }

@@ -252,7 +252,5 @@ line.legend, line.legend.ice {
 /* Contact Me */
 #contactMe {
   background-color: #F2F5F7;
-  height: 200px;
-  padding: 40px 12% 60px 12%;
-  text-align: center;
+  height: 180px;
 }

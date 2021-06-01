@@ -421,25 +421,6 @@ and make sure the svg is still positioned well */
 
 
 
-/* Contact Me */
-#contactMe {
-  background-color: white;
-  height: 200px;
-  padding: 60px 12%;
-  text-align: center;
-}
-
-#contactMe a {
-  padding: 26px;
-  font-size: 1.4rem;
-}
-
-.tableauLink {
-  position: relative;
-  bottom: 3px;
-}
-
-
 
 /*--------------------------------------------------------------
 # Contact
