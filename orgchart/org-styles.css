@@ -199,15 +199,12 @@ body.gif {
 /* Info icon / legend pop out */
 p.info {
   font-size: 2rem;
-  width: 80%;
+  /* width: 80%; */
   background-color: #ffffff00;
-  position: absolute;
+  /* position: absolute; */
   text-align: right;
 }
 
-.orgChart .info {
-  pointer-events: none;
-}
 
 .info .fa-info-circle {
   color: #626262;
