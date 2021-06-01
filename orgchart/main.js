@@ -987,9 +987,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
 
 
+    var circleGroup = teamSvg.append("g").attr("class","empCircles")
 
     // add a circle for each employee of role 1
-    teamSvg.selectAll("circle .role1.emp")
+    circleGroup.selectAll("circle .role1.emp")
       .data(thisLeader.data.role1s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))
@@ -1012,7 +1013,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
         });
 
     // add a circle for each employee of role 2
-    teamSvg.selectAll("circle .role2.emp")
+    circleGroup.selectAll("circle .role2.emp")
       .data(thisLeader.data.role2s)
       .join("circle")
         .attr("cx", (d,iRole) => 8+(iRole*7.2)%(rowCount*7.2))

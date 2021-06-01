@@ -36,6 +36,20 @@
   <div class="main orgChart">
 
     <h1>ORG CHART EXPLORE TOOL</h1>
+
+
+    <!-- <div class="mainSubheader">
+      <div class="row">
+        <div class="col-sm-9 col-md-10 col-lg-11">
+
+        </div>
+        <div class="col-sm-3 col-md-2 col-lg-1">
+
+        </div>
+      </div>
+    </div> -->
+
+
     <p class="info"><span id="infoIcon"><i class="fas fa-info-circle"></i></span></p>
     <form class="roleForm" action="" method="get">
       <label for="role1">Where are all of the </label>
@@ -79,31 +93,27 @@
 
   <div class="main teamCards">
 
-    <div class="dasdasd">
-      <div class="row">
-        <div class="col-12 col-md-7 teamsTitle">
-          <h1>TEAMS OF INTEREST</h1>
-          <p>Teams with three or more roles of interest (limit 30 teams).</p>
-        </div>
-        <div class="col-8 col-md-4">
-          <div class="range-slider">
-            <form class="roleForm" action="" method="get">
-              Ideal team size
-              <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
-              <span class="range-slider__value">0</span>
-            </form>
-          </div>
-        </div>
-        <div class="col-4 col-md-1 buttonCont">
+    <div class="row">
+      <div class="col-12 col-md-7 teamsTitle">
+        <h1>TEAMS OF INTEREST</h1>
+        <p>Teams with three or more roles of interest (limit 30 teams).</p>
+      </div>
+      <div class="col-8 col-md-4">
+        <div class="range-slider">
           <form class="roleForm" action="" method="get">
-            <input class="btn btn-outline-secondary btn-sm updateButton" type="button" name="button" value="Update" onClick="formChanged()">
+            Ideal team size
+            <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
+            <span class="range-slider__value">0</span>
           </form>
         </div>
       </div>
+      <div class="col-4 col-md-1 buttonCont">
+        <form class="roleForm" action="" method="get">
+          <input class="btn btn-outline-secondary btn-sm updateButton" type="button" name="button" value="Update" onClick="formChanged()">
+        </form>
+      </div>
     </div>
 
-    <!-- <h1>TEAMS OF INTEREST</h1>
-    <p>Teams with three or more roles of interest (limit 30 teams).</p> -->
     <div class="row teams">
     </div>
   </div>

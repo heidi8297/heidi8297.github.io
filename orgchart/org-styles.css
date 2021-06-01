@@ -205,6 +205,10 @@ p.info {
   text-align: right;
 }
 
+.orgChart .info {
+  pointer-events: none;
+}
+
 .info .fa-info-circle {
   color: #626262;
 }
