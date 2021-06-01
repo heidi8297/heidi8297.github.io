@@ -49,6 +49,13 @@ a:hover {
   padding: 1px 1% 10px 1%;
 }
 
+@media (max-width: 500px) {
+  .main {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+}
+
 
 /* Force graph and loading animation */
 
@@ -223,13 +230,13 @@ p.info {
 
 @media (max-width: 1000px) {
   #infoIcon .svg-inline--fa {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
   }
 }
 
 @media (max-width: 700px) {
   #infoIcon .svg-inline--fa {
-    font-size: 3rem;
+    font-size: 2.8rem;
   }
 }
 
@@ -473,6 +480,7 @@ h5.titleText {  /* job title of leader */
 /* Contact Me */
 #contactMe {
   background-color: #f8f8f8;
+  height: 180px;
 }
 
 

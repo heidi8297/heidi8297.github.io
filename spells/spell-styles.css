@@ -54,6 +54,12 @@ a:hover {
   padding: 0 10%;
 }
 
+@media (max-width: 500px) {
+  .main {
+    padding: 0 5%;
+  }
+}
+
 .container-fluid {
   margin: 50px auto;
 }
@@ -232,13 +238,6 @@ a:hover {
 .tableauLink svg {
   fill: #EED8AD;
 }
-
-/* #bottomContainer {
-  background-color: #151515;
-  text-align: center;
-  padding: 50px;
-  margin: 100px 0 0 0;
-} */
 
 #contactMe {
   background-color: #151515;

@@ -206,6 +206,10 @@ and make sure the svg is still positioned well */
   text-align: center;
 }
 
+.portfolio-info a {
+  text-decoration: none;
+}
+
 .portfolio .portfolio-item {
   margin-bottom: 30px;
 }
@@ -307,7 +311,7 @@ and make sure the svg is still positioned well */
   z-index: 4;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a {
+.portfolio .portfolio-wrap .portfolio-links i {
   color: #45505b;
   margin: 0 2px;
   font-size: 28px;
@@ -315,7 +319,7 @@ and make sure the svg is still positioned well */
   transition: 0.3s;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a:hover {
+.portfolio .portfolio-wrap .portfolio-links i:hover {
   color: #5B87FF;
 }
 
@@ -346,7 +350,25 @@ and make sure the svg is still positioned well */
   z-index: 2000000;
 }
 
+.dark {
+  opacity: 0.9;
+}
 
+.darker {
+  opacity: 0.82;
+}
+
+.portfolio-links.wonkyL {
+  position: relative;
+  right: 1.2rem;
+}
+
+.portfolio-links.wonkyR {
+  position: relative;
+  left: 1.2rem;
+  bottom: 2rem;
+  margin-bottom: -2rem;
+}
 
 
 /*--------------------------------------------------------------
@@ -569,5 +591,15 @@ and make sure the svg is still positioned well */
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+
+
+
+@media (max-width: 500px) {
+  #header, #aboutMe, #portfolio, #contactMe {
+    padding-left: 6%;
+    padding-right: 6%;
   }
 }

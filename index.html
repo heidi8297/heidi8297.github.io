@@ -31,10 +31,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86">
 
   <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="Heidi Stockton" />
+  <meta property="og:title" content="A portfolio of data visualizations by Heidi Stockton" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="http://heidistockton.com/images/websiteThumbnail.png" />
-  <meta property="og:description" content="A portfolio of data visualizations by Heidi Stockton" />
+  <!-- <meta property="og:description" content="A portfolio of data visualizations by Heidi Stockton" /> -->
   <meta property="og:url" content="https://www.heidistockton.com/" />
 
   <!-- Vendor CSS Files -->
@@ -165,17 +165,19 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleStudies.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>NSRL Studies Dashboard</h4>
-              <p class="desc">What has the Nike Sport Research Lab been up to this quarter?</p>
-              <p class="tech">Tableau, MySQL</p>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleStudiesThreeViews.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="NSRL Studies Dashboard - iconography created in collaboration with Sara Mostafavi"
-                ><i class="bx bx-plus"></i></a>
-              </div>
+              <a
+                href="images/workSampleStudiesThreeViews.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="NSRL Studies Dashboard - iconography created in collaboration with Sara Mostafavi"
+              >
+                <h4>NSRL Studies Dashboard</h4>
+                <p class="desc">What has the Nike Sport Research Lab been up to this quarter?</p>
+                <p class="tech">Tableau, MySQL</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -184,29 +186,33 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleSourcedDemand.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Sourced Demand vs Strategy</h4>
-              <p class="desc">Tracking sourcing strategy against the incoming demand signal</p>
-              <p class="tech">Tableau, Snowflake</p>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleSourcedDemand.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="Sourced Demand - made possible by the data wizardry of Sergey Lyashenko"
-                ><i class="bx bx-plus"></i></a>
-              </div>
+              <a
+                href="images/workSampleSourcedDemand.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="Sourced Demand - made possible by the data wizardry of Sergey Lyashenko"
+              >
+                <h4>Sourced Demand vs Strategy</h4>
+                <p class="desc">Tracking sourcing strategy against the incoming demand signal</p>
+                <p class="tech">Tableau, Snowflake</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
 
-        <!-- <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
+        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
           <div class="portfolio-wrap">
-            <img src="images/workSampleOrgChartCropped.png" class="img-fluid" alt="">
+            <img src="images/workSampleOrgChartCroppedNew.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Org Chart Explorer</h4>
-              <p class="desc">A guided search tool for finding people and the teams
-                they belong to within a large organization</p>
-              <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              <a href="http://heidistockton.com/orgchart/">
+                <h4>Org Chart Explorer</h4>
+                <p class="desc">A guided search tool for finding people and the teams
+                  they belong to within a large organization</p>
+                <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              </a>
               <div class="portfolio-links">
                 <a
                   href="images/workSampleOrgChart.png"
@@ -219,16 +225,48 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-tableau">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleCovid.png" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleCovid.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="COVID-19 Case Tracker - created to combat the misinformation
+                that was rampant in the early days of the pandemic"
+              >
+                <h4>COVID-19 Case Tracker</h4>
+                <p class="desc">A look at how different parts of the country
+                  are faring against the COVID-19 pandemic (refreshed weekly)</p>
+                <p class="tech">Tableau, Tableau Prep</p>
+                <div class="portfolio-links wonkyL">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+
+              <div class="portfolio-links wonkyR">
+                <a href="https://public.tableau.com/profile/heidi.stockton#!/vizhome/COVID-19CaseTracker-USAbyCounty/CasesByStateAndCounty" target="_blank"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-d3">
           <div class="portfolio-wrap">
-            <img src="images/workSampleSpells.png" class="img-fluid" alt="">
+            <div class="dark">
+              <img src="images/workSampleSpells.png" class="img-fluid" alt="">
+            </div>
             <div class="portfolio-info">
-              <h4>Spells & Spellcasters</h4>
-              <p class="desc">The top spells and spellcasters of Harry Potter along with
-                who said what when</p>
-              <p class="tech">D3.js, HTML, CSS, Javascript</p>
+              <a href="http://heidistockton.com/spells/">
+                <h4>Spells & Spellcasters</h4>
+                <p class="desc">The top spells and spellcasters of Harry Potter along with
+                  who said what when</p>
+                <p class="tech">D3.js, HTML, CSS, Javascript</p>
+              </a>
               <div class="portfolio-links">
                 <a href="images/workSampleSpells.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Spells & Spellcasters"><i class="bx bx-plus"></i></a>
                 <a href="http://heidistockton.com/spells/"><i class="bx bx-link"></i></a>
@@ -237,35 +275,15 @@
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-tableau">
+        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
           <div class="portfolio-wrap">
-            <img src="images/workSampleCovid.png" class="img-fluid" alt="">
+            <img src="images/workSampleFireIceCroppedNew.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>COVID-19 Case Tracker</h4>
-              <p class="desc">A look at how different parts of the country
-                are faring against the COVID-19 pandemic (refreshed weekly)</p>
-              <p class="tech">Tableau, Tableau Prep</p>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleCovid.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="COVID-19 Case Tracker - created to combat the misinformation
-                  that was rampant in the early days of the pandemic"
-                ><i class="bx bx-plus"></i></a>
-                <a href="https://public.tableau.com/profile/heidi.stockton#!/vizhome/COVID-19CaseTracker-USAbyCounty/CasesByStateAndCounty" target="_blank"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleFireIce.png" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Fire and Ice</h4>
-              <p class="desc">A look at some of the extreme weather happening in Portland, OR</p>
-              <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              <a href="http://heidistockton.com/fireandice/">
+                <h4>Fire and Ice</h4>
+                <p class="desc">A look at some of the extreme weather happening in Portland, OR</p>
+                <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              </a>
               <div class="portfolio-links">
                 <a
                   href="images/workSampleFireIce.png"
@@ -280,48 +298,60 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
           <div class="portfolio-wrap">
             <img src="images/workSampleSMS.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Sustainability KPI Tracker</h4>
-              <p class="desc">Tracking progress against annual sustainability targets</p>
-              <p class="tech">Tableau, Snowflake</p>
-              <div class="portfolio-links">
-                <a href="images/workSampleSMS.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Sustainability KPI Tracker"><i class="bx bx-plus"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleMultisource.png" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Multisourcing Tracker</h4>
-              <p class="desc">Tracking how sourcing outcomes are impacted by developing
-                styles at multiple suppliers</p>
-              <p class="tech">Tableau, Snowflake</p>
-              <div class="portfolio-links">
-                <a href="images/workSampleMultisource.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Multisourcing Tracker"><i class="bx bx-plus"></i></a>
-              </div>
+              <a href="images/workSampleSMS.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Sustainability KPI Tracker">
+                <h4>Sustainability KPI Tracker</h4>
+                <p class="desc">Tracking progress against annual sustainability targets</p>
+                <p class="tech">Tableau, Snowflake</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-tableau">
           <div class="portfolio-wrap">
-            <img src="images/workSampleHowMany.png" class="img-fluid" alt="">
+            <div class="darker">
+              <img src="images/workSampleHowMany.png" class="img-fluid" alt="">
+            </div>
             <div class="portfolio-info">
-              <h4>Last Words</h4>
-              <p class="desc">An exploration of police killings in the USA</p>
-              <p class="tech">Tableau</p>
-              <div class="portfolio-links">
-                <a href="images/workSampleHowMany.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Last Words"><i class="bx bx-plus"></i></a>
+              <a href="images/workSampleHowMany.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Last Words">
+                <h4>Last Words</h4>
+                <p class="desc">An exploration of police killings in the USA</p>
+                <p class="tech">Tableau</p>
+                <div class="portfolio-links wonkyL">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+
+              <div class="portfolio-links wonkyR">
                 <a href="https://public.tableau.com/profile/heidi.stockton#!/vizhome/LastWords_16020241778850/FloatingVersion" target="_blank"><i class="bx bx-link"></i></a>
               </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleMultisource.png" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <a href="images/workSampleMultisource.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Multisourcing Tracker">
+                <h4>Multisourcing Tracker</h4>
+                <p class="desc">Tracking how sourcing outcomes are impacted by developing
+                  styles at multiple suppliers</p>
+                <p class="tech">Tableau, Snowflake</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -330,20 +360,21 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleFootCropped.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Baseline Assessment</h4>
-              <p class="desc">A customized immediate-turnaround report for athletes
-                visiting the Sport Research Lab at Nike's WHQ</p>
-              <p class="tech">Tableau</p>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleBaselineSQ.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="Baseline Assessment - in collaboration with Michael Showell
-                  and several others"
-                >
-                <i class="bx bx-plus"></i></a>
-              </div>
+              <a
+                href="images/workSampleBaselineSQ.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="Baseline Assessment - in collaboration with Michael Showell
+                and several others"
+              >
+                <h4>Baseline Assessment</h4>
+                <p class="desc">A customized immediate-turnaround report for athletes
+                  visiting the Sport Research Lab at Nike's WHQ</p>
+                <p class="tech">Tableau</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -352,12 +383,14 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleCapacity.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Capacity Variance</h4>
-              <p class="desc">Tracking changes in factory capacity over time</p>
-              <p class="tech">Tableau, Snowflake</p>
-              <div class="portfolio-links">
-                <a href="images/workSampleCapacity.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Capacity Variance"><i class="bx bx-plus"></i></a>
-              </div>
+              <a href="images/workSampleCapacity.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Capacity Variance">
+                <h4>Capacity Variance</h4>
+                <p class="desc">Tracking changes in factory capacity over time</p>
+                <p class="tech">Tableau, Snowflake</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -366,18 +399,20 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleClimate.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>ECAP Climate Change survey</h4>
-              <p class="desc">Results of a survey looking at public knowledge, attitudes
-                and behaviors pertaining to climate change</p>
-              <p class="tech">Tableau, Python</p>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleClimate.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="ECAP Climate Change survey - for Luna Abadia, a truly inspiring young activist"
-                ><i class="bx bx-plus"></i></a>
-              </div>
+              <a
+                href="images/workSampleClimate.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="ECAP Climate Change survey - for Luna Abadia, a truly inspiring young activist"
+              >
+                <h4>ECAP Climate Change survey</h4>
+                <p class="desc">Results of a survey looking at public knowledge, attitudes
+                  and behaviors pertaining to climate change</p>
+                <p class="tech">Tableau, Python</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -386,11 +421,16 @@
           <div class="portfolio-wrap">
             <img src="images/workSampleWebsite.png" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>Personal Website</h4>
-              <p class="desc">A website to impress and delight (is it working?)</p>
-              <p class="tech">D3.js, Bootstrap, HTML, CSS, Javascript</p>
-              <div class="portfolio-links">
-                <a href="images/workSampleWebsite.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Personal Website"><i class="bx bx-plus"></i></a>
+              <a href="images/workSampleWebsite.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Personal Website">
+                <h4>Personal Website</h4>
+                <p class="desc">A website to impress and delight (is it working?)</p>
+                <p class="tech">D3.js, Bootstrap, HTML, CSS, Javascript</p>
+                <div class="portfolio-links wonkyL">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+
+              <div class="portfolio-links wonkyR">
                 <a href="https://heidistockton.com"><i class="bx bx-link"></i></a>
               </div>
             </div>
@@ -566,7 +606,6 @@
 
 
 
-    <!-- <a href="mailto:notgiven@gmail.com"><i class="fas fa-envelope"></i></a> -->
     <a class="footerLink" href="http://heidistockton.com"><i class="fas fa-home"></i></a>
     <a class="footerLink" href="mailto:stocktonheidi AT gee male dot comm"><i class="fas fa-envelope"></i></a>
     <a class="footerLink" href="https://linkedin.com/in/heidistockton/" target="_blank"><i class="fab fa-linkedin"></i></a>

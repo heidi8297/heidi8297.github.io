@@ -78,7 +78,7 @@ a:hover {
     display: none;
   }
   #infoIcon .svg-inline--fa {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
   }
 }
 
@@ -87,7 +87,7 @@ a:hover {
     width: 68%;
   }
   #infoIcon .svg-inline--fa {
-    font-size: 3rem;
+    font-size: 2.8rem;
   }
 }
 
@@ -98,6 +98,22 @@ p.info {
   background-color: none;
   position: absolute;
   text-align: right;
+}
+
+@media (max-width: 500px) {
+  .main {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .main.headerSection {
+    width: 78%;
+    margin-left: 4%;
+    margin-left: 4%;
+  }
+  p.info {
+    width: 92%;
+  }
+
 }
 
 .info .fa-info-circle {
@@ -116,6 +132,13 @@ body {
 
 .radialChart {
   text-align: center;
+}
+
+@media (max-width: 500px) {
+  .main.radialChart {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 }
 
 .area {
