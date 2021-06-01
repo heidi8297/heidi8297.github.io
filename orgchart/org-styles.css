@@ -144,7 +144,7 @@ body.gif {
   font-size: 0.83rem;
 }
 
-.updateButton {
+.orgChart .updateButton {
   font-weight: normal;
   font-size: 0.83rem;
   position: relative;
@@ -215,7 +215,7 @@ p.info {
 
 .legendPop {
   position: absolute;
-  right: 10%;
+  right: 9%;
   width: 25%;
   opacity: 0;
   text-align: center;
@@ -280,10 +280,11 @@ p.info {
 }
 
 
+
 /* Role summary statistics */
 
-.roleSummaryTitle {
-  padding: 0px;
+.roleSummary h1 {
+  margin-bottom: 30px;
 }
 
 .summaryGraphArea {
@@ -365,6 +366,21 @@ rect.dt {
   margin-bottom: 30px;
 }
 
+.buttonCont {
+  padding-left: 0;
+  margin-top: 48px;
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  .range-slider, .buttonCont {
+    margin: 23px 0 23px 0;
+  }
+  .main p {  /* description below section title */
+    margin-bottom: 0;
+  }
+}
+
 .block {  /* individual team card div */
   background-color: white;
   margin-bottom: 30px;
@@ -438,15 +454,7 @@ h5.titleText {  /* job title of leader */
   text-align: center;
 }
 
-#contactMe a {
-  padding: 26px;
-  font-size: 1.4rem;
-}
 
-.tableauLink {
-  position: relative;
-  bottom: 3px;
-}
 
 .tableauIcon {
   /* likely should keep this the same color as the 'a' color above */

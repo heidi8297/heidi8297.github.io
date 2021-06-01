@@ -17,8 +17,8 @@
 
   <!-- primary style sheet -->
   <link rel="stylesheet" href="/core.css" type="text/css">
-  <link rel="stylesheet" href="org-styles.css" type="text/css">
   <link rel="stylesheet" href="slider.css" type="text/css">
+  <link rel="stylesheet" href="org-styles.css" type="text/css">
 
   <!-- Font Awesome -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
@@ -60,26 +60,8 @@
   </div>
 
   <div class="main roleSummary">
-    <!-- <div class="container">
-      <div class="row">
-        <div class="col-12 col-md-8 roleSummaryTitle">
-          <h1>ROLE SUMMARY</h1>
-          <p>Teams with three or more roles of interest (limit 30 teams).</p>
-        </div>
-        <div class="col-12 col-md-4">
-          <div class="range-slider">
-            <form class="roleForm" action="" method="get">
-              <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
-              <span class="range-slider__value">0</span>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <h1>ROLE SUMMARY</h1>
-    <p>Teams with three or more roles of interest (limit 30 teams).</p>
-    <div class="container summaryGraphArea">
+    <div class="summaryGraphArea">
       <div class="row">
         <div class="col-12 col-md-6 col-xl-4 roleGraph role1">
 
@@ -87,7 +69,7 @@
         <div class="col-12 col-md-6 col-xl-4 roleGraph role2">
 
         </div>
-        <div class="col-12 col-md-6 col-xl-4 roleGraph titles">
+        <div class="col-12 col-md-12 col-xl-4 roleGraph titles">
 
         </div>
       </div>
@@ -97,19 +79,25 @@
 
   <div class="main teamCards">
 
-    <div class="container">
+    <div class="dasdasd">
       <div class="row">
-        <div class="col-12 col-md-8 roleSummaryTitle">
+        <div class="col-12 col-md-7 teamsTitle">
           <h1>TEAMS OF INTEREST</h1>
           <p>Teams with three or more roles of interest (limit 30 teams).</p>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-8 col-md-4">
           <div class="range-slider">
             <form class="roleForm" action="" method="get">
+              Ideal team size
               <input class="range-slider__range" name="inputTeamSize" type="range" value="35" min="10" max="100" step="5">
               <span class="range-slider__value">0</span>
             </form>
           </div>
+        </div>
+        <div class="col-4 col-md-1 buttonCont">
+          <form class="roleForm" action="" method="get">
+            <input class="btn btn-outline-secondary btn-sm updateButton" type="button" name="button" value="Update" onClick="formChanged()">
+          </form>
         </div>
       </div>
     </div>

@@ -1076,19 +1076,19 @@ legendColorSvg = d3.select(".legendDraw").append("svg")
   .call(responsivefy)
   .append("g");
 legendColorSvg.append("text")
-  .attr("x",10).attr("y",10).attr("class","legendText")
+  .attr("x",10).attr("y",15).attr("class","legendText")
   .text("FTE");
 legendColorSvg.append("text")
-  .attr("x",35).attr("y",10).attr("class","legendText")
+  .attr("x",31).attr("y",15).attr("class","legendText")
   .text("TMP");
 legendColorSvg.append("text")
-  .attr("x",56).attr("y",30).attr("dy",3).attr("class","legendTextRole")
+  .attr("x",46).attr("y",30).attr("dy",3).attr("class","legendTextRole")
   .text(rolename1);
 legendColorSvg.append("text")
-  .attr("x",56).attr("y",50).attr("dy",3).attr("class","legendTextRole")
+  .attr("x",46).attr("y",50).attr("dy",3).attr("class","legendTextRole")
   .text(rolename2);
 legendColorSvg.append("text")
-  .attr("x",56).attr("y",70).attr("dy",3).attr("class","legendTextRole")
+  .attr("x",46).attr("y",70).attr("dy",3).attr("class","legendTextRole")
   .text("OTHER");
 legendColorSvg.append("circle")
   .attr("cx",10).attr("cy",30).attr("r",7).attr("class","role1 fte");
@@ -1097,11 +1097,11 @@ legendColorSvg.append("circle")
 legendColorSvg.append("circle")
   .attr("cx",10).attr("cy",70).attr("r",7).attr("class","roleOther fte");
 legendColorSvg.append("circle")
-  .attr("cx",35).attr("cy",30).attr("r",7).attr("class","role1 etw");
+  .attr("cx",31).attr("cy",30).attr("r",7).attr("class","role1 etw");
 legendColorSvg.append("circle")
-  .attr("cx",35).attr("cy",50).attr("r",7).attr("class","role2 etw");
+  .attr("cx",31).attr("cy",50).attr("r",7).attr("class","role2 etw");
 legendColorSvg.append("circle")
-  .attr("cx",35).attr("cy",70).attr("r",7).attr("class","roleOther etw");
+  .attr("cx",31).attr("cy",70).attr("r",7).attr("class","roleOther etw");
 
 
 // add click event to show legend overlay

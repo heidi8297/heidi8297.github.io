@@ -4,14 +4,14 @@
 	 box-sizing: border-box;
 }
  .range-slider {
-	 margin: 60px 0 0 0%;
+	 margin: 45px 0 0 0%;
 }
  .range-slider {
 	 width: 100%;
 }
  .range-slider__range {
 	 -webkit-appearance: none;
-	 width: calc(100% - (73px));
+	 width: calc(100% - (53px));
 	 height: 7px;
 	 border-radius: 3.5px;
 	 background: #ddd;
@@ -24,7 +24,7 @@
 	 width: 14px;
 	 height: 14px;
 	 border-radius: 50%;
-	 background: #222222;
+	 background: #444444;
 	 cursor: pointer;
 	 transition: background 0.15s ease-in-out;
 }
@@ -39,7 +39,7 @@
 	 height: 14px;
 	 border: 0;
 	 border-radius: 50%;
-	 background: #222222;
+	 background: #444444;
 	 cursor: pointer;
 	 transition: background 0.15s ease-in-out;
 }
@@ -55,16 +55,16 @@
  .range-slider__value {
 	 display: inline-block;
 	 position: relative;
-	 width: 37px;
+	 width: 34px;
 	 color: #fff;
 	 line-height: 13px;
 	 font-family: 'Quattrocento', serif;
 	 font-size: 0.9rem;
 	 text-align: center;
 	 border-radius: 3px;
-	 background: #222222;
-	 padding: 5px 10px;
-	 margin-left: 8px;
+	 background: #444444;
+	 padding: 5px 6px;
+	 margin-left: 5px;
 }
  .range-slider__value:after {
 	 position: absolute;
@@ -73,7 +73,7 @@
 	 width: 0;
 	 height: 0;
 	 border-top: 7px solid transparent;
-	 border-right: 7px solid #222222;
+	 border-right: 7px solid #444444;
 	 border-bottom: 7px solid transparent;
 	 content: '';
 }
