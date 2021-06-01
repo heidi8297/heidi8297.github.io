@@ -112,6 +112,9 @@ body.gif {
 
 /* Org chart */
 
+.mainSubheader p {
+  margin-bottom: 30px;
+}
 
 #role1Gradient .stop-left {
   stop-color: #4C70D6;
@@ -151,9 +154,15 @@ body.gif {
   bottom: 3px;
 }
 
+@media (max-width: 543px) {
+  .orgChart .updateButton {
+    margin-top: 7px;
+  }
+}
+
 
 .inputRole1, .inputRole2 {
-  width: 200px;
+  width: 170px;
 }
 
 .inputRole1 {
@@ -199,9 +208,7 @@ body.gif {
 /* Info icon / legend pop out */
 p.info {
   font-size: 2rem;
-  /* width: 80%; */
   background-color: #ffffff00;
-  /* position: absolute; */
   text-align: right;
 }
 
@@ -214,10 +221,22 @@ p.info {
   color: #343434;
 }
 
+@media (max-width: 1000px) {
+  #infoIcon .svg-inline--fa {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  #infoIcon .svg-inline--fa {
+    font-size: 3rem;
+  }
+}
+
 .legendPop {
   position: absolute;
   right: 9%;
-  width: 25%;
+  width: calc(15% + 200px);
   opacity: 0;
   text-align: center;
   background-color: white;
@@ -246,9 +265,6 @@ p.info {
 
 
 /* Format the org chart */
-.orgChartArea {
-  margin-top: 30px;
-}
 
 .node circle {
   fill: #fff;
@@ -363,7 +379,7 @@ rect.dt {
   margin-bottom: 2.5%;
 }
 
-.main p {  /* description below section title */
+.teamsTitle p {  /* description below section title */
   margin-bottom: 30px;
 }
 
@@ -373,11 +389,18 @@ rect.dt {
   text-align: right;
 }
 
+.buttonCont .updateButton {
+  margin-left: -11px;
+}
+
 @media (max-width: 767px) {
-  .range-slider, .buttonCont {
-    margin: 23px 0 23px 0;
+  .range-slider {
+    margin: 13px 0 33px 0;
   }
-  .main p {  /* description below section title */
+  .buttonCont {
+    margin: 25px 0 21px 0;
+  }
+  .teamsTitle p {  /* description below section title */
     margin-bottom: 0;
   }
 }
