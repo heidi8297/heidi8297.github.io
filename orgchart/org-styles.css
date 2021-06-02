@@ -61,7 +61,7 @@ a:hover {
 
 body.gif {
   background-image: url("/orgchart/ForceTree.gif");
-  height: 60vh; /* You must set a specified height */
+  height: 50vh; /* You must set a specified height */
   background-size: cover; /* Resize the background image to cover the entire container */
 }
 
@@ -100,14 +100,14 @@ body.gif {
 
 .main.storyP {
   text-align: center;
-  margin: 30vh calc(33% - 100px) 10vh calc(33% - 100px);
+  margin: 25vh calc(33% - 100px) 10vh calc(33% - 100px);
 }
 
 .singleLine {
   background-color: #ffffffBB;
   display: none;
   font-size: 1.3rem;
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Quattrocento', serif;
 }
 
 @media (max-width: 540px) {
