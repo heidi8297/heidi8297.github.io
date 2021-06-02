@@ -1,4 +1,4 @@
-/* This code from Sean Stopnik - I only changed the colors */
+/* This code from Sean Stopnik - I made minor edits to the styling */
 
 *, *:before, *:after {
 	 box-sizing: border-box;
@@ -52,6 +52,22 @@
  .range-slider__range:focus::-webkit-slider-thumb {
 	 box-shadow: 0 0 0 3px #fff, 0 0 0 6px #1abc9c;
 }
+
+@media (max-width: 700px) {
+	.range-slider__range::-webkit-slider-thumb {
+		width: 19px;
+ 	 	height: 19px;
+	}
+	.range-slider__range:focus::-webkit-slider-thumb {
+		box-shadow: 0 0 0 4px #fff, 0 0 0 7px #1abc9c;
+ 	}
+ 	.range-slider__range::-moz-range-thumb {
+		width: 19px;
+ 		height: 19px;
+ 	}
+}
+
+
  .range-slider__value {
 	 display: inline-block;
 	 position: relative;

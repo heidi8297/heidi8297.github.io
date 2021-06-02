@@ -34,7 +34,7 @@ const colorOrder = {
 
 var initialOffsetX = 120,
   initialOffsetY = 0,
-  etwText = "(ETW",
+  etwText = "(TMP",
   heightScale = 0.51;
 
 // change the things that are specific to the dummy org chart data
@@ -42,11 +42,12 @@ if (treeFile === "DMOrgChart.json") {
   initialOffsetX = 90;
   initialOffsetY = 45;
   heightScale = 0.44;
+} else {
   inputRole1 = document.querySelector(".inputRole1");
-  inputRole1.value = "COMPLIANCE";
+  inputRole1.value = "VISUALIZATION";
   inputRole2 = document.querySelector(".inputRole2");
-  inputRole2.value = "RISK";
-  etwText = "(TMP";
+  inputRole2.value = "DATA SCIENTIST";
+  etwText = "(ETW";
 }
 
 // may get rid of this function at some point - keeping it here for later use

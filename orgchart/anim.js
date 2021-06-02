@@ -5,7 +5,7 @@ let redirect_Page = (timeout) => {
     }, timeout);
 }
 
-redirect_Page(33000);
+redirect_Page(32700);
 
 
 
