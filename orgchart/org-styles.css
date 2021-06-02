@@ -125,6 +125,19 @@ body.gif {
   margin-bottom: 30px;
 }
 
+.mainSubheader p.desc.mobile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .mainSubheader p.desc {
+    display: none;
+  }
+  .mainSubheader p.desc.mobile {
+    display: inline-block;
+  }
+}
+
 #role1Gradient .stop-left {
   stop-color: #4C70D6;
 }
