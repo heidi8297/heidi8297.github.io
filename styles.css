@@ -371,6 +371,57 @@ and make sure the svg is still positioned well */
 }
 
 
+/* Shrink the text sizes (and spacing) when the cards are small */
+@media (min-width: 992px) and (max-width: 1175px) {
+  .portfolio .portfolio-wrap .portfolio-info h4 {
+    font-size: 19px;
+    margin-bottom: 0.38rem;
+  }
+  .portfolio .portfolio-wrap .portfolio-info p.desc, .portfolio .portfolio-wrap .portfolio-info p.tech {
+    font-size: 12px;
+    padding: 2px;
+  }
+  .portfolio .portfolio-wrap .portfolio-info i {
+    font-size: 19px;
+  }
+  .portfolio-links.wonkyL {
+    right: 0.8rem;
+  }
+  .portfolio-links.wonkyR {
+    left: 0.8rem;
+    bottom: 1.5rem;
+    margin-bottom: -1.5rem;
+  }
+}
+
+@media (max-width: 367px) {
+  .portfolio .portfolio-wrap .portfolio-info h4 {
+    font-size: 19px;
+    margin-bottom: 0.38rem;
+  }
+  .portfolio .portfolio-wrap .portfolio-info p.desc, .portfolio .portfolio-wrap .portfolio-info p.tech {
+    font-size: 12px;
+    padding: 2px;
+  }
+  .portfolio .portfolio-wrap .portfolio-info i {
+    font-size: 19px;
+  }
+  .portfolio-links.wonkyL {
+    right: 0.8rem;
+  }
+  .portfolio-links.wonkyR {
+    left: 0.8rem;
+    bottom: 1.5rem;
+    margin-bottom: -1.5rem;
+  }
+}
+
+
+
+
+
+
+
 /*--------------------------------------------------------------
 # Testimonials
 --------------------------------------------------------------*/
@@ -422,6 +473,7 @@ and make sure the svg is still positioned well */
   font-weight: bold;
 }
 
+
 .carousel-item {
   font-size: 1rem;
   padding: 0% 12% 0% calc(12% + 90px);
@@ -435,6 +487,18 @@ and make sure the svg is still positioned well */
   font-family: 'Proza Libre', sans-serif;
   left: 12%;
 
+}
+
+@media (max-width: 600px) {
+  .testimonial-text, .testimonial-author {
+    font-size: 1.01rem;
+  }
+  .quote {
+    font-size: 6.5rem;
+  }
+  .carousel-item {
+    padding-left: calc(12% + 70px);
+  }
 }
 
 .carousel-control-prev, .carousel-control-next {

@@ -61,7 +61,7 @@ a:hover {
 
 body.gif {
   background-image: url("/orgchart/ForceTree.gif");
-  height: 90vh; /* You must set a specified height */
+  height: 60vh; /* You must set a specified height */
   background-size: cover; /* Resize the background image to cover the entire container */
 }
 
@@ -88,38 +88,40 @@ body.gif {
   opacity: 0;
 }
 
-.storyText {
-  margin: 5%;
-  height: 80%;
-}
 
 .formAnim {
   text-align: center;
+  display: block;
 }
 
 .main.storyP {
-  height: 80%;
+  height: 40vh;
 }
 
-.main.storyP p {
+.main.storyP {
   text-align: center;
-  background-color: #f8f8f8BB;
-  margin: 20% 10% 10% 10%;
+  margin: 30vh calc(33% - 100px) 10vh calc(33% - 100px);
 }
 
 .singleLine {
+  background-color: #ffffffBB;
   display: none;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-family: 'Raleway', sans-serif;
 }
 
+@media (max-width: 540px) {
+  .singleLine {
+    font-size: 1rem;
+  }
+}
 
 
 
 
 /* Org chart */
 
-.mainSubheader p {
+.mainSubheader p.desc {
   margin-bottom: 30px;
 }
 
@@ -217,6 +219,7 @@ p.info {
   font-size: 2rem;
   background-color: #ffffff00;
   text-align: right;
+  margin-bottom: 0;
 }
 
 
