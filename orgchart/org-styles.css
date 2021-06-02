@@ -264,6 +264,7 @@ p.info {
   text-align: center;
   background-color: white;
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
+  pointer-events: none;
 }
 .legendContainer {
   width: 80%;
