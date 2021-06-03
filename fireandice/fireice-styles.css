@@ -247,8 +247,8 @@ line.annotation {
   opacity: 0;
 }
 
-.legend {
-  stroke: white;
+.legend tspan {
+  fill: white;
   font-family: 'Raleway', serif;
 }
 
