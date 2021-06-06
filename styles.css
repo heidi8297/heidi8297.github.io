@@ -167,6 +167,10 @@ and make sure the svg is still positioned well */
   padding-bottom: 10px;
 }
 
+#aboutMe .last {
+  margin-bottom: 0;
+}
+
 .skillRow.container {
   display: flex;
   flex-direction: row;
