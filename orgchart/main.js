@@ -33,7 +33,7 @@ const colorOrder = {
 
 
 var initialOffsetX = 120,
-  initialOffsetY = 0,
+  initialOffsetY = 15,
   etwText = "(TMP",
   heightScale = 0.51;
 
@@ -1081,7 +1081,7 @@ legendColorSvg.append("text")
   .text("FTE");
 legendColorSvg.append("text")
   .attr("x",31).attr("y",15).attr("class","legendText")
-  .text("TMP");
+  .text(etwText.substring(1, 4));
 legendColorSvg.append("text")
   .attr("x",46).attr("y",30).attr("dy",3).attr("class","legendTextRole")
   .text(rolename1);
