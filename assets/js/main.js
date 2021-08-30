@@ -157,9 +157,12 @@
 
 
 
+
 // ======================   D3 loading animation   =========================
 
 
+const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+console.log(vw);
 
 const spellsFullList = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
 	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"];
@@ -328,7 +331,7 @@ const graph = svg.append('g')
   .attr('height',graphHeight)
   .attr('transform',`translate(${margin.left},${margin.top})`);
 
-d3.json('circles.json').then(data => {
+d3.json('circlesWithMobile.json').then(data => {
 
   // overwrite the existing histogram values with the randomly generated ones
   [...Array(140).keys()].forEach(function(index) {
@@ -375,8 +378,21 @@ d3.json('circles.json').then(data => {
     .transition().duration(1200)
         .delay(d=> 4200+1100*Math.random())
         .ease(d3.easePolyInOut.exponent(3))
-        .attr('cy', d=> graphHeight - 0.93*(y(d.scatterY) + 100*Math.random()-50) )
-        .attr('cx', d=> 0.93*(x(d.scatterX)+ 100*Math.random()-50) )
+        // use a different graph shape for the scatter plot depending on screen size
+        .attr('cy', function(d) {
+            if (vw < 800) {
+              return graphHeight - 0.93*(y(d.scatterYMobile) + 100*Math.random()-50)
+            } else {
+              return graphHeight - 0.93*(y(d.scatterY) + 100*Math.random()-50)
+            }
+        })
+        .attr('cx', function(d) {
+          if (vw < 800) {
+            return 0.93*(x(d.scatterXMobile)+ 100*Math.random()-50)
+          } else {
+            return 0.93*(x(d.scatterX)+ 100*Math.random()-50)
+          }
+        })
         .attr('r',d=>5+25*Math.random())
         .attr("opacity", d=>0.25+0.6*Math.random())
         ;

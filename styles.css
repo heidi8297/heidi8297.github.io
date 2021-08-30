@@ -121,23 +121,36 @@ and make sure the svg is still positioned well */
   }
 }
 
+
+/* for smaller screens, move the d3 animation below the intro text */
+/* note that the "top" adjustment and the "bottom" adjustments both add up to 80% - this keeps the two canvases overlapping */
 @media (max-width: 800px) {
   .introText {
     font-size: 2rem;
-    top: 50%;
+    top: 18%;
   }
-  .canvas, .canvasForce {
+  .canvas {
     position: relative;
+    top: 36%;
+  }
+  .canvasForce {
+    position: relative;
+    bottom: 44%;
   }
 }
 
 @media (max-width: 430px) {
   .introText {
     font-size: 1.7rem;
-    top: 50%;
+    top: 18%;
   }
-  .canvas, .canvasForce {
+  .canvas {
     position: relative;
+    top: 36%;
+  }
+  .canvasForce {
+    position: relative;
+    bottom: 44%;
   }
 }
 
