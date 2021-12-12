@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Natural Disasters</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-12NPY4109R');
+  </script> -->
+
+
+  <!-- Make the webpage perform better on mobile? -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86"> -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="A look at natural disasters across the globe between 1960 and 2018">
+  <meta name="news_keywords" content="disasters, scrollytelling, scroll-driven, graphics, d3, scrollmagic, waypoints, graph-scoll, scrollstory, in-view">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Natural Disasters" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://heidistockton.com/naturaldisasters/naturalDisastersThumbnail.png" />
+  <meta property="og:description" content="A look at natural disasters across the globe between 1960 and 2018" />
+  <meta property="og:url" content="http://heidistockton.com/naturaldisasters/" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+  <!-- primary style sheet -->
+  <link rel='stylesheet' href='styles.css' />
+  <link rel='stylesheet' href='graphic.css' />
+  <link rel="stylesheet" href="/core.css" type="text/css">
+  <!-- <link rel="stylesheet" href="disaster-styles.css" type="text/css"> -->
+
+
+</head>
+
+
+<body>
+
+  <header>
+    <h1>Natural Disasters 1960-2018</h1>
+    <p>This is my paragraph text to test font styles and other formatting.</p>
+  </header>
+
+
+  <main>
+    <div class='library'>
+      <div class='library__graphic graphic'>
+        <div class='graphic__prose'>
+          <p class='trigger' data-step='0'>Step 1 in the graphic. It triggers in the middle of the viewport. For this graphic, it is the same as the initial state so the reader doesn&rsquo;t miss anything.</p>
+          <p class='trigger' data-step='1'>Step 2 arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
+          <p class='trigger' data-step='2'>Step 3 concludes our brief tour. The graphic should now go back to its original in-flow position, elegantly snapping back into place.</p>
+        </div>
+        <div class='graphic__vis'></div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div id="contactMe">
+      <a class="footerLink" href="http://heidistockton.com"><i class="fas fa-home"></i></a>
+      <a class="footerLink" href="mailto:stocktonheidi at gee male dot comm"><i class="fas fa-envelope"></i></a>
+      <a class="footerLink" href="https://linkedin.com/in/heidistockton/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a class="footerLink tableauLink" href="https://public.tableau.com/profile/heidi.stockton/" target="_blank">
+        <svg class="tableauIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="24px" height="24px">
+          <path
+            d="M 23.5 0 L 23.5 4.5 L 19.5 4.5 L 19.5 6.5 L 23.5 6.5 L 23.5 11 L 25.5 11 L 25.5 6.5 L 29.5 6.5 L 29.5 4.5 L 25.5 4.5 L 25.5 0 L 23.5 0 z M 11 5 L 11 11 L 5 11 L 5 13 L 11 13 L 11 19 L 13 19 L 13 13 L 19 13 L 19 11 L 13 11 L 13 5 L 11 5 z M 36 5 L 36 11 L 30 11 L 30 13 L 36 13 L 36 19 L 38 19 L 38 13 L 44 13 L 44 11 L 38 11 L 38 5 L 36 5 z M 23 16 L 23 23 L 16 23 L 16 26 L 23 26 L 23 33 L 26 33 L 26 26 L 33 26 L 33 23 L 26 23 L 26 16 L 23 16 z M 5 19 L 5 23.5 L 1 23.5 L 1 25.5 L 5 25.5 L 5 30 L 7 30 L 7 25.5 L 11 25.5 L 11 23.5 L 7 23.5 L 7 19 L 5 19 z M 43 19 L 43 23.5 L 39 23.5 L 39 25.5 L 43 25.5 L 43 30 L 45 30 L 45 25.5 L 49 25.5 L 49 23.5 L 45 23.5 L 45 19 L 43 19 z M 11 29 L 11 35 L 5 35 L 5 37 L 11 37 L 11 43 L 13 43 L 13 37 L 19 37 L 19 35 L 13 35 L 13 29 L 11 29 z M 36 29 L 36 35 L 30 35 L 30 37 L 36 37 L 36 43 L 38 43 L 38 37 L 44 37 L 44 35 L 38 35 L 38 29 L 36 29 z M 23.5 38 L 23.5 42.5 L 19.5 42.5 L 19.5 44.5 L 23.5 44.5 L 23.5 49 L 25.5 49 L 25.5 44.5 L 29.5 44.5 L 29.5 42.5 L 25.5 42.5 L 25.5 38 L 23.5 38 z" />
+        </svg>
+      </a>
+      <a class="footerLink githubLink" href="https://github.com/heidi8297/" target="_blank"><i class="fab fa-github-alt"></i></a>
+    </div>
+
+  </main>
+
+
+
+
+  <!-- for the graphic -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src='graphic.js'></script>
+
+<!-- The scroll library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.js"></script>
+
+
+
+<script>
+  (function() {
+
+    // helper function so we can map over dom selection
+    function selectionToArray(selection) {
+      var len = selection.length
+      var result = []
+      for (var i = 0; i < len; i++) {
+        result.push(selection[i])
+      }
+      return result
+    }
+
+    function waypoints() {
+      // select elements
+      var graphicEl = document.querySelector('.graphic')
+      var graphicVisEl = graphicEl.querySelector('.graphic__vis')
+      var triggerEls = selectionToArray(graphicEl.querySelectorAll('.trigger'))
+
+      // viewport height
+      var viewportHeight = window.innerHeight
+      var halfViewportHeight = Math.floor(viewportHeight / 2)
+
+      // a global function creates and handles all the vis + updates
+      var graphic = createGraphic('.graphic')
+
+      // handle the fixed/static position of grahpic
+      var toggle = function(fixed, bottom) {
+        if (fixed) graphicVisEl.classList.add('is-fixed')
+        else graphicVisEl.classList.remove('is-fixed')
+
+        if (bottom) graphicVisEl.classList.add('is-bottom')
+        else graphicVisEl.classList.remove('is-bottom')
+      }
+
+      // setup a waypoint trigger for each trigger element
+      var waypoints = triggerEls.map(function(el) {
+
+        // get the step, cast as number
+        var step = +el.getAttribute('data-step')
+
+        return new Waypoint({
+          element: el, // our trigger element
+          handler: function(direction) {
+            // if the direction is down then we use that number,
+            // else, we want to trigger the previous one
+            var nextStep = direction === 'down' ? step : Math.max(0, step - 1)
+
+            // tell our graphic to update with a specific step
+            graphic.update(nextStep)
+          },
+          offset: '50%',  // trigger halfway up the viewport
+        })
+      })
+
+      // enter (top) / exit (bottom) graphic (toggle fixed position)
+      var enterWaypoint = new Waypoint({
+        element: graphicEl,
+        handler: function(direction) {
+          var fixed = direction === 'down'
+          var bottom = false
+          toggle(fixed, bottom)
+        },
+      })
+
+      var exitWaypoint = new Waypoint({
+        element: graphicEl,
+        handler: function(direction) {
+          var fixed = direction === 'up'
+          var bottom = !fixed
+          toggle(fixed, bottom)
+        },
+        offset: 'bottom-in-view', // waypoints convenience instead of a calculation
+      })
+    }
+
+    waypoints()
+
+  })()
+</script>
+
+
+
+</body>
+
+</html>

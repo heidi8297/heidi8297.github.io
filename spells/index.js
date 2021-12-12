@@ -158,6 +158,7 @@ function extraText(thisPosition) {
 
 
 // this function makes our graph responsive to the size of the container/screen!
+// function from Ben Clinkinbeard
 function responsivefy(thisSvg) {
   // container will be the DOM element that the svg is appended to
   // we then measure the container and find its aspect ratio

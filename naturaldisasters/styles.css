@@ -1,0 +1,216 @@
+/* reset stuff */
+* {
+  box-sizing: border-box;
+}
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+  display: block;
+}
+body,
+html {
+  height: 100%;
+}
+a img {
+  border: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+caption,
+td,
+th {
+  text-align: left;
+  font-weight: 400;
+  vertical-align: middle;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  font-feature-settings: "kern" 1, "onum" 1, "liga" 0;
+}
+b,
+strong {
+  font-weight: 700;
+}
+em,
+i {
+  font-style: italic;
+}
+ul {
+  list-style-type: none;
+}
+img {
+  cursor: pointer;
+  border: none;
+  outline: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+.hide-accessible {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+}
+.hide-invisible {
+  visibility: hidden;
+}
+.hide-display {
+  display: none;
+}
+
+body {
+  background: #fff;
+  font-size: 17px;
+}
+
+
+body {
+  font-size: 17px;
+  font-weight: 400;
+  background-color: #fffffc;
+  color: #1a1a1a;
+  line-height: 1.8;
+  font-family: "Whitney SSm A", "Whitney SSm B", Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  padding-bottom: 1rem;
+}
+
+p {
+  margin: 1.5rem 0;
+}
+
+ol,
+ul {
+  list-style-type: none;
+}
+
+header {
+  z-index: 1000;
+  margin: 1rem auto;
+  max-width: 12rem;
+  padding: 1rem;
+}
+
+.library {
+  padding: 1rem 0;
+  margin: 2rem 3%;
+}
