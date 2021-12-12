@@ -85,7 +85,6 @@ var {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit;
   vertical-align: baseline;
 }
 article,
@@ -185,7 +184,7 @@ body {
   background-color: #fffffc;
   color: #1a1a1a;
   line-height: 1.8;
-  font-family: "Whitney SSm A", "Whitney SSm B", Helvetica, sans-serif;
+  /* font-family: "Whitney SSm A", "Whitney SSm B", Helvetica, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -206,8 +205,18 @@ ul {
 header {
   z-index: 1000;
   margin: 1rem auto;
-  max-width: 12rem;
+  max-width: 28rem;
   padding: 1rem;
+}
+
+header h1 {
+  font-family: 'Cabin Sketch', cursive;
+  font-size: 3rem;
+}
+
+header h2 {
+  font-family: 'Cabin Sketch', cursive;
+  font-size: 1.8rem;
 }
 
 .library {
