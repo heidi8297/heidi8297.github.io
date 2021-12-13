@@ -38,9 +38,10 @@
 }
 
 .graphic__vis svg {
-	border: 1px dashed black;
+	border: 1px solid darkgrey;
 	top: 50%;
 	position: absolute;
+	height: 60%;
 	width: 100%;
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);

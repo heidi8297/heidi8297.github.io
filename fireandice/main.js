@@ -23,6 +23,7 @@ const annotSize = 0.28;
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
 function responsivefy(thisSvg,maxWidth=4000) {
+  console.log("running responsivefy");
   const container = d3.select(thisSvg.node().parentNode),
     width = parseInt(thisSvg.style('width'), 10),
     height = parseInt(thisSvg.style('height'), 10),
@@ -207,6 +208,7 @@ const yAxisTextBottom = yAxisTicks.append("text")
 
 // Updater
 redraw();
+console.log("redraw function");
 
 
 function redraw(){  d3.csv("PDXWeatherDaily20162017.csv").then( function(flatData) {

@@ -1,6 +1,7 @@
 // this function makes our svg responsive to the size of the container/screen!
 // initial version provided by Ben Clinkinbeard and Brendan Sudol
 function responsivefy(thisSvg,maxWidth=4000) {
+	console.log("running responsivefy");
   const container = d3.select(thisSvg.node().parentNode),
     width = parseInt(thisSvg.style('width'), 10),
     height = parseInt(thisSvg.style('height'), 10),
@@ -37,7 +38,7 @@ window.createGraphic = function(graphicSelector) {
 	var chartSize = size - margin * 2
 	var scaleX = null
 	var scaleR = null
-	var data = [8, 6, 7, 5, 3, 0, 9]
+	var data = [8, 6, 7, 5, 3, 0, 9, 5, 4]
 	var extent = d3.extent(data)
 	var minR = 10
 	var maxR = 24
@@ -55,6 +56,7 @@ window.createGraphic = function(graphicSelector) {
 
 			item.transition(t)
 				.attr('transform', translate(chartSize / 2, chartSize / 2))
+			console.log("translating stuff by",chartSize);
 
 			item.select('circle')
 				.transition(t)
@@ -123,10 +125,12 @@ window.createGraphic = function(graphicSelector) {
 		var svg = graphicVisEl.append('svg')
 			.attr('width', size + 'px')
 			.attr('height', size + 'px')
+			.attr('id',"mainSvg")
+			.call(responsivefy, 4000);
 
 		var chart = svg.append('g')
 			.classed('chart', true)
-			.attr('transform', 'translate(' + margin + ',' + margin + ')')
+			.attr('transform', 'translate(' + margin + ',' + margin + ')');
 
 		scaleR = d3.scaleLinear()
 		scaleX = d3.scaleBand()
@@ -171,6 +175,7 @@ window.createGraphic = function(graphicSelector) {
 	}
 
 	init()
+	d3.select("#mainSvg").call(responsivefy,4000);
 
 	return {
 		update: update,
