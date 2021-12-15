@@ -16,7 +16,6 @@
 	padding: 0;
 	margin: 0;
 	min-height: 240px;
-
 }
 
 .graphic__vis {
@@ -31,21 +30,6 @@
 	display: inline-block;
 }
 
-/* .graphic__vis.is-fixed {
-	display: inline-block;
-	position: fixed;
-	margin: auto auto auto 0;
-	height: 900px;
-	width: 1000px;
-	top: 50%;
-	transform: translateY(-50%);
-}
-
-.graphic__vis.is-bottom {
-	top: auto;
-	bottom: 0;
-} */
-
 .graphic__vis svg {
 	border: 1px solid darkgrey;
 	top: 50%;
@@ -55,7 +39,6 @@
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);
 	transform: translateY(-50%);
-
 }
 
 .item circle {
@@ -70,16 +53,3 @@
 	text-anchor: middle;
 	alignment-baseline: middle;
 }
-
-
-
-/* graph-scroll.js version */
-/* .graphic__vis.graph-scroll-fixed {
-	position: fixed;
-	right: auto;
-}
-
-.graphic__vis.graph-scroll-below {
-	top: auto;
-	bottom: 0;
-} */

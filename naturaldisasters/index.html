@@ -57,21 +57,15 @@
 
 
   <main>
-    <!-- <div class='library'> -->
-      <div class='library__graphic graphic flex-container'>
-        <div class='graphic__prose'>
-          <p class='trigger' data-step='0'>Step 1 in the graphic. It triggers in the middle of the viewport. For this graphic, it is the same as the initial state so the reader doesn&rsquo;t miss anything.</p>
-          <p class='trigger' data-step='1'>Step 2 arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
-          <p class='trigger' data-step='2'>Step 3 concludes our brief tour. The graphic should now go back to its original in-flow position, elegantly snapping back into place.</p>
-        </div>
-        <div class='graphic__vis'></div>
+    <div class='library__graphic graphic flex-container'>
+      <div class='graphic__prose'>
+        <p class='trigger' data-step='0'>Step 1 in the graphic. It triggers in the middle of the viewport. For this graphic, it is the same as the initial state so the reader doesn&rsquo;t miss anything.</p>
+        <p class='trigger' data-step='1'>Step 2 arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
+        <p class='trigger' data-step='2'>Step 3 concludes our brief tour. The graphic should now go back to its original in-flow position, elegantly snapping back into place.</p>
       </div>
-    <!-- </div> -->
-
-
-    <div class="spacer">
-
+      <div class='graphic__vis'></div>
     </div>
+
 
 
 
@@ -131,15 +125,6 @@
       // a global function creates and handles all the vis + updates
       var graphic = createGraphic('.graphic')
 
-      // handle the fixed/static position of grahpic
-      var toggle = function(fixed, bottom) {
-        if (fixed) graphicVisEl.classList.add('is-fixed')
-        else graphicVisEl.classList.remove('is-fixed')
-
-        if (bottom) graphicVisEl.classList.add('is-bottom')
-        else graphicVisEl.classList.remove('is-bottom')
-      }
-
       // setup a waypoint trigger for each trigger element
       var waypoints = triggerEls.map(function(el) {
 
@@ -160,13 +145,12 @@
         })
       })
 
-      // enter (top) / exit (bottom) graphic (toggle fixed position)
+      // enter (top) / exit (bottom) graphic
       var enterWaypoint = new Waypoint({
         element: graphicEl,
         handler: function(direction) {
           var fixed = direction === 'down'
           var bottom = false
-          // toggle(fixed, bottom)
         },
       })
 
@@ -175,7 +159,6 @@
         handler: function(direction) {
           var fixed = direction === 'up'
           var bottom = !fixed
-          // toggle(fixed, bottom)
         },
         offset: 'bottom-in-view', // waypoints convenience instead of a calculation
       })
