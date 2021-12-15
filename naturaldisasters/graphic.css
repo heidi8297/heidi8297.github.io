@@ -21,8 +21,8 @@
 .graphic__vis {
 	position: sticky;
 	width: 1000px;
-	height: 900px;
-	top: max(0px, calc(50vh - 450px));
+	height: 800px;
+	top: max(0px, calc(50vh - 400px));
 	margin-left: 0;
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
@@ -34,7 +34,7 @@
 	border: 1px solid darkgrey;
 	top: 50%;
 	position: absolute;
-	height: 900px;
+	height: 800px;
 	width: 1000px;
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);
