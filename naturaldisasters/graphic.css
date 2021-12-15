@@ -1,11 +1,15 @@
 /* GRAPHIC CODE */
 .graphic {
-	width: 100%;
+	width: 1350px;
 	position: relative;
 }
 
 .graphic__prose {
-	width: 35%;
+	position: relative;
+	display: block;
+	width: 300px;
+	top: 60px;
+	margin-right: 50px;
 }
 
 .graphic__prose .trigger {
@@ -16,33 +20,38 @@
 }
 
 .graphic__vis {
-	position: absolute;
-	width: 61%;
-	top: 0;
-	margin-left: 39%;
+	position: sticky;
+	width: 1000px;
+	height: 900px;
+	top: max(0px, calc(50vh - 450px));
+	margin-left: 0;
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
-	height: 100vh;
+	display: inline-block;
 }
 
-.graphic__vis.is-fixed {
+/* .graphic__vis.is-fixed {
+	display: inline-block;
 	position: fixed;
-	margin-left: 36.57%;
-	width: 57.37%;
+	margin: auto auto auto 0;
+	height: 900px;
+	width: 1000px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .graphic__vis.is-bottom {
 	top: auto;
 	bottom: 0;
-}
+} */
 
 .graphic__vis svg {
 	border: 1px solid darkgrey;
 	top: 50%;
 	position: absolute;
-	height: 60%;
-	width: 100%;
+	height: 900px;
+	width: 1000px;
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);
 	transform: translateY(-50%);
@@ -65,7 +74,7 @@
 
 
 /* graph-scroll.js version */
-.graphic__vis.graph-scroll-fixed {
+/* .graphic__vis.graph-scroll-fixed {
 	position: fixed;
 	right: auto;
 }
@@ -73,4 +82,4 @@
 .graphic__vis.graph-scroll-below {
 	top: auto;
 	bottom: 0;
-}
+} */

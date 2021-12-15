@@ -221,7 +221,15 @@ header h2 {
   bottom: 15px;
 }
 
-.library {
+.library__graphic.graphic {
+  display: flex;
   padding: 1rem 0;
-  margin: 2rem 3%;
+  margin: 2rem auto;
+  width: 1350px;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.spacer {
+  height: 100px;
 }
