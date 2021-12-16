@@ -1,48 +1,4 @@
-body, p, .tooltip {
-  font-family: 'Quattrocento', serif;
-  color: #222222;
-  background-color: #f8f8f8;
-}
 
-h1,h2,h3,h4,h5,h6 {
-  font-family: 'Oswald', sans-serif;
-  font-weight: bold;
-  color: #222222;
-}
-
-h1 {
-  margin-bottom: 10px;
-  margin-top: 20px;
-  font-size: 3.5rem;
-}
-
-h4 {
-  margin-top: 10px;
-  font-size: 0.83rem;
-}
-
-h5 {
-  font-size: 0.83rem;
-  font-weight: normal;
-  margin-bottom: 0;
-}
-
-p {
-  font-size: 0.83rem;
-}
-
-a {
-  /* likely should keep this the same color as the 'tableauIcon' color below */
-  color: #2C3D6D;
-}
-
-a:hover {
-  color: #5B87FF;
-}
-
-.footerLink:hover {
-  fill: #5B87FF;
-}
 
 .main {
   margin: 2.5% 9% 5% 9%;
@@ -54,19 +10,4 @@ a:hover {
     margin-left: 4%;
     margin-right: 4%;
   }
-}
-
-
-
-/* Contact Me */
-#contactMe {
-  background-color: #f8f8f8;
-  height: 180px;
-}
-
-
-
-.tableauIcon {
-  /* likely should keep this the same color as the 'a' color above */
-  fill: #2C3D6D;
 }

@@ -1,13 +1,19 @@
+body, p {
+  font-family: 'Raleway', sans-serif;
+  color: #222222;
+  font-size: 1rem;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Pompiere', Tahoma, sans-serif;
   font-weight: bold;
   color: #222222;
 }
 
-p {
+.tooltip {
   font-family: 'Raleway', sans-serif;
   color: #222222;
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
 a {
