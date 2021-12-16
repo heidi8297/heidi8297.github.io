@@ -1,4 +1,5 @@
 
+/* totally not sure if either of these "main" styles actually does anything */
 
 .main {
   margin: 2.5% 9% 5% 9%;
@@ -10,4 +11,68 @@
     margin-left: 4%;
     margin-right: 4%;
   }
+}
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-size: 17px;
+  font-feature-settings: "kern" 1, "onum" 1, "liga" 0;
+  font-weight: 400;
+  background-color: #fffffc;
+  color: #1a1a1a;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  padding-bottom: 1rem;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Cabin Sketch', cursive;
+}
+
+p {
+  margin: 1.5rem 0;
+}
+
+header {
+  z-index: 1000;
+  margin: 1rem auto;
+  max-width: 28rem;
+  padding: 1rem;
+}
+
+h1, h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+header h1 {
+  font-size: 3rem;
+}
+
+header h2 {
+  font-size: 1.8rem;
+  position: relative;
+  bottom: 15px;
 }
