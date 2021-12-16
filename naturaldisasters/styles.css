@@ -59,12 +59,3 @@ header h2 {
   position: relative;
   bottom: 15px;
 }
-
-.library__graphic.graphic {
-  display: flex;
-  padding: 1rem 0;
-  margin: 2rem auto;
-  width: 1350px;
-  flex-direction: row;
-  justify-content: space-around;
-}

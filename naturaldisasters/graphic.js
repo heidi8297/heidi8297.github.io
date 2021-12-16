@@ -1,7 +1,6 @@
 /*
-	I've created a function here that is a simple d3 chart.
-	This could be anything that has discrete steps, as simple as changing
-	the background color, or playing/pausing a video.
+	This function creates a simple d3 chart.
+	This could be anything that has discrete steps.
 	The important part is that it exposes an update function that
 	calls a new thing on a scroll trigger.
 */
@@ -29,7 +28,6 @@ window.createGraphic = function(graphicSelector) {
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
-
 
 			var item = graphicVisEl.selectAll('.item')
 
