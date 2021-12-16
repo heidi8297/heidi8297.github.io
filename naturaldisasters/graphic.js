@@ -72,6 +72,29 @@ window.createGraphic = function(graphicSelector) {
 				.duration(800)
 				.ease(d3.easeQuadInOut)
 
+			// circles are positioned
+			var item = graphicVisEl.selectAll('.item')
+
+			item.transition(t)
+				.attr('transform', function(d, i) {
+					return translate(scaleX(i), chartHeight / 2)
+				})
+
+			item.select('circle')
+				.transition(t)
+				.attr('r', 3.2*minR)
+
+			item.select('text')
+				.transition(t)
+				.style('opacity', 0)
+		},
+
+
+		function step3() {
+			var t = d3.transition()
+				.duration(800)
+				.ease(d3.easeQuadInOut)
+
 			// circles are sized
 			var item = graphicVisEl.selectAll('.item')
 
