@@ -11,8 +11,10 @@ window.createGraphic = function(graphicSelector) {
 	var graphicProseEl = graphicEl.select('.graphic__prose')
 
 	var margin = 20
-	var size = 400
-	var chartSize = size - margin * 2
+	var width = 1000
+	var chartWidth = width - margin * 2
+	var height = 800
+	var chartHeight = height - margin * 2
 	var scaleX = null
 	var scaleR = null
 	var data = [8, 6, 7, 5, 3, 0, 9]
@@ -32,7 +34,7 @@ window.createGraphic = function(graphicSelector) {
 			var item = graphicVisEl.selectAll('.item')
 
 			item.transition(t)
-				.attr('transform', translate(chartSize / 2, chartSize / 2))
+				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
 
 			item.select('circle')
 				.transition(t)
@@ -53,7 +55,7 @@ window.createGraphic = function(graphicSelector) {
 
 			item.transition(t)
 				.attr('transform', function(d, i) {
-					return translate(scaleX(i), chartSize / 2)
+					return translate(scaleX(i), chartHeight / 2)
 				})
 
 			item.select('circle')
@@ -99,8 +101,8 @@ window.createGraphic = function(graphicSelector) {
 
 	function setupCharts() {
 		var svg = graphicVisEl.append('svg')
-			.attr('width', size + 'px')
-			.attr('height', size + 'px')
+			.attr('width', width + 'px')
+			.attr('height', height + 'px')
 
 		var chart = svg.append('g')
 			.classed('chart', true)
@@ -113,7 +115,7 @@ window.createGraphic = function(graphicSelector) {
 
 		scaleX
 			.domain(domainX)
-			.range([0, chartSize])
+			.range([0, chartWidth])
 			.padding(1)
 
 		scaleR
@@ -124,7 +126,7 @@ window.createGraphic = function(graphicSelector) {
 			.data(data)
 			.enter().append('g')
 				.classed('item', true)
-				.attr('transform', translate(chartSize / 2, chartSize / 2))
+				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
 
 		item.append('circle')
 			.attr('cx', 0)
