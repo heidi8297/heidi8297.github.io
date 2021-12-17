@@ -1,10 +1,6 @@
-p, .tooltip {
-  font-family: 'Raleway', serif;
-  color: #222222;
-}
-
 body {
   background-color: #F2F5F7;
+  margin: 0;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -34,21 +30,7 @@ h1 span.titleIce {
 }
 
 p {
-  font-size: 1rem;
   margin-bottom: 0px;
-}
-
-a {
-  /* likely should keep this the same color as the 'tableauIcon' color below */
-  color: #2C3D6D;
-}
-
-a:hover {
-  color: #5B87FF;
-}
-
-.footerLink:hover {
-  fill: #5B87FF;
 }
 
 .main {
@@ -122,11 +104,6 @@ p.info {
 
 .info .fa-info-circle:hover {
   color: #343434;
-}
-
-body {
-  margin: 0;
-  font-family: "Helvetica Neue", sans-serif;
 }
 
 
@@ -261,8 +238,6 @@ line.legend, line.legend.ice {
   border: 0;
   border-radius: 4px;
   color: #f8f8f8;
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.85rem;
   font-weight: 200;
   height: auto;
   padding: 3px;

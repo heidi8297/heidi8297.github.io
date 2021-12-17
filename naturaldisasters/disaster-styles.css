@@ -30,11 +30,8 @@ html {
 }
 
 body {
-  font-size: 17px;
   font-feature-settings: "kern" 1, "onum" 1, "liga" 0;
-  font-weight: 400;
   background-color: #fffffc;
-  color: #1a1a1a;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
