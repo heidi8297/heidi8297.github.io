@@ -30,8 +30,9 @@ html {
 }
 
 body {
+  color: #3F3027;
   font-feature-settings: "kern" 1, "onum" 1, "liga" 0;
-  background-color: #fffffc;
+  background-color: #F4EFED;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -43,10 +44,29 @@ main {
 
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Cabin Sketch', cursive;
+  color: #3F3027;
 }
 
 p {
+  color: #3F3027;
   margin: 1.5rem 0;
+}
+
+a {
+  /* likely should keep this the same color as the 'footerLink' color below */
+  color: #3F3027;
+}
+
+a:hover {
+  color: #A57F66;
+}
+
+.footerLink {
+  fill: #3F3027;
+}
+
+.footerLink:hover, .tableauLink svg:hover {
+  fill: #A57F66;
 }
 
 header {
@@ -119,7 +139,8 @@ header h2 {
 }
 
 .graphic__vis svg {
-	border: 1px solid darkgrey;
+  background-color: #FAF7F6;
+	border: 1px solid #EAE0DB;
 	top: 50%;  /* not sure this actually does anything? */
 	position: absolute;
 	height: 800px;
