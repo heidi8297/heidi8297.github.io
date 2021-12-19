@@ -165,13 +165,17 @@ window.createGraphic = function(graphicSelector) {
 			.style('height', height + 'px')
 	}
 
+
 	function init() {
 		setupCharts()
 		setupProse()
 		update(0)
 	}
 
-	init()
+	d3.csv('pend-gdis-aug-v2.csv').then(data => {
+		init()
+		console.log(data[0]);
+	})
 
 	return {
 		update: update,
