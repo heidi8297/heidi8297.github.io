@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var minR = 10
 	var maxR = 24
 	let data = [];
-	const offset = 200;
+	const offset = 300;
 
 	const typeColor = d3.scaleOrdinal()
 		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
@@ -121,7 +121,7 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
-		console.log(data[0]);
+		console.log(data[0+offset]);
 	}
 
 	// little helper for string concat if using es5
@@ -182,9 +182,29 @@ window.createGraphic = function(graphicSelector) {
 		update(0)
 	}
 
-	// load the main data file and store as 'data'
+	// load/parse the main data file and store as 'data'
 	// then set up the charts and kick off the updater function
-	d3.csv('pend-gdis-aug-v2.csv').then(disData => {
+	d3.csv('pend-gdis-aug-v2.csv', function(d) {
+		return {
+			id: d.id,
+			country: d.country,
+			iso3: d.iso3,
+			year: +d.year,
+			geo_id: +d.geo_id,
+			disastertype: d.disastertype,
+			disasterno: d.disasterno,
+			latitude: +d.latitude,
+			longitude: +d.longitude,
+			deathsPerDisaster: +d.deathsPerDisaster,
+			damagesPerDisaster: +d.damagesAdjPerDisaster,
+			gdpInUsdPerCountry: +d.GdpInUsdPerCountry,
+			populationPerCountry: +d.PopulationPerCountry,
+			disasterSubtype: d.DisasterSubtype,
+			startDate: new Date(+d.year, (d.StartMonth != "")? +d.StartMonth : 0, (d.StartDay != "")? +d.StartDay : 1),
+			totalAffected: +d.TotalAffected,
+			otherNotes: d.OtherNotes
+		}
+	}).then(disData => {
 		data = disData;
 		init()
 	})
