@@ -21,7 +21,7 @@ a {
   color: #2C3D6D;
 }
 
-a:hover, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-brand:hover {
+a:hover {
   color: #5B87FF;
 }
 
@@ -43,42 +43,6 @@ section {
 .section-title {
   padding-bottom: 30px;
 }
-
-
-
-
-/*--------------------------------------------------------------
-# Navigation bar
---------------------------------------------------------------*/
-
-.ml-auto, .mx-auto {
-    margin-left: auto!important;
-}
-
-.navbar {
-  padding: 0 0 4.5rem;
-}
-
-.navbar-brand {
-  font-family: "Raleway", sans-serif;
-  font-size: 0.9rem;
-  padding: 0 12px;
-}
-
-.navbar-light .navbar-brand {
-    color: rgba(0,0,0,.5);
-}
-
-.nav-item {
-  padding: 0 8px;
-}
-
-.nav-link {
-  font-size: 0.9rem;
-  font-family: "Raleway", sans-serif;
-}
-
-
 
 
 

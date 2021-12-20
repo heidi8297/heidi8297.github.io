@@ -28,7 +28,40 @@ h4 {
 
 
 
+/*--------------------------------------------------------------
+# Navigation bar
+--------------------------------------------------------------*/
 
+.ml-auto, .mx-auto {
+    margin-left: auto!important;
+}
+
+.navbar {
+  padding: 0 0 4.5rem;
+}
+
+.navbar-brand {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.9rem;
+  padding: 0 12px;
+}
+
+.navbar-light .navbar-brand {
+    color: rgba(0,0,0,.5);
+}
+
+.nav-item {
+  padding: 0 8px;
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  font-family: "Raleway", sans-serif;
+}
+
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-brand:hover {
+  color: #5B87FF;
+}
 
 
 
@@ -42,8 +75,6 @@ h4 {
   height: 100vh;
   padding: 2% 12% calc(7% + 10px) 12%;
 }
-
-
 
 .introText {
   font-size: 2.5rem;
