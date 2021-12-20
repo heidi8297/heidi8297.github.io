@@ -20,6 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var minR = 10
 	var maxR = 24
 	let data = [];
+	let eventData = [];
 	const offset = 300;
 
 	const typeColor = d3.scaleOrdinal()
@@ -206,6 +207,21 @@ window.createGraphic = function(graphicSelector) {
 		}
 	}).then(disData => {
 		data = disData;
+
+		eventData = d3.rollup(
+			data,
+			function(v) {
+				return {
+			    geoIdCount: v.length,
+					country: d3.min(v, d => d.country),
+			    deaths: d3.min(v, d => d.deathsPerDisaster )
+		  	};
+			},
+		  d => d.disasterno
+		);
+		console.log(eventData);
+
+
 		init()
 	})
 

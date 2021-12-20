@@ -54,7 +54,7 @@ p {
 
 a {
   /* likely should keep this the same color as the 'footerLink' color below */
-  color: #3F3027;
+  color: #4E3C30;
 }
 
 a:hover {
@@ -62,7 +62,7 @@ a:hover {
 }
 
 .footerLink {
-  fill: #3F3027;
+  fill: #4E3C30;
 }
 
 .footerLink:hover, .tableauLink svg:hover {
