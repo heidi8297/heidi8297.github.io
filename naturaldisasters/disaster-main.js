@@ -16,11 +16,10 @@ window.createGraphic = function(graphicSelector) {
 	var chartHeight = height - margin * 2
 	var scaleX = null
 	var scaleR = null
-	var data = [8, 6, 7, 5, 3, 0, 9]
-	var extent = d3.extent(data)
+	let extent = [0,70]
 	var minR = 10
 	var maxR = 24
-	let newData = [];
+	let data = [];
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -101,7 +100,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition(t)
 				.delay(function(d, i) { return i * 200 })
 				.attr('r', function(d, i) {
-					return scaleR(d)
+					return scaleR(parseInt(d.year)-1950)
 				})
 
 			item.select('text')
@@ -114,7 +113,6 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
-		console.log(newData[1]);
 	}
 
 	// little helper for string concat if using es5
@@ -134,7 +132,7 @@ window.createGraphic = function(graphicSelector) {
 		scaleR = d3.scaleLinear()
 		scaleX = d3.scaleBand()
 
-		var domainX = d3.range(data.length)
+		var domainX = d3.range(data.slice(0, 8).length)
 
 		scaleX
 			.domain(domainX)
@@ -146,7 +144,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([minR, maxR])
 
 		var item = chart.selectAll('.item')
-			.data(data)
+			.data(data.slice(0, 8))
 			.enter().append('g')
 				.classed('item', true)
 				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
@@ -156,7 +154,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr('cy', 0)
 
 		item.append('text')
-			.text(function(d) { return d })
+			.text(function(d) { return d.country })
 			.attr('y', 1)
 			.style('opacity', 0)
 	}
@@ -174,10 +172,8 @@ window.createGraphic = function(graphicSelector) {
 	}
 
 	d3.csv('pend-gdis-aug-v2.csv').then(disData => {
-		newData = disData;
-		console.log(newData[0]);
+		data = disData;
 		init()
-		console.log(disData[0])
 	})
 
 	//init()
