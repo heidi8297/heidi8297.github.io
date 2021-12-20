@@ -154,7 +154,7 @@ header h2 {
 .item circle {
 	stroke: #666;
 	stroke-width: 1px;
-	fill: #fff;
+	/*fill: #fff;*/
 }
 
 /* probably won't need this once I add my own visuals */

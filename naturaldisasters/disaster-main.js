@@ -20,6 +20,11 @@ window.createGraphic = function(graphicSelector) {
 	var minR = 10
 	var maxR = 24
 	let data = [];
+	const offset = 200;
+
+	const typeColor = d3.scaleOrdinal()
+		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
+		.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -96,12 +101,15 @@ window.createGraphic = function(graphicSelector) {
 			// circles are sized
 			var item = graphicVisEl.selectAll('.item')
 
+			console.log("hello")
 			item.select('circle')
 				.transition(t)
 				.delay(function(d, i) { return i * 200 })
+				.attr("fill", d=> typeColor(d.disastertype) )
 				.attr('r', function(d, i) {
 					return scaleR(parseInt(d.year)-1950)
 				})
+				.style('opacity',0.5)
 
 			item.select('text')
 				.transition(t)
@@ -113,6 +121,7 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
+		console.log(data[0]);
 	}
 
 	// little helper for string concat if using es5
@@ -120,6 +129,7 @@ window.createGraphic = function(graphicSelector) {
 		return 'translate(' + x + ',' + y + ')'
 	}
 
+	// initiate the svg, scales and initial shapes
 	function setupCharts() {
 		var svg = graphicVisEl.append('svg')
 			.attr('width', width + 'px')
@@ -132,7 +142,7 @@ window.createGraphic = function(graphicSelector) {
 		scaleR = d3.scaleLinear()
 		scaleX = d3.scaleBand()
 
-		var domainX = d3.range(data.slice(0, 8).length)
+		var domainX = d3.range(data.slice(0+offset, 8+offset).length)
 
 		scaleX
 			.domain(domainX)
@@ -144,7 +154,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([minR, maxR])
 
 		var item = chart.selectAll('.item')
-			.data(data.slice(0, 8))
+			.data(data.slice(0+offset, 8+offset))
 			.enter().append('g')
 				.classed('item', true)
 				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
@@ -159,6 +169,7 @@ window.createGraphic = function(graphicSelector) {
 			.style('opacity', 0)
 	}
 
+	// setup the scrolly text section on the lefthand side
 	function setupProse() {
 		var height = window.innerHeight * 0.5
 		graphicProseEl.selectAll('.trigger')
@@ -171,12 +182,12 @@ window.createGraphic = function(graphicSelector) {
 		update(0)
 	}
 
+	// load the main data file and store as 'data'
+	// then set up the charts and kick off the updater function
 	d3.csv('pend-gdis-aug-v2.csv').then(disData => {
 		data = disData;
 		init()
 	})
-
-	//init()
 
 	return {
 		update: update,
