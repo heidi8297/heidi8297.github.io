@@ -20,6 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var extent = d3.extent(data)
 	var minR = 10
 	var maxR = 24
+	let newData = [];
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -113,6 +114,7 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
+		console.log(newData[1]);
 	}
 
 	// little helper for string concat if using es5
@@ -165,17 +167,20 @@ window.createGraphic = function(graphicSelector) {
 			.style('height', height + 'px')
 	}
 
-
 	function init() {
 		setupCharts()
 		setupProse()
 		update(0)
 	}
 
-	d3.csv('pend-gdis-aug-v2.csv').then(data => {
+	d3.csv('pend-gdis-aug-v2.csv').then(disData => {
+		newData = disData;
+		console.log(newData[0]);
 		init()
-		console.log(data[0]);
+		console.log(disData[0])
 	})
+
+	//init()
 
 	return {
 		update: update,
