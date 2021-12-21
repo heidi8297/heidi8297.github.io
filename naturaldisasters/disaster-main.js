@@ -122,7 +122,6 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
-		console.log(data[0+offset]);
 	}
 
 	// little helper for string concat if using es5
@@ -212,9 +211,19 @@ window.createGraphic = function(graphicSelector) {
 			data,
 			function(v) {
 				return {
+					disasterno: d3.min(v, d => d.disasterno),
 			    geoIdCount: v.length,
-					country: d3.min(v, d => d.country),
-			    deaths: d3.min(v, d => d.deathsPerDisaster )
+					country: d3.min(v, d => d.country),  // does this make sense?
+					year: d3.min(v, d => +d.year),
+					disastertype: d3.min(v, d => d.disastertype),
+					latitude: d3.mean(v, d => +d.latitude),
+					longitude: d3.mean(v, d => +d.longitude),
+			    deaths: d3.min(v, d => d.deathsPerDisaster ),
+					damages: d3.min(v, d => d.damagesPerDisaster ),
+					disasterSubtype: d3.min(v, d => d.disasterSubtype),
+					startDate: d3.min(v, d => d.startDate),
+					totalAffected: d3.min(v, d => d.totalAffected),
+					otherNotes: d3.min(v, d => d.otherNotes)
 		  	};
 			},
 		  d => d.disasterno
