@@ -21,6 +21,12 @@ window.createGraphic = function(graphicSelector) {
 	var maxR = 24
 	let data = [];
 	let eventData = [];
+	let eventsByType = [];
+	let eventTypesByDeathTolls = [];
+	let deadliestEvents = [];
+	let firstTenYears = [];
+	let lastTenYears = [];
+
 	const offset = 1300;
 
 	// provide a disaster type and return a corresponding color
@@ -207,7 +213,7 @@ window.createGraphic = function(graphicSelector) {
 	}).then(disData => {
 		data = disData;
 
-		// rollup/collapse the data to one entry per disasterno
+		// rollup/collapse the data in various ways to support the different visualization components
 		eventData = Array.from(d3.rollup(
 			data,
 			function(v) {
@@ -229,6 +235,19 @@ window.createGraphic = function(graphicSelector) {
 			},
 		  d => d.disasterno
 		).values());
+
+		eventsByType = Array.from(
+			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
+		);
+		eventTypesByDeathTolls = Array.from(
+			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disastertype).entries()
+		);
+		firstTenYears = eventData.filter(d => d.year < 1970)
+		lastTenYears = eventData.filter(d => d.year > 2008)
+		deadliestEvents = eventData.sort(function(a, b) {
+			return d3.descending(+a.deaths, +b.deaths);
+		}).slice(0, 15);
+
 
 		init()
 	})
