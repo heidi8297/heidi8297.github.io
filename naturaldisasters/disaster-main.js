@@ -26,6 +26,8 @@ window.createGraphic = function(graphicSelector) {
 	let deadliestEvents = [];
 	let firstTenYears = [];
 	let lastTenYears = [];
+	let eventsByYear = [];
+	let eventsByYearFlat = [];
 
 
 	const offset = 1300;
@@ -78,6 +80,8 @@ window.createGraphic = function(graphicSelector) {
 			item.select('circle')
 				.transition(t)
 				.attr('r', minR)
+				.attr("fill","#000000")
+				.style('opacity',1)
 
 			item.select('text')
 				.transition(t)
@@ -99,36 +103,17 @@ window.createGraphic = function(graphicSelector) {
 
 			item.select('circle')
 				.transition(t)
-				.attr('r', 3.2*minR)
-
-			item.select('text')
-				.transition(t)
-				.style('opacity', 0)
-		},
-
-
-		function step3() {
-			var t = d3.transition()
-				.duration(800)
-				.ease(d3.easeQuadInOut)
-
-			// circles are sized
-			var item = graphicVisEl.selectAll('.item')
-
-			item.select('circle')
-				.transition(t)
-				.delay(function(d, i) { return i * 200 })
 				.attr("fill", d=> typeColor(d.disastertype) )
 				.attr('r', function(d, i) {
 					return scaleR(parseInt(d.year)-1950)
 				})
-				.style('opacity',0.5)
+				.style('opacity', 0.5)
 
 			item.select('text')
 				.transition(t)
-				.delay(function(d, i) { return i * 200 })
 				.style('opacity', 1)
-		},
+		}
+		
 	]
 
 	// update our chart
@@ -266,7 +251,12 @@ window.createGraphic = function(graphicSelector) {
 		for (let key of eventsByYear.keys()) {
 			eventsByYear.get(key).sort(function(a, b) {
 				return typeSortNum(a.disastertype)- typeSortNum(b.disastertype) || a.disasterno-b.disasterno;
+			})
+			eventsByYear.get(key).forEach(function(event, index, theArray) {
+				theArray[index].vertNum = index;
 			});
+			eventsByYearFlat = eventsByYearFlat.concat(eventsByYear.get(key))
+
 		}
 
 
