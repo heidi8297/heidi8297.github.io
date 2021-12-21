@@ -23,6 +23,7 @@ window.createGraphic = function(graphicSelector) {
 	let eventData = [];
 	const offset = 300;
 
+	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
 		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
 		.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
@@ -122,6 +123,10 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
+		console.log(data.isArray)
+		console.log(data);
+		console.log(eventData.values().isArray)
+		console.log(Array.from(eventData.values()));
 	}
 
 	// little helper for string concat if using es5
@@ -207,6 +212,7 @@ window.createGraphic = function(graphicSelector) {
 	}).then(disData => {
 		data = disData;
 
+		// rollup/collapse the data to one entry per disasterno
 		eventData = d3.rollup(
 			data,
 			function(v) {
