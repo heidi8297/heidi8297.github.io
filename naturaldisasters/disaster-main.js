@@ -21,7 +21,7 @@ window.createGraphic = function(graphicSelector) {
 	var maxR = 24
 	let data = [];
 	let eventData = [];
-	const offset = 300;
+	const offset = 1300;
 
 	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
@@ -103,7 +103,6 @@ window.createGraphic = function(graphicSelector) {
 			// circles are sized
 			var item = graphicVisEl.selectAll('.item')
 
-			console.log("hello")
 			item.select('circle')
 				.transition(t)
 				.delay(function(d, i) { return i * 200 })
@@ -123,10 +122,6 @@ window.createGraphic = function(graphicSelector) {
 	// update our chart
 	function update(step) {
 		steps[step].call()
-		console.log(data.isArray)
-		console.log(data);
-		console.log(eventData.values().isArray)
-		console.log(Array.from(eventData.values()));
 	}
 
 	// little helper for string concat if using es5
@@ -147,7 +142,7 @@ window.createGraphic = function(graphicSelector) {
 		scaleR = d3.scaleLinear()
 		scaleX = d3.scaleBand()
 
-		var domainX = d3.range(data.slice(0+offset, 8+offset).length)
+		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
 
 		scaleX
 			.domain(domainX)
@@ -159,7 +154,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([minR, maxR])
 
 		var item = chart.selectAll('.item')
-			.data(data.slice(0+offset, 8+offset))
+			.data(eventData.slice(0+offset, 8+offset))
 			.enter().append('g')
 				.classed('item', true)
 				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
@@ -213,7 +208,7 @@ window.createGraphic = function(graphicSelector) {
 		data = disData;
 
 		// rollup/collapse the data to one entry per disasterno
-		eventData = d3.rollup(
+		eventData = Array.from(d3.rollup(
 			data,
 			function(v) {
 				return {
@@ -233,9 +228,7 @@ window.createGraphic = function(graphicSelector) {
 		  	};
 			},
 		  d => d.disasterno
-		);
-		console.log(eventData);
-
+		).values());
 
 		init()
 	})
