@@ -27,18 +27,13 @@ window.createGraphic = function(graphicSelector) {
 	let firstTenYears = [];
 	let lastTenYears = [];
 
-	// define a sort order by disaster type, to be used in stacked circle chart
-	const typeSortNum = new Map([
-    ['flood',0],
-    ['storm',1],
-		['earthquake',2],
-		['landslide',3],
-		['drought',4],
-		['extreme temperature',5],
-		['volcanic activity',6]
-	])
 
 	const offset = 1300;
+
+	// define a sort order by disaster type, to be used in stacked circle chart
+	const typeSortNum = d3.scaleOrdinal()
+		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
+		.range([0,1,2,3,4,5,6,7]);
 
 	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
@@ -208,7 +203,7 @@ window.createGraphic = function(graphicSelector) {
 			iso3: d.iso3,
 			year: +d.year,
 			geo_id: +d.geo_id,
-			disastertype: d.disastertype,
+			disastertype: d.disastertype.trim(),
 			disasterno: d.disasterno,
 			latitude: +d.latitude,
 			longitude: +d.longitude,
@@ -266,16 +261,14 @@ window.createGraphic = function(graphicSelector) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
 
-
+		// group events by year, then sort each set of yearly events by type
 		eventsByYear = d3.group(eventData, d => d.year);
-
 		for (let key of eventsByYear.keys()) {
-			console.log(key);
 			eventsByYear.get(key).sort(function(a, b) {
-				return [a.year-b.year]
-				return a - b;
+				return typeSortNum(a.disastertype)- typeSortNum(b.disastertype) || a.disasterno-b.disasterno;
 			});
 		}
+
 
 		init()
 	})
