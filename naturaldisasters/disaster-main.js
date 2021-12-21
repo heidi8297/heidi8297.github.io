@@ -27,6 +27,17 @@ window.createGraphic = function(graphicSelector) {
 	let firstTenYears = [];
 	let lastTenYears = [];
 
+	// define a sort order by disaster type, to be used in stacked circle chart
+	const typeSortNum = new Map([
+    ['flood',0],
+    ['storm',1],
+		['earthquake',2],
+		['landslide',3],
+		['drought',4],
+		['extreme temperature',5],
+		['volcanic activity',6]
+	])
+
 	const offset = 1300;
 
 	// provide a disaster type and return a corresponding color
@@ -236,18 +247,35 @@ window.createGraphic = function(graphicSelector) {
 		  d => d.disasterno
 		).values());
 
+		// count total events of each type
 		eventsByType = Array.from(
 			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
 		);
+
+		// get total death toll by disaster type
 		eventTypesByDeathTolls = Array.from(
 			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disastertype).entries()
 		);
+
+		// create sets for the first ten years of events and for the last ten years
 		firstTenYears = eventData.filter(d => d.year < 1970)
 		lastTenYears = eventData.filter(d => d.year > 2008)
+
+		// find the 15 deadliest events
 		deadliestEvents = eventData.sort(function(a, b) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
 
+
+		eventsByYear = d3.group(eventData, d => d.year);
+
+		for (let key of eventsByYear.keys()) {
+			console.log(key);
+			eventsByYear.get(key).sort(function(a, b) {
+				return [a.year-b.year]
+				return a - b;
+			});
+		}
 
 		init()
 	})
