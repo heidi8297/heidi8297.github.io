@@ -29,8 +29,17 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByYear = [];
 	let eventsByYearFlat = [];
 
+	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
+	//   the latter of which will be used for rendering our elements to the canvas
+	var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
 
-	const offset = 1300;
+	// create a 'custom' element that will be part of a 'virtual' DOM
+	//   we will use this to bind our data without cluttering the actual DOM
+	var detachedContainer = document.createElement("custom");
+	var dataContainer = d3.select(detachedContainer);
+
+	const offset = 1300;  // using this for testing purposes only - can delete later
 
 	// define a sort order by disaster type, to be used in stacked circle chart
 	const typeSortNum = d3.scaleOrdinal()
@@ -113,7 +122,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition(t)
 				.style('opacity', 1)
 		}
-		
+
 	]
 
 	// update our chart
@@ -138,6 +147,16 @@ window.createGraphic = function(graphicSelector) {
 
 		scaleR = d3.scaleLinear()
 		scaleX = d3.scaleBand()
+
+		scaleXyear = d3.scaleLinear()
+		scaleXyear
+			.domain([1960,2018])
+			.range([0, chartWidth])
+
+		scaleYvert = d3.scaleLinear()
+		scaleYvert
+			.domain([0,360])
+			.range([0.7*chartHeight, 0])
 
 		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
 
@@ -164,6 +183,39 @@ window.createGraphic = function(graphicSelector) {
 			.text(function(d) { return d.country })
 			.attr('y', 1)
 			.style('opacity', 0)
+
+		// CANVAS DATA PREP
+		var dataBinding = dataContainer.selectAll(".node")
+			.data(eventsByYearFlat)
+			.join("circle")
+				.attr("class", "node")
+				.attr("cx", d => 0.1*scaleXyear(d.year) )
+				.attr("cy", d => 0.1*scaleYvert(d.vertNum) )
+				.attr("r", 1 )
+				.attr("opacity", 0.7)
+				.attr("fill", d => typeColor(d.disastertype) );
+
+		//Drawing a rectangle
+		// ctx.fillStyle = "red";
+		// ctx.fillRect(80, 40, 100, 100);
+		//Optional if you also want to give the rectangle a stroke
+		// ctx.strokeStyle = "blue";
+		// ctx.strokeRect(80, 40, 100, 100);
+
+		dataBinding.each(function(d) {
+			//Select one of the nodes/circles
+			var node = d3.select(this);
+
+			//Draw each circle
+			ctx.fillStyle = node.attr("fill");
+			ctx.beginPath();
+			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
+									0,  2 * Math.PI, true);
+			ctx.fill();
+			ctx.closePath();
+		});
+
+
 	}
 
 	// setup the scrolly text section on the lefthand side
@@ -260,8 +312,10 @@ window.createGraphic = function(graphicSelector) {
 		}
 
 
+
+
 		init()
-	})
+	})    // end d3.csv.then
 
 	return {
 		update: update,

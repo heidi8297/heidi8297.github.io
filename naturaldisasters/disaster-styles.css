@@ -124,7 +124,7 @@ header h2 {
 }
 
 /* div wrapper for svg */
-.graphic__vis {
+.graphic__vis, #canvas {
 	position: sticky;
 	width: 1000px;
 	height: 800px;
@@ -136,6 +136,8 @@ header h2 {
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 	display: inline-block;
+  background-color: #FAF7F6;
+  border: 1px solid #EAE0DB;
 }
 
 .graphic__vis svg {
