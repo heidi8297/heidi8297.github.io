@@ -28,6 +28,9 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsByYearFlat = [];
+	const canvasWidth = 3000;
+	const canvasHeight = 2400;
+	const canvasMargin = 0.01*canvasWidth;
 
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
@@ -151,12 +154,12 @@ window.createGraphic = function(graphicSelector) {
 		scaleXyear = d3.scaleLinear()
 		scaleXyear
 			.domain([1960,2018])
-			.range([0, chartWidth])
+			.range([0+canvasMargin, canvasWidth-canvasMargin])
 
 		scaleYvert = d3.scaleLinear()
 		scaleYvert
 			.domain([0,360])
-			.range([0.7*chartHeight, 0])
+			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 
 		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
 
@@ -189,10 +192,10 @@ window.createGraphic = function(graphicSelector) {
 			.data(eventsByYearFlat)
 			.join("circle")
 				.attr("class", "node")
-				.attr("cx", d => 0.1*scaleXyear(d.year) )
-				.attr("cy", d => 0.1*scaleYvert(d.vertNum) )
-				.attr("r", 1 )
-				.attr("opacity", 0.7)
+				.attr("cx", d => scaleXyear(d.year) )
+				.attr("cy", d => scaleYvert(d.vertNum) )
+				.attr("r", 6 )
+				.attr("opacity", 0.5)
 				.attr("fill", d => typeColor(d.disastertype) );
 
 		//Drawing a rectangle
