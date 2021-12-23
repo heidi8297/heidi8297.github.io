@@ -187,67 +187,37 @@ window.createGraphic = function(graphicSelector) {
 			.attr('y', 1)
 			.style('opacity', 0)
 
-
-		function databind(dataToBind) {
-			console.log("databind")
-			var boundElements = dataContainer.selectAll("custom.circle")
-				.data(dataToBind)
-				.join('custom')
-					.attr("class", "circle")
-					.attr("cx", d => scaleXyear(d.year) )
-					.attr("cy", d => scaleYvert(d.vertNum) )
-					.attr("r", 3 )
-					.attr("opacity", 0.7)
-					.attr("fillStyle", d => typeColor(d.disastertype) )
-		} // databind()
-
-		function draw() {
-			console.log("drawing")
-			ctx.clearRect(0,0,canvasWidth,canvasHeight);
-
-			var elements = dataContainer.selectAll("custom.circle");// Grab all elements you bound data to in the databind() function.
-			elements.each(function(d,i) {
-				var node = d3.select(this);   // This is each individual element in the loop.
-				ctx.fillStyle = node.attr('fillStyle')   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
-				ctx.globalAlpha = node.attr("opacity")
-				ctx.beginPath();
-				ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
-										0,  2 * Math.PI, true);
-				ctx.fill()
-				ctx.closePath()
-			})
-		}
-		databind(eventsByYearFlat);
-		draw();
-
-		// CANVAS DATA PREP
-		// var dataBinding = dataContainer.selectAll(".node")
-		// 	.data(eventsByYearFlat)
-		// 	.join("circle")
-		// 		.attr("class", "node")
-		// 		.attr("cx", d => scaleXyear(d.year) )
-		// 		.attr("cy", d => scaleYvert(d.vertNum) )
-		// 		.attr("r", 6 )
-		// 		.attr("opacity", 0.7)
-		// 		.attr("fill", d => typeColor(d.disastertype) );
-
-		// DRAW ELEMENTS TO CANVAS
-	// 	dataBinding.each(function(d) {
-	// 		//Select one of the nodes/circles
-	// 		var node = d3.select(this);
-	//
-	// 		//Draw each circle
-	// 		ctx.fillStyle = node.attr("fill");
-	// 		ctx.globalAlpha = node.attr("opacity");
-	// 		ctx.beginPath();
-	// 		ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
-	// 								0,  2 * Math.PI, true);
-	// 		ctx.fill();
-	// 		ctx.closePath();
-	// 	});
-	//
-	//
 	}  // setupCharts
+
+
+	function databind(dataToBind) {
+		var boundElements = dataContainer.selectAll("custom.circle")
+			.data(dataToBind)
+			.join('custom')
+				.attr("class", "circle")
+				.attr("cx", d => scaleXyear(d.year) )
+				.attr("cy", d => scaleYvert(d.vertNum) )
+				.attr("r", 3 )
+				.attr("opacity", 0)
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+				.transition()
+				.duration(800)
+				.attr("opacity", 0.9)
+	} // databind()
+
+	function draw() {
+		ctx.clearRect(0,0,canvasWidth,canvasHeight);
+		dataContainer.selectAll("custom.circle").each(function(d,i) {
+			var node = d3.select(this);   // This is each individual element in the loop.
+			ctx.fillStyle = node.attr('fillStyle')   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+			ctx.globalAlpha = node.attr("opacity")
+			ctx.beginPath();
+			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
+									0,  2 * Math.PI, true);
+			ctx.fill()
+			ctx.closePath()
+		})
+	} // draw()
 
 	// setup the scrolly text section on the lefthand side
 	function setupProse() {
@@ -258,6 +228,11 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
+		databind(eventsByYearFlat);
+		var t = d3.timer(function(elapsed) {
+			draw();
+			if (elapsed > 850) t.stop();
+		}); // Timer running the draw function repeatedly for 850 ms.
 		setupProse()
 		update(0)
 	}
