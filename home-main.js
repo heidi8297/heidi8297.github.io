@@ -162,7 +162,6 @@
 
 
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-console.log(vw);
 
 const spellsFullList = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
 	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"];
