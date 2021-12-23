@@ -32,6 +32,8 @@ window.createGraphic = function(graphicSelector) {
 	const canvasHeight = 2400;
 	const canvasMargin = 0.01*canvasWidth;
 
+	const speedFactor = 4;
+
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
 	var canvas = document.getElementById('canvas');
@@ -49,6 +51,10 @@ window.createGraphic = function(graphicSelector) {
 		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
 		.range([0,1,2,3,4,5,6,7]);
 
+	const typeDeathSort = d3.scaleOrdinal()
+		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
+		.range([3,6,1,4,0,2,7,5]);
+
 	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
 		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
@@ -57,6 +63,12 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {
+			databind21B(eventsByYearFlat);
+			var tt = d3.timer(function(elapsed) {
+				draw();
+				if (elapsed > speedFactor*850) tt.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+
 			// circles are centered and small
 			var t = d3.transition()
 				.duration(800)
@@ -77,6 +89,14 @@ window.createGraphic = function(graphicSelector) {
 		},
 
 		function step1() {
+			databind22(eventsByYearFlat);
+			var tt = d3.timer(function(elapsed) {
+				draw();
+				if (elapsed > speedFactor*850) tt.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+
+
+
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
@@ -161,6 +181,17 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,360])
 			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 
+		scaleXdeadliest = d3.scaleSymlog()
+			.domain([0,450000])
+			.range([0+canvasMargin, canvasWidth-canvasMargin])
+
+		scaleYdeadliest = d3.scaleBand()
+			.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
+			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
+			.paddingInner(0.1)
+ 			.paddingOuter(0.2)
+ 			.align(0.5) /// ??
+
 		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
 
 		scaleX
@@ -190,20 +221,44 @@ window.createGraphic = function(graphicSelector) {
 	}  // setupCharts
 
 
-	function databind(dataToBind) {
+	function databind21(dataToBind) {
 		var boundElements = dataContainer.selectAll("custom.circle")
 			.data(dataToBind)
 			.join('custom')
 				.attr("class", "circle")
 				.attr("cx", d => scaleXyear(d.year) )
 				.attr("cy", d => scaleYvert(d.vertNum) )
-				.attr("r", 3 )
+				.attr("r", 5 )
 				.attr("opacity", 0)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
+	} // databind21()
+
+	function databind22(dataToBind) {
+		var boundElements = dataContainer.selectAll("custom.circle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "circle")
 				.transition()
-				.duration(800)
-				.attr("opacity", 0.9)
-	} // databind()
+				.duration(speedFactor*800)
+				.attr("cx", d => scaleXdeadliest(d.deaths))
+				.attr("cy", d => scaleYdeadliest(d.disastertype) - 40 + 80*Math.random())
+				.attr("r", 8 )
+				.attr("opacity", 0.5)
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+	}
+
+	function databind21B(dataToBind) {
+		var boundElements = dataContainer.selectAll("custom.circle")
+			.data(dataToBind)
+			.join('custom')
+			.transition()
+			.duration(speedFactor*800)
+			.attr("cx", d => scaleXyear(d.year) )
+			.attr("cy", d => scaleYvert(d.vertNum) )
+			.attr("r", 5 )
+			.attr("fillStyle", d => typeColor(d.disastertype) )
+			.attr("opacity", 0.5)
+	}
 
 	function draw() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
@@ -228,11 +283,9 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
-		databind(eventsByYearFlat);
-		var t = d3.timer(function(elapsed) {
-			draw();
-			if (elapsed > 850) t.stop();
-		}); // Timer running the draw function repeatedly for 850 ms.
+		databind21(eventsByYearFlat)
+		databind21B(eventsByYearFlat)
+		draw()
 		setupProse()
 		update(0)
 	}
