@@ -32,7 +32,7 @@ window.createGraphic = function(graphicSelector) {
 	const canvasHeight = 2400;
 	const canvasMargin = 0.01*canvasWidth;
 
-	const speedFactor = 4;
+	const speedFactor = 2.7;
 
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
@@ -48,12 +48,12 @@ window.createGraphic = function(graphicSelector) {
 
 	// define a sort order by disaster type, to be used in stacked circle chart
 	const typeSortNum = d3.scaleOrdinal()
-		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
-		.range([0,1,2,3,4,5,6,7]);
+		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
+		.range([0,1,2,3,4,5,6]);
 
 	const typeDeathSort = d3.scaleOrdinal()
-		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
-		.range([3,6,1,4,0,2,7,5]);
+		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
+		.range([3,5,1,4,0,2,6]);
 
 	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
@@ -121,6 +121,13 @@ window.createGraphic = function(graphicSelector) {
 		},
 
 		function step2() {
+			databind23(eventsByYearFlat);
+			var tt = d3.timer(function(elapsed) {
+				draw();
+				if (elapsed > speedFactor*850) tt.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+
+
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
@@ -146,7 +153,7 @@ window.createGraphic = function(graphicSelector) {
 				.style('opacity', 1)
 		}
 
-	]
+	] // steps
 
 	// update our chart
 	function update(step) {
@@ -172,12 +179,10 @@ window.createGraphic = function(graphicSelector) {
 		scaleX = d3.scaleBand()
 
 		scaleXyear = d3.scaleLinear()
-		scaleXyear
 			.domain([1960,2018])
 			.range([0+canvasMargin, canvasWidth-canvasMargin])
 
 		scaleYvert = d3.scaleLinear()
-		scaleYvert
 			.domain([0,360])
 			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 
@@ -186,11 +191,15 @@ window.createGraphic = function(graphicSelector) {
 			.range([0+canvasMargin, canvasWidth-canvasMargin])
 
 		scaleYdeadliest = d3.scaleBand()
-			.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity","mass movement (dry)"])
+			.domain(["mass movement (dry)","volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
 			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 			.paddingInner(0.1)
  			.paddingOuter(0.2)
  			.align(0.5) /// ??
+
+		scaleYdeaths = d3.scaleLinear()
+			.domain([0,450000])
+			.range([canvasHeight -canvasMargin, 0+canvasMargin])
 
 		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
 
@@ -221,44 +230,62 @@ window.createGraphic = function(graphicSelector) {
 	}  // setupCharts
 
 
-	function databind21(dataToBind) {
+	function databind21(dataToBind) {  // events by year, circle chart
 		var boundElements = dataContainer.selectAll("custom.circle")
 			.data(dataToBind)
 			.join('custom')
 				.attr("class", "circle")
 				.attr("cx", d => scaleXyear(d.year) )
 				.attr("cy", d => scaleYvert(d.vertNum) )
-				.attr("r", 5 )
+				.attr("r", 7 )
 				.attr("opacity", 0)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind21()
 
-	function databind22(dataToBind) {
+	function databind21B(dataToBind) {  // events by year transition
+		var boundElements = dataContainer.selectAll("custom.circle")
+			.data(dataToBind)
+			.join('custom')
+			.transition()
+			.ease(d3.easeQuadInOut)
+			.duration(speedFactor*800)
+			.attr("cx", d => scaleXyear(d.year) )
+			.attr("cy", d => scaleYvert(d.vertNum) )
+			.attr("r", 7 )
+			.attr("fillStyle", d => typeColor(d.disastertype) )
+			.attr("opacity", 0.5)
+	} // databind21B()
+
+	function databind22(dataToBind) {  // deadliest individual events / log scale
 		var boundElements = dataContainer.selectAll("custom.circle")
 			.data(dataToBind)
 			.join("custom")
 				.attr("class", "circle")
 				.transition()
+				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXdeadliest(d.deaths))
-				.attr("cy", d => scaleYdeadliest(d.disastertype) - 40 + 80*Math.random())
-				.attr("r", 8 )
+				.attr("cy", d => scaleYdeadliest(d.disastertype) - 60 + 120*Math.random())
+				.attr("r", 10 )
 				.attr("opacity", 0.5)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
-	}
+	} // databind22()
 
-	function databind21B(dataToBind) {
+	function databind23(dataToBind) {  // deaths by year
 		var boundElements = dataContainer.selectAll("custom.circle")
 			.data(dataToBind)
-			.join('custom')
-			.transition()
-			.duration(speedFactor*800)
-			.attr("cx", d => scaleXyear(d.year) )
-			.attr("cy", d => scaleYvert(d.vertNum) )
-			.attr("r", 5 )
-			.attr("fillStyle", d => typeColor(d.disastertype) )
-			.attr("opacity", 0.5)
-	}
+			.join("custom")
+				.attr("class", "circle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => scaleXyear(d.year))
+				.attr("cy", d => scaleYdeaths(d.deaths))
+				.attr("r", 13 )
+				.attr("opacity", 0.6)
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+	} // databind22()
+
 
 	function draw() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
@@ -288,7 +315,7 @@ window.createGraphic = function(graphicSelector) {
 		draw()
 		setupProse()
 		update(0)
-	}
+	} // init()
 
 	// load/parse the main data file and store as 'data'
 	// then set up the charts and kick off the updater function
@@ -336,7 +363,7 @@ window.createGraphic = function(graphicSelector) {
 		  	};
 			},
 		  d => d.disasterno
-		).values());
+		).values()).filter(d => d.disastertype != "mass movement (dry)");
 
 		// count total events of each type
 		eventsByType = Array.from(
@@ -367,16 +394,13 @@ window.createGraphic = function(graphicSelector) {
 				theArray[index].vertNum = index;
 			});
 			eventsByYearFlat = eventsByYearFlat.concat(eventsByYear.get(key))
-
 		}
 
 
-
-
 		init()
-	})    // end d3.csv.then
+	})   // end d3.csv.then
 
 	return {
 		update: update,
 	}
-}
+} // window.createGraphic
