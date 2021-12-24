@@ -6,19 +6,12 @@
 */
 window.createGraphic = function(graphicSelector) {
 	var graphicEl = d3.select('.graphic')
-	var graphicVisEl = graphicEl.select('.graphic__vis')
 	var graphicProseEl = graphicEl.select('.graphic__prose')
 
-	var margin = 20
-	var width = 1000
-	var chartWidth = width - margin * 2
 	var height = 800
-	var chartHeight = height - margin * 2
 	var scaleX = null
 	var scaleR = null
 	let extent = [0,70]
-	var minR = 10
-	var maxR = 24
 	let data = [];
 	let eventData = [];
 	let eventsByType = [];
@@ -65,93 +58,54 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {
 			databind21B(eventsByYearFlat);
 			var tt = d3.timer(function(elapsed) {
-				draw();
+				drawEventCircles();
 				if (elapsed > speedFactor*850) tt.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 
-			// circles are centered and small
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
 
-			var item = graphicVisEl.selectAll('.item')
-
-			item.transition(t)
-				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
-
-			item.select('circle')
-				.transition(t)
-				.attr('r', minR)
-
-			item.select('text')
-				.transition(t)
-				.style('opacity', 0)
-		},
+		}, // step0()
 
 		function step1() {
 			databind22(eventsByYearFlat);
 			var tt = d3.timer(function(elapsed) {
-				draw();
+				drawEventCircles();
 				if (elapsed > speedFactor*850) tt.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
-
 
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
 
-			// circles are positioned
-			var item = graphicVisEl.selectAll('.item')
-
-			item.transition(t)
-				.attr('transform', function(d, i) {
-					return translate(scaleX(i), chartHeight / 2)
-				})
-
-			item.select('circle')
-				.transition(t)
-				.attr('r', minR)
-				.attr("fill","#000000")
-				.style('opacity',1)
-
-			item.select('text')
-				.transition(t)
-				.style('opacity', 0)
-		},
+		}, // step1()
 
 		function step2() {
 			databind23(eventsByYearFlat);
 			var tt = d3.timer(function(elapsed) {
-				draw();
+				drawEventCircles();
 				if (elapsed > speedFactor*850) tt.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
 
 			var t = d3.transition()
 				.duration(800)
 				.ease(d3.easeQuadInOut)
 
-			// circles are positioned
-			var item = graphicVisEl.selectAll('.item')
+		}, // step2()
 
-			item.transition(t)
-				.attr('transform', function(d, i) {
-					return translate(scaleX(i), chartHeight / 2)
-				})
+		function step3() {
+			databind23(eventsByYearFlat, 37000);
+			var tt = d3.timer(function(elapsed) {
+				drawEventCircles();
+				if (elapsed > speedFactor*850) tt.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
 
-			item.select('circle')
-				.transition(t)
-				.attr("fill", d=> typeColor(d.disastertype) )
-				.attr('r', function(d, i) {
-					return scaleR(parseInt(d.year)-1950)
-				})
-				.style('opacity', 0.5)
+			var t = d3.transition()
+				.duration(800)
+				.ease(d3.easeQuadInOut)
 
-			item.select('text')
-				.transition(t)
-				.style('opacity', 1)
-		}
+		} // step3()
 
 	] // steps
 
@@ -167,16 +121,6 @@ window.createGraphic = function(graphicSelector) {
 
 	// initiate the svg, scales and initial shapes
 	function setupCharts() {
-		var svg = graphicVisEl.append('svg')
-			.attr('width', width + 'px')
-			.attr('height', height + 'px')
-
-		var chart = svg.append('g')
-			.classed('chart', true)
-			.attr('transform', 'translate(' + margin + ',' + margin + ')')
-
-		scaleR = d3.scaleLinear()
-		scaleX = d3.scaleBand()
 
 		scaleXyear = d3.scaleLinear()
 			.domain([1960,2018])
@@ -201,40 +145,15 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([canvasHeight -canvasMargin, 0+canvasMargin])
 
-		var domainX = d3.range(eventData.slice(0+offset, 8+offset).length)
-
-		scaleX
-			.domain(domainX)
-			.range([0, chartWidth])
-			.padding(1)
-
-		scaleR
-			.domain(extent)
-			.range([minR, maxR])
-
-		var item = chart.selectAll('.item')
-			.data(eventData.slice(0+offset, 8+offset))
-			.enter().append('g')
-				.classed('item', true)
-				.attr('transform', translate(chartWidth / 2, chartHeight / 2))
-
-		item.append('circle')
-			.attr('cx', 0)
-			.attr('cy', 0)
-
-		item.append('text')
-			.text(function(d) { return d.country })
-			.attr('y', 1)
-			.style('opacity', 0)
 
 	}  // setupCharts
 
 
 	function databind21(dataToBind) {  // events by year, circle chart
-		var boundElements = dataContainer.selectAll("custom.circle")
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join('custom')
-				.attr("class", "circle")
+				.attr("class", "eventCircle")
 				.attr("cx", d => scaleXyear(d.year) )
 				.attr("cy", d => scaleYvert(d.vertNum) )
 				.attr("r", 7 )
@@ -243,7 +162,7 @@ window.createGraphic = function(graphicSelector) {
 	} // databind21()
 
 	function databind21B(dataToBind) {  // events by year transition
-		var boundElements = dataContainer.selectAll("custom.circle")
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join('custom')
 			.transition()
@@ -257,10 +176,10 @@ window.createGraphic = function(graphicSelector) {
 	} // databind21B()
 
 	function databind22(dataToBind) {  // deadliest individual events / log scale
-		var boundElements = dataContainer.selectAll("custom.circle")
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
-				.attr("class", "circle")
+				.attr("class", "eventCircle")
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
@@ -271,25 +190,29 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind22()
 
-	function databind23(dataToBind) {  // deaths by year
-		var boundElements = dataContainer.selectAll("custom.circle")
+	function databind23(dataToBind, deathMin=0) {  // deaths by year
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
-				.attr("class", "circle")
+				.attr("class", "eventCircle")
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXyear(d.year))
 				.attr("cy", d => scaleYdeaths(d.deaths))
 				.attr("r", 13 )
-				.attr("opacity", 0.6)
+				.attr("opacity", function(d) {
+					if (d.deaths < deathMin) {
+						return 0
+					} else { return 0.6 }
+				})
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind22()
 
 
-	function draw() {
+	function drawEventCircles() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
-		dataContainer.selectAll("custom.circle").each(function(d,i) {
+		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
 			ctx.fillStyle = node.attr('fillStyle')   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
 			ctx.globalAlpha = node.attr("opacity")
@@ -299,21 +222,13 @@ window.createGraphic = function(graphicSelector) {
 			ctx.fill()
 			ctx.closePath()
 		})
-	} // draw()
-
-	// setup the scrolly text section on the lefthand side
-	function setupProse() {
-		var height = window.innerHeight * 0.5
-		graphicProseEl.selectAll('.trigger')
-			.style('height', height + 'px')
-	}
+	} // drawEventCircles()
 
 	function init() {
 		setupCharts()
-		databind21(eventsByYearFlat)
-		databind21B(eventsByYearFlat)
-		draw()
-		setupProse()
+		databind21(eventsByYearFlat)  // create event circles, make invisible
+		databind21B(eventsByYearFlat) // transition event circles into view
+		drawEventCircles()
 		update(0)
 	} // init()
 
@@ -363,7 +278,7 @@ window.createGraphic = function(graphicSelector) {
 		  	};
 			},
 		  d => d.disasterno
-		).values()).filter(d => d.disastertype != "mass movement (dry)");
+		).values()).filter(d => d.disastertype != "mass movement (dry)"); // remove this disaster type
 
 		// count total events of each type
 		eventsByType = Array.from(
