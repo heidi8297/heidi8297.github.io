@@ -123,6 +123,15 @@ header h2 {
 	min-height: 520px;
 }
 
+.graphic__prose .spacer {
+  min-height: 260px;
+}
+
+.graphic__prose .thanks {
+  min-height: 100px;
+}
+
+
 /* div wrapper for svg */
 .graphic__vis, #canvas {
 	position: sticky;

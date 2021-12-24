@@ -50,54 +50,34 @@ window.createGraphic = function(graphicSelector) {
 	var steps = [
 		function step0() {
 			databind21B(eventsByYearFlat);
-			var tt = d3.timer(function(elapsed) {
+			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
-				if (elapsed > speedFactor*850) tt.stop();
+				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
-			var t = d3.transition()
-				.duration(800)
-				.ease(d3.easeQuadInOut)
-
 		}, // step0()
 
 		function step1() {
 			databind22(eventsByYearFlat);
-			var tt = d3.timer(function(elapsed) {
+			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
-				if (elapsed > speedFactor*850) tt.stop();
+				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
-			var t = d3.transition()
-				.duration(800)
-				.ease(d3.easeQuadInOut)
-
 		}, // step1()
 
 		function step2() {
 			databind23(eventsByYearFlat);
-			var tt = d3.timer(function(elapsed) {
+			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
-				if (elapsed > speedFactor*850) tt.stop();
+				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
-			var t = d3.transition()
-				.duration(800)
-				.ease(d3.easeQuadInOut)
-
 		}, // step2()
 
 		function step3() {
 			databind23(eventsByYearFlat, 37000);
-			var tt = d3.timer(function(elapsed) {
+			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
-				if (elapsed > speedFactor*850) tt.stop();
+				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-
-			var t = d3.transition()
-				.duration(800)
-				.ease(d3.easeQuadInOut)
-
 		} // step3()
 
 	] // steps
