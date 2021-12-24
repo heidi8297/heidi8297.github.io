@@ -5,13 +5,6 @@
 	calls a new thing on a scroll trigger.
 */
 window.createGraphic = function(graphicSelector) {
-	var graphicEl = d3.select('.graphic')
-	var graphicProseEl = graphicEl.select('.graphic__prose')
-
-	var height = 800
-	var scaleX = null
-	var scaleR = null
-	let extent = [0,70]
 	let data = [];
 	let eventData = [];
 	let eventsByType = [];
@@ -25,7 +18,7 @@ window.createGraphic = function(graphicSelector) {
 	const canvasHeight = 2400;
 	const canvasMargin = 0.01*canvasWidth;
 
-	const speedFactor = 2.7;
+	const speedFactor = 2.2;
 
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
@@ -114,12 +107,7 @@ window.createGraphic = function(graphicSelector) {
 		steps[step].call()
 	}
 
-	// little helper for string concat if using es5
-	function translate(x, y) {
-		return 'translate(' + x + ',' + y + ')'
-	}
-
-	// initiate the svg, scales and initial shapes
+	// initiate the scales and initial shapes
 	function setupCharts() {
 
 		scaleXyear = d3.scaleLinear()
@@ -144,7 +132,6 @@ window.createGraphic = function(graphicSelector) {
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
 			.range([canvasHeight -canvasMargin, 0+canvasMargin])
-
 
 	}  // setupCharts
 

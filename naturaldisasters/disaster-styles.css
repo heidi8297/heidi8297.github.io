@@ -120,7 +120,7 @@ header h2 {
 .graphic__prose .trigger {
 	padding: 0;
 	margin: 0;
-	min-height: 480px;
+	min-height: 520px;
 }
 
 /* div wrapper for svg */
@@ -136,12 +136,12 @@ header h2 {
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 	display: inline-block;
-  background-color: #FAF7F6;
+  background-color: #fbf9f9;
   border: 1px solid #EAE0DB;
 }
 
 .graphic__vis svg {
-  background-color: #FAF7F6;
+  background-color: #fbf9f9;
 	border: 1px solid #EAE0DB;
 	top: 50%;  /* not sure this actually does anything? */
 	position: absolute;
