@@ -74,7 +74,6 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {
-    	simulation.stop()
 			databind21B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
@@ -84,7 +83,7 @@ window.createGraphic = function(graphicSelector) {
 
 		function step1() {
 			simulation.stop()
-			databind22(eventsByYearFlat);
+			databind25(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
 				if (elapsed > speedFactor*850) t.stop();
@@ -92,6 +91,15 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {
+			simulation.stop()
+			databind22(eventsByYearFlat);
+			var t = d3.timer(function(elapsed) {
+				drawEventCircles();
+				if (elapsed > speedFactor*850) t.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+		}, // step2()
+
+		function step3() {
 			simulation.stop()
 			// simulation
 			// 	.force('charge', d3.forceManyBody().strength([2]))
@@ -111,9 +119,9 @@ window.createGraphic = function(graphicSelector) {
 				drawEventCircles();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-		}, // step2()
+		}, // step3()
 
-		function step3() {
+		function step4() {
 			simulation.stop()
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
@@ -123,7 +131,7 @@ window.createGraphic = function(graphicSelector) {
 				drawEventCircles();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
-		}, // step3()
+		}, // step4()
 
 	] // steps
 
@@ -277,6 +285,21 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind24()
 
+	function databind25(dataToBind, deathMin=0) {  // grid of all events
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => scaleFactor*d.gridX)
+				.attr("cy", d => scaleFactor*d.gridY)
+				.attr("r", 15 ) // must be at least 9 to show up as a circle?
+				.attr("opacity", 0.4)
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+	} // databind25()
+
 
 	function drawEventCircles() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
@@ -378,6 +401,18 @@ window.createGraphic = function(graphicSelector) {
 			});
 			eventsByYearFlat = eventsByYearFlat.concat(eventsByYear.get(key))
 		}
+		console.log(eventsByYearFlat.length)
+
+		const rowCount = 110; // max number of circles in any row
+		eventsByYearFlat.forEach(function(event, index, theArray) {
+			var rowNum = Math.floor(index/rowCount);
+			if (rowNum%2 == 0) {
+				theArray[index].gridX = 6+(index*9)%(rowCount*9)
+			} else {
+				theArray[index].gridX = 11+(index*9)%(rowCount*9)
+			}
+			theArray[index].gridY = 8+8*Math.floor(index/rowCount)
+		});
 
 		init()
 
