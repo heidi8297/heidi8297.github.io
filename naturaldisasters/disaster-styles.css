@@ -133,7 +133,7 @@ header h2 {
 
 
 /* div wrapper for svg */
-.graphic__vis, #canvas {
+#viz-container {
 	position: sticky;
 	width: 1000px;
 	height: 800px;
@@ -149,14 +149,13 @@ header h2 {
   border: 1px solid #EAE0DB;
 }
 
-.graphic__vis svg {
-  background-color: #fbf9f9;
-	border: 1px solid #EAE0DB;
-	top: 50%;  /* not sure this actually does anything? */
+#viz-container canvas, #viz-container svg {
 	position: absolute;
 	height: 800px;
 	width: 1000px;
+  /* not clear on whether the following attributes were doing anything */
+  /* top: 50%;
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);
-	transform: translateY(-50%);
+	transform: translateY(-50%); */
 }

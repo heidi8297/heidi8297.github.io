@@ -63,13 +63,15 @@
         <p class='trigger' data-step='1'>Step 2 arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
         <p class='trigger' data-step='2'>Step 3 is neato.</p>
         <p class='trigger' data-step='3'>Step 4 concludes our brief tour. The graphic should now go back to its original in-flow position, elegantly snapping back into place.</p>
+        <!-- <p class='trigger' data-step='4'>Step 5 involves a map.</p> -->
         <p class='thanks'>Thank you!</p>
       </div>
 
       <!-- this is where the viz / svg sits -->
-      <!-- <div class='graphic__vis' style="display: none" ></div> -->
+      <!-- <div class='graphic__vis' ></div> -->
       <!-- defining the width/height of the drawing space is distinct from setting the size in CSS -->
-      <canvas id="canvas" width="3000" height="2400"></canvas>
+      <div id="viz-container"></div>
+      <!-- <canvas id="canvas" width="3000" height="2400"></canvas> -->
     </div>
 
 
@@ -104,7 +106,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.js"></script>
 
 
-
+  <!-- setting up the waypoints/triggers -->
   <script>
     (function() {
 
