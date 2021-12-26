@@ -14,19 +14,25 @@ window.createGraphic = function(graphicSelector) {
 	const canvasHeight = 2400;
 	const canvasMargin = 0.01*canvasWidth;
 
+	// this should be the same size as defined in CSS
 	const vizWidth = 1000;
 	const vizHeight = 800;
 
 	const scaleFactor = canvasWidth/vizWidth;
 
-	const speedFactor = 2.2;
+	const speedFactor = 1.7;
 
 	// create an svg which we will use for our world map / background image
-	var backgroundSvg = d3.select("#viz-container").append('svg');
+	var svgBackground = d3.select("#viz-container").append('svg');
 
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
-	var canvas = d3.select('#viz-container')  .append('canvas')  .attr('width', canvasWidth)  .attr('height', canvasHeight) ;
+	// note that defining the width/height of the drawing space is distinct from
+	//   setting the size in CSS
+	var canvas = d3.select('#viz-container')
+		.append('canvas')
+		.attr('width', canvasWidth)
+		.attr('height', canvasHeight) ;
 	var ctx = canvas.node().getContext('2d');
 
 	// create a 'custom' element that will be part of a 'virtual' DOM
@@ -35,7 +41,7 @@ window.createGraphic = function(graphicSelector) {
 	var dataContainer = d3.select(detachedContainer);
 
 	// create an svg which we will use for axes and/or other plotting needs
-	var foregroundSvg = d3.select("#viz-container").append('svg');
+	var svgForeground = d3.select("#viz-container").append('svg');
 
 	// define a sort order by disaster type, to be used in stacked circle chart
 	const typeSortNum = d3.scaleOrdinal()
@@ -50,6 +56,20 @@ window.createGraphic = function(graphicSelector) {
 	const typeColor = d3.scaleOrdinal()
 		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
 		.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
+
+	// create an svg path in a teardrop shape of specified size and orientation
+	function teardrop(size=10, orientation=0) {
+		switch (orientation) {
+		  case 0:  // top right from origin    "M0,0 l0,-10 a10,10 0 1,1 10,10 l-10,0"
+		    return `M0,0 l0,-${size} a${size},${size} 0 1,1 ${size},${size} l-${size},0`;
+		  case 1:  // bottom right   				"M0,0 l0,10 a10,10 0 1,0 10,-10 l-10,0"
+		    return `M0,0 l0,${size} a${size},${size} 0 1,0 ${size},-${size} l-${size},0`;
+		  case 2:  // bottom left   "M0,0 l0,10 a10,10 0 1,1 -10,-10 l10,0"
+				return `M0,0 l0,${size} a${size},${size} 0 1,1 -${size},-${size} l${size},0`;
+		  case 3:  // top left    "M0,0 l0,-10 a10,10 0 1,0 -10,10 l10,0"
+				return `M0,0 l0,-${size} a${size},${size} 0 1,0 -${size},${size} l${size},0`;
+		}
+	}
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -124,7 +144,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([canvasHeight -canvasMargin, 0+canvasMargin])
 
-		mapGroup = backgroundSvg.append('g')
+		mapGroup = svgBackground.append('g')
 			.attr('width', vizWidth)
 			.attr('height', vizHeight);
 
