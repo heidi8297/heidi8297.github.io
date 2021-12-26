@@ -24,44 +24,15 @@ window.createGraphic = function(graphicSelector) {
 	// create an svg which we will use for our world map / background image
 	var backgroundSvg = d3.select("#viz-container").append('svg');
 
-	var g = backgroundSvg.append('g')
-		.attr('width', vizWidth)
-		.attr('height', vizHeight);
-
-	var projection = d3.geoNaturalEarth1()
-		.scale(vizWidth / 1.4 / Math.PI)
-		.translate([-30+ vizWidth / 2, vizHeight / 2]);
-	var geoPath = d3.geoPath(projection);
-
-	// draw the map and set the opacity to 0
-	d3.json("world.geojson").then( function(worldData){
-	  g.selectAll('path')
-	    .data(worldData.features)
-	    .join('path')
-	    .attr('fill', '#EAE0DB')
-			.attr('opacity', 0)
-	    .attr('d', geoPath);
-	});
-
-
 	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 	//   the latter of which will be used for rendering our elements to the canvas
 	var canvas = d3.select('#viz-container')  .append('canvas')  .attr('width', canvasWidth)  .attr('height', canvasHeight) ;
-	//var canvas = document.getElementById('myCanvas')
-	//var canvas = document.getElementById('canvas');
 	var ctx = canvas.node().getContext('2d');
-
 
 	// create a 'custom' element that will be part of a 'virtual' DOM
 	//   we will use this to bind our data without cluttering the actual DOM
 	var detachedContainer = document.createElement("custom");
 	var dataContainer = d3.select(detachedContainer);
-
-	// Set a projection for the map. Projection = transform a lat/long on a position on the 2d map.
-	// const projection = d3.geoNaturalEarth1()
-	//     .scale(canvasWidth / 1.3 / Math.PI)
-	//     .translate([canvasWidth / 2, canvasHeight / 2])
-	// const pathGenerator = d3.geoPath(projection, ctx);
 
 	// create an svg which we will use for axes and/or other plotting needs
 	var foregroundSvg = d3.select("#viz-container").append('svg');
@@ -99,7 +70,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {
-			g.selectAll("path").transition()
+			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			databind23(eventsByYearFlat);
@@ -110,7 +81,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step2()
 
 		function step3() {
-			g.selectAll("path").transition()
+			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
 			databind24(eventsByYearFlat, 37000);
@@ -120,13 +91,6 @@ window.createGraphic = function(graphicSelector) {
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step3()
 
-		// function step4() {
-		// 	var t = d3.timer(function(elapsed) {
-		// 		drawMap(mapData);
-		// 		if (elapsed > speedFactor*850) t.stop();
-		// 	});
-		// } // step4()
-
 	] // steps
 
 	// update our chart
@@ -134,7 +98,7 @@ window.createGraphic = function(graphicSelector) {
 		steps[step].call()
 	}
 
-	// initiate the scales and initial shapes
+	// initiate the scales and background map
 	function setupCharts() {
 
 		scaleXyear = d3.scaleLinear()
@@ -159,6 +123,25 @@ window.createGraphic = function(graphicSelector) {
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
 			.range([canvasHeight -canvasMargin, 0+canvasMargin])
+
+		mapGroup = backgroundSvg.append('g')
+			.attr('width', vizWidth)
+			.attr('height', vizHeight);
+
+		projection = d3.geoNaturalEarth1()
+			.scale(vizWidth / 1.4 / Math.PI)
+			.translate([-30+ vizWidth / 2, vizHeight / 2]);
+		geoPath = d3.geoPath(projection);
+
+		// draw the map and set the opacity to 0
+		d3.json("world.geojson").then( function(worldData){
+		  mapGroup.selectAll('path')
+		    .data(worldData.features)
+		    .join('path')
+		    .attr('fill', '#EAE0DB')
+				.attr('opacity', 0)
+		    .attr('d', geoPath);
+		});
 
 	}  // setupCharts
 
@@ -259,16 +242,6 @@ window.createGraphic = function(graphicSelector) {
 		})
 	} // drawEventCircles()
 
-	// function drawMap(providedData) {
-	// 	ctx.clearRect(0,0,canvasWidth,canvasHeight);
-	// 	ctx.beginPath();
-	// 	pathGenerator(providedData);
-	// 	ctx.fillStyle = "#EFE8E4";
-	// 	ctx.fill();
-	// 	ctx.strokeStyle = "#EAE0DB";
-	// 	ctx.stroke()
-	// } // drawMap()
-
 	function init() {
 		setupCharts()
 		databind21(eventsByYearFlat)  // create event circles, make invisible
@@ -356,11 +329,7 @@ window.createGraphic = function(graphicSelector) {
 			eventsByYearFlat = eventsByYearFlat.concat(eventsByYear.get(key))
 		}
 
-		// Load geojson data
-		d3.json("world.geojson").then( function(disData){
-		  mapData = disData;
-			init()
-		})
+		init()
 
 	})   // end d3.csv.then
 
