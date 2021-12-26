@@ -74,6 +74,7 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {
+    	simulation.stop()
 			databind21B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
@@ -82,6 +83,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step0()
 
 		function step1() {
+			simulation.stop()
 			databind22(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventCircles();
@@ -90,6 +92,17 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {
+			simulation.stop()
+			// simulation
+			// 	.force('charge', d3.forceManyBody().strength([2]))
+			// 	.force('forceX', d3.forceX(d => 0))
+			// 	.force('forceY', d3.forceY(d => 0))
+			// 	.force('collide', d3.forceCollide(d => 4))
+			// 	.alphaDecay([0.02])
+			//
+			// //Reheat simulation and restart
+			// simulation.alpha(0.9).restart()
+
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -101,6 +114,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step2()
 
 		function step3() {
+			simulation.stop()
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
@@ -162,6 +176,22 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity', 0)
 		    .attr('d', geoPath);
 		});
+
+
+		// initiate the force simulation, then stop it for now
+		simulation = d3.forceSimulation(eventData)
+		var nodes = dataContainer.selectAll("custom.eventCircle")
+			.data(eventsByYearFlat)
+			.join('custom')
+				.attr("class", "eventCircle")
+		// Define each tick of simulation
+		simulation.on('tick', () => {
+			nodes
+				.attr('cx', d => d.x)
+				.attr('cy', d => d.y)
+    	})
+    simulation.stop()
+
 
 	}  // setupCharts
 
