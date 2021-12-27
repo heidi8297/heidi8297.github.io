@@ -36,6 +36,7 @@ body {
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 10px;
 }
 
 main {
@@ -71,9 +72,10 @@ a:hover {
 
 header {
   z-index: 1000;
-  /* margin: 1rem auto; */
-  /* max-width: 28rem; */
-  padding: 1rem;
+  position: relative;
+  padding: 1rem 0;
+  margin: 2rem auto;
+  width: 1350px;
 }
 
 h1, h2 {
@@ -121,6 +123,12 @@ header h2 {
 	padding: 0;
 	margin: 0;
 	min-height: 520px;
+  opacity: 0.3;
+}
+
+/* scrolly text - active segment */
+.graphic__prose .trigger.active {
+	opacity: 1;
 }
 
 .graphic__prose .spacer {
@@ -141,6 +149,7 @@ header h2 {
 	/* if the viewport is smaller than that, this anchors the div to the top */
 	top: max(0px, calc(50vh - 400px));
 	margin-left: 0;
+  margin-right: 10px;
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);

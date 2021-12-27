@@ -59,7 +59,7 @@
       <!-- scrolly text section -->
       <div class='graphic__prose'>
         <p class='spacer'>If the visualisation doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
-        <p class='trigger' data-step='0'>Step 1 in the graphic. It triggers in the middle of the viewport. For this graphic, it is the same as the initial state so the reader doesn&rsquo;t miss anything.</p>
+        <p class='trigger active' data-step='0'>Step 1 in the graphic. It triggers in the middle of the viewport. For this graphic, it is the same as the initial state so the reader doesn&rsquo;t miss anything.</p>
         <p class='trigger' data-step='1'>Step 2A arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
         <p class='trigger' data-step='2'>Step 2B arrives. The graphic should be locking into a fixed position right about now. We could have a whole bunch of these &ldquo;fixed&rdquo; steps.</p>
         <p class='trigger' data-step='3'>Step 3 is neato.</p>
@@ -135,6 +135,15 @@
 
               // tell our graphic to update with a specific step
               graphic.update(nextStep)
+
+              if (direction === 'down') {
+                triggerEls[Math.max(0, step - 1)].classList.remove("active")
+                triggerEls[step].classList.add("active")
+              } else {
+                triggerEls[step].classList.remove("active")
+                triggerEls[nextStep].classList.add("active")
+              }
+
             },
             offset: '65%',  // trigger 65% down from top of the viewport
           }) // return new Waypoint
