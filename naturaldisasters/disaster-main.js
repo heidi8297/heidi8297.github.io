@@ -253,10 +253,10 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXdeadliest(d.deaths))
-				.attr("y1", d => scaleYdeadliest(d.disastertype) - 60 + 120*displacement)
-				.attr("x2", d => scaleXdeadliest(d.deaths))
-				.attr("y2", d => scaleYdeadliest(d.disastertype) - 60 + 120*displacement)
+				.attr("x1", d => scaleXyear(d.year))
+				.attr("y1", d => canvasHeight-canvasMargin)
+				.attr("x2", d => scaleXyear(d.year))
+				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind22()
@@ -285,7 +285,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => scaleXyear(d.year))
-				.attr("y1", d => scaleYdeaths(d.deaths))
+				.attr("y1", d => scaleYdeaths(d.deaths)+15)
 				.attr("x2", d => scaleXyear(d.year))
 				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
@@ -317,22 +317,10 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleFactor*projection([d.longitude,d.latitude])[0])
-				.attr("y1", function(d) {
-					if (d.deaths < deathMin) {
-						return canvasHeight*4 // for anything not in the top 15 events, fly off screen
-					} else {
-						return scaleFactor*projection([d.longitude,d.latitude])[1]
-					}
-				})
-				.attr("x2", d => scaleFactor*projection([d.longitude,d.latitude])[0])
-				.attr("y2", function(d) {
-					if (d.deaths < deathMin) {
-						return canvasHeight*4 // for anything not in the top 15 events, fly off screen
-					} else {
-						return scaleFactor*projection([d.longitude,d.latitude])[1]
-					}
-				})
+				.attr("x1", d => scaleXyear(d.year))
+				.attr("y1", d => canvasHeight-canvasMargin)
+				.attr("x2", d => scaleXyear(d.year))
+				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind24()
