@@ -390,6 +390,11 @@ and make sure the svg is still positioned well */
   right: 15px;
 }
 
+.new-content {
+  position: absolute;
+  left: 0;
+}
+
 .gslide-media.gslide-image {
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
   z-index: 2000000;
