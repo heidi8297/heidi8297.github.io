@@ -76,7 +76,7 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {
 			databind21B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
-				drawEventCircles();
+				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step0()
@@ -85,7 +85,7 @@ window.createGraphic = function(graphicSelector) {
 			simulation.stop()
 			databind25(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
-				drawEventCircles();
+				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step1()
@@ -94,7 +94,7 @@ window.createGraphic = function(graphicSelector) {
 			simulation.stop()
 			databind22(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
-				drawEventCircles();
+				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step2()
@@ -116,7 +116,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0)
 			databind23(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
-				drawEventCircles();
+				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step3()
@@ -128,7 +128,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0.8)
 			databind24(eventsByYearFlat, 37000);
 			var t = d3.timer(function(elapsed) {
-				drawEventCircles();
+				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step4()
@@ -239,10 +239,26 @@ window.createGraphic = function(graphicSelector) {
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXdeadliest(d.deaths))
-				.attr("cy", d => scaleYdeadliest(d.disastertype) - 60 + 120*Math.random())
+				.attr("cy", function(d) {
+					displacement = Math.random()
+					return scaleYdeadliest(d.disastertype) - 60 + 120*displacement
+				})
 				.attr("r", 10 )
 				.attr("opacity", 0.5)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
+		var boundLines = dataContainer.selectAll("custom.line")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class","line")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("x1", d => scaleXdeadliest(d.deaths))
+				.attr("y1", d => scaleYdeadliest(d.disastertype) - 60 + 120*displacement)
+				.attr("x2", d => scaleXdeadliest(d.deaths))
+				.attr("y2", d => scaleYdeadliest(d.disastertype) - 60 + 120*displacement)
+				.attr("opacity", 0.7)
+				.attr("stroke", "#999");
 	} // databind22()
 
 	function databind23(dataToBind, deathMin=0) {  // deaths by year
@@ -261,10 +277,22 @@ window.createGraphic = function(graphicSelector) {
 						return 0
 					} else { return 0.6 }
 				})
-				.attr("fillStyle", d => typeColor(d.disastertype) )
+				.attr("fillStyle", d => typeColor(d.disastertype) );
+		var boundLines = dataContainer.selectAll("custom.line")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class","line")
+				.transition()
+				.duration(speedFactor*800)
+				.attr("x1", d => scaleXyear(d.year))
+				.attr("y1", d => scaleYdeaths(d.deaths))
+				.attr("x2", d => scaleXyear(d.year))
+				.attr("y2", d => canvasHeight)
+				.attr("opacity", 0.7)
+				.attr("stroke", "#999");
 	} // databind23()
 
-	function databind24(dataToBind, deathMin=0) {  // deaths by year
+	function databind24(dataToBind, deathMin=0) {  // deaths by year top 15 only
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -283,6 +311,30 @@ window.createGraphic = function(graphicSelector) {
 				.attr("r", d => 10*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", d => 0.6)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
+		var boundLines = dataContainer.selectAll("custom.line")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class","line")
+				.transition()
+				.duration(speedFactor*800)
+				.attr("x1", d => scaleFactor*projection([d.longitude,d.latitude])[0])
+				.attr("y1", function(d) {
+					if (d.deaths < deathMin) {
+						return canvasHeight*4 // for anything not in the top 15 events, fly off screen
+					} else {
+						return scaleFactor*projection([d.longitude,d.latitude])[1]
+					}
+				})
+				.attr("x2", d => scaleFactor*projection([d.longitude,d.latitude])[0])
+				.attr("y2", function(d) {
+					if (d.deaths < deathMin) {
+						return canvasHeight*4 // for anything not in the top 15 events, fly off screen
+					} else {
+						return scaleFactor*projection([d.longitude,d.latitude])[1]
+					}
+				})
+				.attr("opacity", 0)
+				.attr("stroke", "#999");
 	} // databind24()
 
 	function databind25(dataToBind, deathMin=0) {  // grid of all events
@@ -295,13 +347,13 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleFactor*d.gridX)
 				.attr("cy", d => scaleFactor*d.gridY)
-				.attr("r", 15 ) // must be at least 9 to show up as a circle?
+				.attr("r", 12 ) // must be at least 9 to show up as a circle?
 				.attr("opacity", 0.4)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind25()
 
 
-	function drawEventCircles() {
+	function drawEventElements() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
 		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
@@ -313,13 +365,21 @@ window.createGraphic = function(graphicSelector) {
 			ctx.fill()
 			ctx.closePath()
 		})
-	} // drawEventCircles()
+		dataContainer.selectAll("custom.line").each(function(d,i) {
+			var node = d3.select(this);   // This is each individual element in the loop.
+			ctx.beginPath();       // Start a new path
+			ctx.moveTo(node.attr('x1'), node.attr('y1'));    // Move the pen to (30, 50)
+			ctx.lineTo(node.attr('x2'), node.attr('y2'));  // Draw a line to (150, 100)
+			ctx.strokeStyle = node.attr("stroke", "green");
+			ctx.stroke();          // Render the path
+		})
+	} // drawEventElements()
 
 	function init() {
 		setupCharts()
 		databind21(eventsByYearFlat)  // create event circles, make invisible
 		databind21B(eventsByYearFlat) // transition event circles into view
-		drawEventCircles()
+		drawEventElements()
 		update(0)
 	} // init()
 
