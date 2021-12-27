@@ -258,7 +258,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x2", d => scaleXdeadliest(d.deaths))
 				.attr("y2", d => scaleYdeadliest(d.disastertype) - 60 + 120*displacement)
 				.attr("opacity", 0.7)
-				.attr("stroke", "#999");
+				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind22()
 
 	function databind23(dataToBind, deathMin=0) {  // deaths by year
@@ -271,7 +271,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXyear(d.year))
 				.attr("cy", d => scaleYdeaths(d.deaths))
-				.attr("r", 13 )
+				.attr("r", 15 )
 				.attr("opacity", function(d) {
 					if (d.deaths < deathMin) {
 						return 0
@@ -287,9 +287,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x1", d => scaleXyear(d.year))
 				.attr("y1", d => scaleYdeaths(d.deaths))
 				.attr("x2", d => scaleXyear(d.year))
-				.attr("y2", d => canvasHeight)
+				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
-				.attr("stroke", "#999");
+				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind23()
 
 	function databind24(dataToBind, deathMin=0) {  // deaths by year top 15 only
@@ -334,7 +334,7 @@ window.createGraphic = function(graphicSelector) {
 					}
 				})
 				.attr("opacity", 0)
-				.attr("stroke", "#999");
+				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind24()
 
 	function databind25(dataToBind, deathMin=0) {  // grid of all events
@@ -370,7 +370,9 @@ window.createGraphic = function(graphicSelector) {
 			ctx.beginPath();       // Start a new path
 			ctx.moveTo(node.attr('x1'), node.attr('y1'));    // Move the pen to (30, 50)
 			ctx.lineTo(node.attr('x2'), node.attr('y2'));  // Draw a line to (150, 100)
-			ctx.strokeStyle = node.attr("stroke", "green");
+			ctx.globalAlpha = node.attr("opacity")
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = node.attr("stroke");
 			ctx.stroke();          // Render the path
 		})
 	} // drawEventElements()
