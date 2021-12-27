@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 
 	const scaleFactor = canvasWidth/vizWidth;
 
-	const speedFactor = 1.7;
+	const speedFactor = 1.5;
 
 	// create an svg which we will use for our world map / background image
 	var svgBackground = d3.select("#viz-container").append('svg');
@@ -147,15 +147,15 @@ window.createGraphic = function(graphicSelector) {
 			.domain([1960,2018])
 			.range([0+canvasMargin, canvasWidth-canvasMargin])
 
-		scaleYvert = d3.scaleLinear()
+		scaleYvert = d3.scaleLinear() // linear scale for event count by year
 			.domain([0,360])
 			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 
-		scaleXdeadliest = d3.scaleSymlog()
+		scaleXdeadliest = d3.scaleSymlog() // log scale for X-axis of deadliest event types
 			.domain([0,450000])
 			.range([0+canvasMargin, canvasWidth-canvasMargin])
 
-		scaleYdeadliest = d3.scaleBand()
+		scaleYdeadliest = d3.scaleBand()  // band scale for Y-axis of deadliest event types (log scale)
 			.domain(["mass movement (dry)","volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
 			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
 			.paddingInner(0.1)
@@ -253,9 +253,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year))
+				.attr("x1", d => scaleXyear(d.year)+20*d.jitter)
 				.attr("y1", d => canvasHeight-canvasMargin)
-				.attr("x2", d => scaleXyear(d.year))
+				.attr("x2", d => scaleXyear(d.year)+20*d.jitter)
 				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -269,9 +269,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => scaleXyear(d.year))
+				.attr("cx", d => scaleXyear(d.year)-12+24*d.jitter)
 				.attr("cy", d => scaleYdeaths(d.deaths))
-				.attr("r", 15 )
+				.attr("r", 18 )
 				.attr("opacity", function(d) {
 					if (d.deaths < deathMin) {
 						return 0
@@ -284,9 +284,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year))
-				.attr("y1", d => scaleYdeaths(d.deaths)+15)
-				.attr("x2", d => scaleXyear(d.year))
+				.attr("x1", d => scaleXyear(d.year)-12+24*d.jitter)
+				.attr("y1", d => scaleYdeaths(d.deaths)+18)
+				.attr("x2", d => scaleXyear(d.year)-12+24*d.jitter)
 				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -317,9 +317,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year))
+				.attr("x1", d => scaleXyear(d.year)-12+24*d.jitter)
 				.attr("y1", d => canvasHeight-canvasMargin)
-				.attr("x2", d => scaleXyear(d.year))
+				.attr("x2", d => scaleXyear(d.year)-12+24*d.jitter)
 				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -415,7 +415,8 @@ window.createGraphic = function(graphicSelector) {
 					disasterSubtype: d3.min(v, d => d.disasterSubtype),
 					startDate: d3.min(v, d => d.startDate),
 					totalAffected: d3.min(v, d => d.totalAffected),
-					otherNotes: d3.min(v, d => d.otherNotes)
+					otherNotes: d3.min(v, d => d.otherNotes),
+					jitter: Math.random()
 		  	};
 			},
 		  d => d.disasterno
@@ -444,7 +445,10 @@ window.createGraphic = function(graphicSelector) {
 		eventsByYear = d3.group(eventData, d => d.year);
 		for (let key of eventsByYear.keys()) {
 			eventsByYear.get(key).sort(function(a, b) {
-				return typeSortNum(a.disastertype)- typeSortNum(b.disastertype) || a.disasterno-b.disasterno;
+				// within each year - sort first by disaster type, then by disaster number
+				//return typeSortNum(a.disastertype)- typeSortNum(b.disastertype) || a.disasterno-b.disasterno;
+				// within each year - sort by disaster number
+				return b.disasterno-a.disasterno;
 			})
 			eventsByYear.get(key).forEach(function(event, index, theArray) {
 				theArray[index].vertNum = index;
@@ -453,13 +457,14 @@ window.createGraphic = function(graphicSelector) {
 		}
 		console.log(eventsByYearFlat.length)
 
+		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
 		eventsByYearFlat.forEach(function(event, index, theArray) {
 			var rowNum = Math.floor(index/rowCount);
 			if (rowNum%2 == 0) {
 				theArray[index].gridX = 6+(index*9)%(rowCount*9)
 			} else {
-				theArray[index].gridX = 11+(index*9)%(rowCount*9)
+				theArray[index].gridX = 11+(index*9)%(rowCount*9) // shift odd rows by 5 pixels to create a different/compact grid type
 			}
 			theArray[index].gridY = 8+8*Math.floor(index/rowCount)
 		});
