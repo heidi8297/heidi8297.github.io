@@ -74,15 +74,18 @@ window.createGraphic = function(graphicSelector) {
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
-		function step0() {
-			databind1B(eventsByYearFlat);   //  databind1B
+		function step0() {  // pane ONE
+			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step0()
 
-		function step1() {
+		function step1() {  // pane TWO - placeholder
+			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -90,8 +93,11 @@ window.createGraphic = function(graphicSelector) {
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step1()
 
-		function step2() {
-			databind22(eventsByYearFlat);
+		function step2() {  // pane THREE - placeholder
+			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0.8)
+			databind6(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -102,7 +108,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind23(eventsByYearFlat);
+			databind7(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -113,7 +119,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
-			databind24(eventsByYearFlat, 37000);
+			databind8(eventsByYearFlat, 37000);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -124,12 +130,34 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind26(eventsByYearFlat);
+			databind10(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step5()
+
+		function step6() {
+			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
+			databind10(eventsByYearFlat);
+			var t = d3.timer(function(elapsed) {
+				drawEventElements();
+				if (elapsed > speedFactor*850) t.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+		}, // step6()
+
+		function step7() {
+			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
+			databind10(eventsByYearFlat);
+			var t = d3.timer(function(elapsed) {
+				drawEventElements();
+				if (elapsed > speedFactor*850) t.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+		}, // step7()
 
 
 	] // steps
@@ -224,7 +252,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("opacity", 0.4)
 	} // databind1B()
 
-	function databind22(dataToBind) {  // deadliest individual events / log scale
+	function databind6(dataToBind) {  // deadliest individual events / log scale
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -251,9 +279,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
-	} // databind22()
+	} // databind6()
 
-	function databind23(dataToBind, deathMin=0) {  // deaths by year
+	function databind7(dataToBind, deathMin=0) {  // deaths by year
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -269,7 +297,6 @@ window.createGraphic = function(graphicSelector) {
 						return 0
 					} else { return 0.6 }
 				})
-				//.attr("fillStyle", d => typeColor(d.disastertype) );
 		var boundLines = dataContainer.selectAll("custom.line")
 			.data(dataToBind)
 			.join("custom")
@@ -282,9 +309,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => vizDim.bottom)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
-	} // databind23()
+	} // databind7()
 
-	function databind24(dataToBind, deathMin=0) {  // deaths by year top 15 only
+	function databind8(dataToBind, deathMin=0) {  // deaths by year top 15 - MAP
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -314,9 +341,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
-	} // databind24()
+	} // databind8()
 
-	function databind26(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
+	function databind10(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -328,7 +355,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cy", d => canvasHeight*d.jitter2)
 				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
 				.attr("opacity", 0.33)
-	} // databind26()
+	} // databind10()
 
 
 	function drawEventElements() {
@@ -357,8 +384,8 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
-		databind1A(eventsByYearFlat)  // create event circles, make invisible       databind1A
-		databind1B(eventsByYearFlat) // transition event circles into view 				databind1B
+		databind1A(eventsByYearFlat)  // create event circles, make invisible
+		databind1B(eventsByYearFlat) // transition event circles into view
 		drawEventElements()
 		update(0)
 	} // init()
