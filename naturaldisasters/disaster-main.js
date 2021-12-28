@@ -10,15 +10,16 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsByYearFlat = [];
-	const canvasWidth = 3000;
-	const canvasHeight = 2400;
-	const canvasMargin = 0.02*canvasWidth;
+	const canvasWidth = 4000;
+	const canvasHeight = 3200;
+	const margin = ({top: 120, right: 120, bottom: 120, left: 120})
+	const vizDim = ({top: 0+margin.top, right: canvasWidth-margin.right, bottom: canvasHeight-margin.bottom, left: 0+margin.left})
 
 	// this should be the same size as defined in CSS
-	const vizWidth = 1000;
-	const vizHeight = 800;
+	const dispWidth = 1000;
+	const dispHeight = 800;
 
-	const scaleFactor = canvasWidth/vizWidth;
+	const scaleFactor = canvasWidth/dispWidth;
 
 	const speedFactor = 1.5;
 
@@ -82,7 +83,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step0()
 
 		function step1() {
-			simulation.stop()
 			databind25(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -91,7 +91,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {
-			simulation.stop()
 			databind22(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -100,17 +99,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step2()
 
 		function step3() {
-			simulation.stop()
-			// simulation
-			// 	.force('charge', d3.forceManyBody().strength([2]))
-			// 	.force('forceX', d3.forceX(d => 0))
-			// 	.force('forceY', d3.forceY(d => 0))
-			// 	.force('collide', d3.forceCollide(d => 4))
-			// 	.alphaDecay([0.02])
-			//
-			// //Reheat simulation and restart
-			// simulation.alpha(0.9).restart()
-
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -122,7 +110,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step3()
 
 		function step4() {
-			simulation.stop()
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
@@ -145,34 +132,34 @@ window.createGraphic = function(graphicSelector) {
 
 		scaleXyear = d3.scaleLinear()
 			.domain([1960,2018])
-			.range([0+canvasMargin, canvasWidth-canvasMargin])
+			.range([vizDim.left, vizDim.right])
 
 		scaleYvert = d3.scaleLinear() // linear scale for event count by year
 			.domain([0,360])
-			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
+			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
 
 		scaleXdeadliest = d3.scaleSymlog() // log scale for X-axis of deadliest event types
 			.domain([0,450000])
-			.range([0+canvasMargin, canvasWidth-canvasMargin])
+			.range([vizDim.left, vizDim.right])
 
 		scaleYdeadliest = d3.scaleBand()  // band scale for Y-axis of deadliest event types (log scale)
 			.domain(["mass movement (dry)","volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([canvasHeight -canvasMargin, 0+0.3*canvasHeight+canvasMargin])
+			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
 			.paddingInner(0.1)
  			.paddingOuter(0.2)
  			.align(0.5) /// ??
 
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
-			.range([canvasHeight -canvasMargin, 0+canvasMargin])
+			.range([vizDim.bottom, vizDim.top])
 
 		mapGroup = svgBackground.append('g')
-			.attr('width', vizWidth)
-			.attr('height', vizHeight);
+			.attr('width', dispWidth)
+			.attr('height', dispHeight);
 
 		projection = d3.geoNaturalEarth1()
-			.scale(vizWidth / 1.4 / Math.PI)
-			.translate([-30+ vizWidth / 2, vizHeight / 2]);
+			.scale(dispWidth / 1.4 / Math.PI)
+			.translate([-20+ dispWidth / 2, dispHeight / 2]);
 		geoPath = d3.geoPath(projection);
 
 		// draw the map and set the opacity to 0
@@ -185,22 +172,6 @@ window.createGraphic = function(graphicSelector) {
 		    .attr('d', geoPath);
 		});
 
-
-		// initiate the force simulation, then stop it for now
-		simulation = d3.forceSimulation(eventData)
-		var nodes = dataContainer.selectAll("custom.eventCircle")
-			.data(eventsByYearFlat)
-			.join('custom')
-				.attr("class", "eventCircle")
-		// Define each tick of simulation
-		simulation.on('tick', () => {
-			nodes
-				.attr('cx', d => d.x)
-				.attr('cy', d => d.y)
-    	})
-    simulation.stop()
-
-
 	}  // setupCharts
 
 
@@ -211,7 +182,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class", "eventCircle")
 				.attr("cx", d => scaleXyear(d.year) )
 				.attr("cy", d => scaleYvert(d.vertNum) )
-				.attr("r", 7 )
+				.attr("r", 10 )
 				.attr("opacity", 0)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind21()
@@ -225,7 +196,7 @@ window.createGraphic = function(graphicSelector) {
 			.duration(speedFactor*800)
 			.attr("cx", d => scaleXyear(d.year) )
 			.attr("cy", d => scaleYvert(d.vertNum) )
-			.attr("r", 7 )
+			.attr("r", 10 )
 			.attr("fillStyle", d => typeColor(d.disastertype) )
 			.attr("opacity", 0.5)
 	} // databind21B()
@@ -240,9 +211,9 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXdeadliest(d.deaths))
 				.attr("cy", function(d) {
-					return scaleYdeadliest(d.disastertype) - 60 + 120*d.jitter
+					return scaleYdeadliest(d.disastertype) - 80 + 160*d.jitter
 				})
-				.attr("r", 10 )
+				.attr("r", 13 )
 				.attr("opacity", 0.5)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 		var boundLines = dataContainer.selectAll("custom.line")
@@ -252,9 +223,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)+20*d.jitter)
+				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("y1", d => canvasHeight*1.2)
-				.attr("x2", d => scaleXyear(d.year)+20*d.jitter)
+				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -268,9 +239,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => scaleXyear(d.year)-23+46*d.jitter)
+				.attr("cx", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("cy", d => scaleYdeaths(d.deaths))
-				.attr("r", 18 )
+				.attr("r", 24 )
 				.attr("opacity", function(d) {
 					if (d.deaths < deathMin) {
 						return 0
@@ -283,10 +254,10 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-23+46*d.jitter)
-				.attr("y1", d => scaleYdeaths(d.deaths)+18)
-				.attr("x2", d => scaleXyear(d.year)-23+46*d.jitter)
-				.attr("y2", d => canvasHeight-canvasMargin)
+				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
+				.attr("y1", d => scaleYdeaths(d.deaths)+24)
+				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
+				.attr("y2", d => vizDim.bottom)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind23()
@@ -307,8 +278,8 @@ window.createGraphic = function(graphicSelector) {
 						return scaleFactor*projection([d.longitude,d.latitude])[1]
 					}
 				})
-				.attr("r", d => 10*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", d => 0.6)
+				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
+				.attr("opacity", 0.6)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 		var boundLines = dataContainer.selectAll("custom.line")
 			.data(dataToBind)
@@ -316,9 +287,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-23+46*d.jitter)
+				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("y1", d => canvasHeight*1.2)
-				.attr("x2", d => scaleXyear(d.year)-23+46*d.jitter)
+				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -334,7 +305,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleFactor*d.gridX)
 				.attr("cy", d => scaleFactor*d.gridY)
-				.attr("r", 12 ) // must be at least 9 to show up as a circle?
+				.attr("r", 16 ) // must be at least 9 to show up as a circle?
 				.attr("opacity", 0.4)
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind25()
@@ -358,7 +329,7 @@ window.createGraphic = function(graphicSelector) {
 			ctx.moveTo(node.attr('x1'), node.attr('y1'));    // Move the pen to (30, 50)
 			ctx.lineTo(node.attr('x2'), node.attr('y2'));  // Draw a line to (150, 100)
 			ctx.globalAlpha = node.attr("opacity")
-			ctx.lineWidth = 3;
+			ctx.lineWidth = 5;
 			ctx.strokeStyle = node.attr("stroke");
 			ctx.stroke();          // Render the path
 		})
