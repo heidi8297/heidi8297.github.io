@@ -12,7 +12,7 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByYearFlat = [];
 	const canvasWidth = 3000;
 	const canvasHeight = 2400;
-	const canvasMargin = 0.01*canvasWidth;
+	const canvasMargin = 0.02*canvasWidth;
 
 	// this should be the same size as defined in CSS
 	const vizWidth = 1000;
@@ -240,8 +240,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleXdeadliest(d.deaths))
 				.attr("cy", function(d) {
-					displacement = Math.random()
-					return scaleYdeadliest(d.disastertype) - 60 + 120*displacement
+					return scaleYdeadliest(d.disastertype) - 60 + 120*d.jitter
 				})
 				.attr("r", 10 )
 				.attr("opacity", 0.5)
@@ -254,9 +253,9 @@ window.createGraphic = function(graphicSelector) {
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("x1", d => scaleXyear(d.year)+20*d.jitter)
-				.attr("y1", d => canvasHeight-canvasMargin)
+				.attr("y1", d => canvasHeight*1.2)
 				.attr("x2", d => scaleXyear(d.year)+20*d.jitter)
-				.attr("y2", d => canvasHeight-canvasMargin)
+				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind22()
@@ -269,7 +268,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => scaleXyear(d.year)-12+24*d.jitter)
+				.attr("cx", d => scaleXyear(d.year)-23+46*d.jitter)
 				.attr("cy", d => scaleYdeaths(d.deaths))
 				.attr("r", 18 )
 				.attr("opacity", function(d) {
@@ -284,9 +283,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-12+24*d.jitter)
+				.attr("x1", d => scaleXyear(d.year)-23+46*d.jitter)
 				.attr("y1", d => scaleYdeaths(d.deaths)+18)
-				.attr("x2", d => scaleXyear(d.year)-12+24*d.jitter)
+				.attr("x2", d => scaleXyear(d.year)-23+46*d.jitter)
 				.attr("y2", d => canvasHeight-canvasMargin)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
@@ -317,10 +316,10 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-12+24*d.jitter)
-				.attr("y1", d => canvasHeight-canvasMargin)
-				.attr("x2", d => scaleXyear(d.year)-12+24*d.jitter)
-				.attr("y2", d => canvasHeight-canvasMargin)
+				.attr("x1", d => scaleXyear(d.year)-23+46*d.jitter)
+				.attr("y1", d => canvasHeight*1.2)
+				.attr("x2", d => scaleXyear(d.year)-23+46*d.jitter)
+				.attr("y2", d => canvasHeight*1.2)
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind24()
@@ -426,6 +425,8 @@ window.createGraphic = function(graphicSelector) {
 		eventsByType = Array.from(
 			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
 		);
+
+		console.log(eventsByType)
 
 		// get total death toll by disaster type
 		eventTypesByDeathTolls = Array.from(
