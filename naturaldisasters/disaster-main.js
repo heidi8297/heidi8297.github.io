@@ -209,7 +209,6 @@ window.createGraphic = function(graphicSelector) {
 			.attr("cx", d => scaleXyear(d.year) )
 			.attr("cy", d => scaleYvert(d.vertNum) )
 			.attr("r", 10 )
-			.attr("fillStyle", d => typeColor(d.disastertype) )
 			.attr("opacity", 0.5)
 	} // databind21B()
 
@@ -227,7 +226,6 @@ window.createGraphic = function(graphicSelector) {
 				})
 				.attr("r", 13 )
 				.attr("opacity", 0.5)
-				.attr("fillStyle", d => typeColor(d.disastertype) )
 		var boundLines = dataContainer.selectAll("custom.line")
 			.data(dataToBind)
 			.join("custom")
@@ -259,7 +257,7 @@ window.createGraphic = function(graphicSelector) {
 						return 0
 					} else { return 0.6 }
 				})
-				.attr("fillStyle", d => typeColor(d.disastertype) );
+				//.attr("fillStyle", d => typeColor(d.disastertype) );
 		var boundLines = dataContainer.selectAll("custom.line")
 			.data(dataToBind)
 			.join("custom")
@@ -292,7 +290,6 @@ window.createGraphic = function(graphicSelector) {
 				})
 				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.6)
-				.attr("fillStyle", d => typeColor(d.disastertype) )
 		var boundLines = dataContainer.selectAll("custom.line")
 			.data(dataToBind)
 			.join("custom")
@@ -319,7 +316,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cy", d => scaleFactor*d.gridY)
 				.attr("r", 16 ) // must be at least 9 to show up as a circle?
 				.attr("opacity", 0.4)
-				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind25()
 
 	function databind26(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
@@ -334,7 +330,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cy", d => canvasHeight*d.jitter2)
 				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
 				.attr("opacity", 0.3)
-				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind26()
 
 
@@ -342,7 +337,7 @@ window.createGraphic = function(graphicSelector) {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
 		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
-			ctx.fillStyle = node.attr('fillStyle')   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+			ctx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
 			ctx.globalAlpha = node.attr("opacity")
 			ctx.beginPath();
 			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
