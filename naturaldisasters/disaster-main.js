@@ -120,6 +120,18 @@ window.createGraphic = function(graphicSelector) {
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step4()
 
+		function step5() {
+			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
+			databind26(eventsByYearFlat);
+			var t = d3.timer(function(elapsed) {
+				drawEventElements();
+				if (elapsed > speedFactor*850) t.stop();
+			}); // Timer running the draw function repeatedly for 850 ms.
+		}, // step5()
+
+
 	] // steps
 
 	// update our chart
@@ -310,6 +322,21 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fillStyle", d => typeColor(d.disastertype) )
 	} // databind25()
 
+	function databind26(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => canvasWidth*d.jitter)
+				.attr("cy", d => canvasHeight*d.jitter2)
+				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
+				.attr("opacity", 0.3)
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+	} // databind26()
+
 
 	function drawEventElements() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
@@ -386,7 +413,8 @@ window.createGraphic = function(graphicSelector) {
 					startDate: d3.min(v, d => d.startDate),
 					totalAffected: d3.min(v, d => d.totalAffected),
 					otherNotes: d3.min(v, d => d.otherNotes),
-					jitter: Math.random()
+					jitter: Math.random(),
+					jitter2: Math.random()
 		  	};
 			},
 		  d => d.disasterno
