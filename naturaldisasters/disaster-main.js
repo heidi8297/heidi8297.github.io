@@ -170,11 +170,11 @@ window.createGraphic = function(graphicSelector) {
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step8()
 
-		function step9() {  // pane NINE - placeholder
+		function step9() {  // pane NINE
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind8(eventsByYearFlat);
+			databind9(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -185,7 +185,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind10(eventsByYearFlat);
+			databind9(eventsByYearFlat,0);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -414,6 +414,20 @@ window.createGraphic = function(graphicSelector) {
 				.attr("opacity", 0)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind8()
+
+	function databind9(dataToBind, deathMin=37000) {  // deaths top 15 by GDP
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
+				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : canvasHeight/2)
+				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
+				.attr("opacity", 0.6)
+	} // databind9()
 
 	function databind10(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
