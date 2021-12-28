@@ -75,7 +75,7 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {
-			databind21B(eventsByYearFlat);
+			databind1B(eventsByYearFlat);   //  databind1B
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -83,7 +83,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step0()
 
 		function step1() {
-			databind25(eventsByYearFlat);
+			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -187,30 +187,42 @@ window.createGraphic = function(graphicSelector) {
 	}  // setupCharts
 
 
-	function databind21(dataToBind) {  // events by year, circle chart
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join('custom')
-				.attr("class", "eventCircle")
-				.attr("cx", d => scaleXyear(d.year) )
-				.attr("cy", d => scaleYvert(d.vertNum) )
-				.attr("r", 10 )
-				.attr("opacity", 0)
-				.attr("fillStyle", d => typeColor(d.disastertype) )
-	} // databind21()
+	//----------------------------------------------------------------------------
+	//  DATA BINDING FUNCTIONS
+	//----------------------------------------------------------------------------
 
-	function databind21B(dataToBind) {  // events by year transition
+	// these functions bind the data to the "virtual" DOM elements and define the
+	//   attributes and transitions that will be used to generate each step in the
+	//   visualization.
+
+	// the first step is split into two functions so that we can transition them in
+	//   from opacity = 0 on page load, but then keep the transitions with higher opacity
+	//   for subsequent (scroll-activated) transitions (e.g. if the user scrolls back up)
+	function databind1A(dataToBind) {  // grid of all events - initialize and set opacity to 0
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
-			.join('custom')
-			.transition()
-			.ease(d3.easeQuadInOut)
-			.duration(speedFactor*800)
-			.attr("cx", d => scaleXyear(d.year) )
-			.attr("cy", d => scaleYvert(d.vertNum) )
-			.attr("r", 10 )
-			.attr("opacity", 0.5)
-	} // databind21B()
+			.join("custom")
+				.attr("class", "eventCircle")
+				.attr("cx", d => scaleFactor*d.gridX)
+				.attr("cy", d => scaleFactor*d.gridY)
+				.attr("r", 16 ) // must be at least 9 to show up as a circle?
+				.attr("fillStyle", d => typeColor(d.disastertype) )
+				.attr("opacity", 0)
+	} // databind1A()
+
+	function databind1B(dataToBind) {  // grid of all events - transition
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => scaleFactor*d.gridX)
+				.attr("cy", d => scaleFactor*d.gridY)
+				.attr("r", 16 ) // must be at least 9 to show up as a circle?
+				.attr("opacity", 0.4)
+	} // databind1B()
 
 	function databind22(dataToBind) {  // deadliest individual events / log scale
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
@@ -304,20 +316,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind24()
 
-	function databind25(dataToBind, deathMin=0) {  // grid of all events
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => scaleFactor*d.gridX)
-				.attr("cy", d => scaleFactor*d.gridY)
-				.attr("r", 16 ) // must be at least 9 to show up as a circle?
-				.attr("opacity", 0.4)
-	} // databind25()
-
 	function databind26(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
@@ -329,7 +327,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cx", d => canvasWidth*d.jitter)
 				.attr("cy", d => canvasHeight*d.jitter2)
 				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
-				.attr("opacity", 0.3)
+				.attr("opacity", 0.33)
 	} // databind26()
 
 
@@ -359,8 +357,8 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
-		databind21(eventsByYearFlat)  // create event circles, make invisible
-		databind21B(eventsByYearFlat) // transition event circles into view
+		databind1A(eventsByYearFlat)  // create event circles, make invisible       databind1A
+		databind1B(eventsByYearFlat) // transition event circles into view 				databind1B
 		drawEventElements()
 		update(0)
 	} // init()
