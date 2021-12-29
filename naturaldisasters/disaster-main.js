@@ -172,7 +172,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind3(eventsByYearFlat);
+			databind4(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -183,7 +183,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind3(eventsByYearFlat);
+			databind5(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -448,6 +448,34 @@ window.createGraphic = function(graphicSelector) {
 				.attr("r", d => 0.8*d.geoIdCount )
 				.attr("opacity", 0.53)
 	} // databind3()
+
+	function databind4(dataToBind) {  // deadliest disasters overall - currently just a placeholder
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
+				.attr("cy", d => canvasHeight*d.jitter2)
+				.attr("r", d => 2*d.geoIdCount )
+				.attr("opacity", 0.6)
+	} // databind4()
+
+	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
+				.attr("cy", d => canvasHeight*d.jitter2)
+				.attr("r", d => 2*d.geoIdCount )
+				.attr("opacity", 0.6)
+	} // databind5()
 
 	function databind6(dataToBind) {  // deadliest individual events / log scale
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
