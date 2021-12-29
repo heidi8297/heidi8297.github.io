@@ -1,5 +1,9 @@
 
 window.createGraphic = function(graphicSelector) {
+
+	//----------------------------------------------------------------------------
+	// DEFINE INITIAL VARIABLES AND FUNCTIONS
+	//----------------------------------------------------------------------------
 	let data = [];
 	let mapData = [];
 	let eventData = [];
@@ -18,31 +22,9 @@ window.createGraphic = function(graphicSelector) {
 	// this should be the same size as defined in CSS
 	const dispWidth = 1000;
 	const dispHeight = 800;
-
 	const scaleFactor = canvasWidth/dispWidth;
 
 	const speedFactor = 1.5;
-
-	// create an svg which we will use for our world map / background image
-	var svgBackground = d3.select("#viz-container").append('svg');
-
-	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
-	//   the latter of which will be used for rendering our elements to the canvas
-	// note that defining the width/height of the drawing space is distinct from
-	//   setting the size in CSS
-	var canvas = d3.select('#viz-container')
-		.append('canvas')
-		.attr('width', canvasWidth)
-		.attr('height', canvasHeight) ;
-	var ctx = canvas.node().getContext('2d');
-
-	// create a 'custom' element that will be part of a 'virtual' DOM
-	//   we will use this to bind our data without cluttering the actual DOM
-	var detachedContainer = document.createElement("custom");
-	var dataContainer = d3.select(detachedContainer);
-
-	// create an svg which we will use for axes and/or other plotting needs
-	var svgForeground = d3.select("#viz-container").append('svg');
 
 	// define a sort order by disaster type, to be used in stacked circle chart
 	const typeSortNum = d3.scaleOrdinal()
@@ -89,10 +71,42 @@ window.createGraphic = function(graphicSelector) {
 	// define the coordinates of some text boxes to sit inside the "grid" view of each event
 	const textRectangles = [
 		{'x1':198, 'x2':481, 'y1':104, 'y2':202},
-		{'x1':416, 'x2':797, 'y1':252, 'y2':340},
-		{'x1':101, 'x2':451, 'y1':400, 'y2':483},
-		{'x1':459, 'x2':877, 'y1':542, 'y2':624}
+		{'x1':420, 'x2':790, 'y1':252, 'y2':350},
+		{'x1':101, 'x2':454, 'y1':410, 'y2':507},
+		{'x1':469, 'x2':900, 'y1':579, 'y2':667}
 	]
+
+
+	//----------------------------------------------------------------------------
+	// INITIALIZE DRAWING SPACES
+	//----------------------------------------------------------------------------
+
+	// create an svg which we will use for our world map / background image
+	var svgBackground = d3.select("#viz-container").append('svg');
+
+	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
+	//   the latter of which will be used for rendering our elements to the canvas
+	// note that defining the width/height of the drawing space is distinct from
+	//   setting the size in CSS
+	var canvas = d3.select('#viz-container')
+		.append('canvas')
+		.attr('width', canvasWidth)
+		.attr('height', canvasHeight) ;
+	var ctx = canvas.node().getContext('2d');
+
+	// create a 'custom' element that will be part of a 'virtual' DOM
+	//   we will use this to bind our data without cluttering the actual DOM
+	var detachedContainer = document.createElement("custom");
+	var dataContainer = d3.select(detachedContainer);
+
+	// create an svg which we will use for axes and/or other plotting needs
+	var svgForeground = d3.select("#viz-container").append('svg');
+
+
+
+	//----------------------------------------------------------------------------
+	// STEPS / TRANSITIONS
+	//----------------------------------------------------------------------------
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -228,6 +242,12 @@ window.createGraphic = function(graphicSelector) {
 
 	] // steps
 
+
+
+	//----------------------------------------------------------------------------
+	// UPDATE / SETUP FUNCTIONS
+	//----------------------------------------------------------------------------
+
 	// update our chart
 	function update(step) {
 		steps[step].call()
@@ -279,6 +299,15 @@ window.createGraphic = function(graphicSelector) {
 		});
 
 	}  // setupCharts
+
+	function init() {
+		setupCharts()
+		databind1A(eventsByYearFlat)  // create event circles, make invisible
+		databind1B(eventsByYearFlat) // transition event circles into view
+		drawEventElements()
+		update(0)
+	} // init()
+
 
 
 	//----------------------------------------------------------------------------
@@ -446,7 +475,7 @@ window.createGraphic = function(graphicSelector) {
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : canvasHeight/2)
+				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : 3*canvasHeight/4)
 				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.6)
 	} // databind9()
@@ -464,7 +493,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
 				.attr("opacity", 0.33)
 	} // databind10()
-
 
 	function drawEventElements() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
@@ -490,13 +518,11 @@ window.createGraphic = function(graphicSelector) {
 		})
 	} // drawEventElements()
 
-	function init() {
-		setupCharts()
-		databind1A(eventsByYearFlat)  // create event circles, make invisible
-		databind1B(eventsByYearFlat) // transition event circles into view
-		drawEventElements()
-		update(0)
-	} // init()
+
+
+	//----------------------------------------------------------------------------
+	//  DATA WRANGLING
+	//----------------------------------------------------------------------------
 
 	// load/parse the main data file and store as 'data'
 	// then set up the charts and kick off the updater function
@@ -614,6 +640,7 @@ window.createGraphic = function(graphicSelector) {
 
 		});
 
+		// INITIALIZE THE VISUALIZATION
 		init()
 
 	})   // end d3.csv.then
