@@ -23,6 +23,13 @@ window.createGraphic = function(graphicSelector) {
 	const dispWidth = 1000;
 	const dispHeight = 800;
 	const scaleFactor = canvasWidth/dispWidth;
+	const dispMargin = ({
+		top: Math.floor(margin.top/scaleFactor),
+		right: Math.floor(margin.right/scaleFactor),
+		bottom: Math.floor(margin.bottom/scaleFactor),
+		left: Math.floor(margin.left/scaleFactor)
+	})
+	const dispDim = ({top: 0+dispMargin.top, right: dispWidth-dispMargin.right, bottom: dispHeight-dispMargin.bottom, left: 0+dispMargin.left})
 
 	const speedFactor = 1.5;
 
@@ -256,6 +263,7 @@ window.createGraphic = function(graphicSelector) {
 	// initiate the scales and background map
 	function setupCharts() {
 
+		// CANVAS setup
 		scaleXyear = d3.scaleLinear()
 			.domain([1960,2018])
 			.range([vizDim.left, vizDim.right])
@@ -269,7 +277,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([vizDim.left, vizDim.right])
 
 		scaleYdeadliest = d3.scaleBand()  // band scale for Y-axis of deadliest event types (log scale)
-			.domain(["mass movement (dry)","volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
+			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
 			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
 			.paddingInner(0.1)
  			.paddingOuter(0.2)
@@ -278,6 +286,16 @@ window.createGraphic = function(graphicSelector) {
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
 			.range([vizDim.bottom, vizDim.top])
+
+		// SVG setup
+		scaleXeventCount = d3.scaleLinear()
+			.domain([0, d3.max(eventsByType,d=>d[1])])
+			.range([ dispDim.left,dispDim.right ]);
+
+		scaleYtypes = d3.scaleBand()
+			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
+			.range([ dispDim.bottom, dispDim.top ])
+			.padding(.25);
 
 		mapGroup = svgBackground.append('g')
 			.attr('width', dispWidth)
@@ -298,6 +316,51 @@ window.createGraphic = function(graphicSelector) {
 		    .attr('d', geoPath);
 		});
 
+		// create a bar chart of top job titles
+		var barMargin = {top: 20, right: 10, bottom: 8, left: 10};
+		eventsByTypeSvg = svgForeground.append("g")
+			.attr("class", "eventsByType")
+			.attr("transform", "translate(" + barMargin.left + "," + barMargin.top + ")");
+
+		// background bars
+		eventsByTypeSvg.selectAll("rect.typeBg")
+			.data(eventsByType)
+			.join("rect")
+			.attr("class","typeBg")
+			.attr("x", d => scaleXeventCount(0) )
+			.attr("y", d => scaleYtypes(d[0]) )
+			.attr("width", vizDim.right-vizDim.left)
+			.attr("height", scaleYtypes.bandwidth() )
+			.attr("fill","#EFE8E4")
+			.attr("opacity", 0.1);
+
+		//Bars
+		eventsByTypeSvg.selectAll("rect.typeCounts")
+			.data(eventsByType)
+			.join("rect")
+			.attr("class","typeCounts")
+			.attr("x", d => scaleXeventCount(0) )
+			.attr("y", d => scaleYtypes(d[0]) )
+			.attr("width", d => scaleXeventCount(d[1]) )
+			.attr("height", scaleYtypes.bandwidth() )
+			.attr("fill", d => typeColor(d[0].disastertype) )
+			.attr("opacity", 0.1);
+
+		// add job titles to the bars
+		// barSvg.selectAll("text")
+		// 	.data(role12Titles.slice(0, 8))
+		// 	.join("text")
+		// 	.text(d=> d[0] + "  -  ("+d[1]+")")
+		// 	.attr("x", 2)
+		// 	.attr("y", d => y(d[0])+6 );
+
+		// roleTitleSvg.append("text")
+		// 	.attr("class","barTitle")
+		// 	.text("TOP JOB TITLES (FTE)");
+
+
+
+
 	}  // setupCharts
 
 	function init() {
@@ -311,7 +374,7 @@ window.createGraphic = function(graphicSelector) {
 
 
 	//----------------------------------------------------------------------------
-	//  DATA BINDING FUNCTIONS
+	//  DATA BINDING AND DRAWING FUNCTIONS
 	//----------------------------------------------------------------------------
 
 	// these functions bind the data to the "virtual" DOM elements and define the
