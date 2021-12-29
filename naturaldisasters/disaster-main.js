@@ -58,17 +58,18 @@ window.createGraphic = function(graphicSelector) {
 		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
 		.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
 
-	// create an svg path in a teardrop shape of specified size and orientation
-	function teardrop(size=10, orientation=0) {
+	// create an svg path in a teardrop shape of specified size, spacer and orientation
+	// size = radius of circle, spacer = pixels from origin
+	function teardrop(size=10, spacer=3, orientation=0) {
 		switch (orientation) {
 		  case 0:  // top right from origin    "M0,0 l0,-10 a10,10 0 1,1 10,10 l-10,0"
-		    return `M0,0 l0,-${size} a${size},${size} 0 1,1 ${size},${size} l-${size},0`;
+		    return `M${spacer},-${spacer} l0,-${size} a${size},${size} 0 1,1 ${size},${size} l-${size},0`;
 		  case 1:  // bottom right   				"M0,0 l0,10 a10,10 0 1,0 10,-10 l-10,0"
-		    return `M0,0 l0,${size} a${size},${size} 0 1,0 ${size},-${size} l-${size},0`;
+		    return `M${spacer},${spacer} l0,${size} a${size},${size} 0 1,0 ${size},-${size} l-${size},0`;
 		  case 2:  // bottom left   "M0,0 l0,10 a10,10 0 1,1 -10,-10 l10,0"
-				return `M0,0 l0,${size} a${size},${size} 0 1,1 -${size},-${size} l${size},0`;
+				return `M-${spacer},${spacer} l0,${size} a${size},${size} 0 1,1 -${size},-${size} l${size},0`;
 		  case 3:  // top left    "M0,0 l0,-10 a10,10 0 1,0 -10,10 l10,0"
-				return `M0,0 l0,-${size} a${size},${size} 0 1,0 -${size},${size} l${size},0`;
+				return `M-${spacer},-${spacer} l0,-${size} a${size},${size} 0 1,0 -${size},${size} l${size},0`;
 		}
 	}
 
