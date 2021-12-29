@@ -282,16 +282,15 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,360])
 			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
 
-		scaleXdeadliest = d3.scaleSymlog() // log scale for X-axis of deadliest event types
-			.domain([0,450000])
-			.range([vizDim.left, vizDim.right])
-
-		scaleYdeadliest = d3.scaleBand()  // band scale for Y-axis of deadliest event types (log scale)
+		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
 			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
+			.range([vizDim.left, vizDim.right])
 			.paddingInner(0.1)
- 			.paddingOuter(0.2)
- 			.align(0.5) /// ??
+ 			.paddingOuter(0.1)
+
+		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
+			.domain([0,450000])
+			.range([vizDim.bottom, vizDim.top])
 
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
@@ -328,7 +327,7 @@ window.createGraphic = function(graphicSelector) {
 		});
 
 		// create a bar chart of disaster counts by type
-		eventsByTypeSvg = svgForeground.append("g")
+		eventsByTypeSvg = svgBackground.append("g")
 			.attr("class", "eventsByType")
 			.attr("opacity",0)
 
@@ -354,7 +353,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("width", d => scaleXeventCount(d[1]) )
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill", d => typeColor(d[0]) )
-			.attr("opacity", 0.5);
+			.attr("opacity", 0.7);
 
 		// add disaster type labels to the bars
 		eventsByTypeSvg.selectAll("text")
@@ -362,7 +361,7 @@ window.createGraphic = function(graphicSelector) {
 			.join("text")
 			.text(d => d[0])
 			.attr("x", dispDim.left)
-			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+15 );
+			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
 
 		eventsByTypeSvg.selectAll("text.count")
 			.data(eventsByType)
@@ -429,10 +428,10 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => d.jitter2*d.typeTotal)
+				.attr("cx", d => 5+scaleFactor*scaleXeventCount(d.jitter2*(d.typeTotal+120)))
 				.attr("cy", d => scaleFactor*(scaleYtypes(d.disastertype)+scaleYtypes.bandwidth()*d.jitter))
 				.attr("r", d => 16 )
-				.attr("opacity", 0.3)
+				.attr("opacity", 0.4)
 	} // databind2()
 
 	function databind3(dataToBind) {  // disasters map animation - currently just a placeholder
@@ -445,7 +444,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
 				.attr("cy", d => scaleFactor*projection([d.longitude,d.latitude])[1] )
-				.attr("r", d => 0.8*d.geoIdCount )
+				.attr("r", d => 6*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.53)
 	} // databind3()
 
@@ -459,8 +458,8 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
 				.attr("cy", d => canvasHeight*d.jitter2)
-				.attr("r", d => 2*d.geoIdCount )
-				.attr("opacity", 0.6)
+				.attr("r", d => 10*Math.sqrt(d.geoIdCount) )
+				.attr("opacity", 0.5)
 	} // databind4()
 
 	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
@@ -485,9 +484,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => scaleXdeadliest(d.deaths))
-				.attr("cy", function(d) {
-					return scaleYdeadliest(d.disastertype) - 80 + 160*d.jitter
+				.attr("cy", d => scaleYdeadliest(d.deaths))
+				.attr("cx", function(d) {
+					return scaleXdeadliest(d.disastertype) + 320*d.jitter
 				})
 				.attr("r", 13 )
 				.attr("opacity", 0.5)
