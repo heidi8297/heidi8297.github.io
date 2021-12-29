@@ -85,6 +85,9 @@ window.createGraphic = function(graphicSelector) {
 		return result;
 	}
 
+	// define the coordinates of some text boxes to sit inside the "grid" view of each event
+	const textRectangles = [{'x1':198, 'x2':481, 'y1':110, 'y2':202}]
+
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
@@ -578,14 +581,31 @@ window.createGraphic = function(graphicSelector) {
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
+		let manipulatedIndex = 0;
 		eventsByYearFlat.forEach(function(event, index, theArray) {
-			var rowNum = Math.floor(index/rowCount);
-			if (rowNum%2 == 0) {
-				theArray[index].gridX = 6+(index*9)%(rowCount*9)
-			} else {
-				theArray[index].gridX = 11+(index*9)%(rowCount*9) // shift odd rows by 5 pixels to create a different/compact grid type
+			let xySet = false;
+			while (xySet === false) {
+				let rowNum = Math.floor(manipulatedIndex/rowCount);
+				let xCoor = 0;
+				let yCoor = 0;
+				if (rowNum%2 == 0) {
+					//theArray[index].gridX = 6+(index*9)%(rowCount*9)
+					xCoor = 6+(manipulatedIndex*9)%(rowCount*9)
+				} else {
+					//theArray[index].gridX = 11+(index*9)%(rowCount*9) // shift odd rows by 5 pixels to create a different/compact grid type
+					xCoor = 11+(manipulatedIndex*9)%(rowCount*9)
+				}
+				//theArray[index].gridY = 8+8*Math.floor(index/rowCount)
+				yCoor = 8+8*Math.floor(manipulatedIndex/rowCount)
+
+				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
+					xySet = true;
+					theArray[index].gridX = xCoor;
+					theArray[index].gridY = yCoor;
+				}
+				manipulatedIndex += 1
 			}
-			theArray[index].gridY = 8+8*Math.floor(index/rowCount)
+
 		});
 
 		init()
