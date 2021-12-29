@@ -86,7 +86,12 @@ window.createGraphic = function(graphicSelector) {
 	}
 
 	// define the coordinates of some text boxes to sit inside the "grid" view of each event
-	const textRectangles = [{'x1':198, 'x2':481, 'y1':110, 'y2':202}]
+	const textRectangles = [
+		{'x1':198, 'x2':481, 'y1':104, 'y2':202},
+		{'x1':416, 'x2':797, 'y1':252, 'y2':340},
+		{'x1':101, 'x2':451, 'y1':400, 'y2':483},
+		{'x1':459, 'x2':877, 'y1':542, 'y2':624}
+	]
 
 	// actions to take on each step of our scroll-driven story
 	var steps = [
@@ -581,7 +586,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
-		let manipulatedIndex = 0;
+		let manipulatedIndex = 0; // we use this to ensure no circles are overlapping the specified textRectangles
 		eventsByYearFlat.forEach(function(event, index, theArray) {
 			let xySet = false;
 			while (xySet === false) {
@@ -589,15 +594,15 @@ window.createGraphic = function(graphicSelector) {
 				let xCoor = 0;
 				let yCoor = 0;
 				if (rowNum%2 == 0) {
-					//theArray[index].gridX = 6+(index*9)%(rowCount*9)
 					xCoor = 6+(manipulatedIndex*9)%(rowCount*9)
-				} else {
-					//theArray[index].gridX = 11+(index*9)%(rowCount*9) // shift odd rows by 5 pixels to create a different/compact grid type
+				} else {  // shift odd rows by 5 pixels to create a different/compact grid type
 					xCoor = 11+(manipulatedIndex*9)%(rowCount*9)
 				}
-				//theArray[index].gridY = 8+8*Math.floor(index/rowCount)
 				yCoor = 8+8*Math.floor(manipulatedIndex/rowCount)
 
+				// if the x,y coordinates fall INSIDE one of the specified textRectangles, then
+				//   increment the manipulatedIndex and try again.  this will leave the textRectangles
+				//   clear of circles so we can add text
 				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
 					xySet = true;
 					theArray[index].gridX = xCoor;
