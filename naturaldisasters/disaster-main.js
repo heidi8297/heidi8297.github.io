@@ -31,6 +31,7 @@ window.createGraphic = function(graphicSelector) {
 	})
 	const dispDim = ({top: 0+dispMargin.top, right: dispWidth-dispMargin.right, bottom: dispHeight-dispMargin.bottom, left: 0+dispMargin.left})
 
+	console.log(dispDim);
 	const speedFactor = 1.5;
 
 	// define a sort order by disaster type, to be used in stacked circle chart
@@ -118,6 +119,9 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
+			eventsByTypeSvg.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -129,6 +133,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+			eventsByTypeSvg.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0.8)
 			databind2(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -140,6 +147,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
+			eventsByTypeSvg.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			databind3(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -290,12 +300,13 @@ window.createGraphic = function(graphicSelector) {
 		// SVG setup
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d=>d[1])])
-			.range([ dispDim.left,dispDim.right ]);
+			.range([ dispDim.left, dispDim.right - dispDim.left - 60 ]);
 
 		scaleYtypes = d3.scaleBand()
-			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([ dispDim.bottom, dispDim.top ])
-			.padding(.25);
+			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
+			.range([ dispDim.bottom - 5 , dispDim.top ])
+			.paddingInner(0.35)
+			.paddingOuter(0.40);
 
 		mapGroup = svgBackground.append('g')
 			.attr('width', dispWidth)
@@ -316,11 +327,10 @@ window.createGraphic = function(graphicSelector) {
 		    .attr('d', geoPath);
 		});
 
-		// create a bar chart of top job titles
-		var barMargin = {top: 20, right: 10, bottom: 8, left: 10};
+		// create a bar chart of disaster counts by type
 		eventsByTypeSvg = svgForeground.append("g")
 			.attr("class", "eventsByType")
-			.attr("transform", "translate(" + barMargin.left + "," + barMargin.top + ")");
+			.attr("opacity",0)
 
 		// background bars
 		eventsByTypeSvg.selectAll("rect.typeBg")
@@ -329,10 +339,10 @@ window.createGraphic = function(graphicSelector) {
 			.attr("class","typeBg")
 			.attr("x", d => scaleXeventCount(0) )
 			.attr("y", d => scaleYtypes(d[0]) )
-			.attr("width", vizDim.right-vizDim.left)
+			.attr("width", dispDim.right-dispDim.left )
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill","#EFE8E4")
-			.attr("opacity", 0.1);
+			.attr("opacity", 0.9);
 
 		//Bars
 		eventsByTypeSvg.selectAll("rect.typeCounts")
@@ -343,23 +353,24 @@ window.createGraphic = function(graphicSelector) {
 			.attr("y", d => scaleYtypes(d[0]) )
 			.attr("width", d => scaleXeventCount(d[1]) )
 			.attr("height", scaleYtypes.bandwidth() )
-			.attr("fill", d => typeColor(d[0].disastertype) )
-			.attr("opacity", 0.1);
+			.attr("fill", d => typeColor(d[0]) )
+			.attr("opacity", 0.5);
 
-		// add job titles to the bars
-		// barSvg.selectAll("text")
-		// 	.data(role12Titles.slice(0, 8))
-		// 	.join("text")
-		// 	.text(d=> d[0] + "  -  ("+d[1]+")")
-		// 	.attr("x", 2)
-		// 	.attr("y", d => y(d[0])+6 );
+		// add disaster type labels to the bars
+		eventsByTypeSvg.selectAll("text")
+			.data(eventsByType)
+			.join("text")
+			.text(d => d[0])
+			.attr("x", dispDim.left)
+			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+15 );
 
-		// roleTitleSvg.append("text")
-		// 	.attr("class","barTitle")
-		// 	.text("TOP JOB TITLES (FTE)");
-
-
-
+		eventsByTypeSvg.selectAll("text.count")
+			.data(eventsByType)
+			.join("text")
+			.attr("class","count")
+			.text(d => d[1])
+			.attr("x", d => dispDim.left+scaleXeventCount(d[1])+5 )
+			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
 
 	}  // setupCharts
 
@@ -418,10 +429,10 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
-				.attr("cy", d => canvasHeight*d.jitter2)
-				.attr("r", d => 2*d.geoIdCount )
-				.attr("opacity", 0.53)
+				// .attr("cx", d => canvasWidth*d.jitter*d.jitter)
+				// .attr("cy", d => canvasHeight*d.jitter2)
+				// .attr("r", d => 2*d.geoIdCount )
+				.attr("opacity", 0)
 	} // databind2()
 
 	function databind3(dataToBind) {  // disasters map animation - currently just a placeholder
@@ -640,7 +651,7 @@ window.createGraphic = function(graphicSelector) {
 		// count total events of each type
 		eventsByType = Array.from(
 			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
-		);
+		).sort((a,b) => d3.descending(+a[1], +b[1]) );
 
 		console.log(eventsByType)
 
