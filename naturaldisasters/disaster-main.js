@@ -31,7 +31,6 @@ window.createGraphic = function(graphicSelector) {
 	})
 	const dispDim = ({top: 0+dispMargin.top, right: dispWidth-dispMargin.right, bottom: dispHeight-dispMargin.bottom, left: 0+dispMargin.left})
 
-	console.log(dispDim);
 	const speedFactor = 1.5;
 
 	// define a sort order by disaster type, to be used in stacked circle chart
@@ -83,6 +82,34 @@ window.createGraphic = function(graphicSelector) {
 		{'x1':101, 'x2':454, 'y1':410, 'y2':507},
 		{'x1':469, 'x2':900, 'y1':579, 'y2':667}
 	]
+
+	// define custom margins for each pane
+	function margins(paneNum, units = 0) {
+	// paneNum is an integer from 1-10, units = 0 for canvas, 1 for svg
+	// returns an object of the form {top: 120, right: 120, bottom: 120, left: 120}
+	// usage:  margins(2,1).right  = give me the righthand margin for the 2nd pane in svg units
+		let fScale;
+		units === 0 ? fScale = scaleFactor : fScale = 1 ;
+		if (paneNum === 2) { // bar chart - event count by type
+			return {top: fScale*30, right: fScale*30, bottom: fScale*33, left: fScale*30}
+		}
+
+		// default margins
+		return {top: fScale*30, right: fScale*30, bottom: fScale*30, left: fScale*30}
+	}
+
+	// complementary function to the one above, but returns the actual values of left and right instead of the margins
+	function paneDim(paneNum, units = 0) {
+		let draw;
+		units === 0 ? draw = {right: canvasWidth, bottom: canvasHeight} : draw = {right: dispWidth, bottom: dispHeight}
+		return {
+			top: margins(paneNum, units).top,
+			right: draw.right - margins(paneNum, units).right,
+			bottom: draw.bottom - margins(paneNum, units).bottom,
+			left: margins(paneNum, units).left
+		}
+	}
+
 
 
 	//----------------------------------------------------------------------------
@@ -299,11 +326,11 @@ window.createGraphic = function(graphicSelector) {
 		// SVG setup
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d=>d[1])])
-			.range([ dispDim.left, dispDim.right - dispDim.left - 60 ]);
+			.range([ paneDim(2,1).left, paneDim(2,1).right - paneDim(2,1).left - 60 ]); // 60 makes space for the label
 
 		scaleYtypes = d3.scaleBand()
 			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
-			.range([ dispDim.bottom - 5 , dispDim.top ])
+			.range([ dispDim.bottom - 10 , dispDim.top ])
 			.paddingInner(0.35)
 			.paddingOuter(0.40);
 
