@@ -72,6 +72,19 @@ window.createGraphic = function(graphicSelector) {
 		}
 	}
 
+	// given a set of x y coordinates and a set of rectangular shapes (specified by x1 x2 y1 y2)
+	//   determine if the set of x y coordinates falls inside of any of the rectangular shapes
+	// this function will be used in the styling of the opening (grid) view of each event
+	function insideTheWalls(x,y,rectangles) {
+	// x,y = numbers, rectangles = array of objects where each object = [{x1: 1, x2: 3, y1: 3, y2: 4}]
+		let result = false;
+		rectangles.forEach(function(rect) {
+			// check if x,y falls inside the confines of rect
+			if (x >= rect['x1'] && x <= rect['x2'] && y >= rect['y1'] && y <= rect['y2']) {result = true}
+		})
+		return result;
+	}
+
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
