@@ -429,10 +429,10 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				// .attr("cx", d => canvasWidth*d.jitter*d.jitter)
-				// .attr("cy", d => canvasHeight*d.jitter2)
-				// .attr("r", d => 2*d.geoIdCount )
-				.attr("opacity", 0)
+				.attr("cx", d => d.jitter2*d.typeTotal)
+				.attr("cy", d => scaleFactor*(scaleYtypes(d.disastertype)+scaleYtypes.bandwidth()*d.jitter))
+				.attr("r", d => 16 )
+				.attr("opacity", 0.3)
 	} // databind2()
 
 	function databind3(dataToBind) {  // disasters map animation - currently just a placeholder
@@ -680,6 +680,7 @@ window.createGraphic = function(graphicSelector) {
 		eventsByType = Array.from(
 			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
 		).sort((a,b) => d3.descending(+a[1], +b[1]) );
+		eventsByTypeObject = Object.fromEntries(eventsByType); // create an object to use below
 
 		console.log(eventsByType)
 
@@ -735,11 +736,13 @@ window.createGraphic = function(graphicSelector) {
 				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
 					xySet = true;
 					theArray[index].gridX = xCoor;
+					manipulatedIndex === 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST event circle off the canvas
 					theArray[index].gridY = yCoor;
 				}
 				manipulatedIndex += 1
 			}
-
+			// for each event, also log the total event count for that disaster type
+			theArray[index].typeTotal = eventsByTypeObject[event.disastertype]
 		});
 
 		// INITIALIZE THE VISUALIZATION
