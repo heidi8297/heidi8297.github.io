@@ -23,13 +23,6 @@ window.createGraphic = function(graphicSelector) {
 	const dispWidth = 1000;
 	const dispHeight = 800;
 	const scaleFactor = canvasWidth/dispWidth;
-	const dispMargin = ({
-		top: Math.floor(margin.top/scaleFactor),
-		right: Math.floor(margin.right/scaleFactor),
-		bottom: Math.floor(margin.bottom/scaleFactor),
-		left: Math.floor(margin.left/scaleFactor)
-	})
-	const dispDim = ({top: 0+dispMargin.top, right: dispWidth-dispMargin.right, bottom: dispHeight-dispMargin.bottom, left: 0+dispMargin.left})
 
 	const speedFactor = 1.5;
 
@@ -91,7 +84,7 @@ window.createGraphic = function(graphicSelector) {
 		let fScale;
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
-			return {top: fScale*30, right: fScale*30, bottom: fScale*33, left: fScale*30}
+			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
 		}
 
 		// default margins
@@ -326,13 +319,12 @@ window.createGraphic = function(graphicSelector) {
 		// SVG setup
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d=>d[1])])
-			.range([ paneDim(2,1).left, paneDim(2,1).right - paneDim(2,1).left - 60 ]); // 60 makes space for the label
+			.range([ paneDim(2,1).left, paneDim(2,1).right - 60 ]); // 60 makes space for the label
 
 		scaleYtypes = d3.scaleBand()
 			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
-			.range([ dispDim.bottom - 10 , dispDim.top ])
-			.paddingInner(0.35)
-			.paddingOuter(0.40);
+			.range([ paneDim(2,1).bottom , paneDim(2,1).top ])
+			.paddingInner(0.35);
 
 		mapGroup = svgBackground.append('g')
 			.attr('width', dispWidth)
@@ -365,7 +357,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("class","typeBg")
 			.attr("x", d => scaleXeventCount(0) )
 			.attr("y", d => scaleYtypes(d[0]) )
-			.attr("width", dispDim.right-dispDim.left )
+			.attr("width", paneDim(2,1).right-paneDim(2,1).left )
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill","#EFE8E4")
 			.attr("opacity", 0.9);
@@ -377,7 +369,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("class","typeCounts")
 			.attr("x", d => scaleXeventCount(0) )
 			.attr("y", d => scaleYtypes(d[0]) )
-			.attr("width", d => scaleXeventCount(d[1]) )
+			.attr("width", d => scaleXeventCount(d[1]) - paneDim(2,1).left )
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill", d => typeColor(d[0]) )
 			.attr("opacity", 0.7);
@@ -387,7 +379,7 @@ window.createGraphic = function(graphicSelector) {
 			.data(eventsByType)
 			.join("text")
 			.text(d => d[0])
-			.attr("x", dispDim.left)
+			.attr("x", paneDim(2,1).left)
 			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
 
 		eventsByTypeSvg.selectAll("text.count")
@@ -395,7 +387,7 @@ window.createGraphic = function(graphicSelector) {
 			.join("text")
 			.attr("class","count")
 			.text(d => d[1])
-			.attr("x", d => dispDim.left+scaleXeventCount(d[1])+5 )
+			.attr("x", d => scaleXeventCount(d[1])+5 )
 			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
 
 	}  // setupCharts
@@ -455,7 +447,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => 5+scaleFactor*scaleXeventCount(d.jitter2*(d.typeTotal+120)))
+				.attr("cx", d => 7+scaleFactor*scaleXeventCount(d.jitter2*(d.typeTotal-14)))
 				.attr("cy", d => scaleFactor*(scaleYtypes(d.disastertype)+scaleYtypes.bandwidth()*d.jitter))
 				.attr("r", d => 16 )
 				.attr("opacity", 0.4)
