@@ -274,7 +274,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind9(eventsByYearFlat);
+			databind9A(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -285,10 +285,10 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind9(eventsByYearFlat,0);
+			databind9B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
+				if (elapsed > speedFactor*1100) t.stop();
 			}); // Timer running the draw function repeatedly for 850 ms.
 		}, // step10()
 
@@ -675,7 +675,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind8()
 
-	function databind9(dataToBind, deathMin=37000) {  // deaths top 15 by GDP
+	function databind9A(dataToBind) {  // deaths top 15 by GDP
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -685,10 +685,32 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.delay((d,i) => i*0.015+0.2*d.longitude )
 				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : canvasHeight/2)
+				.attr("cy", d => d.deaths < 37000 ? canvasHeight*4 : canvasHeight/2)
 				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.6)
-	} // databind9()
+	} // databind9A()
+
+	function databind9B(dataToBind) {  // deaths top 15 by GDP
+		var boundElements = dataContainer.selectAll("custom.eventCircle")
+			.data(dataToBind)
+			.join("custom")
+				.attr("class", "eventCircle")
+				.transition()
+				.duration(0)
+				.attr("cy", function(d) {
+					if (d.deaths >= 37000) { return canvasHeight/2 }
+					else if ( +d.disasterno.charAt(d.disasterno.length - 1)%2 === 0 ) { return -canvasHeight }
+					else { return canvasHeight*2 }
+				})
+				.transition()
+				.ease(d3.easeQuadInOut)
+				.duration(speedFactor*800)
+				.delay( (d,i) => 80*d.jitter*d.jitter+0.05*i )
+				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
+				.attr("cy", d => canvasHeight/2)
+				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
+				.attr("opacity", 0.4)
+	} // databind9B()
 
 	function databind10(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
