@@ -85,6 +85,8 @@ window.createGraphic = function(graphicSelector) {
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
+		} else if (paneNum === 6) { // log scale / deaths per disaster
+			return {top: fScale*30, right: fScale*30, bottom: fScale*80, left: fScale*60}
 		}
 
 		// default margins
@@ -304,13 +306,12 @@ window.createGraphic = function(graphicSelector) {
 
 		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
 			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([vizDim.left, vizDim.right])
+			.range([paneDim(6).left, paneDim(6).right])
 			.paddingInner(0.1)
- 			.paddingOuter(0.1)
 
 		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
 			.domain([0,450000])
-			.range([vizDim.bottom, vizDim.top])
+			.range([paneDim(6).bottom, paneDim(6).top])
 
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
@@ -447,6 +448,7 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
+				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
 				.attr("cx", d => 7+scaleFactor*scaleXeventCount(d.jitter2*(d.typeTotal-14)))
 				.attr("cy", d => scaleFactor*(scaleYtypes(d.disastertype)+scaleYtypes.bandwidth()*d.jitter))
 				.attr("r", d => 16 )
@@ -616,16 +618,6 @@ window.createGraphic = function(graphicSelector) {
 
 	function drawEventElements() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
-		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
-			var node = d3.select(this);   // This is each individual element in the loop.
-			ctx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
-			ctx.globalAlpha = node.attr("opacity")
-			ctx.beginPath();
-			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
-									0,  2 * Math.PI, true);
-			ctx.fill()
-			ctx.closePath()
-		})
 		dataContainer.selectAll("custom.line").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
 			ctx.beginPath();       // Start a new path
@@ -635,6 +627,16 @@ window.createGraphic = function(graphicSelector) {
 			ctx.lineWidth = 5;
 			ctx.strokeStyle = node.attr("stroke");
 			ctx.stroke();          // Render the path
+		})
+		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
+			var node = d3.select(this);   // This is each individual element in the loop.
+			ctx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
+			ctx.globalAlpha = node.attr("opacity")
+			ctx.beginPath();
+			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
+									0,  2 * Math.PI, true);
+			ctx.fill()
+			ctx.closePath()
 		})
 	} // drawEventElements()
 
