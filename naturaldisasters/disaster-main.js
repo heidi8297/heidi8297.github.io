@@ -149,8 +149,7 @@ window.createGraphic = function(graphicSelector) {
 				barsByTypeG.transition()
 					.duration(speedFactor*700)
 					.attr('opacity',0)
-			}
-			catch(err) {}
+			} catch(err) {}
 			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -221,6 +220,9 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
+			logBarsG.transition()
+				.duration(speedFactor*700)
+				.attr('opacity',0)
 			databind5(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -232,6 +234,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+			logBarsG.transition()
+				.duration(speedFactor*1100)
+				.attr('opacity',1)
 			databind6(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -242,6 +247,9 @@ window.createGraphic = function(graphicSelector) {
 		function step7() {  // pane SEVEN
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
+				.attr('opacity',0)
+			logBarsG.transition()
+				.duration(speedFactor*700)
 				.attr('opacity',0)
 			databind7(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -350,7 +358,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0, d3.max(eventTypesByDeathTolls,d=>d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
 
-		// panes 3 and 8
+		// panes 3 and 8 - world map
 		mapGroup = svgBackground.append('g')
 			.attr('width', dispWidth)
 			.attr('height', dispHeight);
@@ -439,11 +447,9 @@ window.createGraphic = function(graphicSelector) {
 			.data(eventTypesByDeathTolls)
 			.join("text")
 			.text(d => d[0])
-			//.attr("x", paneDim(2,1).left)
 			.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
 			.attr("text-anchor", "middle")
 			.attr("y", paneDim(4,1).bottom + 28)
-			//.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
 		deathsByTypeLabels.selectAll("text.count") // eventCounts
 			.data(eventTypesByDeathTolls)
 			.join("text")
@@ -452,8 +458,22 @@ window.createGraphic = function(graphicSelector) {
 			.attr("x", d => scaleXtypes(d[0])+scaleXtypes.bandwidth()/2 )
 			.attr("text-anchor", "middle")
 			.attr("y", d => scaleYdeathCount(d[1]) - 11 );
-			//.attr("x", d => scaleXeventCount(d[1])+5 )
-			//.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
+
+		// pane 6
+		// create lightly colored background bars for the log plots
+		logBarsG = svgBackground.append("g")
+			.attr("class", "logBars") // this is purely to make the group easy to see in 'inspect'
+			.attr("opacity",0)
+		logBarsG.selectAll("rect")
+			.data(eventsByType)
+			.join("rect")
+			.attr("x", d => scaleXdeadliest(d[0])/scaleFactor ) // since the scale was written for canvas, need scaleFactor here...
+			.attr("y", d => paneDim(6,1).top )
+			.attr("width", scaleXdeadliest.bandwidth()/scaleFactor )
+			.attr("height", paneDim(6,1).bottom-paneDim(6,1).top )
+			.attr("fill", d => typeColor(d[0]) )
+			.attr("opacity", 0.1);
+
 
 	}  // setupCharts
 
