@@ -85,10 +85,10 @@ window.createGraphic = function(graphicSelector) {
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
-		} else if (paneNum === 4) {
+		} else if (paneNum === 4) { // bar chart - total death toll by type
 			return {top: fScale*30, right: fScale*70, bottom: fScale*80, left: fScale*70}
 		} else if (paneNum === 6) { // log scale / deaths per disaster
-			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*90}
+			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
 			return {top: fScale*35, right: fScale*35, bottom: fScale*50, left: fScale*35}
 		}
@@ -145,9 +145,12 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
-			barsByTypeG.transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
+			try {
+				barsByTypeG.transition()
+					.duration(speedFactor*800)
+					.attr('opacity',0)
+			}
+			catch(err) {}
 			databind1B(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -173,9 +176,6 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
-			eventsByTypeLabels.transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
 			barsByTypeG.transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -190,29 +190,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			barsByTypeG.transition()
+			deathsByTypeG.transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			barsByTypeG.selectAll("rect.typeBg")
-				.data(eventTypesByDeathTolls)
-				.join("rect")
-				.attr("class","typeBg")
-				.attr("x", d => scaleXtypes(d[0]) )
-				.attr("y", d => paneDim(4,1).top )
-				.attr("width", scaleXtypes.bandwidth() )
-				.attr("height", paneDim(4,1).bottom-paneDim(4,1).top )
-				.attr("fill","#EFE8E4")
-				.attr("opacity", 0.9);
-			barsByTypeG.selectAll("rect.typeCounts")
-				.data(eventTypesByDeathTolls)
-				.join("rect")
-				.attr("class","typeCounts")
-				.attr("x", d => scaleXtypes(d[0]) )
-				.attr("y", d => scaleYdeathCount(d[1]) )
-				.attr("width", d => scaleXtypes.bandwidth() )
-				.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
-				.attr("fill", d => typeColor(d[0]) )
-				.attr("opacity", 0.7);
 			databind3(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -224,7 +204,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			barsByTypeG.transition()
+			deathsByTypeG.transition()
 				.duration(speedFactor*800)
 				.attr('opacity',1)
 			databind4(eventsByYearFlat);
@@ -238,7 +218,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			barsByTypeG.transition()
+			deathsByTypeG.transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			databind5(eventsByYearFlat);
@@ -363,7 +343,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// pane 4
 		scaleXtypes = d3.scaleBand()
-			.domain(["volcanic activity","landslide","extreme temperature","flood","drought","storm","earthquake"])
+			.domain(["earthquake","storm","drought","flood","extreme temperature","landslide","volcanic activity"])
 			.range([ paneDim(4,1).left , paneDim(4,1).right ])
 			.paddingInner(0.35);
 		scaleYdeathCount = d3.scaleLinear() // total death counts by type
@@ -391,11 +371,9 @@ window.createGraphic = function(graphicSelector) {
 		// pane 2
 		// create a bar chart of disaster counts by type
 		barsByTypeG = svgBackground.append("g")
-			.attr("class", "eventsByType")
+			.attr("class", "eventsByType") // this is purely to make the group easy to see in 'inspect'
 			.attr("opacity",0)
-
-		// background bars
-		barsByTypeG.selectAll("rect.typeBg")
+		barsByTypeG.selectAll("rect.typeBg") // background bars
 			.data(eventsByType)
 			.join("rect")
 			.attr("class","typeBg")
@@ -405,9 +383,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill","#EFE8E4")
 			.attr("opacity", 0.9);
-
-		//Bars
-		barsByTypeG.selectAll("rect.typeCounts")
+		barsByTypeG.selectAll("rect.typeCounts") // event count bars
 			.data(eventsByType)
 			.join("rect")
 			.attr("class","typeCounts")
@@ -433,6 +409,33 @@ window.createGraphic = function(graphicSelector) {
 			.text(d => d[1])
 			.attr("x", d => scaleXeventCount(d[1])+5 )
 			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
+
+
+		// pane 4
+		// create a bar chart of total death counts by type
+		deathsByTypeG = svgBackground.append("g")
+			.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
+			.attr("opacity",0)
+		deathsByTypeG.selectAll("rect.typeBg") // background bars
+			.data(eventTypesByDeathTolls)
+			.join("rect")
+			.attr("class","typeBg")
+			.attr("x", d => scaleXtypes(d[0]) )
+			.attr("y", d => paneDim(4,1).top )
+			.attr("width", scaleXtypes.bandwidth() )
+			.attr("height", paneDim(4,1).bottom-paneDim(4,1).top )
+			.attr("fill","#EFE8E4")
+			.attr("opacity", 0.9);
+		deathsByTypeG.selectAll("rect.typeCounts") // death toll bars
+			.data(eventTypesByDeathTolls)
+			.join("rect")
+			.attr("class","typeCounts")
+			.attr("x", d => scaleXtypes(d[0]) )
+			.attr("y", d => scaleYdeathCount(d[1]) )
+			.attr("width", d => scaleXtypes.bandwidth() )
+			.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
+			.attr("fill", d => typeColor(d[0]) )
+			.attr("opacity", 0.7);
 
 	}  // setupCharts
 
@@ -512,7 +515,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("opacity", 0.53)
 	} // databind3()
 
-	function databind4(dataToBind) {  // deadliest disasters overall - currently just a placeholder
+	function databind4(dataToBind) {  // bar chart - deadliest disasters overall
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -523,7 +526,7 @@ window.createGraphic = function(graphicSelector) {
 				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
 				.attr("cy", d => 7+scaleFactor*scaleYdeathCount(d.jitter2*(d.typeDeathCount-14)))
 				.attr("cx", d => scaleFactor*(scaleXtypes(d.disastertype)+scaleXtypes.bandwidth()*d.jitter))
-				.attr("r", d => 0.6*Math.sqrt(d.deaths) )
+				.attr("r", d => 0.5*Math.sqrt(d.deaths) )
 				.attr("opacity", 0.7)
 	} // databind4()
 
