@@ -205,7 +205,8 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0)
 			deathsByTypeG.transition()
 				.duration(speedFactor*1100)
-				.attr('opacity',1)
+				.attr('opacity',0.8)
+				//.attr('opacity',1)  // for the sized-by-death-toll version
 			databind4(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -441,7 +442,8 @@ window.createGraphic = function(graphicSelector) {
 			.attr("width", d => scaleXtypes.bandwidth() )
 			.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
 			.attr("fill", d => typeColor(d[0]) )
-			.attr("opacity", 0.7);
+			.attr("opacity", 0.8);
+			//.attr("opacity", 0.7);  // for the sized-by-death-toll version
 		deathsByTypeLabels = deathsByTypeG.append("g")
 		deathsByTypeLabels.selectAll("text") // disaster type names
 			.data(eventTypesByDeathTolls)
@@ -564,8 +566,10 @@ window.createGraphic = function(graphicSelector) {
 				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
 				.attr("cy", d => 7+scaleFactor*scaleYdeathCount(d.jitter2*(d.typeDeathCount-14)))
 				.attr("cx", d => scaleFactor*(scaleXtypes(d.disastertype)+scaleXtypes.bandwidth()*d.jitter))
-				.attr("r", d => 0.5*Math.sqrt(d.deaths) )
-				.attr("opacity", 0.7)
+				.attr("r", 16)
+				//.attr("r", d => 0.5*Math.sqrt(d.deaths) )  // for the sized-by-death-toll version
+				.attr("opacity", 0.4)
+				//.attr("opacity", 0.7)  // for the sized-by-death-toll version
 	} // databind4()
 
 	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
@@ -650,7 +654,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
 				.attr("cy", function(d) {
 					if (d.deaths < deathMin) {
-						return canvasHeight*4 // for anything not in the top 15 events, fly off screen
+						return canvasHeight*2 // for anything not in the top 15 events, fly off screen
 					} else {
 						return scaleFactor*projection([d.longitude,d.latitude])[1]
 					}
@@ -679,8 +683,9 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
+				.delay((d,i) => i*0.015+0.2*d.longitude )
 				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : 3*canvasHeight/4)
+				.attr("cy", d => d.deaths < deathMin ? canvasHeight*4 : canvasHeight/2)
 				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.6)
 	} // databind9()
