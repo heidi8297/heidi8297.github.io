@@ -85,6 +85,8 @@ window.createGraphic = function(graphicSelector) {
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
+		} else if (paneNum === 4) {
+			return {top: fScale*30, right: fScale*70, bottom: fScale*80, left: fScale*70}
 		} else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*90}
 		} else if (paneNum === 7) { // deaths by year, linear scale
@@ -188,6 +190,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+			barsByTypeG.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			barsByTypeG.selectAll("rect.typeBg")
 				.data(eventTypesByDeathTolls)
 				.join("rect")
@@ -221,7 +226,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0)
 			barsByTypeG.transition()
 				.duration(speedFactor*800)
-				.attr('opacity',0.8)
+				.attr('opacity',1)
 			databind4(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -515,10 +520,11 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
-				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
-				.attr("cy", d => canvasHeight*d.jitter2)
-				.attr("r", d => 10*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", 0.03)
+				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
+				.attr("cy", d => 7+scaleFactor*scaleYdeathCount(d.jitter2*(d.typeDeathCount-14)))
+				.attr("cx", d => scaleFactor*(scaleXtypes(d.disastertype)+scaleXtypes.bandwidth()*d.jitter))
+				.attr("r", d => 0.6*Math.sqrt(d.deaths) )
+				.attr("opacity", 0.7)
 	} // databind4()
 
 	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
