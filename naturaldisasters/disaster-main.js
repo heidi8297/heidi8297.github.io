@@ -86,7 +86,7 @@ window.createGraphic = function(graphicSelector) {
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
 		} else if (paneNum === 4) { // bar chart - total death toll by type
-			return {top: fScale*30, right: fScale*70, bottom: fScale*80, left: fScale*70}
+			return {top: fScale*40, right: fScale*70, bottom: fScale*80, left: fScale*70}
 		} else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
@@ -147,7 +147,7 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {  // pane ONE
 			try {
 				barsByTypeG.transition()
-					.duration(speedFactor*800)
+					.duration(speedFactor*700)
 					.attr('opacity',0)
 			}
 			catch(err) {}
@@ -163,7 +163,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			barsByTypeG.transition()
-				.duration(speedFactor*800)
+				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
 			databind2(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -177,7 +177,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
 			barsByTypeG.transition()
-				.duration(speedFactor*800)
+				.duration(speedFactor*700)
 				.attr('opacity',0)
 			databind3(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -191,7 +191,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
-				.duration(speedFactor*800)
+				.duration(speedFactor*700)
 				.attr('opacity',0)
 			databind3(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -205,7 +205,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
-				.duration(speedFactor*800)
+				.duration(speedFactor*1100)
 				.attr('opacity',1)
 			databind4(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -219,7 +219,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
-				.duration(speedFactor*800)
+				.duration(speedFactor*700)
 				.attr('opacity',0)
 			databind5(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
@@ -393,16 +393,14 @@ window.createGraphic = function(graphicSelector) {
 			.attr("height", scaleYtypes.bandwidth() )
 			.attr("fill", d => typeColor(d[0]) )
 			.attr("opacity", 0.7);
-
-		// add disaster type labels to the bars
 		eventsByTypeLabels = barsByTypeG.append("g")
-		eventsByTypeLabels.selectAll("text")
+		eventsByTypeLabels.selectAll("text") // disaster type names
 			.data(eventsByType)
 			.join("text")
 			.text(d => d[0])
 			.attr("x", paneDim(2,1).left)
 			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
-		eventsByTypeLabels.selectAll("text.count")
+		eventsByTypeLabels.selectAll("text.count") // eventCounts
 			.data(eventsByType)
 			.join("text")
 			.attr("class","count")
@@ -436,6 +434,26 @@ window.createGraphic = function(graphicSelector) {
 			.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
 			.attr("fill", d => typeColor(d[0]) )
 			.attr("opacity", 0.7);
+		deathsByTypeLabels = deathsByTypeG.append("g")
+		deathsByTypeLabels.selectAll("text") // disaster type names
+			.data(eventTypesByDeathTolls)
+			.join("text")
+			.text(d => d[0])
+			//.attr("x", paneDim(2,1).left)
+			.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
+			.attr("text-anchor", "middle")
+			.attr("y", paneDim(4,1).bottom + 28)
+			//.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
+		deathsByTypeLabels.selectAll("text.count") // eventCounts
+			.data(eventTypesByDeathTolls)
+			.join("text")
+			.attr("class","count")
+			.text(d => d[1])
+			.attr("x", d => scaleXtypes(d[0])+scaleXtypes.bandwidth()/2 )
+			.attr("text-anchor", "middle")
+			.attr("y", d => scaleYdeathCount(d[1]) - 11 );
+			//.attr("x", d => scaleXeventCount(d[1])+5 )
+			//.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
 
 	}  // setupCharts
 
