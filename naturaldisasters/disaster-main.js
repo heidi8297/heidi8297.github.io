@@ -86,7 +86,9 @@ window.createGraphic = function(graphicSelector) {
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
 		} else if (paneNum === 6) { // log scale / deaths per disaster
-			return {top: fScale*30, right: fScale*30, bottom: fScale*80, left: fScale*60}
+			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*90}
+		} else if (paneNum === 7) { // deaths by year, linear scale
+			return {top: fScale*35, right: fScale*35, bottom: fScale*50, left: fScale*35}
 		}
 
 		// default margins
@@ -296,10 +298,6 @@ window.createGraphic = function(graphicSelector) {
 	function setupCharts() {
 
 		// CANVAS setup
-		scaleXyear = d3.scaleLinear()
-			.domain([1960,2018])
-			.range([vizDim.left, vizDim.right])
-
 		scaleYvert = d3.scaleLinear() // linear scale for event count by year
 			.domain([0,360])
 			.range([vizDim.bottom, 0+0.3*vizDim.bottom])
@@ -307,15 +305,19 @@ window.createGraphic = function(graphicSelector) {
 		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
 			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
 			.range([paneDim(6).left, paneDim(6).right])
-			.paddingInner(0.1)
+			.paddingInner(0.3)
 
 		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
 			.domain([0,450000])
 			.range([paneDim(6).bottom, paneDim(6).top])
 
+		scaleXyear = d3.scaleLinear()
+			.domain([1960,2018])
+			.range([paneDim(7).left, paneDim(7).right])
+
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
-			.range([vizDim.bottom, vizDim.top])
+			.range([paneDim(7).bottom, paneDim(7).top])
 
 		// SVG setup
 		scaleXeventCount = d3.scaleLinear()
@@ -506,9 +508,7 @@ window.createGraphic = function(graphicSelector) {
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
 				.attr("cy", d => scaleYdeadliest(d.deaths))
-				.attr("cx", function(d) {
-					return scaleXdeadliest(d.disastertype) + 320*d.jitter
-				})
+				.attr("cx", d => scaleXdeadliest(d.disastertype) + scaleXdeadliest.bandwidth()*d.jitter)
 				.attr("r", 13 )
 				.attr("opacity", 0.5)
 		var boundLines = dataContainer.selectAll("custom.line")
@@ -551,7 +551,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
 				.attr("y1", d => scaleYdeaths(d.deaths)+24)
 				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y2", d => vizDim.bottom)
+				.attr("y2", d => paneDim(7).bottom+24)
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind7()
