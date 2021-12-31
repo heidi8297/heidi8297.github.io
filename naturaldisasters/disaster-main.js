@@ -23,7 +23,6 @@ window.createGraphic = function(graphicSelector) {
 	const dispWidth = 1000;
 	const dispHeight = 800;
 	const scaleFactor = canvasWidth/dispWidth;
-	console.log(scaleFactor)
 
 	const speedFactor = 1.5;
 
@@ -123,7 +122,7 @@ window.createGraphic = function(graphicSelector) {
 					ret.push((nextCol & 0xff00) >> 8); // G
 					ret.push((nextCol & 0xff0000) >> 16); // B
 
-					nextCol += 1; // This is exagerated for this example and would ordinarily be 1.
+					nextCol += 1;
 			}
 			var col = "rgb(" + ret.join(',') + ")";
 			return col;
@@ -282,9 +281,13 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
-			lollipopLines.transition()
+			lollipopLines.selectAll("line")
+				.transition()
 				.duration(speedFactor*800)
-				.attr('opacity',0)
+				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y1", d => dispHeight*1.2)
+				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y2", d => dispHeight*1.2)
 			databind6(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -299,9 +302,13 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			lollipopLines.transition()
+			lollipopLines.selectAll("line")
+				.transition()
 				.duration(speedFactor*800)
-				.attr('opacity',1)
+				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
+				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
+				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
+				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
 			databind7(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -313,9 +320,13 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
-			lollipopLines.transition()
+			lollipopLines.selectAll("line")
+				.transition()
 				.duration(speedFactor*800)
-				.attr('opacity',0)
+				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y1", d => dispHeight*1.2)
+				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y2", d => dispHeight*1.2)
 			databind8(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -568,10 +579,11 @@ window.createGraphic = function(graphicSelector) {
 			.join("line")
 			.attr("stroke", d => typeColor(d.disastertype))
 			.attr("stroke-width", 1.5 )
-			.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
-			.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
+			.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+			.attr("y1", d => dispHeight*1.2)
 			.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
-			.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom) // this is the bottom of the line
+			.attr("y2", d => dispHeight*1.2)
+			.attr("opacity", 0.7)
 
 		setupComplete = true;
 	}  // setupCharts
@@ -695,19 +707,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("cx", d => scaleXdeadliest(d.disastertype) + scaleXdeadliest.bandwidth()*d.jitter)
 				.attr("r", 13 )
 				.attr("opacity", 0.5)
-		var boundLines = dataContainer.selectAll("custom.line")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class","line")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y1", d => canvasHeight*1.2)
-				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y2", d => canvasHeight*1.2)
-				.attr("opacity", 0.7)
-				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind6()
 
 	function databind7(dataToBind, deathMin=0) {  // deaths by year
@@ -727,25 +726,6 @@ window.createGraphic = function(graphicSelector) {
 						return 0
 					} else { return 0.6 }
 				})
-		var boundLines = dataContainer.selectAll("custom.line")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class","line")
-				.transition()
-				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter )
-				.attr("y1", function(d) {
-					// only create a line if it would be 16 or more pixels long (otherwise, will be hidden by circles)
-					if (scaleYdeaths(d.deaths)+40 < paneDim(7).bottom) {
-						//console.log(d.deaths) // minimum of 7375
-						return scaleYdeaths(d.deaths)+24
-					}
-					return paneDim(7).bottom
-				}  ) // this is the top of the line
-				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y2", d => paneDim(7).bottom) // this is the bottom of the line
-				.attr("opacity", 0.7)
-				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind7()
 
 	function databind8(dataToBind, deathMin=37000) {  // deaths by year top 15 - MAP
@@ -766,18 +746,6 @@ window.createGraphic = function(graphicSelector) {
 				})
 				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
 				.attr("opacity", 0.6)
-		var boundLines = dataContainer.selectAll("custom.line")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class","line")
-				.transition()
-				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y1", d => canvasHeight*1.2)
-				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y2", d => canvasHeight*1.2)
-				.attr("opacity", 0)
-				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind8()
 
 	function databind9A(dataToBind) {  // deaths top 15 by GDP
@@ -800,13 +768,6 @@ window.createGraphic = function(graphicSelector) {
 			.data(dataToBind)
 			.join("custom")
 				.attr("class", "eventCircle")
-				// .transition()
-				// .duration(0)
-				// .attr("cy", function(d) {
-				// 	if (d.deaths >= 37000) { return canvasHeight/2 }
-				// 	else if ( +d.disasterno.charAt(d.disasterno.length - 1)%2 === 0 ) { return -canvasHeight }
-				// 	else { return canvasHeight*2 }
-				// })
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
@@ -833,16 +794,6 @@ window.createGraphic = function(graphicSelector) {
 
 	function drawEventElements() {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
-		dataContainer.selectAll("custom.line").each(function(d,i) {
-			var node = d3.select(this);   // This is each individual element in the loop.
-			ctx.beginPath();       // Start a new path
-			ctx.moveTo(node.attr('x1'), node.attr('y1'));    // Move the pen to (30, 50)
-			ctx.lineTo(node.attr('x2'), node.attr('y2'));  // Draw a line to (150, 100)
-			ctx.globalAlpha = node.attr("opacity")
-			ctx.lineWidth = 5;
-			ctx.strokeStyle = node.attr("stroke");
-			ctx.stroke();          // Render the path
-		})
 		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
 			ctx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
