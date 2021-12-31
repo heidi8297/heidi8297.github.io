@@ -72,9 +72,9 @@ window.createGraphic = function(graphicSelector) {
 
 	// define the coordinates of some text boxes to sit inside the "grid" view of each event
 	const textRectangles = [
-		{'x1':222, 'x2':471, 'y1':104, 'y2':202},
+		{'x1':229, 'x2':471, 'y1':104, 'y2':202},
 		{'x1':430, 'x2':780, 'y1':252, 'y2':350},
-		{'x1':80, 'x2':482, 'y1':410, 'y2':507},
+		{'x1':80, 'x2':493, 'y1':410, 'y2':507},
 		{'x1':469, 'x2':910, 'y1':579, 'y2':667}
 	]
 
@@ -111,7 +111,42 @@ window.createGraphic = function(graphicSelector) {
 		}
 	}
 
+	//Generates the next color in the sequence, going from 0,0,0 to 255,255,255.
+	//From: https://bocoup.com/weblog/2d-picking-in-canvas
+	var nextCol = 1;
+	function genColor(){
+			var ret = [];
+			// via http://stackoverflow.com/a/15804183
+			if (nextCol < 16777215) {
+					ret.push(nextCol & 0xff); // R
+					ret.push((nextCol & 0xff00) >> 8); // G
+					ret.push((nextCol & 0xff0000) >> 16); // B
 
+					nextCol += 1; // This is exagerated for this example and would ordinarily be 1.
+			}
+			var col = "rgb(" + ret.join(',') + ")";
+			return col;
+	} // genColor()
+
+	var stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+
+	// align top-left
+	stats.domElement.style.position = 'fixed';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+
+	document.body.appendChild( stats.domElement );
+
+
+	var dt = 0;
+	d3.timer(function(elapsed) {
+			stats.begin();
+			// interpolateZoom(elapsed - dt);
+			dt = elapsed;
+			stats.end();
+			drawEventElements()
+	});
 
 	//----------------------------------------------------------------------------
 	// INITIALIZE DRAWING SPACES
@@ -152,11 +187,8 @@ window.createGraphic = function(graphicSelector) {
 					.duration(speedFactor*700)
 					.attr('opacity',0)
 				textIntroNums.transition()
-					.duration(speedFactor*200)
-					.attr("opacity",0)
-					.transition()
-					.duration(speedFactor*600)
-					.attr("opacity",1)
+					.duration(speedFactor*800)
+					.attr("opacity",0.92)
 				databind1B(eventsByYearFlat);
 				var t = d3.timer(function(elapsed) {
 					drawEventElements();
@@ -328,7 +360,7 @@ window.createGraphic = function(graphicSelector) {
 		steps[step].call()
 	}
 
-	// initiate the scales and background map
+	// initiate the scales and all elements in the svg (background map, bar charts, etc)
 	function setupCharts() {
 
 		// CANVAS setup
@@ -350,6 +382,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([paneDim(7).bottom, paneDim(7).top])
 
+
 		// SVG setup
 
 		// pane 1
@@ -359,20 +392,21 @@ window.createGraphic = function(graphicSelector) {
 		textIntroNums.append("text") // "59 years"
 			.attr("class", "pane1text yearCount")
 			.attr("x", (textRectangles[0]["x1"]+textRectangles[0]["x2"])/2 )
-			.attr("y", 15+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
+			.attr("y", 23+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
 		textIntroNums.append("text") // "8,982 disasters"
 			.attr("class", "pane1text eventCount")
 			.attr("x", (textRectangles[1]["x1"]+textRectangles[1]["x2"])/2 )
-			.attr("y", 15+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
+			.attr("y", 20+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
 		textIntroNums.append("text") // "3,428,650 lives lost"
 			.attr("class", "pane1text deathCount")
 			.attr("x", (textRectangles[2]["x1"]+textRectangles[2]["x2"])/2 )
-			.attr("y", 15+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
+			.attr("y", 18+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
 		textIntroNums.append("text") // "countless lives altered"
 			.attr("class", "pane1text livesCount")
 			.attr("x", (textRectangles[3]["x1"]+textRectangles[3]["x2"])/2 )
-			.attr("y", 15+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
+			.attr("y", 18+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
 
+		// using .innerHTML here so I can include tspans (for separate text sizing)
 		document.querySelector(".pane1text.yearCount").innerHTML = "<tspan>59</tspan> years"
 		document.querySelector(".pane1text.eventCount").innerHTML = "<tspan>8,982</tspan> disasters"
 		document.querySelector(".pane1text.deathCount").innerHTML = "<tspan>3,428,650</tspan> lives lost"
@@ -652,6 +686,7 @@ window.createGraphic = function(graphicSelector) {
 	} // databind6()
 
 	function databind7(dataToBind, deathMin=0) {  // deaths by year
+		let i = 0;
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
 			.data(dataToBind)
 			.join("custom")
@@ -674,9 +709,16 @@ window.createGraphic = function(graphicSelector) {
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y1", d => scaleYdeaths(d.deaths)+24)
+				.attr("y1", function(d) {
+					// only create a line if it would be 16 or more pixels long (otherwise, will be hidden by circles)
+					if (scaleYdeaths(d.deaths)+40 < paneDim(7).bottom) {
+						console.log(d.deaths) // minimum of 7375
+						return scaleYdeaths(d.deaths)+24
+					}
+					return paneDim(7).bottom
+				}  ) // this is the top of the line
 				.attr("x2", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("y2", d => paneDim(7).bottom+24)
+				.attr("y2", d => paneDim(7).bottom) // this is the bottom of the line
 				.attr("opacity", 0.7)
 				.attr("stroke", d => typeColor(d.disastertype));
 	} // databind7()
@@ -905,7 +947,7 @@ window.createGraphic = function(graphicSelector) {
 				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
 					xySet = true;
 					theArray[index].gridX = xCoor;
-					manipulatedIndex === 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST event circle off the canvas
+					manipulatedIndex >= 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST event circle off the canvas
 					theArray[index].gridY = yCoor;
 				}
 				manipulatedIndex += 1
