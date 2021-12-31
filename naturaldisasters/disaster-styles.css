@@ -168,3 +168,27 @@ header h2 {
 	-moz-transform: translateY(-50%);
 	transform: translateY(-50%); */
 }
+
+.pane1text {
+  text-anchor: middle;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Cabin Sketch', cursive;
+  fill: #4E3C30;
+}
+
+.pane1text.yearCount tspan {
+  font-size: 5.2rem;
+}
+
+.pane1text.eventCount tspan {
+  font-size: 4.4rem;
+}
+
+.pane1text.deathCount tspan {
+  font-size: 3.8rem;
+}
+
+.pane1text.livesCount tspan {
+  font-size: 3.6rem;
+}

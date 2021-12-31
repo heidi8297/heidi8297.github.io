@@ -26,6 +26,8 @@ window.createGraphic = function(graphicSelector) {
 
 	const speedFactor = 1.5;
 
+	let setupComplete = false;
+
 	// define a sort order by disaster type, to be used in stacked circle chart
 	const typeSortNum = d3.scaleOrdinal()
 		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
@@ -70,10 +72,10 @@ window.createGraphic = function(graphicSelector) {
 
 	// define the coordinates of some text boxes to sit inside the "grid" view of each event
 	const textRectangles = [
-		{'x1':198, 'x2':481, 'y1':104, 'y2':202},
-		{'x1':420, 'x2':790, 'y1':252, 'y2':350},
-		{'x1':101, 'x2':454, 'y1':410, 'y2':507},
-		{'x1':469, 'x2':900, 'y1':579, 'y2':667}
+		{'x1':222, 'x2':471, 'y1':104, 'y2':202},
+		{'x1':430, 'x2':780, 'y1':252, 'y2':350},
+		{'x1':80, 'x2':482, 'y1':410, 'y2':507},
+		{'x1':469, 'x2':910, 'y1':579, 'y2':667}
 	]
 
 	// define custom margins for each pane
@@ -145,16 +147,22 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
-			try {
+			if (setupComplete) { // avoids "object doesn't exist" errors
 				barsByTypeG.transition()
 					.duration(speedFactor*700)
 					.attr('opacity',0)
-			} catch(err) {}
-			databind1B(eventsByYearFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+				textIntroNums.transition()
+					.duration(speedFactor*200)
+					.attr("opacity",0)
+					.transition()
+					.duration(speedFactor*600)
+					.attr("opacity",1)
+				databind1B(eventsByYearFlat);
+				var t = d3.timer(function(elapsed) {
+					drawEventElements();
+					if (elapsed > speedFactor*850) t.stop();
+				}); // Timer running the draw function repeatedly for 850 ms.
+			}
 		}, // step0()
 
 		function step1() {  // pane TWO - placeholder
@@ -164,6 +172,9 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
+			textIntroNums.transition()
+				.duration(speedFactor*500)
+				.attr("opacity",0)
 			databind2(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -341,6 +352,33 @@ window.createGraphic = function(graphicSelector) {
 
 		// SVG setup
 
+		// pane 1
+		textIntroNums = svgForeground.append("g") // this explanatory text shows up on the first pane
+			.attr("class", "textIntroNums") // this is purely to make the group easy to see in 'inspect'
+			.attr("opacity",0)
+		textIntroNums.append("text") // "59 years"
+			.attr("class", "pane1text yearCount")
+			.attr("x", (textRectangles[0]["x1"]+textRectangles[0]["x2"])/2 )
+			.attr("y", 15+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
+		textIntroNums.append("text") // "8,982 disasters"
+			.attr("class", "pane1text eventCount")
+			.attr("x", (textRectangles[1]["x1"]+textRectangles[1]["x2"])/2 )
+			.attr("y", 15+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
+		textIntroNums.append("text") // "3,428,650 lives lost"
+			.attr("class", "pane1text deathCount")
+			.attr("x", (textRectangles[2]["x1"]+textRectangles[2]["x2"])/2 )
+			.attr("y", 15+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
+		textIntroNums.append("text") // "countless lives altered"
+			.attr("class", "pane1text livesCount")
+			.attr("x", (textRectangles[3]["x1"]+textRectangles[3]["x2"])/2 )
+			.attr("y", 15+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
+
+		document.querySelector(".pane1text.yearCount").innerHTML = "<tspan>59</tspan> years"
+		document.querySelector(".pane1text.eventCount").innerHTML = "<tspan>8,982</tspan> disasters"
+		document.querySelector(".pane1text.deathCount").innerHTML = "<tspan>3,428,650</tspan> lives lost"
+		document.querySelector(".pane1text.livesCount").innerHTML = "<tspan>Countless</tspan> lives altered"
+
+
 		// pane 2
 		scaleXeventCount = d3.scaleLinear() // event counts by type
 			.domain([0, d3.max(eventsByType,d=>d[1])])
@@ -476,7 +514,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("fill", d => typeColor(d[0]) )
 			.attr("opacity", 0.1);
 
-
+		setupComplete = true;
 	}  // setupCharts
 
 	function init() {
@@ -695,13 +733,13 @@ window.createGraphic = function(graphicSelector) {
 			.data(dataToBind)
 			.join("custom")
 				.attr("class", "eventCircle")
-				.transition()
-				.duration(0)
-				.attr("cy", function(d) {
-					if (d.deaths >= 37000) { return canvasHeight/2 }
-					else if ( +d.disasterno.charAt(d.disasterno.length - 1)%2 === 0 ) { return -canvasHeight }
-					else { return canvasHeight*2 }
-				})
+				// .transition()
+				// .duration(0)
+				// .attr("cy", function(d) {
+				// 	if (d.deaths >= 37000) { return canvasHeight/2 }
+				// 	else if ( +d.disasterno.charAt(d.disasterno.length - 1)%2 === 0 ) { return -canvasHeight }
+				// 	else { return canvasHeight*2 }
+				// })
 				.transition()
 				.ease(d3.easeQuadInOut)
 				.duration(speedFactor*800)
