@@ -23,6 +23,7 @@ window.createGraphic = function(graphicSelector) {
 	const dispWidth = 1000;
 	const dispHeight = 800;
 	const scaleFactor = canvasWidth/dispWidth;
+	console.log(scaleFactor)
 
 	const speedFactor = 1.5;
 
@@ -281,6 +282,9 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
+			lollipopLines.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			databind6(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -295,6 +299,9 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
+			lollipopLines.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',1)
 			databind7(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -306,6 +313,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
+			lollipopLines.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			databind8(eventsByYearFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -548,6 +558,21 @@ window.createGraphic = function(graphicSelector) {
 			.attr("fill", d => typeColor(d[0]) )
 			.attr("opacity", 0.1);
 
+		// pane 7
+		// create lollipop lines
+		lollipopLines = svgBackground.append("g")
+			.attr("class", "lollipopLines") // this is purely to make the group easy to see in 'inspect'
+			.attr("opacity",1)
+		lollipopLines.selectAll("line")
+			.data(lollipopEvents)
+			.join("line")
+			.attr("stroke", d => typeColor(d.disastertype))
+			.attr("stroke-width", 1.5 )
+			.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
+			.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
+			.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+			.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom) // this is the bottom of the line
+
 		setupComplete = true;
 	}  // setupCharts
 
@@ -708,11 +733,11 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","line")
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter)
+				.attr("x1", d => scaleXyear(d.year)-31+62*d.jitter )
 				.attr("y1", function(d) {
 					// only create a line if it would be 16 or more pixels long (otherwise, will be hidden by circles)
 					if (scaleYdeaths(d.deaths)+40 < paneDim(7).bottom) {
-						console.log(d.deaths) // minimum of 7375
+						//console.log(d.deaths) // minimum of 7375
 						return scaleYdeaths(d.deaths)+24
 					}
 					return paneDim(7).bottom
@@ -908,6 +933,12 @@ window.createGraphic = function(graphicSelector) {
 		deadliestEvents = eventData.sort(function(a, b) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
+
+		// find the events with more than 7000 deaths
+		//   so we can create all lollipop lines that would be at least 16 pixels long
+		lollipopEvents = eventData.sort(function(a, b) {
+			return d3.descending(+a.deaths, +b.deaths);
+		}).slice(0, 43);
 
 		// group events by year, then sort each set of yearly events by type
 		eventsByYear = d3.group(eventData, d => d.year);
