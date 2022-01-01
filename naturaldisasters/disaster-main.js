@@ -10,14 +10,13 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByType = [];
 	let eventTypesByDeathTolls = [];
 	let deadliestEvents = [];
+	let lollipopEvents = [];
 	let firstTenYears = [];
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsByYearFlat = [];
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
-	const margin = ({top: 120, right: 120, bottom: 120, left: 120})
-	const vizDim = ({top: 0+margin.top, right: canvasWidth-margin.right, bottom: canvasHeight-margin.bottom, left: 0+margin.left})
 
 	// this should be the same size as defined in CSS
 	const dispWidth = 1000;
@@ -27,15 +26,6 @@ window.createGraphic = function(graphicSelector) {
 	const speedFactor = 1.5;
 
 	let setupComplete = false;
-
-	// define a sort order by disaster type, to be used in stacked circle chart
-	const typeSortNum = d3.scaleOrdinal()
-		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
-		.range([0,1,2,3,4,5,6]);
-
-	const typeDeathSort = d3.scaleOrdinal()
-		.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
-		.range([3,5,1,4,0,2,6]);
 
 	// provide a disaster type and return a corresponding color
 	const typeColor = d3.scaleOrdinal()
@@ -128,25 +118,25 @@ window.createGraphic = function(graphicSelector) {
 			return col;
 	} // genColor()
 
-	var stats = new Stats();
-	stats.setMode(0); // 0: fps, 1: ms, 2: mb
-
-	// align top-left
-	stats.domElement.style.position = 'fixed';
-	stats.domElement.style.left = '0px';
-	stats.domElement.style.top = '0px';
-
-	document.body.appendChild( stats.domElement );
-
-
-	var dt = 0;
-	d3.timer(function(elapsed) {
-			stats.begin();
-			// interpolateZoom(elapsed - dt);
-			dt = elapsed;
-			stats.end();
-			drawEventElements()
-	});
+	// var stats = new Stats();
+	// stats.setMode(0); // 0: fps, 1: ms, 2: mb
+	//
+	// // align top-left
+	// stats.domElement.style.position = 'fixed';
+	// stats.domElement.style.left = '0px';
+	// stats.domElement.style.top = '0px';
+	//
+	// document.body.appendChild( stats.domElement );
+	//
+	//
+	// var dt = 0;
+	// d3.timer(function(elapsed) {
+	// 		stats.begin();
+	// 		// interpolateZoom(elapsed - dt);
+	// 		dt = elapsed;
+	// 		stats.end();
+	// 		drawEventElements()
+	// });
 
 	//----------------------------------------------------------------------------
 	// INITIALIZE DRAWING SPACES
@@ -895,8 +885,6 @@ window.createGraphic = function(graphicSelector) {
 		eventsByYear = d3.group(eventData, d => d.year);
 		for (let key of eventsByYear.keys()) {
 			eventsByYear.get(key).sort(function(a, b) {
-				// within each year - sort first by disaster type, then by disaster number
-				//return typeSortNum(a.disastertype)- typeSortNum(b.disastertype) || a.disasterno-b.disasterno;
 				// within each year - sort by disaster number
 				return b.disasterno-a.disasterno;
 			})
