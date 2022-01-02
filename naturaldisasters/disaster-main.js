@@ -14,7 +14,9 @@ window.createGraphic = function(graphicSelector) {
 	let firstTenYears = [];
 	let lastTenYears = [];
 	let eventsByYear = [];
-	let eventsByYearFlat = [];
+	let eventsFlat = [];
+	var circleStartInfo = {};
+	var circleEndInfo = {};
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
 
@@ -179,7 +181,7 @@ window.createGraphic = function(graphicSelector) {
 				textIntroNums.transition()
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
-				databind1B(eventsByYearFlat);
+				databind1B(eventsFlat);
 				var t = d3.timer(function(elapsed) {
 					drawEventElements();
 					if (elapsed > speedFactor*850) t.stop();
@@ -197,7 +199,7 @@ window.createGraphic = function(graphicSelector) {
 			textIntroNums.transition()
 				.duration(speedFactor*500)
 				.attr("opacity",0)
-			databind2(eventsByYearFlat);
+			databind2(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -211,7 +213,7 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind3(eventsByYearFlat);
+			databind3(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -225,7 +227,7 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind3(eventsByYearFlat);
+			databind3(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -240,7 +242,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
 				//.attr('opacity',1)  // for the sized-by-death-toll version
-			databind4(eventsByYearFlat);
+			databind4(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -257,7 +259,7 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind5(eventsByYearFlat);
+			databind5(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -278,7 +280,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => dispHeight*1.2)
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y2", d => dispHeight*1.2)
-			databind6(eventsByYearFlat);
+			databind6(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -299,7 +301,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
 				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
-			databind7(eventsByYearFlat);
+			databind7(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -317,7 +319,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => dispHeight*1.2)
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y2", d => dispHeight*1.2)
-			databind8(eventsByYearFlat);
+			databind8(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -328,7 +330,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind9A(eventsByYearFlat);
+			databind9A(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -339,7 +341,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind9B(eventsByYearFlat);
+			databind9B(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*1100) t.stop();
@@ -350,7 +352,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind10(eventsByYearFlat);
+			databind10(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
 				if (elapsed > speedFactor*850) t.stop();
@@ -575,13 +577,31 @@ window.createGraphic = function(graphicSelector) {
 			.attr("y2", d => dispHeight*1.2)
 			.attr("opacity", 0.7)
 
+		for (var i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i]
+			circleStartInfo[i] = {
+				'cx': scaleFactor*node.gridX,
+				'cy': scaleFactor*node.gridY,
+				'r': 16,
+				'fill': typeColor(node.disastertype),
+				'opacity': 0
+			}
+			circleEndInfo[i] = {
+				'cx':scaleFactor*node.gridX,
+				'cy': scaleFactor*node.gridY,
+				'r': 16,
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.3
+			}
+		}
+
 		setupComplete = true;
 	}  // setupCharts
 
 	function init() {
 		setupCharts()
-		databind1A(eventsByYearFlat)  // create event circles, make invisible
-		databind1B(eventsByYearFlat) // transition event circles into view
+		databind1A(eventsFlat)  // create event circles, make invisible
+		databind1B(eventsFlat) // transition event circles into view
 		drawEventElements()
 		update(0)
 	} // init()
@@ -891,14 +911,14 @@ window.createGraphic = function(graphicSelector) {
 			eventsByYear.get(key).forEach(function(event, index, theArray) {
 				theArray[index].vertNum = index;
 			});
-			eventsByYearFlat = eventsByYearFlat.concat(eventsByYear.get(key))
+			eventsFlat = eventsFlat.concat(eventsByYear.get(key))
 		}
-		console.log(eventsByYearFlat.length)
+		console.log(eventsFlat.length)
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
 		let manipulatedIndex = 0; // we use this to ensure no circles are overlapping the specified textRectangles
-		eventsByYearFlat.forEach(function(event, index, theArray) {
+		eventsFlat.forEach(function(event, index, theArray) {
 			let xySet = false;
 			while (xySet === false) {
 				let rowNum = Math.floor(manipulatedIndex/rowCount);
