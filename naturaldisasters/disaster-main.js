@@ -15,6 +15,7 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
+	var lockInc = 0;
 
 	// variables needed for transition method
 	var circleStartInfo = {};
@@ -182,6 +183,7 @@ window.createGraphic = function(graphicSelector) {
 	var steps = [
 		function step0() {  // pane ONE
 			if (setupComplete) {
+				let stepInc = lockInc += 1;
 				console.log("starting step 0")
 				barsByTypeG.transition()
 					.duration(speedFactor*700)
@@ -198,7 +200,7 @@ window.createGraphic = function(graphicSelector) {
 					dt = elapsed;
 					drawCircles()
 					stats.end();
-					if (elapsed > duration) {
+					if (elapsed > duration || stepInc !== lockInc) {
 						console.log("ending step 0")
 						t.stop()
 					};
@@ -207,6 +209,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step0()
 
 		function step1() {  // pane TWO - placeholder
+			let stepInc = lockInc += 1;
 			console.log("starting step 1")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
@@ -226,7 +229,7 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration) {
+				if (elapsed > duration || stepInc !== lockInc) {
 					console.log("ending step 1")
 					t.stop()
 				};
@@ -234,6 +237,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {  // pane THREE
+			let stepInc = lockInc += 1;
 			console.log("starting step 2")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
@@ -251,7 +255,7 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration) {
+				if (elapsed > duration || stepInc !== lockInc) {
 					console.log("ending step 2")
 					t.stop()
 				};
@@ -259,6 +263,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
+			let stepInc = lockInc += 1;
 			console.log("starting step 3")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
@@ -276,7 +281,7 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration) {
+				if (elapsed > duration || stepInc !== lockInc) {
 					console.log("ending step 3")
 					t.stop()
 				};
@@ -284,6 +289,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step3()
 
 		function step4() {  // pane FOUR - placeholder
+			let stepInc = lockInc += 1;
 			console.log("starting step 4")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
@@ -301,7 +307,7 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration) {
+				if (elapsed > duration || stepInc !== lockInc) {
 					console.log("ending step 4")
 					t.stop()
 				};
