@@ -265,6 +265,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step5()
 
 		function step6() {  // pane SIX
+			let stepInc = lockInc += 1;
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -278,14 +279,12 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => dispHeight*1.2)
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y2", d => dispHeight*1.2)
-			databind6(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			transitionPane6()
+			animateCircles(stepInc)
 		}, // step6()
 
 		function step7() {  // pane SEVEN
+			let stepInc = lockInc += 1;
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -299,11 +298,8 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
 				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
-			databind7(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			transitionPane7()
+			animateCircles(stepInc)
 		}, // step7()
 
 		function step8() {  // pane EIGHT
@@ -613,10 +609,18 @@ window.createGraphic = function(graphicSelector) {
 	}  // setupCharts
 
 	function init() {
+		let stepInc = lockInc += 1;
 		setupCharts()
-		databind1A(eventsFlat)  // create event circles, make invisible
-		databind1B(eventsFlat) // transition event circles into view
-		drawEventElements()
+		// the below is just 'animateCircles' without the 'moveCircles' step
+		let dt = 0;
+		let t = d3.timer(function(elapsed) {
+			stats.begin();
+			interpCircMove(elapsed - dt);
+			dt = elapsed;
+			drawCircles()
+			stats.end();
+			if (elapsed > setDuration || stepInc !== lockInc) t.stop();
+		});
 		update(0)
 	} // init()
 
@@ -689,7 +693,7 @@ window.createGraphic = function(graphicSelector) {
 		});
 	}
 
-	
+
 
 	// update circleEndInfo with new target formatting for each eventCircle
 	function transitionPane1() {  // "grid" of events with summary numbers
@@ -758,73 +762,33 @@ window.createGraphic = function(graphicSelector) {
 		}}
 	} // transitionPane5()
 
+	function transitionPane6() {   // deadliest individual events / log scale
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter,
+				'cy': scaleYdeadliest(node.deaths),
+				'r': 13,
+				'opacity': 0.5
+		}}
+	} // transitionPane6()
+
+	function transitionPane7() {   // deaths by year lollipop chart
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleXyear(node.year)-31+62*node.jitter,
+				'cy': scaleYdeaths(node.deaths),
+				'r': 24,
+				'opacity': 0.6
+		}}
+	} // transitionPane7()
+
 
 
 	// these functions bind the data to the "virtual" DOM elements and define the
 	//   attributes and transitions that will be used to generate each step in the
 	//   visualization.
-
-	// the first step is split into two functions so that we can transition them in
-	//   from opacity = 0 on page load, but then keep the transitions with higher opacity
-	//   for subsequent (scroll-activated) transitions (e.g. if the user scrolls back up)
-	function databind1A(dataToBind) {  // grid of all events - initialize and set opacity to 0
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.attr("cx", d => scaleFactor*d.gridX)
-				.attr("cy", d => scaleFactor*d.gridY)
-				.attr("r", 16 ) // must be at least 9 to show up as a circle?
-				.attr("fillStyle", d => typeColor(d.disastertype) )
-				.attr("opacity", 0)
-	} // databind1A()
-
-	function databind1B(dataToBind) {  // grid of all events - transition
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => scaleFactor*d.gridX)
-				.attr("cy", d => scaleFactor*d.gridY)
-				.attr("r", 16 ) // must be at least 9 to show up as a circle?
-				.attr("opacity", 0.4)
-	} // databind1B()
-
-	function databind6(dataToBind) {  // deadliest individual events / log scale
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cy", d => scaleYdeadliest(d.deaths))
-				.attr("cx", d => scaleXdeadliest(d.disastertype) + scaleXdeadliest.bandwidth()*d.jitter)
-				.attr("r", 13 )
-				.attr("opacity", 0.5)
-	} // databind6()
-
-	function databind7(dataToBind, deathMin=0) {  // deaths by year
-		let i = 0;
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => scaleXyear(d.year)-31+62*d.jitter)
-				.attr("cy", d => scaleYdeaths(d.deaths))
-				.attr("r", 24 )
-				.attr("opacity", function(d) {
-					if (d.deaths < deathMin) {
-						return 0
-					} else { return 0.6 }
-				})
-	} // databind7()
 
 	function databind8(dataToBind, deathMin=37000) {  // deaths by year top 15 - MAP
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
