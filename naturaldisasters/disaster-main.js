@@ -152,26 +152,29 @@ window.createGraphic = function(graphicSelector) {
 	// INITIALIZE DRAWING SPACES
 	//----------------------------------------------------------------------------
 
-	// create an svg which we will use for our world map / background image
-	var svgBackground = d3.select("#viz-container").append('svg');
+	function initializeDrawingSpaces() {
+		// create an svg which we will use for our world map / background image
+		svgBackground = d3.select("#viz-container").append('svg');
 
-	// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
-	//   the latter of which will be used for rendering our elements to the canvas
-	// note that defining the width/height of the drawing space is distinct from
-	//   setting the size in CSS
-	var canvas = d3.select('#viz-container')
-		.append('canvas')
-		.attr('width', canvasWidth)
-		.attr('height', canvasHeight) ;
-	var ctx = canvas.node().getContext('2d');
+		// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
+		//   the latter of which will be used for rendering our elements to the canvas
+		// note that defining the width/height of the drawing space is distinct from
+		//   setting the size in CSS
+		canvas = d3.select('#viz-container')
+			.append('canvas')
+			.attr('width', canvasWidth)
+			.attr('height', canvasHeight) ;
+		ctx = canvas.node().getContext('2d');
 
-	// create a 'custom' element that will be part of a 'virtual' DOM
-	//   we will use this to bind our data without cluttering the actual DOM
-	var detachedContainer = document.createElement("custom");
-	var dataContainer = d3.select(detachedContainer);
+		// create a 'custom' element that will be part of a 'virtual' DOM
+		//   we will use this to bind our data without cluttering the actual DOM
+		detachedContainer = document.createElement("custom");
+		dataContainer = d3.select(detachedContainer);
 
-	// create an svg which we will use for axes and/or other plotting needs
-	var svgForeground = d3.select("#viz-container").append('svg');
+		// create an svg which we will use for axes and/or other plotting needs
+		svgForeground = d3.select("#viz-container").append('svg');
+	}
+	initializeDrawingSpaces()
 
 
 
@@ -443,33 +446,35 @@ window.createGraphic = function(graphicSelector) {
 
 		// SVG setup
 
-		// pane 1
-		textIntroNums = svgForeground.append("g") // this explanatory text shows up on the first pane
-			.attr("class", "textIntroNums") // this is purely to make the group easy to see in 'inspect'
-			.attr("opacity",0)
-		textIntroNums.append("text") // "59 years"
-			.attr("class", "pane1text yearCount")
-			.attr("x", (textRectangles[0]["x1"]+textRectangles[0]["x2"])/2 )
-			.attr("y", 23+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
-		textIntroNums.append("text") // "8,982 disasters"
-			.attr("class", "pane1text eventCount")
-			.attr("x", (textRectangles[1]["x1"]+textRectangles[1]["x2"])/2 )
-			.attr("y", 20+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
-		textIntroNums.append("text") // "3,428,650 lives lost"
-			.attr("class", "pane1text deathCount")
-			.attr("x", (textRectangles[2]["x1"]+textRectangles[2]["x2"])/2 )
-			.attr("y", 18+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
-		textIntroNums.append("text") // "countless lives altered"
-			.attr("class", "pane1text livesCount")
-			.attr("x", (textRectangles[3]["x1"]+textRectangles[3]["x2"])/2 )
-			.attr("y", 18+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
+		// pane 1 - create display text
+		function createDisplayText() {
+			textIntroNums = svgForeground.append("g") // this explanatory text shows up on the first pane
+				.attr("class", "textIntroNums") // this is purely to make the group easy to see in 'inspect'
+				.attr("opacity",0)
+			textIntroNums.append("text") // "59 years"
+				.attr("class", "pane1text yearCount")
+				.attr("x", (textRectangles[0]["x1"]+textRectangles[0]["x2"])/2 )
+				.attr("y", 23+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
+			textIntroNums.append("text") // "8,982 disasters"
+				.attr("class", "pane1text eventCount")
+				.attr("x", (textRectangles[1]["x1"]+textRectangles[1]["x2"])/2 )
+				.attr("y", 20+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
+			textIntroNums.append("text") // "3,428,650 lives lost"
+				.attr("class", "pane1text deathCount")
+				.attr("x", (textRectangles[2]["x1"]+textRectangles[2]["x2"])/2 )
+				.attr("y", 18+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
+			textIntroNums.append("text") // "countless lives altered"
+				.attr("class", "pane1text livesCount")
+				.attr("x", (textRectangles[3]["x1"]+textRectangles[3]["x2"])/2 )
+				.attr("y", 18+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
 
-		// using .innerHTML here so I can include tspans (for separate text sizing)
-		document.querySelector(".pane1text.yearCount").innerHTML = "<tspan>59</tspan> years"
-		document.querySelector(".pane1text.eventCount").innerHTML = "<tspan>8,982</tspan> disasters"
-		document.querySelector(".pane1text.deathCount").innerHTML = "<tspan>3,428,650</tspan> lives lost"
-		document.querySelector(".pane1text.livesCount").innerHTML = "<tspan>Countless</tspan> lives altered"
-
+			// using .innerHTML here so I can include tspans (for separate text sizing)
+			document.querySelector(".pane1text.yearCount").innerHTML = "<tspan>59</tspan> years"
+			document.querySelector(".pane1text.eventCount").innerHTML = "<tspan>8,982</tspan> disasters"
+			document.querySelector(".pane1text.deathCount").innerHTML = "<tspan>3,428,650</tspan> lives lost"
+			document.querySelector(".pane1text.livesCount").innerHTML = "<tspan>Countless</tspan> lives altered"
+		}
+		createDisplayText()
 
 		// pane 2
 		scaleXeventCount = d3.scaleLinear() // event counts by type
@@ -490,155 +495,169 @@ window.createGraphic = function(graphicSelector) {
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
 
 		// panes 3 and 8 - world map
-		mapGroup = svgBackground.append('g')
-			.attr('width', dispWidth)
-			.attr('height', dispHeight);
-		projection = d3.geoNaturalEarth1()
-			.scale(dispWidth / 1.4 / Math.PI)
-			.translate([-20+ dispWidth / 2, dispHeight / 2]);
-		geoPath = d3.geoPath(projection);
-		// draw the map and set the opacity to 0
-		d3.json("world.geojson").then( function(worldData){
-		  mapGroup.selectAll('path')
-		    .data(worldData.features)
-		    .join('path')
-		    .attr('fill', '#EAE0DB')
-				.attr('opacity', 0)
-		    .attr('d', geoPath);
-		});
+		function createMap() {
+			mapGroup = svgBackground.append('g')
+				.attr('width', dispWidth)
+				.attr('height', dispHeight);
+			projection = d3.geoNaturalEarth1()
+				.scale(dispWidth / 1.4 / Math.PI)
+				.translate([-20+ dispWidth / 2, dispHeight / 2]);
+			geoPath = d3.geoPath(projection);
+			// draw the map and set the opacity to 0
+			d3.json("world.geojson").then( function(worldData){
+				mapGroup.selectAll('path')
+					.data(worldData.features)
+					.join('path')
+					.attr('fill', '#EAE0DB')
+					.attr('opacity', 0)
+					.attr('d', geoPath);
+			});
+		}
+		createMap()
 
-		// pane 2
-		// create a bar chart of disaster counts by type
-		barsByTypeG = svgBackground.append("g")
-			.attr("class", "eventsByType") // this is purely to make the group easy to see in 'inspect'
-			.attr("opacity",0)
-		barsByTypeG.selectAll("rect.typeBg") // background bars
-			.data(eventsByType)
-			.join("rect")
-			.attr("class","typeBg")
-			.attr("x", d => scaleXeventCount(0) )
-			.attr("y", d => scaleYtypes(d[0]) )
-			.attr("width", paneDim(2,1).right-paneDim(2,1).left )
-			.attr("height", scaleYtypes.bandwidth() )
-			.attr("fill","#EFE8E4")
-			.attr("opacity", 0.9);
-		barsByTypeG.selectAll("rect.typeCounts") // event count bars
-			.data(eventsByType)
-			.join("rect")
-			.attr("class","typeCounts")
-			.attr("x", d => scaleXeventCount(0) )
-			.attr("y", d => scaleYtypes(d[0]) )
-			.attr("width", d => scaleXeventCount(d[1]) - paneDim(2,1).left )
-			.attr("height", scaleYtypes.bandwidth() )
-			.attr("fill", d => typeColor(d[0]) )
-			.attr("opacity", 0.7);
-		eventsByTypeLabels = barsByTypeG.append("g")
-		eventsByTypeLabels.selectAll("text") // disaster type names
-			.data(eventsByType)
-			.join("text")
-			.text(d => d[0])
-			.attr("x", paneDim(2,1).left)
-			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
-		eventsByTypeLabels.selectAll("text.count") // eventCounts
-			.data(eventsByType)
-			.join("text")
-			.attr("class","count")
-			.text(d => d[1])
-			.attr("x", d => scaleXeventCount(d[1])+5 )
-			.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
+		// pane 2 - create a bar chart of disaster counts by type
+		function createBars2() {
+			barsByTypeG = svgBackground.append("g")
+				.attr("class", "eventsByType") // this is purely to make the group easy to see in 'inspect'
+				.attr("opacity",0)
+			barsByTypeG.selectAll("rect.typeBg") // background bars
+				.data(eventsByType)
+				.join("rect")
+				.attr("class","typeBg")
+				.attr("x", d => scaleXeventCount(0) )
+				.attr("y", d => scaleYtypes(d[0]) )
+				.attr("width", paneDim(2,1).right-paneDim(2,1).left )
+				.attr("height", scaleYtypes.bandwidth() )
+				.attr("fill","#EFE8E4")
+				.attr("opacity", 0.9);
+			barsByTypeG.selectAll("rect.typeCounts") // event count bars
+				.data(eventsByType)
+				.join("rect")
+				.attr("class","typeCounts")
+				.attr("x", d => scaleXeventCount(0) )
+				.attr("y", d => scaleYtypes(d[0]) )
+				.attr("width", d => scaleXeventCount(d[1]) - paneDim(2,1).left )
+				.attr("height", scaleYtypes.bandwidth() )
+				.attr("fill", d => typeColor(d[0]) )
+				.attr("opacity", 0.7);
+			eventsByTypeLabels = barsByTypeG.append("g")
+			eventsByTypeLabels.selectAll("text") // disaster type names
+				.data(eventsByType)
+				.join("text")
+				.text(d => d[0])
+				.attr("x", paneDim(2,1).left)
+				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
+			eventsByTypeLabels.selectAll("text.count") // eventCounts
+				.data(eventsByType)
+				.join("text")
+				.attr("class","count")
+				.text(d => d[1])
+				.attr("x", d => scaleXeventCount(d[1])+5 )
+				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
+		}
+		createBars2()
 
+		// pane 4 - create a bar chart of total death counts by type
+		function createBars4() {
+			deathsByTypeG = svgBackground.append("g")
+				.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
+				.attr("opacity",0)
+			deathsByTypeG.selectAll("rect.typeBg") // background bars
+				.data(eventTypesByDeathTolls)
+				.join("rect")
+				.attr("class","typeBg")
+				.attr("x", d => scaleXtypes(d[0]) )
+				.attr("y", d => paneDim(4,1).top )
+				.attr("width", scaleXtypes.bandwidth() )
+				.attr("height", paneDim(4,1).bottom-paneDim(4,1).top )
+				.attr("fill","#EFE8E4")
+				.attr("opacity", 0.9);
+			deathsByTypeG.selectAll("rect.typeCounts") // death toll bars
+				.data(eventTypesByDeathTolls)
+				.join("rect")
+				.attr("class","typeCounts")
+				.attr("x", d => scaleXtypes(d[0]) )
+				.attr("y", d => scaleYdeathCount(d[1]) )
+				.attr("width", d => scaleXtypes.bandwidth() )
+				.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
+				.attr("fill", d => typeColor(d[0]) )
+				.attr("opacity", 0.8);
+				//.attr("opacity", 0.7);  // for the sized-by-death-toll version
+			deathsByTypeLabels = deathsByTypeG.append("g")
+			deathsByTypeLabels.selectAll("text") // disaster type names
+				.data(eventTypesByDeathTolls)
+				.join("text")
+				.text(d => d[0])
+				.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
+				.attr("text-anchor", "middle")
+				.attr("y", paneDim(4,1).bottom + 28)
+			deathsByTypeLabels.selectAll("text.count") // eventCounts
+				.data(eventTypesByDeathTolls)
+				.join("text")
+				.attr("class","count")
+				.text(d => d[1])
+				.attr("x", d => scaleXtypes(d[0])+scaleXtypes.bandwidth()/2 )
+				.attr("text-anchor", "middle")
+				.attr("y", d => scaleYdeathCount(d[1]) - 11 );
+		}
+		createBars4()
 
-		// pane 4
-		// create a bar chart of total death counts by type
-		deathsByTypeG = svgBackground.append("g")
-			.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
-			.attr("opacity",0)
-		deathsByTypeG.selectAll("rect.typeBg") // background bars
-			.data(eventTypesByDeathTolls)
-			.join("rect")
-			.attr("class","typeBg")
-			.attr("x", d => scaleXtypes(d[0]) )
-			.attr("y", d => paneDim(4,1).top )
-			.attr("width", scaleXtypes.bandwidth() )
-			.attr("height", paneDim(4,1).bottom-paneDim(4,1).top )
-			.attr("fill","#EFE8E4")
-			.attr("opacity", 0.9);
-		deathsByTypeG.selectAll("rect.typeCounts") // death toll bars
-			.data(eventTypesByDeathTolls)
-			.join("rect")
-			.attr("class","typeCounts")
-			.attr("x", d => scaleXtypes(d[0]) )
-			.attr("y", d => scaleYdeathCount(d[1]) )
-			.attr("width", d => scaleXtypes.bandwidth() )
-			.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
-			.attr("fill", d => typeColor(d[0]) )
-			.attr("opacity", 0.8);
-			//.attr("opacity", 0.7);  // for the sized-by-death-toll version
-		deathsByTypeLabels = deathsByTypeG.append("g")
-		deathsByTypeLabels.selectAll("text") // disaster type names
-			.data(eventTypesByDeathTolls)
-			.join("text")
-			.text(d => d[0])
-			.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
-			.attr("text-anchor", "middle")
-			.attr("y", paneDim(4,1).bottom + 28)
-		deathsByTypeLabels.selectAll("text.count") // eventCounts
-			.data(eventTypesByDeathTolls)
-			.join("text")
-			.attr("class","count")
-			.text(d => d[1])
-			.attr("x", d => scaleXtypes(d[0])+scaleXtypes.bandwidth()/2 )
-			.attr("text-anchor", "middle")
-			.attr("y", d => scaleYdeathCount(d[1]) - 11 );
+		// pane 6 - create lightly colored background bars for the log plots
+		function createBars6() {
+			logBarsG = svgBackground.append("g")
+				.attr("class", "logBars") // this is purely to make the group easy to see in 'inspect'
+				.attr("opacity",0)
+			logBarsG.selectAll("rect")
+				.data(eventsByType)
+				.join("rect")
+				.attr("x", d => scaleXdeadliest(d[0])/scaleFactor ) // since the scale was written for canvas, need scaleFactor here...
+				.attr("y", d => paneDim(6,1).top )
+				.attr("width", scaleXdeadliest.bandwidth()/scaleFactor )
+				.attr("height", paneDim(6,1).bottom-paneDim(6,1).top )
+				.attr("fill", d => typeColor(d[0]) )
+				.attr("opacity", 0.1);
+		}
+		createBars6()
 
-		// pane 6
-		// create lightly colored background bars for the log plots
-		logBarsG = svgBackground.append("g")
-			.attr("class", "logBars") // this is purely to make the group easy to see in 'inspect'
-			.attr("opacity",0)
-		logBarsG.selectAll("rect")
-			.data(eventsByType)
-			.join("rect")
-			.attr("x", d => scaleXdeadliest(d[0])/scaleFactor ) // since the scale was written for canvas, need scaleFactor here...
-			.attr("y", d => paneDim(6,1).top )
-			.attr("width", scaleXdeadliest.bandwidth()/scaleFactor )
-			.attr("height", paneDim(6,1).bottom-paneDim(6,1).top )
-			.attr("fill", d => typeColor(d[0]) )
-			.attr("opacity", 0.1);
+		// pane 7 - create lollipop lines
+		function createLollipopLines() {
+			lollipopLines = svgBackground.append("g")
+				.attr("class", "lollipopLines") // this is purely to make the group easy to see in 'inspect'
+				.attr("opacity",1)
+			lollipopLines.selectAll("line")
+				.data(lollipopEvents)
+				.join("line")
+				.attr("stroke", d => typeColor(d.disastertype))
+				.attr("stroke-width", 1.5 )
+				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y1", d => dispHeight*1.2)
+				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("y2", d => dispHeight*1.2)
+				.attr("opacity", 0.7)
+		}
+		createLollipopLines()
 
-		// pane 7
-		// create lollipop lines
-		lollipopLines = svgBackground.append("g")
-			.attr("class", "lollipopLines") // this is purely to make the group easy to see in 'inspect'
-			.attr("opacity",1)
-		lollipopLines.selectAll("line")
-			.data(lollipopEvents)
-			.join("line")
-			.attr("stroke", d => typeColor(d.disastertype))
-			.attr("stroke-width", 1.5 )
-			.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
-			.attr("y1", d => dispHeight*1.2)
-			.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
-			.attr("y2", d => dispHeight*1.2)
-			.attr("opacity", 0.7)
-
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i]
-			circleStartInfo[i] = {
-				'cx': scaleFactor*node.gridX,
-				'cy': scaleFactor*node.gridY,
-				'r': 16,
-				'fill': typeColor(node.disastertype),
-				'opacity': 0
-			}
-			circleEndInfo[i] = {
-				'cx':scaleFactor*node.gridX,
-				'cy': scaleFactor*node.gridY,
-				'r': 16,
-				'fill': typeColor(node.disastertype),
-				'opacity': 0.3
+		// create dicts to keep track of circle positions for the transitions
+		function initiateCircleInfo() {
+			for (let i = 0; i < eventsFlat.length; i++) {
+				node = eventsFlat[i]
+				circleStartInfo[i] = {
+					'cx': scaleFactor*node.gridX,
+					'cy': scaleFactor*node.gridY,
+					'r': 16,
+					'fill': typeColor(node.disastertype),
+					'opacity': 0
+				}
+				circleEndInfo[i] = {
+					'cx':scaleFactor*node.gridX,
+					'cy': scaleFactor*node.gridY,
+					'r': 16,
+					'fill': typeColor(node.disastertype),
+					'opacity': 0.3
+				}
 			}
 		}
+		initiateCircleInfo()
 
 		setupComplete = true;
 	}  // setupCharts
@@ -680,9 +699,9 @@ window.createGraphic = function(graphicSelector) {
 			var pct = Math.min(ease(timeElapsed / duration), 1.0);
 
 			for (let i = 0; i < eventsFlat.length; i++) {
-				circleStartInfo[i].cx = interpolators[i][0](pct);
-				circleStartInfo[i].cy = interpolators[i][1](pct);
-				circleStartInfo[i].r = interpolators[i][2](pct);
+				circleStartInfo[i].cx = Math.floor(interpolators[i][0](pct));
+				circleStartInfo[i].cy = Math.floor(interpolators[i][1](pct));
+				circleStartInfo[i].r = Math.floor(interpolators[i][2](pct));
 				circleStartInfo[i].fill = interpolators[i][3](pct);
 				circleStartInfo[i].opacity = interpolators[i][4](pct);
 			}
