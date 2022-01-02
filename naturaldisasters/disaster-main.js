@@ -15,8 +15,15 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
+
+	// variables needed for transition method
 	var circleStartInfo = {};
 	var circleEndInfo = {};
+	var ease = d3.easeCubicInOut;
+	var duration = 1500;
+	var timeElapsed = 0;
+	var interpolators = null;
+
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
 
@@ -611,6 +618,40 @@ window.createGraphic = function(graphicSelector) {
 	//----------------------------------------------------------------------------
 	//  DATA BINDING AND DRAWING FUNCTIONS
 	//----------------------------------------------------------------------------
+
+	// on each waypoint trigger, create new interpolator functions to be used for drawing circles
+	function moveCircles() {
+		interpolators = {}
+		for (var i = 0; i < eventsFlat.length; i++) {
+			interpolators[i] = [
+				d3.interpolate(circleStartInfo[i].cx, circleEndInfo[i].cx),
+				d3.interpolate(circleStartInfo[i].cy, circleEndInfo[i].cy),
+				d3.interpolate(circleStartInfo[i].r, circleEndInfo[i].r),
+				d3.interpolate(circleStartInfo[i].fill, circleEndInfo[i].fill)
+			];
+		}
+		timeElapsed = 0;
+	} // moveCircles()
+
+	// iterate through every event and update the circleStartInfo
+	//   to allow redrawing a single frame accordingly
+	function interpCircMove(dt) {
+		if (interpolators) {
+			timeElapsed += dt;
+			var pct = Math.min(ease(timeElapsed / duration), 1.0);
+
+			for (var i = 0; i < eventsFlat.length; i++) {
+				circleStartInfo[i].cx = interpolators[i][0](pct);
+				circleStartInfo[i].cy = interpolators[i][1](pct);
+				circleStartInfo[i].r = interpolators[i][2](pct);
+				circleStartInfo[i].fill = interpolators[i][3](pct);
+			}
+
+			if (timeElapsed >= duration) {
+				interpolators = null;
+			}
+		}
+	}
 
 	// these functions bind the data to the "virtual" DOM elements and define the
 	//   attributes and transitions that will be used to generate each step in the
