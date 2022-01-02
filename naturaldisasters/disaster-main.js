@@ -584,7 +584,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("y2", d => dispHeight*1.2)
 			.attr("opacity", 0.7)
 
-		for (var i = 0; i < eventsFlat.length; i++) {
+		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i]
 			circleStartInfo[i] = {
 				'cx': scaleFactor*node.gridX,
@@ -622,7 +622,7 @@ window.createGraphic = function(graphicSelector) {
 	// on each waypoint trigger, create new interpolator functions to be used for drawing circles
 	function moveCircles() {
 		interpolators = {}
-		for (var i = 0; i < eventsFlat.length; i++) {
+		for (let i = 0; i < eventsFlat.length; i++) {
 			interpolators[i] = [
 				d3.interpolate(circleStartInfo[i].cx, circleEndInfo[i].cx),
 				d3.interpolate(circleStartInfo[i].cy, circleEndInfo[i].cy),
@@ -640,7 +640,7 @@ window.createGraphic = function(graphicSelector) {
 			timeElapsed += dt;
 			var pct = Math.min(ease(timeElapsed / duration), 1.0);
 
-			for (var i = 0; i < eventsFlat.length; i++) {
+			for (let i = 0; i < eventsFlat.length; i++) {
 				circleStartInfo[i].cx = interpolators[i][0](pct);
 				circleStartInfo[i].cy = interpolators[i][1](pct);
 				circleStartInfo[i].r = interpolators[i][2](pct);
@@ -652,6 +652,66 @@ window.createGraphic = function(graphicSelector) {
 			}
 		}
 	}
+
+	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
+	// this function clears and redraws one frame onto the canvas
+	function drawCircles() {
+		ctx.clearRect(0,0,canvasWidth,canvasHeight);
+
+		for (let i = 0; i < eventsFlat.length; i++) {
+			ctx.fillStyle = circleStartInfo[i].fill  // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
+			ctx.globalAlpha = 0.4
+			ctx.beginPath();
+			ctx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
+			ctx.fill()
+			ctx.closePath()
+		}
+	}
+
+	// update circleEndInfo with new target formatting for each eventCircle
+	function defineTransitionToPane1() {
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*node.gridX,
+				'cy': scaleFactor*node.gridY,
+				'r': 16,
+				'fill': typeColor(node.disastertype)
+		}}
+	} // defineTransitionToPane1()
+
+	function defineTransitionToPane2() {
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
+				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
+				'r': 16,
+				'fill': typeColor(node.disastertype)
+		}}
+	} // defineTransitionToPane2()
+
+	function defineTransitionToPane3() {
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': 7*Math.sqrt(node.geoIdCount),
+				'fill': typeColor(node.disastertype)
+		}}
+	} // defineTransitionToPane3()
+
+	function defineTransitionToPane4() {
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
+				'cy': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
+				'r': 16,
+				'fill': typeColor(node.disastertype)
+		}}
+	} // defineTransitionToPane4()
 
 	// these functions bind the data to the "virtual" DOM elements and define the
 	//   attributes and transitions that will be used to generate each step in the
