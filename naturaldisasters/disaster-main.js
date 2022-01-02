@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var circleStartInfo = {};
 	var circleEndInfo = {};
 	var ease = d3.easeCubicInOut;
-	var duration = 1500;
+	var duration = 3500;
 	var timeElapsed = 0;
 	var interpolators = null;
 
@@ -127,17 +127,17 @@ window.createGraphic = function(graphicSelector) {
 			return col;
 	} // genColor()
 
-	// var stats = new Stats();
-	// stats.setMode(0); // 0: fps, 1: ms, 2: mb
-	//
-	// // align top-left
-	// stats.domElement.style.position = 'fixed';
-	// stats.domElement.style.left = '0px';
-	// stats.domElement.style.top = '0px';
-	//
-	// document.body.appendChild( stats.domElement );
-	//
-	//
+	var stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+
+	// align top-left
+	stats.domElement.style.position = 'fixed';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+
+	document.body.appendChild( stats.domElement );
+
+
 	// var dt = 0;
 	// d3.timer(function(elapsed) {
 	// 		stats.begin();
@@ -181,22 +181,48 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
-			if (setupComplete) { // avoids "object doesn't exist" errors
+			if (setupComplete) {
+				console.log("starting step 0")
 				barsByTypeG.transition()
 					.duration(speedFactor*700)
 					.attr('opacity',0)
 				textIntroNums.transition()
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
-				databind1B(eventsFlat);
+				defineTransitionToPane1()
+				moveCircles()
+				let dt = 0;
 				var t = d3.timer(function(elapsed) {
-					drawEventElements();
-					if (elapsed > speedFactor*850) t.stop();
-				}); // Timer running the draw function repeatedly for 850 ms.
+					stats.begin();
+					interpCircMove(elapsed - dt);
+					dt = elapsed;
+					stats.end();
+					drawCircles()
+					if (elapsed > duration) {
+						console.log("ending step 0")
+						t.stop()
+					};
+				});
 			}
+
+			// if (setupComplete) { // avoids "object doesn't exist" errors
+			// 	barsByTypeG.transition()
+			// 		.duration(speedFactor*700)
+			// 		.attr('opacity',0)
+			// 	textIntroNums.transition()
+			// 		.duration(speedFactor*800)
+			// 		.attr("opacity",0.92)
+			// 	databind1B(eventsFlat);
+			// 	var t = d3.timer(function(elapsed) {
+			// 		drawEventElements();
+			// 		if (elapsed > speedFactor*850) t.stop();
+			// 	}); // Timer running the draw function repeatedly for 850 ms.
+			// }
 		}, // step0()
 
 		function step1() {  // pane TWO - placeholder
+			console.log("starting step 1")
+			console.log(circleEndInfo)
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -206,25 +232,57 @@ window.createGraphic = function(graphicSelector) {
 			textIntroNums.transition()
 				.duration(speedFactor*500)
 				.attr("opacity",0)
-			databind2(eventsFlat);
+			defineTransitionToPane2()
+			moveCircles()
+			let dt = 0;
 			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+				stats.begin();
+				interpCircMove(elapsed - dt);
+				dt = elapsed;
+				stats.end();
+				drawCircles()
+				if (elapsed > duration) {
+					console.log("ending step 1")
+					t.stop()
+				};
+			});
+
+			// databind2(eventsFlat);
+			// var t = d3.timer(function(elapsed) {
+			// 	drawEventElements();
+			// 	if (elapsed > speedFactor*850) t.stop();
+			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step1()
 
 		function step2() {  // pane THREE
+			console.log("starting step 2")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
 			barsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind3(eventsFlat);
+
+			defineTransitionToPane3()
+			moveCircles()
+			let dt = 0;
 			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+				stats.begin();
+				interpCircMove(elapsed - dt);
+				dt = elapsed;
+				stats.end();
+				drawCircles()
+				if (elapsed > duration) {
+					console.log("ending step 2")
+					t.stop()
+				};
+			});
+
+			// databind3(eventsFlat);
+			// var t = d3.timer(function(elapsed) {
+			// 	drawEventElements();
+			// 	if (elapsed > speedFactor*850) t.stop();
+			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
