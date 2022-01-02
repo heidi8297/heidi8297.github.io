@@ -21,7 +21,7 @@ window.createGraphic = function(graphicSelector) {
 	var circleStartInfo = {};
 	var circleEndInfo = {};
 	var ease = d3.easeCubicInOut;
-	var duration = 2000;
+	var setDuration = 2000;
 	var timeElapsed = 0;
 	var interpolators = null;
 
@@ -194,16 +194,7 @@ window.createGraphic = function(graphicSelector) {
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
 				transitionPane1()
-				moveCircles()
-				let dt = 0;
-				let t = d3.timer(function(elapsed) {
-					stats.begin();
-					interpCircMove(elapsed - dt);
-					dt = elapsed;
-					drawCircles()
-					stats.end();
-					if (elapsed > duration || stepInc !== lockInc) t.stop();
-				});
+				animateCircles(stepInc)
 			}
 		}, // step0()
 
@@ -219,16 +210,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*500)
 				.attr("opacity",0)
 			transitionPane2()
-			moveCircles()
-			let dt = 0;
-			let t = d3.timer(function(elapsed) {
-				stats.begin();
-				interpCircMove(elapsed - dt);
-				dt = elapsed;
-				drawCircles()
-				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) t.stop();
-			});
+			animateCircles(stepInc)
 		}, // step1()
 
 		function step2() {  // pane THREE
@@ -239,18 +221,8 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-
 			transitionPane3()
-			moveCircles()
-			let dt = 0;
-			let t = d3.timer(function(elapsed) {
-				stats.begin();
-				interpCircMove(elapsed - dt);
-				dt = elapsed;
-				drawCircles()
-				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) t.stop();
-			});
+			animateCircles(stepInc)
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
@@ -261,18 +233,8 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-
 			transitionPane3B()
-			moveCircles()
-			let dt = 0;
-			let t = d3.timer(function(elapsed) {
-				stats.begin();
-				interpCircMove(elapsed - dt);
-				dt = elapsed;
-				drawCircles()
-				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) t.stop();
-			});
+			animateCircles(stepInc)
 		}, // step3()
 
 		function step4() {  // pane FOUR - placeholder
@@ -283,18 +245,8 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
-
 			transitionPane4()
-			moveCircles()
-			let dt = 0;
-			let t = d3.timer(function(elapsed) {
-				stats.begin();
-				interpCircMove(elapsed - dt);
-				dt = elapsed;
-				drawCircles()
-				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) t.stop();
-			});
+			animateCircles(stepInc)
 		}, // step4()
 
 		function step5() {  // pane FIVE - placeholder
@@ -696,7 +648,7 @@ window.createGraphic = function(graphicSelector) {
 	function interpCircMove(dt) {
 		if (interpolators) {
 			timeElapsed += dt;
-			var pct = Math.min(ease(timeElapsed / duration), 1.0);
+			var pct = Math.min(ease(timeElapsed / setDuration), 1.0);
 
 			for (let i = 0; i < eventsFlat.length; i++) {
 				circleStartInfo[i].cx = Math.floor(interpolators[i][0](pct));
@@ -706,7 +658,7 @@ window.createGraphic = function(graphicSelector) {
 				circleStartInfo[i].opacity = interpolators[i][4](pct);
 			}
 
-			if (timeElapsed >= duration) {
+			if (timeElapsed >= setDuration) {
 				interpolators = null;
 			}
 		}
@@ -718,13 +670,27 @@ window.createGraphic = function(graphicSelector) {
 		ctx.clearRect(0,0,canvasWidth,canvasHeight);
 
 		for (let i = 0; i < eventsFlat.length; i++) {
-			ctx.fillStyle = circleStartInfo[i].fill  // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
+			ctx.fillStyle = circleStartInfo[i].fill
 			ctx.globalAlpha = circleStartInfo[i].opacity
 			ctx.beginPath();
 			ctx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
 			ctx.fill()
 			ctx.closePath()
 		}
+	}
+
+	// this function activates the animation for the length specified by duration
+	function animateCircles(currentInc) {
+		moveCircles()
+		let dt = 0;
+		let t = d3.timer(function(elapsed) {
+			stats.begin();
+			interpCircMove(elapsed - dt);
+			dt = elapsed;
+			drawCircles()
+			stats.end();
+			if (elapsed > setDuration || currentInc !== lockInc) t.stop();
+		});
 	}
 
 	// update circleEndInfo with new target formatting for each eventCircle
