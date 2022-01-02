@@ -125,7 +125,7 @@ window.createGraphic = function(graphicSelector) {
 					ret.push((nextCol & 0xff00) >> 8); // G
 					ret.push((nextCol & 0xff0000) >> 16); // B
 
-					nextCol += 1;
+					nextCol += 100;
 			}
 			var col = "rgb(" + ret.join(',') + ")";
 			return col;
@@ -186,7 +186,7 @@ window.createGraphic = function(graphicSelector) {
 			.append('canvas')
 			.attr('width', canvasWidth)
 			.attr('height', canvasHeight)
-      .style('display','none')
+      //.style('display','none')
 			.attr("class", "hiddenCanvas"); // this is purely to make it easy to see in 'inspect'
     hiddenCtx = hiddenCanvas.node().getContext("2d");
 
@@ -197,8 +197,21 @@ window.createGraphic = function(graphicSelector) {
 	}
 	initializeDrawingSpaces()
 
-	d3.select('.mainCanvas').on('mousemove', function() {
-	  drawCircles(hiddenCtx, true); // Draw the hidden canvas.
+	d3.select('.mainCanvas').on('mousemove', function(e) {
+	  drawCircles(hiddenCtx, true); // draw the hidden canvas
+
+		// Get mouse positions from the main canvas - returned in disp (svg) units
+		var mouseX = scaleFactor*(e.layerX || e.offsetX);
+		var mouseY = scaleFactor*(e.layerY || e.offsetY);
+
+		// pick the color from the mouse position
+		var pickedCol = hiddenCtx.getImageData(mouseX, mouseY, 1, 1).data;
+
+		// Then stringify the values in a way our map-object can read it.
+  	var colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
+
+		console.log(colKey);
+
 	});
 
 	//----------------------------------------------------------------------------
@@ -700,16 +713,16 @@ window.createGraphic = function(graphicSelector) {
         if (node.color == null) {
           // If we have never drawn the node to the hidden canvas get a new color for it and put it in the dictionary.
           node.color = genColor();
-					console.log(node)
           colToCircle[node.color] = node;
         }
         // On the hidden canvas each circle gets a unique color.
         chosenCtx.fillStyle = node.color;
+				chosenCtx.globalAlpha = 1;
       } else {
         chosenCtx.fillStyle = circleStartInfo[i].fill;  // color based on disaster type
+				chosenCtx.globalAlpha = circleStartInfo[i].opacity
       }
 
-			chosenCtx.globalAlpha = circleStartInfo[i].opacity
 			chosenCtx.beginPath();
 			chosenCtx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
 			chosenCtx.fill()

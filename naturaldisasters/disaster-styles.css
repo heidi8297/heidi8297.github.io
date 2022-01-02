@@ -169,7 +169,7 @@ header h2 {
 	transform: translateY(-50%); */
 }
 
-.svgForeground {
+.svgForeground, .hiddenCanvas {
   pointer-events: none; /* makes it possible to register 'mousemove' events from mainCanvas */
 }
 
