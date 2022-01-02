@@ -114,7 +114,7 @@ window.createGraphic = function(graphicSelector) {
 	//Generates the next color in the sequence, going from 0,0,0 to 255,255,255.
 	//From: https://bocoup.com/weblog/2d-picking-in-canvas
 	var nextCol = 1;
-	function genColor(){
+	function genColor() {
 			var ret = [];
 			// via http://stackoverflow.com/a/15804183
 			if (nextCol < 16777215) {
@@ -250,6 +250,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step4()
 
 		function step5() {  // pane FIVE - placeholder
+			let stepInc = lockInc += 1;
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -259,11 +260,8 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind5(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			transitionPane5()
+			animateCircles(stepInc)
 		}, // step5()
 
 		function step6() {  // pane SIX
@@ -597,14 +595,14 @@ window.createGraphic = function(graphicSelector) {
 					'cx': scaleFactor*node.gridX,
 					'cy': scaleFactor*node.gridY,
 					'r': 16,
-					'fill': typeColor(node.disastertype),
+					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
 					'opacity': 0
 				}
 				circleEndInfo[i] = {
 					'cx':scaleFactor*node.gridX,
 					'cy': scaleFactor*node.gridY,
 					'r': 16,
-					'fill': typeColor(node.disastertype),
+					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
 					'opacity': 0.3
 				}
 			}
@@ -636,7 +634,6 @@ window.createGraphic = function(graphicSelector) {
 				d3.interpolate(circleStartInfo[i].cx, circleEndInfo[i].cx),
 				d3.interpolate(circleStartInfo[i].cy, circleEndInfo[i].cy),
 				d3.interpolate(circleStartInfo[i].r, circleEndInfo[i].r),
-				d3.interpolate(circleStartInfo[i].fill, circleEndInfo[i].fill),
 				d3.interpolate(circleStartInfo[i].opacity, circleEndInfo[i].opacity)
 			];
 		}
@@ -654,8 +651,7 @@ window.createGraphic = function(graphicSelector) {
 				circleStartInfo[i].cx = Math.floor(interpolators[i][0](pct));
 				circleStartInfo[i].cy = Math.floor(interpolators[i][1](pct));
 				circleStartInfo[i].r = Math.floor(interpolators[i][2](pct));
-				circleStartInfo[i].fill = interpolators[i][3](pct);
-				circleStartInfo[i].opacity = interpolators[i][4](pct);
+				circleStartInfo[i].opacity = interpolators[i][3](pct);
 			}
 
 			if (timeElapsed >= setDuration) {
@@ -693,66 +689,74 @@ window.createGraphic = function(graphicSelector) {
 		});
 	}
 
+	
+
 	// update circleEndInfo with new target formatting for each eventCircle
-	function transitionPane1() {
+	function transitionPane1() {  // "grid" of events with summary numbers
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*node.gridX,
 				'cy': scaleFactor*node.gridY,
 				'r': 16,
-				'fill': typeColor(node.disastertype),
 				'opacity': 0.4
 		}}
 	} // transitionPane1()
 
-	function transitionPane2() {
+	function transitionPane2() {  // horizontal bar chart of event counts by type
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
 				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
 				'r': 16,
-				'fill': typeColor(node.disastertype),
 				'opacity': 0.4
 		}}
 	} // transitionPane2()
 
-	function transitionPane3() {
+	function transitionPane3() {  // world map animation of events by year
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
 				'r': 7*Math.sqrt(node.geoIdCount),
-				'fill': typeColor(node.disastertype),
 				'opacity': 0.4
 		}}
 	} // transitionPane3()
 
-	function transitionPane3B() {
+	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
 				'r': 7*Math.sqrt(node.geoIdCount),
-				'fill': typeColor(node.disastertype),
 				'opacity': 0.4
 		}}
 	} // transitionPane3B()
 
-	function transitionPane4() {
+	function transitionPane4() {   // vertical bar chart for total death count by disaster type
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
 				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
 				'r': 16,
-				'fill': typeColor(node.disastertype),
 				'opacity': 0.4
 		}}
 	} // transitionPane4()
+
+	function transitionPane5() {   // slopegraphs - currently just a placeholder
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': canvasWidth*node.jitter*node.jitter,
+				'cy': canvasHeight*node.jitter2,
+				'r': 2*node.geoIdCount,
+				'opacity': 0.6
+		}}
+	} // transitionPane5()
 
 
 
@@ -788,20 +792,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("r", 16 ) // must be at least 9 to show up as a circle?
 				.attr("opacity", 0.4)
 	} // databind1B()
-
-	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => canvasWidth*d.jitter*d.jitter)
-				.attr("cy", d => canvasHeight*d.jitter2)
-				.attr("r", d => 2*d.geoIdCount )
-				.attr("opacity", 0.6)
-	} // databind5()
 
 	function databind6(dataToBind) {  // deadliest individual events / log scale
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
