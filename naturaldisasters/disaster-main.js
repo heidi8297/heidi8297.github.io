@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var circleStartInfo = {};
 	var circleEndInfo = {};
 	var ease = d3.easeCubicInOut;
-	var duration = 2200;
+	var duration = 2000;
 	var timeElapsed = 0;
 	var interpolators = null;
 
@@ -196,8 +196,8 @@ window.createGraphic = function(graphicSelector) {
 					stats.begin();
 					interpCircMove(elapsed - dt);
 					dt = elapsed;
-					stats.end();
 					drawCircles()
+					stats.end();
 					if (elapsed > duration) {
 						console.log("ending step 0")
 						t.stop()
@@ -224,8 +224,8 @@ window.createGraphic = function(graphicSelector) {
 				stats.begin();
 				interpCircMove(elapsed - dt);
 				dt = elapsed;
-				stats.end();
 				drawCircles()
+				stats.end();
 				if (elapsed > duration) {
 					console.log("ending step 1")
 					t.stop()
@@ -249,8 +249,8 @@ window.createGraphic = function(graphicSelector) {
 				stats.begin();
 				interpCircMove(elapsed - dt);
 				dt = elapsed;
-				stats.end();
 				drawCircles()
+				stats.end();
 				if (elapsed > duration) {
 					console.log("ending step 2")
 					t.stop()
@@ -274,34 +274,38 @@ window.createGraphic = function(graphicSelector) {
 				stats.begin();
 				interpCircMove(elapsed - dt);
 				dt = elapsed;
-				stats.end();
 				drawCircles()
+				stats.end();
 				if (elapsed > duration) {
 					console.log("ending step 3")
 					t.stop()
 				};
 			});
-
-			// databind3(eventsFlat);
-			// var t = d3.timer(function(elapsed) {
-			// 	drawEventElements();
-			// 	if (elapsed > speedFactor*850) t.stop();
-			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step3()
 
 		function step4() {  // pane FOUR - placeholder
+			console.log("starting step 4")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
-				//.attr('opacity',1)  // for the sized-by-death-toll version
-			databind4(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+
+			transitionPane4()
+			moveCircles()
+			let dt = 0;
+			let t = d3.timer(function(elapsed) {
+				stats.begin();
+				interpCircMove(elapsed - dt);
+				dt = elapsed;
+				drawCircles()
+				stats.end();
+				if (elapsed > duration) {
+					console.log("ending step 4")
+					t.stop()
+				};
+			});
 		}, // step4()
 
 		function step5() {  // pane FIVE - placeholder
@@ -765,16 +769,18 @@ window.createGraphic = function(graphicSelector) {
 		}}
 	} // transitionPane3B()
 
-	function defineTransitionToPane4() {
+	function transitionPane4() {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
-				'cy': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
+				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
 				'r': 16,
 				'fill': typeColor(node.disastertype)
 		}}
-	} // defineTransitionToPane4()
+	} // transitionPane4()
+
+
 
 	// these functions bind the data to the "virtual" DOM elements and define the
 	//   attributes and transitions that will be used to generate each step in the
@@ -808,52 +814,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("r", 16 ) // must be at least 9 to show up as a circle?
 				.attr("opacity", 0.4)
 	} // databind1B()
-
-	function databind2(dataToBind) {  // disasters by type bars - currently just a placeholder
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
-				.attr("cx", d => 7+scaleFactor*scaleXeventCount(d.jitter2*(d.typeCount-14)))
-				.attr("cy", d => scaleFactor*(scaleYtypes(d.disastertype)+scaleYtypes.bandwidth()*d.jitter))
-				.attr("r", d => 16 )
-				.attr("opacity", 0.4)
-	} // databind2()
-
-	function databind3(dataToBind) {  // disasters map animation - currently just a placeholder
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => scaleFactor*projection([d.longitude,d.latitude])[1] )
-				.attr("r", d => 6*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", 0.53)
-	} // databind3()
-
-	function databind4(dataToBind) {  // bar chart - deadliest disasters overall
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				// the 7 and the 14 serve to keep the event circles a little more contained within the bars
-				.attr("cy", d => 7+scaleFactor*scaleYdeathCount(d.jitter2*(d.typeDeathCount-14)))
-				.attr("cx", d => scaleFactor*(scaleXtypes(d.disastertype)+scaleXtypes.bandwidth()*d.jitter))
-				.attr("r", 16)
-				//.attr("r", d => 0.5*Math.sqrt(d.deaths) )  // for the sized-by-death-toll version
-				.attr("opacity", 0.4)
-				//.attr("opacity", 0.7)  // for the sized-by-death-toll version
-	} // databind4()
 
 	function databind5(dataToBind) {  // slopegraphs - currently just a placeholder
 		var boundElements = dataContainer.selectAll("custom.eventCircle")
