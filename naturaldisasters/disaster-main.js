@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	var circleStartInfo = {};
 	var circleEndInfo = {};
 	var ease = d3.easeCubicInOut;
-	var duration = 3500;
+	var duration = 2200;
 	var timeElapsed = 0;
 	var interpolators = null;
 
@@ -189,10 +189,10 @@ window.createGraphic = function(graphicSelector) {
 				textIntroNums.transition()
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
-				defineTransitionToPane1()
+				transitionPane1()
 				moveCircles()
 				let dt = 0;
-				var t = d3.timer(function(elapsed) {
+				let t = d3.timer(function(elapsed) {
 					stats.begin();
 					interpCircMove(elapsed - dt);
 					dt = elapsed;
@@ -204,25 +204,10 @@ window.createGraphic = function(graphicSelector) {
 					};
 				});
 			}
-
-			// if (setupComplete) { // avoids "object doesn't exist" errors
-			// 	barsByTypeG.transition()
-			// 		.duration(speedFactor*700)
-			// 		.attr('opacity',0)
-			// 	textIntroNums.transition()
-			// 		.duration(speedFactor*800)
-			// 		.attr("opacity",0.92)
-			// 	databind1B(eventsFlat);
-			// 	var t = d3.timer(function(elapsed) {
-			// 		drawEventElements();
-			// 		if (elapsed > speedFactor*850) t.stop();
-			// 	}); // Timer running the draw function repeatedly for 850 ms.
-			// }
 		}, // step0()
 
 		function step1() {  // pane TWO - placeholder
 			console.log("starting step 1")
-			console.log(circleEndInfo)
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -232,10 +217,10 @@ window.createGraphic = function(graphicSelector) {
 			textIntroNums.transition()
 				.duration(speedFactor*500)
 				.attr("opacity",0)
-			defineTransitionToPane2()
+			transitionPane2()
 			moveCircles()
 			let dt = 0;
-			var t = d3.timer(function(elapsed) {
+			let t = d3.timer(function(elapsed) {
 				stats.begin();
 				interpCircMove(elapsed - dt);
 				dt = elapsed;
@@ -246,12 +231,6 @@ window.createGraphic = function(graphicSelector) {
 					t.stop()
 				};
 			});
-
-			// databind2(eventsFlat);
-			// var t = d3.timer(function(elapsed) {
-			// 	drawEventElements();
-			// 	if (elapsed > speedFactor*850) t.stop();
-			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step1()
 
 		function step2() {  // pane THREE
@@ -263,10 +242,10 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*700)
 				.attr('opacity',0)
 
-			defineTransitionToPane3()
+			transitionPane3()
 			moveCircles()
 			let dt = 0;
-			var t = d3.timer(function(elapsed) {
+			let t = d3.timer(function(elapsed) {
 				stats.begin();
 				interpCircMove(elapsed - dt);
 				dt = elapsed;
@@ -277,26 +256,37 @@ window.createGraphic = function(graphicSelector) {
 					t.stop()
 				};
 			});
-
-			// databind3(eventsFlat);
-			// var t = d3.timer(function(elapsed) {
-			// 	drawEventElements();
-			// 	if (elapsed > speedFactor*850) t.stop();
-			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
+			console.log("starting step 3")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			databind3(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+
+			transitionPane3B()
+			moveCircles()
+			let dt = 0;
+			let t = d3.timer(function(elapsed) {
+				stats.begin();
+				interpCircMove(elapsed - dt);
+				dt = elapsed;
+				stats.end();
+				drawCircles()
+				if (elapsed > duration) {
+					console.log("ending step 3")
+					t.stop()
+				};
+			});
+
+			// databind3(eventsFlat);
+			// var t = d3.timer(function(elapsed) {
+			// 	drawEventElements();
+			// 	if (elapsed > speedFactor*850) t.stop();
+			// }); // Timer running the draw function repeatedly for 850 ms.
 		}, // step3()
 
 		function step4() {  // pane FOUR - placeholder
@@ -665,6 +655,10 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
+		console.log(circleStartInfo[0])
+		console.log(circleEndInfo[0])
+		console.log(circleStartInfo[7000])
+		console.log(circleEndInfo[7000])
 		databind1A(eventsFlat)  // create event circles, make invisible
 		databind1B(eventsFlat) // transition event circles into view
 		drawEventElements()
@@ -727,7 +721,7 @@ window.createGraphic = function(graphicSelector) {
 	}
 
 	// update circleEndInfo with new target formatting for each eventCircle
-	function defineTransitionToPane1() {
+	function transitionPane1() {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -736,9 +730,9 @@ window.createGraphic = function(graphicSelector) {
 				'r': 16,
 				'fill': typeColor(node.disastertype)
 		}}
-	} // defineTransitionToPane1()
+	} // transitionPane1()
 
-	function defineTransitionToPane2() {
+	function transitionPane2() {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -747,9 +741,9 @@ window.createGraphic = function(graphicSelector) {
 				'r': 16,
 				'fill': typeColor(node.disastertype)
 		}}
-	} // defineTransitionToPane2()
+	} // transitionPane2()
 
-	function defineTransitionToPane3() {
+	function transitionPane3() {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -758,7 +752,18 @@ window.createGraphic = function(graphicSelector) {
 				'r': 7*Math.sqrt(node.geoIdCount),
 				'fill': typeColor(node.disastertype)
 		}}
-	} // defineTransitionToPane3()
+	} // transitionPane3()
+
+	function transitionPane3B() {
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': 7*Math.sqrt(node.geoIdCount),
+				'fill': typeColor(node.disastertype)
+		}}
+	} // transitionPane3B()
 
 	function defineTransitionToPane4() {
 		for (let i = 0; i < eventsFlat.length; i++) {
