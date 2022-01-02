@@ -48,7 +48,7 @@ h1,h2,h3,h4,h5,h6 {
   color: #3F3027;
 }
 
-p {
+p, .tooltip {
   color: #3F3027;
   margin: 1.5rem 0;
 }
@@ -167,6 +167,25 @@ header h2 {
 	-webkit-transform: translateY(-50%);
 	-moz-transform: translateY(-50%);
 	transform: translateY(-50%); */
+}
+
+.svgForeground {
+  pointer-events: none; /* makes it possible to register 'mousemove' events from mainCanvas */
+}
+
+.tooltip {
+  background-color: #EAE0DB;
+  border: 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  height: auto;
+  letter-spacing: 0px;
+  opacity: 0;
+  padding: 3px 6px;
+  pointer-events: none;
+  position: absolute;
+  text-align: left;
 }
 
 .pane1text {

@@ -152,12 +152,13 @@ window.createGraphic = function(graphicSelector) {
 	// });
 
 	//----------------------------------------------------------------------------
-	// INITIALIZE DRAWING SPACES
+	// INITIALIZE DRAWING SPACES AND TOOLTIP FUNCTIONALITY
 	//----------------------------------------------------------------------------
 
 	function initializeDrawingSpaces() {
 		// create an svg which we will use for our world map / background image
-		svgBackground = d3.select("#viz-container").append('svg');
+		svgBackground = d3.select("#viz-container").append('svg')
+			.attr("class", "svgBackground"); // this is purely to make it easy to see in 'inspect'
 
 		// create variables for referring to the 'canvas' element in HTML and to its CONTEXT
 		//   the latter of which will be used for rendering our elements to the canvas
@@ -166,7 +167,8 @@ window.createGraphic = function(graphicSelector) {
 		mainCanvas = d3.select('#viz-container')
 			.append('canvas')
 			.attr('width', canvasWidth)
-			.attr('height', canvasHeight) ;
+			.attr('height', canvasHeight)
+			.attr("class", "mainCanvas"); // this is purely to make it easy to see in 'inspect'
 		mainCtx = mainCanvas.node().getContext('2d');
 
 		// create a 'custom' element that will be part of a 'virtual' DOM
@@ -175,7 +177,8 @@ window.createGraphic = function(graphicSelector) {
 		dataContainer = d3.select(detachedContainer);
 
 		// create an svg which we will use for axes and/or other plotting needs
-		svgForeground = d3.select("#viz-container").append('svg');
+		svgForeground = d3.select("#viz-container").append('svg')
+			.attr("class", "svgForeground"); // this is purely to make it easy to see in 'inspect'
 
 		// create a hidden canvas in which each circle will have a different color
     // we can use this for tooltips
@@ -183,13 +186,20 @@ window.createGraphic = function(graphicSelector) {
 			.append('canvas')
 			.attr('width', canvasWidth)
 			.attr('height', canvasHeight)
-      .style('display','none');
-    var hiddenCtx = hiddenCanvas.node().getContext("2d");
-    hiddenCtx.clearRect(0,0,canvasWidth,canvasHeight);
+      .style('display','none')
+			.attr("class", "hiddenCanvas"); // this is purely to make it easy to see in 'inspect'
+    hiddenCtx = hiddenCanvas.node().getContext("2d");
+
+		// Define the div for the tooltip
+		tooltipMain = d3.select("body").append("div")
+		  .attr("class", "tooltip tooltipMain");
+
 	}
 	initializeDrawingSpaces()
 
-
+	d3.select('.mainCanvas').on('mousemove', function() {
+	  drawCircles(hiddenCtx, true); // Draw the hidden canvas.
+	});
 
 	//----------------------------------------------------------------------------
 	// STEPS / TRANSITIONS
