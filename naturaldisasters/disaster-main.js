@@ -184,7 +184,6 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {  // pane ONE
 			if (setupComplete) {
 				let stepInc = lockInc += 1;
-				console.log("starting step 0")
 				barsByTypeG.transition()
 					.duration(speedFactor*700)
 					.attr('opacity',0)
@@ -200,17 +199,13 @@ window.createGraphic = function(graphicSelector) {
 					dt = elapsed;
 					drawCircles()
 					stats.end();
-					if (elapsed > duration || stepInc !== lockInc) {
-						console.log("ending step 0")
-						t.stop()
-					};
+					if (elapsed > duration || stepInc !== lockInc) t.stop();
 				});
 			}
 		}, // step0()
 
 		function step1() {  // pane TWO - placeholder
 			let stepInc = lockInc += 1;
-			console.log("starting step 1")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -229,16 +224,12 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) {
-					console.log("ending step 1")
-					t.stop()
-				};
+				if (elapsed > duration || stepInc !== lockInc) t.stop();
 			});
 		}, // step1()
 
 		function step2() {  // pane THREE
 			let stepInc = lockInc += 1;
-			console.log("starting step 2")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
@@ -255,16 +246,12 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) {
-					console.log("ending step 2")
-					t.stop()
-				};
+				if (elapsed > duration || stepInc !== lockInc) t.stop();
 			});
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
 			let stepInc = lockInc += 1;
-			console.log("starting step 3")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -281,16 +268,12 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) {
-					console.log("ending step 3")
-					t.stop()
-				};
+				if (elapsed > duration || stepInc !== lockInc) t.stop();
 			});
 		}, // step3()
 
 		function step4() {  // pane FOUR - placeholder
 			let stepInc = lockInc += 1;
-			console.log("starting step 4")
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -307,10 +290,7 @@ window.createGraphic = function(graphicSelector) {
 				dt = elapsed;
 				drawCircles()
 				stats.end();
-				if (elapsed > duration || stepInc !== lockInc) {
-					console.log("ending step 4")
-					t.stop()
-				};
+				if (elapsed > duration || stepInc !== lockInc) t.stop();
 			});
 		}, // step4()
 
@@ -665,10 +645,6 @@ window.createGraphic = function(graphicSelector) {
 
 	function init() {
 		setupCharts()
-		console.log(circleStartInfo[0])
-		console.log(circleEndInfo[0])
-		console.log(circleStartInfo[7000])
-		console.log(circleEndInfo[7000])
 		databind1A(eventsFlat)  // create event circles, make invisible
 		databind1B(eventsFlat) // transition event circles into view
 		drawEventElements()
@@ -689,7 +665,8 @@ window.createGraphic = function(graphicSelector) {
 				d3.interpolate(circleStartInfo[i].cx, circleEndInfo[i].cx),
 				d3.interpolate(circleStartInfo[i].cy, circleEndInfo[i].cy),
 				d3.interpolate(circleStartInfo[i].r, circleEndInfo[i].r),
-				d3.interpolate(circleStartInfo[i].fill, circleEndInfo[i].fill)
+				d3.interpolate(circleStartInfo[i].fill, circleEndInfo[i].fill),
+				d3.interpolate(circleStartInfo[i].opacity, circleEndInfo[i].opacity)
 			];
 		}
 		timeElapsed = 0;
@@ -707,6 +684,7 @@ window.createGraphic = function(graphicSelector) {
 				circleStartInfo[i].cy = interpolators[i][1](pct);
 				circleStartInfo[i].r = interpolators[i][2](pct);
 				circleStartInfo[i].fill = interpolators[i][3](pct);
+				circleStartInfo[i].opacity = interpolators[i][4](pct);
 			}
 
 			if (timeElapsed >= duration) {
@@ -722,7 +700,7 @@ window.createGraphic = function(graphicSelector) {
 
 		for (let i = 0; i < eventsFlat.length; i++) {
 			ctx.fillStyle = circleStartInfo[i].fill  // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
-			ctx.globalAlpha = 0.4
+			ctx.globalAlpha = circleStartInfo[i].opacity
 			ctx.beginPath();
 			ctx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
 			ctx.fill()
@@ -738,7 +716,8 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*node.gridX,
 				'cy': scaleFactor*node.gridY,
 				'r': 16,
-				'fill': typeColor(node.disastertype)
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.4
 		}}
 	} // transitionPane1()
 
@@ -749,7 +728,8 @@ window.createGraphic = function(graphicSelector) {
 				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
 				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
 				'r': 16,
-				'fill': typeColor(node.disastertype)
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.4
 		}}
 	} // transitionPane2()
 
@@ -760,7 +740,8 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
 				'r': 7*Math.sqrt(node.geoIdCount),
-				'fill': typeColor(node.disastertype)
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.4
 		}}
 	} // transitionPane3()
 
@@ -771,7 +752,8 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
 				'r': 7*Math.sqrt(node.geoIdCount),
-				'fill': typeColor(node.disastertype)
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.4
 		}}
 	} // transitionPane3B()
 
@@ -782,7 +764,8 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
 				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
 				'r': 16,
-				'fill': typeColor(node.disastertype)
+				'fill': typeColor(node.disastertype),
+				'opacity': 0.4
 		}}
 	} // transitionPane4()
 
@@ -1007,8 +990,6 @@ window.createGraphic = function(graphicSelector) {
 			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
 		).sort((a,b) => d3.descending(+a[1], +b[1]) );
 		eventsByTypeObject = Object.fromEntries(eventsByType); // create an object to use below
-
-		console.log(eventsByType)
 
 		// get total death toll by disaster type
 		eventTypesByDeathTolls = Array.from(
