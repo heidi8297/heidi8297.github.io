@@ -25,6 +25,9 @@ window.createGraphic = function(graphicSelector) {
 	var timeElapsed = 0;
 	var interpolators = null;
 
+	//Dataset to swtich between color of a circle (in the hidden canvas) and the node data
+  var colToCircle = {};
+
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
 
@@ -160,11 +163,11 @@ window.createGraphic = function(graphicSelector) {
 		//   the latter of which will be used for rendering our elements to the canvas
 		// note that defining the width/height of the drawing space is distinct from
 		//   setting the size in CSS
-		canvas = d3.select('#viz-container')
+		mainCanvas = d3.select('#viz-container')
 			.append('canvas')
 			.attr('width', canvasWidth)
 			.attr('height', canvasHeight) ;
-		ctx = canvas.node().getContext('2d');
+		mainCtx = mainCanvas.node().getContext('2d');
 
 		// create a 'custom' element that will be part of a 'virtual' DOM
 		//   we will use this to bind our data without cluttering the actual DOM
@@ -173,6 +176,16 @@ window.createGraphic = function(graphicSelector) {
 
 		// create an svg which we will use for axes and/or other plotting needs
 		svgForeground = d3.select("#viz-container").append('svg');
+
+		// create a hidden canvas in which each circle will have a different color
+    // we can use this for tooltips
+    hiddenCanvas  = d3.select('#viz-container')
+			.append('canvas')
+			.attr('width', canvasWidth)
+			.attr('height', canvasHeight)
+      .style('display','none');
+    var hiddenCtx = hiddenCanvas.node().getContext("2d");
+    hiddenCtx.clearRect(0,0,canvasWidth,canvasHeight);
 	}
 	initializeDrawingSpaces()
 
@@ -617,7 +630,7 @@ window.createGraphic = function(graphicSelector) {
 			stats.begin();
 			interpCircMove(elapsed - dt);
 			dt = elapsed;
-			drawCircles()
+			drawCircles(mainCtx)
 			stats.end();
 			if (elapsed > setDuration || stepInc !== lockInc) t.stop();
 		});
@@ -666,16 +679,31 @@ window.createGraphic = function(graphicSelector) {
 
 	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
 	// this function clears and redraws one frame onto the canvas
-	function drawCircles() {
-		ctx.clearRect(0,0,canvasWidth,canvasHeight);
+	function drawCircles(chosenCtx, hidden = false) {
+		chosenCtx.clearRect(0,0,canvasWidth,canvasHeight);
 
 		for (let i = 0; i < eventsFlat.length; i++) {
-			ctx.fillStyle = circleStartInfo[i].fill
-			ctx.globalAlpha = circleStartInfo[i].opacity
-			ctx.beginPath();
-			ctx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
-			ctx.fill()
-			ctx.closePath()
+			node = eventsFlat[i];
+			// set the fillstyle depending on whether we're using the mainCtx or the hiddenCtx
+			//   mainCtx gets the colors based on disaster type, hiddenCtx gets unique colors for each circle
+			if (hidden) {
+        if (node.color == null) {
+          // If we have never drawn the node to the hidden canvas get a new color for it and put it in the dictionary.
+          node.color = genColor();
+					console.log(node)
+          colToCircle[node.color] = node;
+        }
+        // On the hidden canvas each circle gets a unique color.
+        chosenCtx.fillStyle = node.color;
+      } else {
+        chosenCtx.fillStyle = circleStartInfo[i].fill;  // color based on disaster type
+      }
+
+			chosenCtx.globalAlpha = circleStartInfo[i].opacity
+			chosenCtx.beginPath();
+			chosenCtx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
+			chosenCtx.fill()
+			chosenCtx.closePath()
 		}
 	}
 
@@ -687,7 +715,7 @@ window.createGraphic = function(graphicSelector) {
 			stats.begin();
 			interpCircMove(elapsed - dt);
 			dt = elapsed;
-			drawCircles()
+			drawCircles(mainCtx)
 			stats.end();
 			if (elapsed > setDuration || currentInc !== lockInc) t.stop();
 		});
@@ -855,16 +883,16 @@ window.createGraphic = function(graphicSelector) {
 	} // databind10()
 
 	function drawEventElements() {
-		ctx.clearRect(0,0,canvasWidth,canvasHeight);
+		mainCtx.clearRect(0,0,canvasWidth,canvasHeight);
 		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
 			var node = d3.select(this);   // This is each individual element in the loop.
-			ctx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
-			ctx.globalAlpha = node.attr("opacity")
-			ctx.beginPath();
-			ctx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
+			mainCtx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
+			mainCtx.globalAlpha = node.attr("opacity")
+			mainCtx.beginPath();
+			mainCtx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
 									0,  2 * Math.PI, true);
-			ctx.fill()
-			ctx.closePath()
+			mainCtx.fill()
+			mainCtx.closePath()
 		})
 	} // drawEventElements()
 
