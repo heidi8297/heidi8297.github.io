@@ -6,13 +6,23 @@
   <title>Natural Disasters</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-12NPY4109R');
-  </script> -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script type="text/javascript">
+    var analytics = true;
+    try {
+      if(
+        'localStorage' in window &&
+        window['localStorage'] !== null &&
+        localStorage["analytics"] == 'no' // check for local 'analytics' variable
+      ) { analytics = false }             // if value is set to no, DO NOT TRACK
+    } catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    if (analytics) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12NPY4109R');
+    } else { console.log('Google Analytics has been disabled') }
+  </script>
 
 
   <!-- Make the webpage perform better on mobile? -->
@@ -96,6 +106,7 @@
 
   <!-- for the graphic -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="/d3-legend.min.js" charset="utf-8"></script>
   <script src='disaster-main.js'></script>
 
   <!-- load core.js file -->

@@ -121,12 +121,10 @@ window.createGraphic = function(graphicSelector) {
 	var nextCol = 1;
 	function genColor() {
 			var ret = [];
-			// via http://stackoverflow.com/a/15804183
-			if (nextCol < 16777215) {
+			if (nextCol < 16777215) {   // via http://stackoverflow.com/a/15804183
 					ret.push(nextCol & 0xff); // R
 					ret.push((nextCol & 0xff00) >> 8); // G
 					ret.push((nextCol & 0xff0000) >> 16); // B
-
 					nextCol += 1;
 			}
 			var col = "rgb(" + ret.join(',') + ")";
@@ -226,6 +224,8 @@ window.createGraphic = function(graphicSelector) {
 		d3.select(".tooltipMain")
 		 .style("opacity", 0);
 	});
+
+
 
 	//----------------------------------------------------------------------------
 	// STEPS / TRANSITIONS
@@ -440,6 +440,20 @@ window.createGraphic = function(graphicSelector) {
 
 
 		// SVG setup
+
+		// create color legend for disaster types
+		svgForeground.append("g")
+		  .attr("class", "legendOrdinal")
+		  .attr("transform", "translate(20,20)");
+
+		var legendOrdinal = d3.legendColor()
+		  .shape("circle")
+		  .shapePadding(10)
+		  .scale(typeColor);
+
+		d3.select(".legendOrdinal")
+		  .call(legendOrdinal);
+
 
 		// pane 1 - create display text
 		function createDisplayText() {
@@ -1083,17 +1097,17 @@ window.createGraphic = function(graphicSelector) {
 		console.log(eventsFlat.length)
 
 		// stack the eventsByYear data by TYPE - each type will be represented on top of each other
-		mygroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
-		mygroup = [0,1,2,3,4,5,6] // list of group names
-		stackedData = d3.stack()
-			.keys(mygroup)
-			.value(function(d, key){
-				console.log(d[1][key])
-				return d[1][key].year
-			})
-			(eventsByYear)
-
-		console.log(stackedData)
+		// mygroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
+		// mygroup = [0,1,2,3,4,5,6] // list of group names
+		// stackedData = d3.stack()
+		// 	.keys(mygroup)
+		// 	.value(function(d, key){
+		// 		console.log(d[1][key])
+		// 		return d[1][key].year
+		// 	})
+		// 	(eventsByYear)
+		//
+		// console.log(stackedData)
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
