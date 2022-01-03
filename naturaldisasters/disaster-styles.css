@@ -139,6 +139,10 @@ header h2 {
   min-height: 200px;
 }
 
+.cell .swatch { /* opacity for all legend swatches */
+  opacity: 0.8;
+}
+
 
 /* div wrapper for svg */
 #viz-container {

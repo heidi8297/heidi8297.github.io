@@ -40,11 +40,6 @@ window.createGraphic = function(graphicSelector) {
 
 	let setupComplete = false;
 
-	// provide a disaster type and return a corresponding color
-	const typeColor = d3.scaleOrdinal()
-		.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
-		.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
-
 	// create an svg path in a teardrop shape of specified size, spacer and orientation
 	// size = radius of circle, spacer = pixels from origin
 	function teardrop(size=10, spacer=3, orientation=0) {
@@ -419,6 +414,12 @@ window.createGraphic = function(graphicSelector) {
 	// initiate the scales and all elements in the svg (background map, bar charts, etc)
 	function setupCharts() {
 
+		// the sole color scale for disaster circles - based on disaster type
+		typeColor = d3.scaleOrdinal()
+			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
+			.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
+
+
 		// CANVAS setup
 
 		// pane 6
@@ -449,6 +450,7 @@ window.createGraphic = function(graphicSelector) {
 		var legendOrdinal = d3.legendColor()
 		  .shape("circle")
 		  .shapePadding(10)
+			.shapeRadius(8)
 		  .scale(typeColor);
 
 		//d3.select(".legendOrdinal")
@@ -596,6 +598,20 @@ window.createGraphic = function(graphicSelector) {
 				)
 		}
 		createArea3()
+
+		svgForeground.append('g')
+			.selectAll("path")
+			.data(eventsStackedByType)
+			.join("path")
+				.style("fill", function(d) { type = typeGroups[d.key] ;  return typeColor(type); })
+				.attr("d", d3.area()
+					.x((d,i) => scaleXyearSvg(d.data.key) )
+					.y0( function(d) {
+						console.log(d)
+						return scaleYeventCountSvg(d[0])
+					}   )
+					.y1( d => scaleYeventCountSvg(d[1]) )
+			)
 
 		// pane 4 - create a bar chart of total death counts by type
 		function createBars4() {
@@ -1044,7 +1060,8 @@ window.createGraphic = function(graphicSelector) {
 					totalAffected: d3.min(v, d => d.totalAffected),
 					otherNotes: d3.min(v, d => d.otherNotes),
 					jitter: Math.random(),
-					jitter2: Math.random()
+					jitter2: Math.random(),
+					one: 1 // used for the stacked area chart
 		  	};
 			},
 		  d => d.disasterno
@@ -1096,18 +1113,86 @@ window.createGraphic = function(graphicSelector) {
 		}
 		console.log(eventsFlat.length)
 
+
+		//// NEED TO CREATE ROLLUPS FOR EACH EVENT TYPE
+		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values})); // recreates the format of d3.nest
+
 		// stack the eventsByYear data by TYPE - each type will be represented on top of each other
-		// mygroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
-		// mygroup = [0,1,2,3,4,5,6] // list of group names
-		// stackedData = d3.stack()
-		// 	.keys(mygroup)
-		// 	.value(function(d, key){
-		// 		console.log(d[1][key])
-		// 		return d[1][key].year
-		// 	})
-		// 	(eventsByYear)
-		//
-		// console.log(stackedData)
+		typeGroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
+		typeKeys = [0,1,2,3,4,5,6] // list of group keys
+
+		var color = d3.scaleOrdinal()
+			.domain(typeGroups)
+			.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+
+		eventsStackedByType = d3.stack()
+			.keys(typeKeys)
+			.value( (d,key) => (d.values[key]) ? d.values[key].one : 0 )
+			(eventsByYearNest)
+
+		// svgForeground.append('g')
+	  //   .selectAll("path")
+	  //   .data(eventsStackedByType)
+	  //   .join("path")
+	  //     .style("fill", function(d) { type = typeGroups[d.key] ;  return color(type); })
+	  //     .attr("d", d3.area()
+	  //       .x((d,i) => scaleXyearSvg(d.data.key) )
+	  //       .y0( d => scaleYeventCountSvg(d[0]) )
+	  //       .y1( d => scaleYeventCountSvg(d[1]) )
+	  //   )
+
+
+		myData = [
+			{key: 1960, values: [
+				{year: 1960, num: 12, type: 'flood'},
+				{year: 1960, num: 14, type: 'flood'},
+				{year: 1960, num: 18, type: 'storm'}
+			]},
+			{key: 1961, values: [
+				{year: 1961, num: 1, type: 'flood'},
+				{year: 1961, num: 2, type: 'storm'},
+				{year: 1961, num: 3, type: 'fire'}
+			]},
+			{key: 1962, values: [
+				{year: 1962, num: 112, type: 'fire'},
+				{year: 1962, num: 54, type: 'fire'},
+				{year: 1962, num: 118, type: 'flood'}
+			]}
+		]
+
+		var mygroups = ["flood", "storm", "fire"] // list of group names
+	  var mygroup = [0,1,2] // list of group names
+	  var stackedData = d3.stack()
+	    .keys(mygroup)
+	    .value(function(d, key){
+	      return d.values[key].num
+	    })
+	    (myData)
+
+		var x = d3.scaleLinear()
+			.domain([1960,1962])
+			.range([ 0, 400 ]);
+
+		var y = d3.scaleLinear()
+			.domain([0, 300])
+	 		.range([ 400, 0 ]);
+
+		// var color = d3.scaleOrdinal()
+		// 	.domain(mygroups)
+		// 	.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+
+		// svgForeground.append('g')
+	  //   .selectAll("path")
+	  //   .data(stackedData)
+	  //   .join("path")
+	  //     .style("fill", function(d) { type = mygroups[d.key] ;  return color(type); })
+	  //     .attr("d", d3.area()
+	  //       .x((d,i) => x(d.data.key) )
+	  //       .y0( d => y(d[0]) )
+	  //       .y1( d => y(d[1]) )
+	  //   )
+
+
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
