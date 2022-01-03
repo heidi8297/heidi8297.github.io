@@ -451,8 +451,8 @@ window.createGraphic = function(graphicSelector) {
 		  .shapePadding(10)
 		  .scale(typeColor);
 
-		d3.select(".legendOrdinal")
-		  .call(legendOrdinal);
+		//d3.select(".legendOrdinal")
+		//  .call(legendOrdinal);
 
 
 		// pane 1 - create display text
