@@ -236,12 +236,12 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {  // pane ONE
 			if (setupComplete) {
 				let stepInc = lockInc += 1;
-				barsByTypeG.transition()
-					.duration(speedFactor*700)
-					.attr('opacity',0)
-				textIntroNums.transition()
+				textIntroNums.transition() // pane ONE
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
+				barsByTypeG.transition() // pane TWO
+					.duration(speedFactor*700)
+					.attr('opacity',0)
 				transitionPane1()
 				animateCircles(stepInc)
 			}
@@ -249,46 +249,46 @@ window.createGraphic = function(graphicSelector) {
 
 		function step1() {  // pane TWO - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-			stackedAreaG.transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-			barsByTypeG.transition()
-				.duration(speedFactor*1100)
-				.attr('opacity',0.8)
-			textIntroNums.transition()
+			textIntroNums.transition() // pane ONE
 				.duration(speedFactor*500)
 				.attr("opacity",0)
+			barsByTypeG.transition() // pane TWO
+				.duration(speedFactor*1100)
+				.attr('opacity',0.8)
+			mapGroup.selectAll("path").transition() // pane THREE
+				.duration(speedFactor*800)
+				.attr('opacity',0)
+			stackedAreaG.transition() // pane THREE
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			transitionPane2()
 			animateCircles(stepInc)
 		}, // step1()
 
 		function step2() {  // pane THREE
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0.8)
-			stackedAreaG.transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0.6)
-			barsByTypeG.transition()
+			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*700)
 				.attr('opacity',0)
+			mapGroup.selectAll("path").transition() // pane THREE
+				.duration(speedFactor*800)
+				.attr('opacity',0.8)
+			stackedAreaG.transition() // pane THREE
+				.duration(speedFactor*800)
+				.attr('opacity',0.6)
 			transitionPane3()
 			animateCircles(stepInc)
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
+			mapGroup.selectAll("path").transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			stackedAreaG.transition()
+			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.6)
-			deathsByTypeG.transition()
+			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*700)
 				.attr('opacity',0)
 			transitionPane3B()
@@ -297,13 +297,13 @@ window.createGraphic = function(graphicSelector) {
 
 		function step4() {  // pane FOUR - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
+			mapGroup.selectAll("path").transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			stackedAreaG.transition()
+			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			deathsByTypeG.transition()
+			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
 			transitionPane4()
@@ -312,13 +312,10 @@ window.createGraphic = function(graphicSelector) {
 
 		function step5() {  // pane FIVE - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-			deathsByTypeG.transition()
+			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			logBarsG.transition()
+			logBarsG.transition() // pane SIX
 				.duration(speedFactor*700)
 				.attr('opacity',0)
 			transitionPane5()
@@ -327,13 +324,10 @@ window.createGraphic = function(graphicSelector) {
 
 		function step6() {  // pane SIX
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-			logBarsG.transition()
+			logBarsG.transition() // pane SIX
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
-			lollipopLines.selectAll("line")
+			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
@@ -346,34 +340,34 @@ window.createGraphic = function(graphicSelector) {
 
 		function step7() {  // pane SEVEN
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-			logBarsG.transition()
+			logBarsG.transition() // pane SIX
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			lollipopLines.selectAll("line")
+			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
 				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
 				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
+			mapGroup.selectAll("path").transition() // pane EIGHT
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			transitionPane7()
 			animateCircles(stepInc)
 		}, // step7()
 
 		function step8() {  // pane EIGHT
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0.8)
-			lollipopLines.selectAll("line")
+			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y1", d => dispHeight*1.2)
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y2", d => dispHeight*1.2)
+			mapGroup.selectAll("path").transition() // pane EIGHT
+				.duration(speedFactor*800)
+				.attr('opacity',0.8)
 			databind8(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -382,7 +376,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step8()
 
 		function step9() {  // pane NINE
-			mapGroup.selectAll("path").transition()
+			mapGroup.selectAll("path").transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			databind9A(eventsFlat);
@@ -393,9 +387,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step9()
 
 		function step10() {  // pane NINE B - placeholder
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
 			databind9B(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -404,9 +395,6 @@ window.createGraphic = function(graphicSelector) {
 		}, // step10()
 
 		function step11() {  // pane TEN
-			mapGroup.selectAll("path").transition()
-				.duration(speedFactor*800)
-				.attr('opacity',0)
 			databind10(eventsFlat);
 			var t = d3.timer(function(elapsed) {
 				drawEventElements();
@@ -499,6 +487,11 @@ window.createGraphic = function(graphicSelector) {
 		scaleYeventCountSvg = d3.scaleLinear()
 			.domain([0, d3.max(eventsByYearCounts,d=>d[1])])
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
+
+		// unlike the positional scales, this one is a time scale for helping to build the transitions
+		scaleYearPercent = d3.scaleLinear()
+			.domain([1960,2019])
+			.range([0,1])
 
 		// pane 4
 		scaleXtypes = d3.scaleBand()
@@ -716,6 +709,23 @@ window.createGraphic = function(graphicSelector) {
 	//----------------------------------------------------------------------------
 	//  DATA BINDING AND DRAWING FUNCTIONS
 	//----------------------------------------------------------------------------
+
+	// an interpolator takes a PERCENTAGE and returns a VALUE for a given ATTRIBUTE
+	//  so I need to create a function that does the same thing for OPACITY
+	//  each event will show up suddenly with its year, then slowly fade into the background
+
+	// given a year, a jitter value, and a pct => returns an OPACITY
+	function eventOpacity(year, jitter, pct) {
+		startPct = scaleYearPercent(year+jitter) // returns a value between 0 and 1
+		if (pct < startPct) {return 0}
+		else if (pct < (startPct + 0.02)) {
+			// startPct = 50
+			// pct = 51
+			// when pct = 50, return 1
+			// when pct = 52, return 0
+			return 1-(pct-startPct)/0.02
+		} else {return 0}
+	}
 
 	// on each waypoint trigger, create new interpolator functions to be used for drawing circles
 	function moveCircles() {
@@ -1071,6 +1081,19 @@ window.createGraphic = function(graphicSelector) {
 			eventsFlat = eventsFlat.concat(eventsByYear.get(key))
 		}
 		console.log(eventsFlat.length)
+
+		// stack the eventsByYear data by TYPE - each type will be represented on top of each other
+		mygroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
+		mygroup = [0,1,2,3,4,5,6] // list of group names
+		stackedData = d3.stack()
+			.keys(mygroup)
+			.value(function(d, key){
+				console.log(d[1][key])
+				return d[1][key].year
+			})
+			(eventsByYear)
+
+		console.log(stackedData)
 
 		// add data to specify coordinates for the grid of all circles
 		const rowCount = 110; // max number of circles in any row
