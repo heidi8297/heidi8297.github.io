@@ -17,12 +17,36 @@
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script type="text/javascript">
+    var analytics = true;
+    try {
+      if(
+        'localStorage' in window &&
+        window['localStorage'] !== null &&
+        localStorage["analytics"] == 'no'
+      ) {
+        analytics = false;
+      }
+    } catch (e) {}
+
+    if (analytics) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12NPY4109R');
+    } else {
+        console.log('Google Analytics has been disabled');
+    }
+  </script>
+
+
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() {dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-12NPY4109R');
-  </script>
+  </script> -->
 
   <!-- Favicons -->
   <link href="/favicon.ico" rel="icon">
