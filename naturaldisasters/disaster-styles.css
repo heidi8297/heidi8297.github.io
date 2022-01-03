@@ -48,7 +48,7 @@ h1,h2,h3,h4,h5,h6 {
   color: #3F3027;
 }
 
-p, .tooltip {
+p {
   color: #3F3027;
   margin: 1.5rem 0;
 }
@@ -175,10 +175,12 @@ header h2 {
 
 .tooltip {
   background-color: #EAE0DB;
+  color: #3F3027;
   border: 0;
   border-radius: 4px;
   font-size: 0.9rem;
   font-weight: 400;
+  line-height: 1.1;
   height: auto;
   letter-spacing: 0px;
   opacity: 0;

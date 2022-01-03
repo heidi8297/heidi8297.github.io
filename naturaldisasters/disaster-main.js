@@ -114,6 +114,8 @@ window.createGraphic = function(graphicSelector) {
 		}
 	}
 
+	function capitalize(word) { return word[0].toUpperCase() + word.slice(1) }
+
 	//Generates the next color in the sequence, going from 0,0,0 to 255,255,255.
 	//From: https://bocoup.com/weblog/2d-picking-in-canvas
 	var nextCol = 1;
@@ -125,7 +127,7 @@ window.createGraphic = function(graphicSelector) {
 					ret.push((nextCol & 0xff00) >> 8); // G
 					ret.push((nextCol & 0xff0000) >> 16); // B
 
-					nextCol += 100;
+					nextCol += 1;
 			}
 			var col = "rgb(" + ret.join(',') + ")";
 			return col;
@@ -186,32 +188,43 @@ window.createGraphic = function(graphicSelector) {
 			.append('canvas')
 			.attr('width', canvasWidth)
 			.attr('height', canvasHeight)
-      //.style('display','none')
+      .style('display','none')
 			.attr("class", "hiddenCanvas"); // this is purely to make it easy to see in 'inspect'
     hiddenCtx = hiddenCanvas.node().getContext("2d");
 
 		// Define the div for the tooltip
-		tooltipMain = d3.select("body").append("div")
+		tooltipMain = d3.select('#viz-container').append("div")
 		  .attr("class", "tooltip tooltipMain");
 
 	}
 	initializeDrawingSpaces()
 
+	// activate tooltip when the mouse moves over an event circle
 	d3.select('.mainCanvas').on('mousemove', function(e) {
 	  drawCircles(hiddenCtx, true); // draw the hidden canvas
-
-		// Get mouse positions from the main canvas - returned in disp (svg) units
-		var mouseX = scaleFactor*(e.layerX || e.offsetX);
-		var mouseY = scaleFactor*(e.layerY || e.offsetY);
-
+		var mouseX = e.layerX || e.offsetX;
+		var mouseY = e.layerY || e.offsetY;
 		// pick the color from the mouse position
-		var pickedCol = hiddenCtx.getImageData(mouseX, mouseY, 1, 1).data;
-
-		// Then stringify the values in a way our map-object can read it.
+		var pickedCol = hiddenCtx.getImageData(scaleFactor*mouseX, scaleFactor*mouseY, 1, 1).data;
   	var colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
+		var nodeData = colToCircle[colKey];  // get the data from our map!
+		if (nodeData) {
+			// Show the tooltip only when there is nodeData found by the mouse
+	    d3.select('.tooltipMain')
+	      .style('opacity', 0.8)
+				.style('left', mouseX + 5 + 'px')
+	      .style('top', mouseY + 5 + 'px')
+				.html(capitalize(nodeData.disastertype) + " in " +nodeData.country +"<br>"+nodeData.year + (nodeData.deaths > 0 ? "<br>Deaths: " +nodeData.deaths : "" ) );
+	  	} else {
+	  	// Hide the tooltip when the mouse doesn't find nodeData
+	    d3.select('.tooltipMain').style('opacity', 0);
+  	}
+	});
 
-		console.log(colKey);
-
+	// hide tooltip when mouse leaves main canvas
+	d3.select(".mainCanvas").on("mouseout", function(d) {
+		d3.select(".tooltipMain")
+		 .style("opacity", 0);
 	});
 
 	//----------------------------------------------------------------------------
