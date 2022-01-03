@@ -252,6 +252,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+			stackedAreaG.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
 			barsByTypeG.transition()
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
@@ -267,6 +270,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
+			stackedAreaG.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0.6)
 			barsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
@@ -279,6 +285,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+			stackedAreaG.transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0.6)
 			deathsByTypeG.transition()
 				.duration(speedFactor*700)
 				.attr('opacity',0)
@@ -289,6 +298,9 @@ window.createGraphic = function(graphicSelector) {
 		function step4() {  // pane FOUR - placeholder
 			let stepInc = lockInc += 1;
 			mapGroup.selectAll("path").transition()
+				.duration(speedFactor*800)
+				.attr('opacity',0)
+			stackedAreaG.transition()
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			deathsByTypeG.transition()
@@ -471,14 +483,22 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createDisplayText()
 
-		// pane 2
-		scaleXeventCount = d3.scaleLinear() // event counts by type
+		// pane 2 - event counts by type
+		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d=>d[1])])
 			.range([ paneDim(2,1).left, paneDim(2,1).right - 60 ]); // 60 makes space for the label
 		scaleYtypes = d3.scaleBand()
 			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
 			.range([ paneDim(2,1).bottom , paneDim(2,1).top ])
 			.paddingInner(0.35);
+
+		// pane 3 - world map animated
+		scaleXyearSvg = d3.scaleLinear()
+  		.domain([1960,2018])
+  		.range([paneDim(3,1).left, paneDim(3,1).right]);
+		scaleYeventCountSvg = d3.scaleLinear()
+			.domain([0, d3.max(eventsByYearCounts,d=>d[1])])
+			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
 
 		// pane 4
 		scaleXtypes = d3.scaleBand()
@@ -551,6 +571,24 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
 		}
 		createBars2()
+
+		// pane 3 - area chart of events by year
+		function createArea3() {
+			stackedAreaG = svgBackground.append("g")
+				.attr("class", "stackedArea")
+				.attr("opacity", 0)
+			stackedAreaG.append("path")
+	      .datum(eventsByYearCounts)
+	      .attr("fill", "#cce5df")
+	      .attr("stroke", "#69b3a2")
+	      .attr("stroke-width", 1.5)
+	      .attr("d", d3.area()
+	        .x( d => scaleXyearSvg(d[0]) )
+	        .y0( scaleYeventCountSvg(0) )
+	        .y1( d => scaleYeventCountSvg(d[1]) )
+				)
+		}
+		createArea3()
 
 		// pane 4 - create a bar chart of total death counts by type
 		function createBars4() {
@@ -1008,6 +1046,11 @@ window.createGraphic = function(graphicSelector) {
 		deadliestEvents = eventData.sort(function(a, b) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
+
+		// count total events by year
+		eventsByYearCounts = Array.from(
+			d3.rollup(eventData, v => v.length, d => d.year).entries()
+		).sort((a,b) => d3.ascending(+a[0], +b[0]) );
 
 		// find the events with more than 7000 deaths
 		//   so we can create all lollipop lines that would be at least 16 pixels long
