@@ -96,7 +96,9 @@ window.createGraphic = function(graphicSelector) {
 			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
 			return {top: fScale*35, right: fScale*35, bottom: fScale*50, left: fScale*35}
-		}
+		} else if (paneNum === 9) { // deaths by Gdp
+      return {top: fScale*30, right: fScale*40, bottom: fScale*30, left: fScale*80}
+    }
 
 		// default margins
 		return {top: fScale*30, right: fScale*30, bottom: fScale*30, left: fScale*30}
@@ -277,6 +279,7 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      d3.select(".sizeLegend1").style("display", "none") // pane THREE
 			transitionPane2()
 			animateCircles(stepInc)
 		}, // step1()
@@ -293,6 +296,7 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
+      d3.select(".sizeLegend1").style("display", "block") // pane THREE
 			transitionPane3()
 			animateCircles(stepInc)
 
@@ -307,6 +311,7 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
+      d3.select(".sizeLegend1").style("display", "block") // pane THREE
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*700)
 				.attr('opacity',0)
@@ -322,6 +327,7 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      d3.select(".sizeLegend1").style("display", "none") // pane THREE
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
@@ -388,6 +394,7 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
+      d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
 			animateCircles(stepInc)
 		}, // step8()
@@ -397,18 +404,21 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
 		}, // step9()
 
 		function step10() {  // pane NINE B - placeholder
 			let stepInc = lockInc += 1;
+      d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9B()
 			animateCircles(stepInc)
 		}, // step10()
 
 		function step11() {  // pane TEN
 			let stepInc = lockInc += 1;
+      d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane10()
 			animateCircles(stepInc)
 		}, // step11()
@@ -455,10 +465,6 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([paneDim(7).bottom, paneDim(7).top])
 
-    // pane 9
-    scaleRdeaths = d3.scaleSqrt()
-			.domain([0, d3.max(eventsFlat,d=>d.deaths)])
-			.range([3,60])
 
 
 		// SVG setup
@@ -495,7 +501,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// pane 2 - event counts by type
 		scaleXeventCount = d3.scaleLinear()
-			.domain([0, d3.max(eventsByType,d=>d[1])])
+			.domain([0, d3.max(eventsByType,d => d[1])])
 			.range([ paneDim(2,1).left, paneDim(2,1).right - 60 ]); // 60 makes space for the label
 		scaleYtypes = d3.scaleBand()
 			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
@@ -507,10 +513,10 @@ window.createGraphic = function(graphicSelector) {
   		.domain([1960,2018])
   		.range([paneDim(3,1).left, paneDim(3,1).right]);
 		scaleYeventCountSvg = d3.scaleLinear()
-			.domain([0, d3.max(eventsByYearCounts,d=>d[1])])
+			.domain([0, d3.max(eventsByYearCounts,d => d[1])])
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
 		scaleRgeo = d3.scaleSqrt()
-			.domain([1, d3.max(eventsFlat,d=>d.geoIdCount)])
+			.domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
 			.range([3,35])
 
 		// unlike the positional scales, this one is a time scale for helping to build the transitions
@@ -524,19 +530,28 @@ window.createGraphic = function(graphicSelector) {
 			.range([ paneDim(4,1).left , paneDim(4,1).right ])
 			.paddingInner(0.35);
 		scaleYdeathCount = d3.scaleLinear() // total death counts by type
-			.domain([0, d3.max(eventTypesByDeathTolls,d=>d[1])])
+			.domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
+
+    // pane 9
+    scaleRdeaths = d3.scaleSqrt()
+      .domain([0, d3.max(eventsFlat, d => d.deaths)])
+      .range([3,70])
+    scaleXgdp = d3.scaleLinear()
+      .domain([0, d3.max(eventsFlat, d => d.gdpInUsdPerCountry)])
+      .range([ paneDim(9,1).left, paneDim(9,1).right ])
 
 
 		// create color legend for disaster types
 		d3.select(".colorLegend1").append('svg')
 			.append('g')
 		  .attr("class", "legendOrdinal")
-		  .attr("transform", "translate(20,20)");
+		  .attr("transform", "translate(13,20)");
 		var legendOrdinal = d3.legendColor()
 		  .shape("circle")
 		  .shapePadding(3)
 			.shapeRadius(7)
+      .title("Disaster type")
 		  .scale(typeColor);
 		d3.select(".legendOrdinal")
 		  .call(legendOrdinal);
@@ -557,6 +572,7 @@ window.createGraphic = function(graphicSelector) {
 			.orient('horizontal');
 		d3.select(".sizeLegend")
 	  	.call(legendSize1);
+    d3.select(".sizeLegend1").style("display", "none")
 
     // create size legend for death toll
     d3.select(".sizeLegend2").append('svg')
@@ -574,6 +590,7 @@ window.createGraphic = function(graphicSelector) {
       .orient('horizontal');
     d3.select(".sizeLegend2 .sizeLegend")
       .call(legendSize2);
+    d3.select(".sizeLegend2").style("display", "none")
 
 
 		// panes 3 and 8 - world map
@@ -881,8 +898,8 @@ window.createGraphic = function(graphicSelector) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': (node.deaths < 37000)? canvasHeight*2 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
+				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': scaleFactor*scaleRdeaths(node.deaths),
 				'opacity': 0.6
 		}}
 	} // transitionPane8()
@@ -891,9 +908,9 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': (node.deaths < 37000)? canvasHeight*2 : canvasHeight/2,
-				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
+				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
+				'cy': (node.deaths < 37000)? canvasHeight*1.1 : canvasHeight/2,
+				'r': scaleFactor*scaleRdeaths(node.deaths),
 				'opacity': 0.6
 		}}
 	} // transitionPane9A()
@@ -902,9 +919,9 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
 				'cy': canvasHeight/2,
-				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
+				'r':scaleFactor*scaleRdeaths(node.deaths),
 				'opacity': 0.4
 		}}
 	} // transitionPane9B()
@@ -1056,6 +1073,7 @@ window.createGraphic = function(graphicSelector) {
 					disasterno: d3.min(v, d => d.disasterno),
 			    geoIdCount: v.length,
 					country: d3.min(v, d => d.country),  // does this make sense?
+          gdpInUsdPerCountry: d3.mean(v, d => d.gdpInUsdPerCountry),  // does this make sense???
 					year: d3.min(v, d => +d.year),
 					disastertype: d3.min(v, d => d.disastertype),
 					latitude: d3.mean(v, d => +d.latitude),
