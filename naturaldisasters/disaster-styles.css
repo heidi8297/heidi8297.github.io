@@ -75,7 +75,7 @@ header {
   position: relative;
   padding: 1rem 0;
   margin: 2rem auto;
-  width: 1350px;
+  width: 1360px; /* needs to match width of library__graphic below */
 }
 
 h1, h2 {
@@ -141,6 +141,10 @@ header h2 {
 
 .cell .swatch { /* opacity for all legend swatches */
   opacity: 0.8;
+}
+
+.cell .label {
+  font-size: 0.9rem;
 }
 
 

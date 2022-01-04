@@ -393,7 +393,7 @@ window.createGraphic = function(graphicSelector) {
 
 
 	//----------------------------------------------------------------------------
-	// UPDATE / SETUP FUNCTIONS
+	// UPDATE / SETUP FUNCTIONS - scales, initializing svg elements,
 	//----------------------------------------------------------------------------
 
 	// update our chart
@@ -431,21 +431,6 @@ window.createGraphic = function(graphicSelector) {
 
 
 		// SVG setup
-
-		// create color legend for disaster types
-		svgForeground.append("g")
-		  .attr("class", "legendOrdinal")
-		  .attr("transform", "translate(20,20)");
-
-		var legendOrdinal = d3.legendColor()
-		  .shape("circle")
-		  .shapePadding(10)
-			.shapeRadius(8)
-		  .scale(typeColor);
-
-		//d3.select(".legendOrdinal")
-		//  .call(legendOrdinal);
-
 
 		// pane 1 - create display text
 		function createDisplayText() {
@@ -493,6 +478,9 @@ window.createGraphic = function(graphicSelector) {
 		scaleYeventCountSvg = d3.scaleLinear()
 			.domain([0, d3.max(eventsByYearCounts,d=>d[1])])
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
+		scaleRgeo = d3.scaleSqrt()
+			.domain([1, d3.max(eventsFlat,d=>d.geoIdCount)])
+			.range([5,40])
 
 		// unlike the positional scales, this one is a time scale for helping to build the transitions
 		scaleYearPercent = d3.scaleLinear()
@@ -507,6 +495,40 @@ window.createGraphic = function(graphicSelector) {
 		scaleYdeathCount = d3.scaleLinear() // total death counts by type
 			.domain([0, d3.max(eventTypesByDeathTolls,d=>d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
+
+
+		// create color legend for disaster types
+		d3.select(".colorLegend1").append('svg')
+			.attr("height", 200)
+			.append('g')
+		  .attr("class", "legendOrdinal")
+		  .attr("transform", "translate(20,20)");
+
+		var legendOrdinal = d3.legendColor()
+		  .shape("circle")
+		  .shapePadding(3)
+			.shapeRadius(8)
+		  .scale(typeColor);
+
+		d3.select(".legendOrdinal")
+		  .call(legendOrdinal);
+
+
+		// create size legend for initial world map
+		d3.select(".sizeLegend1").append('svg')
+			.append("g")
+			.attr("class", "sizeLegendGeo")
+			.attr("transform", "translate(20,20)");
+
+		var legendSize1 = d3.legendSize()
+			.scale(scaleRgeo)
+			.shape('circle')
+			.shapePadding(8)
+			.labelOffset(20)
+			.orient('horizontal');
+
+		d3.select(".sizeLegendGeo")
+	  	.call(legendSize1);
 
 		// panes 3 and 8 - world map
 		function createMap() {

@@ -69,18 +69,24 @@
       <!-- scrolly text section -->
       <div class='graphic__prose'>
         <p class='spacer'>If the visualisation doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
-        <p class='trigger active' data-step='0'>pane ONE: This is a grid of all disasters in the data set.  I'll add some basic stats about the data to the graphic as well.</p>
-        <p class='trigger' data-step='1'>pane TWO: This will be a horizontal bar chart showing total disaster counts by type.</p>
-        <p class='trigger' data-step='2'>pane THREE: This will be an animation showing a map of events by year.  I may also have an area chart at the bottom showing event counts by year and type.</p>
-        <p class='trigger' data-step='3'>pane THREE B: I may add another step here where I then summarize the total increase in events between the first ten years and the last ten years of the data set.</p>
-        <p class='trigger' data-step='4'>pane FOUR: This will be a vertical bar chart showing the deadliest overall event types.</p>
-        <p class='trigger' data-step='5'>pane FIVE: This will be a set of slopegraphs showing event frequency increases and death rate changes by type.</p>
-        <p class='trigger' data-step='6'>pane SIX: This will be a log plot showing deaths for each event, along with their 'typical' (median) values for each type.</p>
-        <p class='trigger' data-step='7'>pane SEVEN: This is a plot of deaths for each event (linear scale this time) to highlight that a small subset of events are responsible for the majority of the deaths.</p>
-        <p class='trigger' data-step='8'>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
-        <p class='trigger' data-step='9'>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
-        <p class='trigger' data-step='10'>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
-        <p class='trigger' data-step='11'>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
+        <p class='trigger pane1 active' data-step='0'>pane ONE: This is a grid of all disasters in the data set.  I'll add some basic stats about the data to the graphic as well.</p>
+        <p class='trigger pane2' data-step='1'>pane TWO: This will be a horizontal bar chart showing total disaster counts by type.</p>
+        <div class='trigger pane3' data-step='2'>
+          <p>
+            pane THREE: This will be an animation showing a map of events by year.  I may also have an area chart at the bottom showing event counts by year and type.
+          </p>
+          <div class="colorLegend1"></div>
+          <div class="sizeLegend1"></div>
+        </div>
+        <p class='trigger pane3B' data-step='3'>pane THREE B: I may add another step here where I then summarize the total increase in events between the first ten years and the last ten years of the data set.</p>
+        <p class='trigger pane4' data-step='4'>pane FOUR: This will be a vertical bar chart showing the deadliest overall event types.</p>
+        <p class='trigger pane5' data-step='5'>pane FIVE: This will be a set of slopegraphs showing event frequency increases and death rate changes by type.</p>
+        <p class='trigger pane6' data-step='6'>pane SIX: This will be a log plot showing deaths for each event, along with their 'typical' (median) values for each type.</p>
+        <p class='trigger pane7' data-step='7'>pane SEVEN: This is a plot of deaths for each event (linear scale this time) to highlight that a small subset of events are responsible for the majority of the deaths.</p>
+        <p class='trigger pane8' data-step='8'>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
+        <p class='trigger pane9' data-step='9'>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
+        <p class='trigger pane9B' data-step='10'>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
+        <p class='trigger pane10' data-step='11'>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
         <div class='thanks'>
           Built on the shoulders of giants.
           <ul>
@@ -93,7 +99,7 @@
               Inspiration from <a target="_blank" href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/">Tony Yu</a> and
               <a target="_blank" href="https://public.tableau.com/app/profile/george.gorczynski/viz/naturaldisasters_country/NaturalDisasters">George Gorczynski</a>
             </li>
-            <li>Super helpful blog posts and code snippets from <a target="_blank" href="https://d3-legend.susielu.com/">Susie Lu</a>,
+            <li>Super helpful blog posts, modules and code snippets from <a target="_blank" href="https://d3-legend.susielu.com/">Susie Lu</a>,
               <a target="_blank" href="http://bl.ocks.org/smoli/d7e4f9199c15d71258b5">Stephan Smola</a>,
               <a target="_blank" href="https://www.visualcinnamon.com/2015/11/learnings-from-a-d3-js-addict-on-starting-with-canvas/">Nadieh Bremer</a>,
               <a target="_blank" href="https://www.freecodecamp.org/news/d3-and-canvas-in-3-steps-8505c8b27444/">Lars Verspohl</a>,
