@@ -126,17 +126,19 @@ header h2 {
   opacity: 0.3;
 }
 
-/* scrolly text - active segment */
-.graphic__prose .trigger.active {
-	opacity: 1;
-}
-
-.graphic__prose .spacer {
+.graphic__prose .preProse {
   min-height: 260px;
+  opacity: 0.3;
 }
 
-.graphic__prose .thanks {
+.graphic__prose .postProse {
   min-height: 200px;
+  opacity: 0.3;
+}
+
+/* scrolly text - active segment */
+.graphic__prose .active {
+	opacity: 1; /* overwrites the opacities specified above when 'active' */
 }
 
 .cell .swatch { /* opacity for all legend swatches */

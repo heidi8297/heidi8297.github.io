@@ -21,7 +21,7 @@
       function gtag() {dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-12NPY4109R');
-    } else { console.log('Google Analytics has been disabled') }
+    } else { console.log('Google Analytics disabled') }
   </script>
 
 
@@ -68,7 +68,7 @@
     <div class='library__graphic graphic flex-container'>
       <!-- scrolly text section -->
       <div class='graphic__prose'>
-        <p class='spacer'>If the visualisation doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
+        <p class='preProse active'>If the visualisation doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
         <p class='trigger pane1 active' data-step='0'>pane ONE: This is a grid of all disasters in the data set.  I'll add some basic stats about the data to the graphic as well.</p>
         <p class='trigger pane2' data-step='1'>pane TWO: This will be a horizontal bar chart showing total disaster counts by type.</p>
         <div class='trigger pane3' data-step='2'>
@@ -78,7 +78,10 @@
           <div class="colorLegend1"></div>
           <div class="sizeLegend1"></div>
         </div>
-        <p class='trigger pane3B' data-step='3'>pane THREE B: I may add another step here where I then summarize the total increase in events between the first ten years and the last ten years of the data set.</p>
+        <div class="trigger pane4" data-step='3'>
+          <p>pane THREE B: I may add another step here where I then summarize the total increase in events between the first ten years and the last ten years of the data set.</p>
+          <div class="colorLegend2"></div>
+        </div>
         <p class='trigger pane4' data-step='4'>pane FOUR: This will be a vertical bar chart showing the deadliest overall event types.</p>
         <p class='trigger pane5' data-step='5'>pane FIVE: This will be a set of slopegraphs showing event frequency increases and death rate changes by type.</p>
         <p class='trigger pane6' data-step='6'>pane SIX: This will be a log plot showing deaths for each event, along with their 'typical' (median) values for each type.</p>
@@ -87,7 +90,7 @@
         <p class='trigger pane9' data-step='9'>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
         <p class='trigger pane9B' data-step='10'>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
         <p class='trigger pane10' data-step='11'>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
-        <div class='thanks'>
+        <div class='postProse thanks'>
           Built on the shoulders of giants.
           <ul>
             <li>
@@ -163,6 +166,8 @@
         // select elements
         var graphicEl = document.querySelector('.graphic')
         var triggerEls = selectionToArray(graphicEl.querySelectorAll('.trigger'))
+        var preProse = document.querySelector('.preProse')
+        var postProse = document.querySelector('.postProse')
 
         // a global function creates and handles all the vis + updates
         var graphic = createGraphic('.graphic')
@@ -186,9 +191,13 @@
               if (direction === 'down') {
                 triggerEls[Math.max(0, step - 1)].classList.remove("active")
                 triggerEls[step].classList.add("active")
+                if (step === 1) {preProse.classList.remove("active")}
+                if (step === 11) {postProse.classList.add("active")}
               } else {
                 triggerEls[step].classList.remove("active")
                 triggerEls[nextStep].classList.add("active")
+                if (nextStep === 0) {preProse.classList.add("active")}
+                if (nextStep === 10) {postProse.classList.remove("active")}
               }
 
             },

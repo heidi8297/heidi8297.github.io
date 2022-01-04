@@ -257,7 +257,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {  // pane THREE
-			console.log(document.getElementsByTagName('*').length,"DOM elements in page")
+			console.log(document.getElementsByTagName('*').length,"DOM elements")
 			let stepInc = lockInc += 1;
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*700)
@@ -508,11 +508,13 @@ window.createGraphic = function(graphicSelector) {
 		var legendOrdinal = d3.legendColor()
 		  .shape("circle")
 		  .shapePadding(3)
-			.shapeRadius(8)
+			.shapeRadius(7)
 		  .scale(typeColor);
 
 		d3.select(".legendOrdinal")
 		  .call(legendOrdinal);
+
+
 
 
 		// create size legend for initial world map
@@ -525,7 +527,7 @@ window.createGraphic = function(graphicSelector) {
 			.scale(scaleRgeo)
 			.shape('circle')
 			.cells([1,10,50,100])
-			.shapePadding(32)
+			.shapePadding(34)
 			.labelFormat("d")
 			.title("Number of locations recorded")
 			.labelOffset(20)
@@ -1075,7 +1077,7 @@ window.createGraphic = function(graphicSelector) {
 			});
 			eventsFlat = eventsFlat.concat(eventsByYear.get(key))
 		}
-		console.log(eventsFlat.length,"disaster events")
+		console.log(eventsFlat.length,"events")
 
 
 		// creating the 'stacked' data for the area chart was a major pain.
