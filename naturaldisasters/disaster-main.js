@@ -222,12 +222,16 @@ window.createGraphic = function(graphicSelector) {
   legendWrapper.addEventListener("click", showHide, false);
   function show() {d3.select("#legendWrapper").style("opacity",1)}
   function hide() {d3.select("#legendWrapper").style("opacity",0)}
+  // this is the only place where I intentionally change the height of something in the
+  //   scrolly text section via javascript, as it messes with the waypoint triggers
   function showHide() {
     if (infoState === "hide") {
       infoState = "show";
+      d3.select(".variableSpacer").style("height", "100px")
       show();
     } else {
       infoState = "hide";
+      d3.select(".variableSpacer").style("height", "0")
       hide();
     }
   }
