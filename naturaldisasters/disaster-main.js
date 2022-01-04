@@ -607,7 +607,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("d", d3.area()
 					.x((d,i) => scaleXyearSvg(d.data.key) )
 					.y0( function(d) {
-						console.log(d)
+						// console.log(d)
 						return scaleYeventCountSvg(d[0])
 					}   )
 					.y1( d => scaleYeventCountSvg(d[1]) )
@@ -749,10 +749,6 @@ window.createGraphic = function(graphicSelector) {
 		startPct = scaleYearPercent(year+jitter) // returns a value between 0 and 1
 		if (pct < startPct) {return 0}
 		else if (pct < (startPct + 0.02)) {
-			// startPct = 50
-			// pct = 51
-			// when pct = 50, return 1
-			// when pct = 52, return 0
 			return 1-(pct-startPct)/0.02
 		} else {return 0}
 	}
@@ -1115,11 +1111,24 @@ window.createGraphic = function(graphicSelector) {
 
 
 		//// NEED TO CREATE ROLLUPS FOR EACH EVENT TYPE
-		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values})); // recreates the format of d3.nest
+		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values}));
 
 		// stack the eventsByYear data by TYPE - each type will be represented on top of each other
 		typeGroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
 		typeKeys = [0,1,2,3,4,5,6] // list of group keys
+
+		newEventsByYearNest = [];
+
+		for (let i = 0; i < eventsByYearNest.length; i++) {
+			let valuePairs = d3.rollup(eventsByYearNest[i].values, v => v.length, d => d.disastertype) // map of the form {'flood'=>5, 'storm'=>6}
+			let newValuePairs = typeGroups.map( function(type) {
+				return ({type: type, count: (valuePairs.get(type) ? valuePairs.get(type) : 0) })
+			} )
+			//console.log(newValuePairs)
+			newEventsByYearNest.push ({ key: eventsByYearNest[i].key, values: newValuePairs })
+		}
+		newEventsByYearNest.sort((a,b) => a.key - b.key) // sort by year
+
 
 		var color = d3.scaleOrdinal()
 			.domain(typeGroups)
@@ -1127,36 +1136,26 @@ window.createGraphic = function(graphicSelector) {
 
 		eventsStackedByType = d3.stack()
 			.keys(typeKeys)
-			.value( (d,key) => (d.values[key]) ? d.values[key].one : 0 )
-			(eventsByYearNest)
+			.value( (d,key) => d.values[key].count )
+			(newEventsByYearNest)
 
-		// svgForeground.append('g')
-	  //   .selectAll("path")
-	  //   .data(eventsStackedByType)
-	  //   .join("path")
-	  //     .style("fill", function(d) { type = typeGroups[d.key] ;  return color(type); })
-	  //     .attr("d", d3.area()
-	  //       .x((d,i) => scaleXyearSvg(d.data.key) )
-	  //       .y0( d => scaleYeventCountSvg(d[0]) )
-	  //       .y1( d => scaleYeventCountSvg(d[1]) )
-	  //   )
-
+		console.log(eventsStackedByType)
 
 		myData = [
 			{key: 1960, values: [
-				{year: 1960, num: 12, type: 'flood'},
+				{year: 1960, num: 12, type: 'fire'},
 				{year: 1960, num: 14, type: 'flood'},
 				{year: 1960, num: 18, type: 'storm'}
 			]},
 			{key: 1961, values: [
-				{year: 1961, num: 1, type: 'flood'},
-				{year: 1961, num: 2, type: 'storm'},
-				{year: 1961, num: 3, type: 'fire'}
+				{year: 1961, num: 1, type: 'fire'},
+				{year: 1961, num: 2, type: 'flood'},
+				{year: 1961, num: 3, type: 'storm'}
 			]},
 			{key: 1962, values: [
 				{year: 1962, num: 112, type: 'fire'},
-				{year: 1962, num: 54, type: 'fire'},
-				{year: 1962, num: 118, type: 'flood'}
+				{year: 1962, num: 54, type: 'storm'},
+				{year: 1962, num: 178, type: 'flood'}
 			]}
 		]
 
@@ -1177,20 +1176,20 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0, 300])
 	 		.range([ 400, 0 ]);
 
-		// var color = d3.scaleOrdinal()
-		// 	.domain(mygroups)
-		// 	.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+		var color = d3.scaleOrdinal()
+			.domain(mygroups)
+			.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
-		// svgForeground.append('g')
-	  //   .selectAll("path")
-	  //   .data(stackedData)
-	  //   .join("path")
-	  //     .style("fill", function(d) { type = mygroups[d.key] ;  return color(type); })
-	  //     .attr("d", d3.area()
-	  //       .x((d,i) => x(d.data.key) )
-	  //       .y0( d => y(d[0]) )
-	  //       .y1( d => y(d[1]) )
-	  //   )
+		svgForeground.append('g')
+	    .selectAll("path")
+	    .data(stackedData)
+	    .join("path")
+	      .style("fill", function(d) { type = mygroups[d.key] ;  return color(type); })
+	      .attr("d", d3.area()
+	        .x((d,i) => x(d.data.key) )
+	        .y0( d => y(d[0]) )
+	        .y1( d => y(d[1]) )
+	    )
 
 
 
