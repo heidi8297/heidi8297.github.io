@@ -20,6 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByYear = [];
 	let eventsFlat = [];
 	var lockInc = 0;
+  infoState = "show";  // needs to be global so we can access from waypoints script
 
 	// variables needed for transition method
 	var circleStartInfo = {};
@@ -216,8 +217,8 @@ window.createGraphic = function(graphicSelector) {
 		 .style("opacity", 0);
 	});
 
+  // turn the legendIconWrapper into a button that shows/hides the legends
   legendWrapper = document.getElementById("legendIconWrapper");
-  infoState = "hide";
   legendWrapper.addEventListener("click", showHide, false);
   function show() {d3.select("#legendWrapper").style("opacity",1)}
   function hide() {d3.select("#legendWrapper").style("opacity",0)}
@@ -514,7 +515,6 @@ window.createGraphic = function(graphicSelector) {
 
 		// create color legend for disaster types
 		d3.select(".colorLegend1").append('svg')
-			.attr("height", 180)
 			.append('g')
 		  .attr("class", "legendOrdinal")
 		  .attr("transform", "translate(20,20)");
@@ -535,7 +535,7 @@ window.createGraphic = function(graphicSelector) {
 		d3.select(".sizeLegend1").append('svg')
 			.append("g")
 			.attr("class", "sizeLegend")
-			.attr("transform", "translate(20,20)");
+			.attr("transform", "translate(13,20)");
 
 		var legendSize1 = d3.legendSize()
 			.scale(scaleRgeo)
