@@ -282,7 +282,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
-				.attr('opacity',0.6)
+				.attr('opacity',0.7)
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*700)
 				.attr('opacity',0)
@@ -581,37 +581,26 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createBars2()
 
-		// pane 3 - area chart of events by year
-		function createArea3() {
-			stackedAreaG = svgBackground.append("g")
+		// pane 3 - stacked area chart of events by year (colored by type)
+		function createStackedArea3() {
+			stackedAreaG = svgForeground.append('g')
 				.attr("class", "stackedArea")
 				.attr("opacity", 0)
-			stackedAreaG.append("path")
-	      .datum(eventsByYearCounts)
-	      .attr("fill", "#cce5df")
-	      .attr("stroke", "#69b3a2")
-	      .attr("stroke-width", 1.5)
-	      .attr("d", d3.area()
-	        .x( d => scaleXyearSvg(d[0]) )
-	        .y0( scaleYeventCountSvg(0) )
-	        .y1( d => scaleYeventCountSvg(d[1]) )
+			stackedAreaG.selectAll("path")
+				.data(eventsStackedByType)
+				.join("path")
+					.style("fill", function(d) { type = typeGroups[d.key] ;  return typeColor(type); })
+					.style("stroke", "none")
+					.attr("d", d3.area()
+						.curve(d3.curveNatural)
+						.x((d,i) => scaleXyearSvg(d.data.key) )
+						.y0( function(d) {
+							return scaleYeventCountSvg(d[0])
+						}   )
+						.y1( d => scaleYeventCountSvg(d[1]) )
 				)
 		}
-		createArea3()
-
-		svgForeground.append('g')
-			.selectAll("path")
-			.data(eventsStackedByType)
-			.join("path")
-				.style("fill", function(d) { type = typeGroups[d.key] ;  return typeColor(type); })
-				.attr("d", d3.area()
-					.x((d,i) => scaleXyearSvg(d.data.key) )
-					.y0( function(d) {
-						// console.log(d)
-						return scaleYeventCountSvg(d[0])
-					}   )
-					.y1( d => scaleYeventCountSvg(d[1]) )
-			)
+		createStackedArea3()
 
 		// pane 4 - create a bar chart of total death counts by type
 		function createBars4() {
@@ -1110,87 +1099,34 @@ window.createGraphic = function(graphicSelector) {
 		console.log(eventsFlat.length)
 
 
-		//// NEED TO CREATE ROLLUPS FOR EACH EVENT TYPE
+		// creating the 'stacked' data for the area chart was a major pain.
+		//   there surely is a better/cleaner way to to this, but I don't want to look
+		//   at this part of the code anymore.  :)
+		// ultimately this section 'stacks' the eventsByYear data by TYPE
+		//   each type will be represented on top of each other (by a unique color)
+
+		// determines the sort/stack order of the area segments
+		typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
+
+		// this is the first data step - it approximates the results of d3.nest, I think?
 		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values}));
 
-		// stack the eventsByYear data by TYPE - each type will be represented on top of each other
-		typeGroups = ["flood","storm","earthquake","drought","extreme temperature","landslide","volcanic activity"] // list of group names
-		typeKeys = [0,1,2,3,4,5,6] // list of group keys
-
+		// need a slightly different format as input for d3.stack including generating a 'count' value for EVERY disaster type
 		newEventsByYearNest = [];
-
 		for (let i = 0; i < eventsByYearNest.length; i++) {
 			let valuePairs = d3.rollup(eventsByYearNest[i].values, v => v.length, d => d.disastertype) // map of the form {'flood'=>5, 'storm'=>6}
-			let newValuePairs = typeGroups.map( function(type) {
+			let newValuePairs = typeGroups.map( function(type) {   // sort by type and fill in with zeros for any missing values
 				return ({type: type, count: (valuePairs.get(type) ? valuePairs.get(type) : 0) })
 			} )
-			//console.log(newValuePairs)
 			newEventsByYearNest.push ({ key: eventsByYearNest[i].key, values: newValuePairs })
 		}
 		newEventsByYearNest.sort((a,b) => a.key - b.key) // sort by year
 
-
-		var color = d3.scaleOrdinal()
-			.domain(typeGroups)
-			.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-
+		// finally, create the 'stacked' data for the area chart
 		eventsStackedByType = d3.stack()
-			.keys(typeKeys)
+			.keys([0,1,2,3,4,5,6]) // indices for each value in typeGroups
 			.value( (d,key) => d.values[key].count )
 			(newEventsByYearNest)
-
-		console.log(eventsStackedByType)
-
-		myData = [
-			{key: 1960, values: [
-				{year: 1960, num: 12, type: 'fire'},
-				{year: 1960, num: 14, type: 'flood'},
-				{year: 1960, num: 18, type: 'storm'}
-			]},
-			{key: 1961, values: [
-				{year: 1961, num: 1, type: 'fire'},
-				{year: 1961, num: 2, type: 'flood'},
-				{year: 1961, num: 3, type: 'storm'}
-			]},
-			{key: 1962, values: [
-				{year: 1962, num: 112, type: 'fire'},
-				{year: 1962, num: 54, type: 'storm'},
-				{year: 1962, num: 178, type: 'flood'}
-			]}
-		]
-
-		var mygroups = ["flood", "storm", "fire"] // list of group names
-	  var mygroup = [0,1,2] // list of group names
-	  var stackedData = d3.stack()
-	    .keys(mygroup)
-	    .value(function(d, key){
-	      return d.values[key].num
-	    })
-	    (myData)
-
-		var x = d3.scaleLinear()
-			.domain([1960,1962])
-			.range([ 0, 400 ]);
-
-		var y = d3.scaleLinear()
-			.domain([0, 300])
-	 		.range([ 400, 0 ]);
-
-		var color = d3.scaleOrdinal()
-			.domain(mygroups)
-			.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-
-		svgForeground.append('g')
-	    .selectAll("path")
-	    .data(stackedData)
-	    .join("path")
-	      .style("fill", function(d) { type = mygroups[d.key] ;  return color(type); })
-	      .attr("d", d3.area()
-	        .x((d,i) => x(d.data.key) )
-	        .y0( d => y(d[0]) )
-	        .y1( d => y(d[1]) )
-	    )
-
 
 
 		// add data to specify coordinates for the grid of all circles
