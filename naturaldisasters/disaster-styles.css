@@ -126,6 +126,14 @@ header h2 {
   opacity: 0.3;
 }
 
+.graphic__prose .trigger.pane2 {
+	min-height: 200px;
+}
+
+.legendInstructions {
+  height: 380px;
+}
+
 .graphic__prose .preProse {
   min-height: 260px;
   opacity: 0.3;
@@ -156,6 +164,37 @@ header h2 {
 .sizeLegend .swatch {
   fill: #176F90;
 }
+
+#legendIconWrapper {
+  position: sticky;
+  width: 36px;
+  top: 20px;
+  padding: 3px;
+  background-color: #fbf9f9;
+  border: 1px solid #EAE0DB;
+  z-index: 1000;
+}
+
+#legendIconWrapper:hover {
+  background-color: white;
+  border: 1px solid #c9ae9f;
+}
+
+.legendIconImage {
+  width: 100%;
+}
+
+#legendWrapper {
+  position: sticky;
+  width: 220px;
+  top: 58px;
+  padding: 3px;
+  background-color: #fbf9f9;
+  border: 1px solid #EAE0DB;
+  z-index: 1000;
+  opacity: 0;
+}
+
 
 
 /* div wrapper for svg */

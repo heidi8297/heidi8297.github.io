@@ -216,6 +216,20 @@ window.createGraphic = function(graphicSelector) {
 		 .style("opacity", 0);
 	});
 
+  legendWrapper = document.getElementById("legendIconWrapper");
+  infoState = "hide";
+  legendWrapper.addEventListener("click", showHide, false);
+  function show() {d3.select("#legendWrapper").style("opacity",1)}
+  function hide() {d3.select("#legendWrapper").style("opacity",0)}
+  function showHide() {
+    if (infoState === "hide") {
+      infoState = "show";
+      show();
+    } else {
+      infoState = "hide";
+      hide();
+    }
+  }
 
 
 	//----------------------------------------------------------------------------
