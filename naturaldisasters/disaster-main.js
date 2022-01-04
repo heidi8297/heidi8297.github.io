@@ -1,4 +1,8 @@
 
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+}
+
 window.createGraphic = function(graphicSelector) {
 
 	//----------------------------------------------------------------------------
@@ -137,14 +141,6 @@ window.createGraphic = function(graphicSelector) {
 	document.body.appendChild( stats.domElement );
 
 
-	// var dt = 0;
-	// d3.timer(function(elapsed) {
-	// 		stats.begin();
-	// 		// interpolateZoom(elapsed - dt);
-	// 		dt = elapsed;
-	// 		stats.end();
-	// 		drawEventElements()
-	// });
 
 	//----------------------------------------------------------------------------
 	// INITIALIZE DRAWING SPACES AND TOOLTIP FUNCTIONALITY
@@ -353,6 +349,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step7()
 
 		function step8() {  // pane EIGHT
+			let stepInc = lockInc += 1;
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
@@ -363,38 +360,29 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.selectAll("path").transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0.8)
-			databind8(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			transitionPane8()
+			animateCircles(stepInc)
 		}, // step8()
 
-		function step9() {  // pane NINE
+		function step9() {  // pane NINE A
+			let stepInc = lockInc += 1;
 			mapGroup.selectAll("path").transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-			databind9A(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			transitionPane9A()
+			animateCircles(stepInc)
 		}, // step9()
 
 		function step10() {  // pane NINE B - placeholder
-			databind9B(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*1100) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			let stepInc = lockInc += 1;
+			transitionPane9B()
+			animateCircles(stepInc)
 		}, // step10()
 
 		function step11() {  // pane TEN
-			databind10(eventsFlat);
-			var t = d3.timer(function(elapsed) {
-				drawEventElements();
-				if (elapsed > speedFactor*850) t.stop();
-			}); // Timer running the draw function repeatedly for 850 ms.
+			let stepInc = lockInc += 1;
+			transitionPane10()
+			animateCircles(stepInc)
 		}, // step11()
 
 
@@ -726,7 +714,146 @@ window.createGraphic = function(graphicSelector) {
 
 
 	//----------------------------------------------------------------------------
-	//  DATA BINDING AND DRAWING FUNCTIONS
+	// TRANSITION FUNCTIONS - define the new target locations for each event circle
+	//----------------------------------------------------------------------------
+
+	// update circleEndInfo with new target formatting for each eventCircle
+	function transitionPane1() {  // "grid" of events with summary numbers
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*node.gridX,
+				'cy': scaleFactor*node.gridY,
+				'r': 16,
+				'opacity': 0.4
+		}}
+	} // transitionPane1()
+
+	function transitionPane2() {  // horizontal bar chart of event counts by type
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
+				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
+				'r': 16,
+				'opacity': 0.4
+		}}
+	} // transitionPane2()
+
+	function transitionPane3() {  // world map animation of events by year
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': 7*Math.sqrt(node.geoIdCount),
+				'opacity': 0.4
+		}}
+	} // transitionPane3()
+
+	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': 7*Math.sqrt(node.geoIdCount),
+				'opacity': 0.4
+		}}
+	} // transitionPane3B()
+
+	function transitionPane4() {   // vertical bar chart for total death count by disaster type
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
+				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
+				'r': 16,
+				'opacity': 0.4
+		}}
+	} // transitionPane4()
+
+	function transitionPane5() {   // slopegraphs - currently just a placeholder
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': canvasWidth*node.jitter*node.jitter,
+				'cy': canvasHeight*node.jitter2,
+				'r': 2*node.geoIdCount,
+				'opacity': 0.6
+		}}
+	} // transitionPane5()
+
+	function transitionPane6() {   // deadliest individual events / log scale
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter,
+				'cy': scaleYdeadliest(node.deaths),
+				'r': 13,
+				'opacity': 0.5
+		}}
+	} // transitionPane6()
+
+	function transitionPane7() {   // deaths by year lollipop chart
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleXyear(node.year)-31+62*node.jitter,
+				'cy': scaleYdeaths(node.deaths),
+				'r': 24,
+				'opacity': 0.6
+		}}
+	} // transitionPane7()
+
+	function transitionPane8() {   // map of top 15 deadliest events / teardrop
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': (node.deaths < 37000)? canvasHeight*2 : scaleFactor*projection([node.longitude,node.latitude])[1],
+				'r': 13*Math.sqrt(node.geoIdCount),
+				'opacity': 0.6
+		}}
+	} // transitionPane8()
+
+	function transitionPane9A() {   // deaths top 15 by GDP
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': (node.deaths < 37000)? canvasHeight*2 : canvasHeight/2,
+				'r': 13*Math.sqrt(node.geoIdCount),
+				'opacity': 0.6
+		}}
+	} // transitionPane9A()
+
+	function transitionPane9B() {   // deaths by GDP
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+				'cy': canvasHeight/2,
+				'r': 13*Math.sqrt(node.geoIdCount),
+				'opacity': 0.4
+		}}
+	} // transitionPane9B()
+
+	function transitionPane10() {   // final words
+		for (let i = 0; i < eventsFlat.length; i++) {
+			node = eventsFlat[i];
+			circleEndInfo[i] = {
+				'cx': canvasWidth*node.jitter,
+				'cy': canvasHeight*node.jitter2,
+				'r': 7*node.geoIdCount,
+				'opacity': 0.33
+		}}
+	} // transitionPane10()
+
+
+
+	//----------------------------------------------------------------------------
+	//  DRAWING FUNCTIONS
 	//----------------------------------------------------------------------------
 
 	// an interpolator takes a PERCENTAGE and returns a VALUE for a given ATTRIBUTE
@@ -822,181 +949,6 @@ window.createGraphic = function(graphicSelector) {
 
 
 
-	// update circleEndInfo with new target formatting for each eventCircle
-	function transitionPane1() {  // "grid" of events with summary numbers
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleFactor*node.gridX,
-				'cy': scaleFactor*node.gridY,
-				'r': 16,
-				'opacity': 0.4
-		}}
-	} // transitionPane1()
-
-	function transitionPane2() {  // horizontal bar chart of event counts by type
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
-				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
-				'r': 16,
-				'opacity': 0.4
-		}}
-	} // transitionPane2()
-
-	function transitionPane3() {  // world map animation of events by year
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 7*Math.sqrt(node.geoIdCount),
-				'opacity': 0.4
-		}}
-	} // transitionPane3()
-
-	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 7*Math.sqrt(node.geoIdCount),
-				'opacity': 0.4
-		}}
-	} // transitionPane3B()
-
-	function transitionPane4() {   // vertical bar chart for total death count by disaster type
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
-				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
-				'r': 16,
-				'opacity': 0.4
-		}}
-	} // transitionPane4()
-
-	function transitionPane5() {   // slopegraphs - currently just a placeholder
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': canvasWidth*node.jitter*node.jitter,
-				'cy': canvasHeight*node.jitter2,
-				'r': 2*node.geoIdCount,
-				'opacity': 0.6
-		}}
-	} // transitionPane5()
-
-	function transitionPane6() {   // deadliest individual events / log scale
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter,
-				'cy': scaleYdeadliest(node.deaths),
-				'r': 13,
-				'opacity': 0.5
-		}}
-	} // transitionPane6()
-
-	function transitionPane7() {   // deaths by year lollipop chart
-		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleXyear(node.year)-31+62*node.jitter,
-				'cy': scaleYdeaths(node.deaths),
-				'r': 24,
-				'opacity': 0.6
-		}}
-	} // transitionPane7()
-
-
-
-	// these functions bind the data to the "virtual" DOM elements and define the
-	//   attributes and transitions that will be used to generate each step in the
-	//   visualization.
-
-	function databind8(dataToBind, deathMin=37000) {  // deaths by year top 15 - MAP
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", function(d) {
-					if (d.deaths < deathMin) {
-						return canvasHeight*2 // for anything not in the top 15 events, fly off screen
-					} else {
-						return scaleFactor*projection([d.longitude,d.latitude])[1]
-					}
-				})
-				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", 0.6)
-	} // databind8()
-
-	function databind9A(dataToBind) {  // deaths top 15 by GDP
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.delay((d,i) => i*0.015+0.2*d.longitude )
-				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => d.deaths < 37000 ? canvasHeight*4 : canvasHeight/2)
-				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", 0.6)
-	} // databind9A()
-
-	function databind9B(dataToBind) {  // deaths top 15 by GDP
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.delay( (d,i) => 80*d.jitter*d.jitter+0.05*i )
-				.attr("cx", d => scaleFactor*projection([d.longitude,d.latitude])[0] )
-				.attr("cy", d => canvasHeight/2)
-				.attr("r", d => 13*Math.sqrt(d.geoIdCount) )
-				.attr("opacity", 0.4)
-	} // databind9B()
-
-	function databind10(dataToBind) {  // FINAL VIZ: random display of all events, sized by location count
-		var boundElements = dataContainer.selectAll("custom.eventCircle")
-			.data(dataToBind)
-			.join("custom")
-				.attr("class", "eventCircle")
-				.transition()
-				.ease(d3.easeQuadInOut)
-				.duration(speedFactor*800)
-				.attr("cx", d => canvasWidth*d.jitter)
-				.attr("cy", d => canvasHeight*d.jitter2)
-				.attr("r", d => 7*d.geoIdCount ) // 8 and 0.4 looks pretty cool
-				.attr("opacity", 0.33)
-	} // databind10()
-
-	function drawEventElements() {
-		mainCtx.clearRect(0,0,canvasWidth,canvasHeight);
-		dataContainer.selectAll("custom.eventCircle").each(function(d,i) {
-			var node = d3.select(this);   // This is each individual element in the loop.
-			mainCtx.fillStyle = node.attr('fillStyle')   // retrieve the colour from the individual in-memory node and set fillStyle for the canvas paint
-			mainCtx.globalAlpha = node.attr("opacity")
-			mainCtx.beginPath();
-			mainCtx.arc(node.attr("cx"), node.attr("cy"), node.attr("r"),
-									0,  2 * Math.PI, true);
-			mainCtx.fill()
-			mainCtx.closePath()
-		})
-	} // drawEventElements()
-
-
-
 	//----------------------------------------------------------------------------
 	//  DATA WRANGLING
 	//----------------------------------------------------------------------------
@@ -1045,8 +997,7 @@ window.createGraphic = function(graphicSelector) {
 					totalAffected: d3.min(v, d => d.totalAffected),
 					otherNotes: d3.min(v, d => d.otherNotes),
 					jitter: Math.random(),
-					jitter2: Math.random(),
-					one: 1 // used for the stacked area chart
+					jitter2: Math.random()
 		  	};
 			},
 		  d => d.disasterno
