@@ -266,9 +266,11 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0.8)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
-				.attr('opacity',0.6)
+				.attr('opacity',0.7)
 			transitionPane3()
 			animateCircles(stepInc)
+
+
 		}, // step2()
 
 		function step3() {  // pane THREE B - placeholder
@@ -901,7 +903,7 @@ window.createGraphic = function(graphicSelector) {
 				interpolators = null;
 			}
 		}
-	}
+	} // interpCircMove()
 
 	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
 	// this function clears and redraws one frame onto the canvas
@@ -931,7 +933,7 @@ window.createGraphic = function(graphicSelector) {
 			chosenCtx.fill()
 			chosenCtx.closePath()
 		}
-	}
+	} // drawCircles()
 
 	// this function activates the animation for the length specified by duration
 	function animateCircles(currentInc) {
@@ -945,7 +947,7 @@ window.createGraphic = function(graphicSelector) {
 			stats.end();
 			if (elapsed > setDuration || currentInc !== lockInc) t.stop();
 		});
-	}
+	} // animateCircles()
 
 
 
