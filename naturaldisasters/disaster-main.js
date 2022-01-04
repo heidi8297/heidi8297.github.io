@@ -219,9 +219,15 @@ window.createGraphic = function(graphicSelector) {
 
   // turn the legendIconWrapper into a button that shows/hides the legends
   legendWrapper = document.getElementById("legendIconWrapper");
-  legendWrapper.addEventListener("click", showHide, false);
-  function show() {d3.select("#legendWrapper").style("opacity",1)}
-  function hide() {d3.select("#legendWrapper").style("opacity",0)}
+  legendWrapper.addEventListener("click", showHide, true);
+  function show() {
+    d3.select("#legendWrapper").style("opacity",1)
+    d3.select(".legendHideIconImage").style("opacity",1)
+  }
+  function hide() {
+    d3.select("#legendWrapper").style("opacity",0)
+    d3.select(".legendHideIconImage").style("opacity",0)
+  }
   // this is the only place where I intentionally change the height of something in the
   //   scrolly text section via javascript, as it messes with the waypoint triggers
   function showHide() {
@@ -449,6 +455,11 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([paneDim(7).bottom, paneDim(7).top])
 
+    // pane 9
+    scaleRdeaths = d3.scaleSqrt()
+			.domain([0, d3.max(eventsFlat,d=>d.deaths)])
+			.range([3,60])
+
 
 		// SVG setup
 
@@ -522,25 +533,19 @@ window.createGraphic = function(graphicSelector) {
 			.append('g')
 		  .attr("class", "legendOrdinal")
 		  .attr("transform", "translate(20,20)");
-
 		var legendOrdinal = d3.legendColor()
 		  .shape("circle")
 		  .shapePadding(3)
 			.shapeRadius(7)
 		  .scale(typeColor);
-
 		d3.select(".legendOrdinal")
 		  .call(legendOrdinal);
 
-
-
-
-		// create size legend for initial world map
+		// create size legend for geoIdCount
 		d3.select(".sizeLegend1").append('svg')
 			.append("g")
 			.attr("class", "sizeLegend")
 			.attr("transform", "translate(13,20)");
-
 		var legendSize1 = d3.legendSize()
 			.scale(scaleRgeo)
 			.shape('circle')
@@ -550,9 +555,26 @@ window.createGraphic = function(graphicSelector) {
 			.title("Number of locations recorded")
 			.labelOffset(20)
 			.orient('horizontal');
-
 		d3.select(".sizeLegend")
 	  	.call(legendSize1);
+
+    // create size legend for death toll
+    d3.select(".sizeLegend2").append('svg')
+      .append("g")
+      .attr("class", "sizeLegend")
+      .attr("transform", "translate(13,20)");
+    var legendSize2 = d3.legendSize()
+      .scale(scaleRdeaths)
+      .shape('circle')
+      .cells([10,5000,20000,100000])
+      .shapePadding(34)
+      .labelFormat("d")
+      .title("Number of deaths")
+      .labelOffset(20)
+      .orient('horizontal');
+    d3.select(".sizeLegend2 .sizeLegend")
+      .call(legendSize2);
+
 
 		// panes 3 and 8 - world map
 		function createMap() {

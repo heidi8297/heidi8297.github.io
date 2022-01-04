@@ -75,10 +75,12 @@
           <div class="absoluteWrapper">
             <div id="legendIconWrapper">
               <img src="legendIcon.png" class="legendIconImage" alt="Legend icon - click to reveal applicable legends">
+              <img src="legendHideIcon.png" class="legendHideIconImage" alt="Arrow icon - click to hide legends">
             </div>
             <div id="legendWrapper">
               <div class="colorLegend1"></div>
               <div class="sizeLegend1"></div>
+              <div class="sizeLegend2"></div>
             </div>
           </div>
           <div class="legendInstructions"></div>
@@ -203,7 +205,6 @@
                 triggerEls[step].classList.add("active")
                 if (step === 1) {preProse.classList.remove("active")}
                 if (step === 11) {postProse.classList.add("active")}
-                console.log(infoState)
               } else {
                 triggerEls[step].classList.remove("active")
                 triggerEls[nextStep].classList.add("active")

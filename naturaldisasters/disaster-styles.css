@@ -161,8 +161,12 @@ header h2 {
   font-size: 0.85rem;
 }
 
-.sizeLegend .swatch {
+.sizeLegend1 .swatch {
   fill: #176F90;
+}
+
+.sizeLegend2 .swatch {
+  fill: #A96830;
 }
 
 .absoluteWrapper {
@@ -189,6 +193,13 @@ header h2 {
   width: 100%;
 }
 
+.legendHideIconImage {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  opacity: 0;
+}
+
 #legendWrapper {
   position: sticky;
   width: 240px;
@@ -204,7 +215,7 @@ header h2 {
   height: 170px;
 }
 
-.sizeLegend1 svg {
+.sizeLegend1 svg, .sizeLegend2 svg {
   height: 105px;
 }
 
