@@ -257,6 +257,7 @@ window.createGraphic = function(graphicSelector) {
 		}, // step1()
 
 		function step2() {  // pane THREE
+			console.log(document.getElementsByTagName('*').length,"DOM elements in page")
 			let stepInc = lockInc += 1;
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*700)
@@ -499,7 +500,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// create color legend for disaster types
 		d3.select(".colorLegend1").append('svg')
-			.attr("height", 200)
+			.attr("height", 180)
 			.append('g')
 		  .attr("class", "legendOrdinal")
 		  .attr("transform", "translate(20,20)");
@@ -543,7 +544,7 @@ window.createGraphic = function(graphicSelector) {
 				.translate([-20+ dispWidth / 2, dispHeight / 2]);
 			geoPath = d3.geoPath(projection);
 			// draw the map and set the opacity to 0
-			d3.json("world.geojson").then( function(worldData){
+			d3.json("map.geojson").then( function(worldData){
 				mapGroup.selectAll('path')
 					.data(worldData.features)
 					.join('path')
@@ -1074,7 +1075,7 @@ window.createGraphic = function(graphicSelector) {
 			});
 			eventsFlat = eventsFlat.concat(eventsByYear.get(key))
 		}
-		console.log(eventsFlat.length)
+		console.log(eventsFlat.length,"disaster events")
 
 
 		// creating the 'stacked' data for the area chart was a major pain.
