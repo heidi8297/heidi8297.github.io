@@ -20,7 +20,7 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByYear = [];
 	let eventsFlat = [];
 	var lockInc = 0;
-  infoState = "show";  // needs to be global so we can access from waypoints script
+  infoState = "hide";  // needs to be global so we can access from waypoints script
 
 	// variables needed for transition method
 	var circleStartInfo = {};
@@ -221,7 +221,7 @@ window.createGraphic = function(graphicSelector) {
 
   // turn the legendIconWrapper into a button that shows/hides the legends
   legendWrapper = document.getElementById("legendIconWrapper");
-  legendWrapper.addEventListener("click", showHide, true);
+  legendWrapper.addEventListener("click", showHide);
   function show() {
     d3.select("#legendWrapper").style("opacity",1)
     d3.select(".legendHideIconImage").style("opacity",1)
@@ -273,7 +273,7 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
-			mapGroup.selectAll("path").transition() // pane THREE
+			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			stackedAreaG.transition() // pane THREE
@@ -290,9 +290,9 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*700)
 				.attr('opacity',0)
-			mapGroup.selectAll("path").transition() // pane THREE
+			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
-				.attr('opacity',0.8)
+				.attr('opacity',1)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
@@ -305,7 +305,7 @@ window.createGraphic = function(graphicSelector) {
 
 		function step3() {  // pane THREE B - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition() // pane THREE
+			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			stackedAreaG.transition() // pane THREE
@@ -321,7 +321,7 @@ window.createGraphic = function(graphicSelector) {
 
 		function step4() {  // pane FOUR - placeholder
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition() // pane THREE
+			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
 			stackedAreaG.transition() // pane THREE
@@ -375,9 +375,12 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
 				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
-			mapGroup.selectAll("path").transition() // pane EIGHT
+			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      teardrops.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',0)
 			transitionPane7()
 			animateCircles(stepInc)
 		}, // step7()
@@ -391,9 +394,12 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => dispHeight*1.2)
 				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
 				.attr("y2", d => dispHeight*1.2)
-			mapGroup.selectAll("path").transition() // pane EIGHT
+			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
-				.attr('opacity',0.8)
+				.attr('opacity',1)
+      teardrops.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',1)
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
 			animateCircles(stepInc)
@@ -401,9 +407,12 @@ window.createGraphic = function(graphicSelector) {
 
 		function step9() {  // pane NINE A
 			let stepInc = lockInc += 1;
-			mapGroup.selectAll("path").transition() // pane EIGHT
+			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      teardrops.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',0)
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
@@ -533,6 +542,14 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
 
+    // pane 8 - scales for teardrop shapes
+    scaleRdamages = d3.scaleSqrt()
+      .domain([0, d3.max(eventsFlat, d => d.damages)])
+      .range([3,70])
+    scaleRaffected = d3.scaleSqrt()
+      .domain([0, d3.max(eventsFlat, d => d.totalAffected)])
+      .range([3,60])
+
     // pane 9
     scaleRdeaths = d3.scaleSqrt()
       .domain([0, d3.max(eventsFlat, d => d.deaths)])
@@ -597,7 +614,8 @@ window.createGraphic = function(graphicSelector) {
 		function createMap() {
 			mapGroup = svgBackground.append('g')
 				.attr('width', dispWidth)
-				.attr('height', dispHeight);
+				.attr('height', dispHeight)
+        .attr("opacity", 0);
 			projection = d3.geoNaturalEarth1()
 				.scale(dispWidth / 1.4 / Math.PI)
 				.translate([-20+ dispWidth / 2, dispHeight / 2]);
@@ -608,7 +626,7 @@ window.createGraphic = function(graphicSelector) {
 					.data(worldData.features)
 					.join('path')
 					.attr('fill', '#EAE0DB')
-					.attr('opacity', 0)
+					.attr('opacity', 0.8)
 					.attr('d', geoPath);
 			});
 		}
@@ -757,6 +775,56 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createLollipopLines()
 
+    // pane 8 - create teardrop shapes on map
+    function createTeardrops() {
+
+      teardrops = svgForeground.append("g")
+        .attr("class", "teardrops")
+        .attr("opacity", 0)
+
+      // top right - sized by death toll
+      teardrops.selectAll("path.TR")
+        .data(deadliestEvents)
+        .join("path")
+        .attr("class", "TR")
+        .attr( "d", d => teardrop( 0.7*scaleRdeaths(d.deaths), 1, 0) )
+        .attr("fill",d => typeColor(d.disastertype))
+        .attr("opacity",0.7)
+        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
+
+      // bottom right - sized by total affected
+      teardrops.selectAll("path.BR")
+        .data(deadliestEvents)
+        .join("path")
+        .attr("class", "BR")
+        .attr( "d", d => teardrop( scaleRaffected(d.totalAffected), 1, 1) )
+        .attr("fill",d => typeColor(d.disastertype))
+        .attr("opacity",0.7)
+        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
+
+      // bottom left - sized by damages
+      teardrops.selectAll("path.BL")
+        .data(deadliestEvents)
+        .join("path")
+        .attr("class", "BL")
+        .attr( "d", d => teardrop( scaleRdamages(d.damages), 1, 2) )
+        .attr("fill",d => typeColor(d.disastertype))
+        .attr("opacity",0.7)
+        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
+
+      // top left - sized by geoIdCount
+      teardrops.selectAll("path.TL")
+        .data(deadliestEvents)
+        .join("path")
+        .attr("class", "TL")
+        .attr( "d", d => teardrop( scaleRgeo(d.geoIdCount), 1, 3) )
+        .attr("fill",d => typeColor(d.disastertype))
+        .attr("opacity",0.7)
+        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
+
+    }
+    createTeardrops()
+
 		// create dicts to keep track of circle positions for the transitions
 		function initiateCircleInfo() {
 			for (let i = 0; i < eventsFlat.length; i++) {
@@ -899,7 +967,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': scaleFactor*scaleRdeaths(node.deaths),
+				'r': 15,
 				'opacity': 0.6
 		}}
 	} // transitionPane8()
