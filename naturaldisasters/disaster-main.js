@@ -480,7 +480,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
 		scaleRgeo = d3.scaleSqrt()
 			.domain([1, d3.max(eventsFlat,d=>d.geoIdCount)])
-			.range([5,40])
+			.range([3,35])
 
 		// unlike the positional scales, this one is a time scale for helping to build the transitions
 		scaleYearPercent = d3.scaleLinear()
@@ -517,17 +517,20 @@ window.createGraphic = function(graphicSelector) {
 		// create size legend for initial world map
 		d3.select(".sizeLegend1").append('svg')
 			.append("g")
-			.attr("class", "sizeLegendGeo")
+			.attr("class", "sizeLegend")
 			.attr("transform", "translate(20,20)");
 
 		var legendSize1 = d3.legendSize()
 			.scale(scaleRgeo)
 			.shape('circle')
-			.shapePadding(8)
+			.cells([1,10,50,100])
+			.shapePadding(32)
+			.labelFormat("d")
+			.title("Number of locations recorded")
 			.labelOffset(20)
 			.orient('horizontal');
 
-		d3.select(".sizeLegendGeo")
+		d3.select(".sizeLegend")
 	  	.call(legendSize1);
 
 		// panes 3 and 8 - world map
@@ -770,7 +773,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 7*Math.sqrt(node.geoIdCount),
+				'r': scaleFactor*scaleRgeo(node.geoIdCount),
 				'opacity': 0.4
 		}}
 	} // transitionPane3()
@@ -781,7 +784,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 7*Math.sqrt(node.geoIdCount),
+				'r': scaleFactor*scaleRgeo(node.geoIdCount),
 				'opacity': 0.4
 		}}
 	} // transitionPane3B()
@@ -836,7 +839,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': (node.deaths < 37000)? canvasHeight*2 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 13*Math.sqrt(node.geoIdCount),
+				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
 				'opacity': 0.6
 		}}
 	} // transitionPane8()
@@ -847,7 +850,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': (node.deaths < 37000)? canvasHeight*2 : canvasHeight/2,
-				'r': 13*Math.sqrt(node.geoIdCount),
+				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
 				'opacity': 0.6
 		}}
 	} // transitionPane9A()
@@ -858,7 +861,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': canvasHeight/2,
-				'r': 13*Math.sqrt(node.geoIdCount),
+				'r': 2*scaleFactor*scaleRgeo(node.geoIdCount),
 				'opacity': 0.4
 		}}
 	} // transitionPane9B()

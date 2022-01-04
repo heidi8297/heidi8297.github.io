@@ -143,8 +143,16 @@ header h2 {
   opacity: 0.8;
 }
 
+.legendTitle {
+  font-size: 0.92rem;
+}
+
 .cell .label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+.sizeLegend .swatch {
+  fill: #176F90;
 }
 
 
