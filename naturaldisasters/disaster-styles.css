@@ -156,6 +156,10 @@ header h2 {
 	opacity: 1; /* overwrites the opacities specified above when 'active' */
 }
 
+.graphic__prose .pane9B {
+  padding-top: 40px; /* added so the legend doesn't bump up against the text */
+}
+
 .cell .swatch { /* opacity for all legend swatches */
   opacity: 0.8;
 }

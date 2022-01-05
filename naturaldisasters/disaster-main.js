@@ -19,24 +19,26 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
-  readyFor2ndAnim = false;
-  yearInc = 1960;
+  let infoState = "hide";
+
+  // variables for the events by year animation in pane THREE
+  let readyFor2ndAnim = false;
+  let yearInc = 1960;
   const fpsTarget = 6;
   const msTarget = Math.floor(1000/fpsTarget)
-  var framesPerYear = 4;
-	var lockInc = 0;
-  infoState = "hide";  // needs to be global so we can access from waypoints script
+  let framesPerYear = 4;
 
 	// variables needed for transition method
-	var circleStartInfo = {};
-	var circleEndInfo = {};
-	var ease = d3.easeCubicInOut;
-	var setDuration = 2000;
-	var timeElapsed = 0;
-	var interpolators = null;
+  let lockInc = 0;
+	let circleStartInfo = {};
+	let circleEndInfo = {};
+	let ease = d3.easeCubicInOut;
+	let setDuration = 2000;
+	let timeElapsed = 0;
+	let interpolators = null;
 
-	//Dataset to swtich between color of a circle (in the hidden canvas) and the node data
-  var colToCircle = {};
+	// dataset to swtich between color of a circle (in the hidden canvas) and the node data
+  let colToCircle = {};
 
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
@@ -127,15 +129,15 @@ window.createGraphic = function(graphicSelector) {
 	//From: https://bocoup.com/weblog/2d-picking-in-canvas
 	var nextCol = 1;
 	function genColor() {
-			var ret = [];
-			if (nextCol < 16777215) {   // via http://stackoverflow.com/a/15804183
-					ret.push(nextCol & 0xff); // R
-					ret.push((nextCol & 0xff00) >> 8); // G
-					ret.push((nextCol & 0xff0000) >> 16); // B
-					nextCol += 1;
-			}
-			var col = "rgb(" + ret.join(',') + ")";
-			return col;
+		var ret = [];
+		if (nextCol < 16777215) {   // via http://stackoverflow.com/a/15804183
+				ret.push(nextCol & 0xff); // R
+				ret.push((nextCol & 0xff00) >> 8); // G
+				ret.push((nextCol & 0xff0000) >> 16); // B
+				nextCol += 1;
+		}
+		var col = "rgb(" + ret.join(',') + ")";
+		return col;
 	} // genColor()
 
 	var stats = new Stats();
@@ -199,12 +201,12 @@ window.createGraphic = function(graphicSelector) {
 	// activate tooltip when the mouse moves over an event circle
 	d3.select('.mainCanvas').on('mousemove', function(e) {
 	  drawCircles(hiddenCtx, true); // draw the hidden canvas
-		var mouseX = e.layerX || e.offsetX;
-		var mouseY = e.layerY || e.offsetY;
+		let mouseX = e.layerX || e.offsetX;
+		let mouseY = e.layerY || e.offsetY;
 		// pick the color from the mouse position
-		var pickedCol = hiddenCtx.getImageData(scaleFactor*mouseX, scaleFactor*mouseY, 1, 1).data;
-  	var colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
-		var nodeData = colToCircle[colKey];  // get the data from our map!
+		let pickedCol = hiddenCtx.getImageData(scaleFactor*mouseX, scaleFactor*mouseY, 1, 1).data;
+  	let colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
+		let nodeData = colToCircle[colKey];  // get the data from our map!
 		if (nodeData) {
 			// Show the tooltip only when there is nodeData found by the mouse
 	    d3.select('.tooltipMain')
@@ -236,7 +238,7 @@ window.createGraphic = function(graphicSelector) {
     d3.select(".legendHideIconImage").style("opacity",0)
   }
   // this is the only place where I intentionally change the height of something in the
-  //   scrolly text section via javascript, as it messes with the waypoint triggers
+  //   scrolly text section via javascript, as it affects the waypoint triggers
   function showHide() {
     if (infoState === "hide") {
       infoState = "show";
@@ -1047,9 +1049,9 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 70,
+				'cx': scaleFactor*(projection([node.longitude,node.latitude])[0]+node.offsetX),
+				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*(projection([node.longitude,node.latitude])[1]+node.offsetY),
+				'r': 80,
 				'opacity': 0
 		}}
 	} // transitionPane8()
