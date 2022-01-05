@@ -19,6 +19,9 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
+  readyFor2ndAnim = false;
+  yearInc = 1960;
+  var fpsTarget = 4;
 	var lockInc = 0;
   infoState = "hide";  // needs to be global so we can access from waypoints script
 
@@ -298,8 +301,22 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',0.7)
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
 			transitionPane3()
-			animateCircles(stepInc)
+			animateCircles(stepInc,true)
 
+      let secondAnim = d3.interval(function() {
+        if (readyFor2ndAnim && stepInc === lockInc) {
+          console.log(yearInc)
+          yearInc += (1/fpsTarget)
+          for (let i = 0; i < eventsFlat.length; i++) {
+    				node = eventsFlat[i]
+
+          }
+        } else if (stepInc !== lockInc) {
+          readyFor2ndAnim = false;
+          yearInc = 1960;
+          secondAnim.stop();
+        }
+      }, 1000 )
 
 		}, // step2()
 
@@ -526,6 +543,10 @@ window.createGraphic = function(graphicSelector) {
 			.domain([1960,2019])
 			.range([0,1])
 
+    scaleYearToSlideNum = d3.scaleLinear()
+      .domain([1960,2019])
+      .range([0,(2019-1960)*fpsTarget]) // create one slide number for every frame - 1 year per second
+
 		// pane 4
 		scaleXtypes = d3.scaleBand()
 			.domain(["earthquake","storm","drought","flood","extreme temperature","landslide","volcanic activity"])
@@ -569,56 +590,58 @@ window.createGraphic = function(graphicSelector) {
       .range([ paneDim(9,1).left, paneDim(9,1).right ])
 
 
-		// create color legend for disaster types
-		d3.select(".colorLegend1").append('svg')
-			.append('g')
-		  .attr("class", "legendOrdinal")
-		  .attr("transform", "translate(13,20)");
-		var legendOrdinal = d3.legendColor()
-		  .shape("circle")
-		  .shapePadding(3)
-			.shapeRadius(7)
-      .title("Disaster type")
-		  .scale(typeColor);
-		d3.select(".legendOrdinal")
-		  .call(legendOrdinal);
+    function createLegends() {
+      // create color legend for disaster types
+  		d3.select(".colorLegend1").append('svg')
+  			.append('g')
+  		  .attr("class", "legendOrdinal")
+  		  .attr("transform", "translate(13,20)");
+  		var legendOrdinal = d3.legendColor()
+  		  .shape("circle")
+  		  .shapePadding(3)
+  			.shapeRadius(7)
+        .title("Disaster type")
+  		  .scale(typeColor);
+  		d3.select(".legendOrdinal")
+  		  .call(legendOrdinal);
 
-		// create size legend for geoIdCount
-		d3.select(".sizeLegend1").append('svg')
-			.append("g")
-			.attr("class", "sizeLegend")
-			.attr("transform", "translate(13,20)");
-		var legendSize1 = d3.legendSize()
-			.scale(scaleRgeo)
-			.shape('circle')
-			.cells([1,10,50,100])
-			.shapePadding(34)
-			.labelFormat("d")
-			.title("Number of locations recorded")
-			.labelOffset(20)
-			.orient('horizontal');
-		d3.select(".sizeLegend")
-	  	.call(legendSize1);
-    d3.select(".sizeLegend1").style("display", "none")
+  		// create size legend for geoIdCount
+  		d3.select(".sizeLegend1").append('svg')
+  			.append("g")
+  			.attr("class", "sizeLegend")
+  			.attr("transform", "translate(13,20)");
+  		var legendSize1 = d3.legendSize()
+  			.scale(scaleRgeo)
+  			.shape('circle')
+  			.cells([1,10,50,100])
+  			.shapePadding(34)
+  			.labelFormat("d")
+  			.title("Number of locations recorded")
+  			.labelOffset(20)
+  			.orient('horizontal');
+  		d3.select(".sizeLegend")
+  	  	.call(legendSize1);
+      d3.select(".sizeLegend1").style("display", "none")
 
-    // create size legend for death toll
-    d3.select(".sizeLegend2").append('svg')
-      .append("g")
-      .attr("class", "sizeLegend")
-      .attr("transform", "translate(13,20)");
-    var legendSize2 = d3.legendSize()
-      .scale(scaleRdeaths)
-      .shape('circle')
-      .cells([10,5000,20000,100000])
-      .shapePadding(34)
-      .labelFormat("d")
-      .title("Number of deaths")
-      .labelOffset(20)
-      .orient('horizontal');
-    d3.select(".sizeLegend2 .sizeLegend")
-      .call(legendSize2);
-    d3.select(".sizeLegend2").style("display", "none")
-
+      // create size legend for death toll
+      d3.select(".sizeLegend2").append('svg')
+        .append("g")
+        .attr("class", "sizeLegend")
+        .attr("transform", "translate(13,20)");
+      var legendSize2 = d3.legendSize()
+        .scale(scaleRdeaths)
+        .shape('circle')
+        .cells([10,5000,20000,100000])
+        .shapePadding(34)
+        .labelFormat("d")
+        .title("Number of deaths")
+        .labelOffset(20)
+        .orient('horizontal');
+      d3.select(".sizeLegend2 .sizeLegend")
+        .call(legendSize2);
+      d3.select(".sizeLegend2").style("display", "none")
+    }
+    createLegends()
 
 		// panes 3 and 8 - world map
 		function createMap() {
@@ -840,7 +863,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 				.attr("opacity", 0.7)
-
     }
     createTeardropOffsetLines()
 
@@ -921,7 +943,7 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
 				'r': scaleFactor*scaleRgeo(node.geoIdCount),
-				'opacity': 0.4
+				'opacity': 0
 		}}
 	} // transitionPane3()
 
@@ -1035,11 +1057,12 @@ window.createGraphic = function(graphicSelector) {
 	//  each event will show up suddenly with its year, then slowly fade into the background
 
 	// given a year, a jitter value, and a pct => returns an OPACITY
-	function eventOpacity(year, jitter, pct) {
-		startPct = scaleYearPercent(year+jitter) // returns a value between 0 and 1
-		if (pct < startPct) {return 0}
-		else if (pct < (startPct + 0.02)) {
-			return 1-(pct-startPct)/0.02
+	function eventOpacity(yearValue, currentInc, fadeDur) {
+		startInc = scaleYearToSlideNum(yearValue) // should return an integer
+		if (currentInc < startInc) {return 0}
+		else if (currentInc < scaleYearToSlideNum(yearValue+fadeDur*fpsTarget)) {
+			//return 1-(pct-startPct)/0.02
+      return 0.5
 		} else {return 0}
 	}
 
@@ -1077,6 +1100,15 @@ window.createGraphic = function(graphicSelector) {
 		}
 	} // interpCircMove()
 
+  // iterate through every event and update the opacity value of circleStartInfo
+  //   to allow redrawing a single frame accordingly (for pane 3 part 2)
+  function setOpacityForCircles() {
+    for (let i = 0; i < eventsFlat.length; i++) {
+      circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
+    }
+  }
+
+
 	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
 	// this function clears and redraws one frame onto the canvas
 	function drawCircles(chosenCtx, hidden = false) {
@@ -1108,7 +1140,7 @@ window.createGraphic = function(graphicSelector) {
 	} // drawCircles()
 
 	// this function activates the animation for the length specified by duration
-	function animateCircles(currentInc) {
+	function animateCircles(currentInc, secondAnimNeeded=false) {
 		moveCircles()
 		let dt = 0;
 		let t = d3.timer(function(elapsed) {
@@ -1117,7 +1149,10 @@ window.createGraphic = function(graphicSelector) {
 			dt = elapsed;
 			drawCircles(mainCtx)
 			stats.end();
-			if (elapsed > setDuration || currentInc !== lockInc) t.stop();
+			if (elapsed > setDuration || currentInc !== lockInc) {
+        if (secondAnimNeeded) { readyFor2ndAnim = true; }
+        t.stop()
+      };
 		});
 	} // animateCircles()
 
@@ -1172,7 +1207,8 @@ window.createGraphic = function(graphicSelector) {
 					totalAffected: d3.min(v, d => d.totalAffected),
 					otherNotes: d3.min(v, d => d.otherNotes),
 					jitter: Math.random(),
-					jitter2: Math.random()
+					jitter2: Math.random(),
+          yearCounter: d3.min(v, d => +d.year + Math.floor(fpsTarget*Math.random())/fpsTarget)
 		  	};
 			},
 		  d => d.disasterno
