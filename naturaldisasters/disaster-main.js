@@ -306,11 +306,12 @@ window.createGraphic = function(graphicSelector) {
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc) {
           console.log(yearInc)
+          setOpacityForCircles()
+          //console.log(circleStartInfo)
+          drawCircles(mainCtx)
           yearInc += (1/fpsTarget)
-          for (let i = 0; i < eventsFlat.length; i++) {
-    				node = eventsFlat[i]
 
-          }
+
         } else if (stepInc !== lockInc) {
           readyFor2ndAnim = false;
           yearInc = 1960;
@@ -1058,9 +1059,10 @@ window.createGraphic = function(graphicSelector) {
 
 	// given a year, a jitter value, and a pct => returns an OPACITY
 	function eventOpacity(yearValue, currentInc, fadeDur) {
-		startInc = scaleYearToSlideNum(yearValue) // should return an integer
-		if (currentInc < startInc) {return 0}
-		else if (currentInc < scaleYearToSlideNum(yearValue+fadeDur*fpsTarget)) {
+		//startInc = scaleYearToSlideNum(yearValue) // should return an integer
+		if (currentInc < yearValue) {return 0}
+    else if (currentInc === yearValue) {return 1}
+		else if (currentInc < yearValue+fadeDur*fpsTarget) {
 			//return 1-(pct-startPct)/0.02
       return 0.5
 		} else {return 0}
@@ -1104,10 +1106,11 @@ window.createGraphic = function(graphicSelector) {
   //   to allow redrawing a single frame accordingly (for pane 3 part 2)
   function setOpacityForCircles() {
     for (let i = 0; i < eventsFlat.length; i++) {
+      //console.log(eventsFlat[i].yearCounter, yearInc)
+      //console.log(eventOpacity(eventsFlat[i].yearCounter, yearInc, 3))
       circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
     }
   }
-
 
 	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
 	// this function clears and redraws one frame onto the canvas
