@@ -355,9 +355,9 @@ window.createGraphic = function(graphicSelector) {
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x1", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y1", d => dispHeight*1.2)
-				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x2", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y2", d => dispHeight*1.2)
 			transitionPane6()
 			animateCircles(stepInc)
@@ -371,10 +371,10 @@ window.createGraphic = function(graphicSelector) {
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
-				.attr("y1", d => (1.0/scaleFactor)*(scaleYdeaths(d.deaths)+24) ) // this is the top of the line
-				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter) )
-				.attr("y2", d => (1.0/scaleFactor)*paneDim(7).bottom ) // this is the bottom of the line
+				.attr("x1", d => scaleXyear(d.year)-8+16*d.jitter)
+				.attr("y1", d => scaleYdeaths(d.deaths)+6) // this is the top of the line
+				.attr("x2", d => scaleXyear(d.year)-8+16*d.jitter)
+				.attr("y2", d => paneDim(7,1).bottom ) // this is the bottom of the line
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -391,9 +391,9 @@ window.createGraphic = function(graphicSelector) {
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
-				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x1", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y1", d => dispHeight*1.2)
-				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x2", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y2", d => dispHeight*1.2)
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
@@ -441,7 +441,7 @@ window.createGraphic = function(graphicSelector) {
 
 
 	//----------------------------------------------------------------------------
-	// UPDATE / SETUP FUNCTIONS - scales, initializing svg elements,
+	// UPDATE / SETUP FUNCTIONS - scales, initializing svg elements, create legends
 	//----------------------------------------------------------------------------
 
 	// update our chart
@@ -456,27 +456,6 @@ window.createGraphic = function(graphicSelector) {
 		typeColor = d3.scaleOrdinal()
 			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
 			.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
-
-
-		// CANVAS setup
-
-		// pane 6
-		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
-			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([paneDim(6).left, paneDim(6).right])
-			.paddingInner(0.3)
-		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
-			.domain([0,450000])
-			.range([paneDim(6).bottom, paneDim(6).top])
-
-		// pane 7
-		scaleXyear = d3.scaleLinear()
-			.domain([1960,2018])
-			.range([paneDim(7).left, paneDim(7).right])
-		scaleYdeaths = d3.scaleLinear()
-			.domain([0,450000])
-			.range([paneDim(7).bottom, paneDim(7).top])
-
 
 
 		// SVG setup
@@ -511,6 +490,8 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createDisplayText()
 
+    // ALL SCALES set in SVG units and converted to canvas units when needed
+
 		// pane 2 - event counts by type
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d => d[1])])
@@ -544,6 +525,23 @@ window.createGraphic = function(graphicSelector) {
 		scaleYdeathCount = d3.scaleLinear() // total death counts by type
 			.domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
+
+    // pane 6
+		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
+			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
+			.range([paneDim(6,1).left, paneDim(6,1).right])
+			.paddingInner(0.3)
+		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
+			.domain([0,450000])
+			.range([paneDim(6,1).bottom, paneDim(6,1).top])
+
+    // pane 7
+		scaleXyear = d3.scaleLinear()
+			.domain([1960,2018])
+			.range([paneDim(7,1).left, paneDim(7,1).right])
+		scaleYdeaths = d3.scaleLinear()
+			.domain([0,450000])
+			.range([paneDim(7,1).bottom, paneDim(7,1).top])
 
     // pane 8 - scales for teardrop shapes
     scaleRdamages = d3.scaleSqrt()
@@ -753,9 +751,9 @@ window.createGraphic = function(graphicSelector) {
 				.join("rect")
         // these dimensions/coordinates are a little funky because I want the rectangles
         //   slighly larger than the space taken up by the data points
-				.attr("x", d => scaleXdeadliest(d[0])/scaleFactor - 0.05*scaleXdeadliest.bandwidth()/scaleFactor )
+				.attr("x", d => scaleXdeadliest(d[0]) - 0.05*scaleXdeadliest.bandwidth() )
 				.attr("y", d => paneDim(6,1).top - 7 )
-				.attr("width", 1.1*scaleXdeadliest.bandwidth()/scaleFactor )
+				.attr("width", 1.1*scaleXdeadliest.bandwidth() )
 				.attr("height", paneDim(6,1).bottom-paneDim(6,1).top + 14 )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.1);
@@ -772,9 +770,9 @@ window.createGraphic = function(graphicSelector) {
 				.join("line")
 				.attr("stroke", d => typeColor(d.disastertype))
 				.attr("stroke-width", 1.5 )
-				.attr("x1", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x1", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y1", d => dispHeight*1.2)
-				.attr("x2", d => (1.0/scaleFactor)*(scaleXyear(d.year)-31+62*d.jitter))
+				.attr("x2", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y2", d => dispHeight*1.2)
 				.attr("opacity", 0.7)
 		}
@@ -948,8 +946,8 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter,
-				'cy': scaleYdeadliest(node.deaths),
+				'cx': scaleFactor*(scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter),
+				'cy': scaleFactor*scaleYdeadliest(node.deaths),
 				'r': 13,
 				'opacity': 0.5
 		}}
@@ -959,8 +957,8 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleXyear(node.year)-31+62*node.jitter,
-				'cy': scaleYdeaths(node.deaths),
+				'cx': scaleFactor*scaleXyear(node.year)-32+64*node.jitter,
+				'cy': scaleFactor*scaleYdeaths(node.deaths),
 				'r': 24,
 				'opacity': 0.6
 		}}
@@ -972,7 +970,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 15,
+				'r': 20,
 				'opacity': 0.6
 		}}
 	} // transitionPane8()

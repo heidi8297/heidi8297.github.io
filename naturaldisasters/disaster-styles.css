@@ -178,6 +178,10 @@ header h2 {
   margin-bottom: 10px;
 }
 
+.legendSticky {
+  position: relative;
+}
+
 .absoluteWrapper {
   position: absolute;
   height: 100%;
