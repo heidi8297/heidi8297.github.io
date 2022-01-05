@@ -398,14 +398,6 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-      teardrops.selectAll("path").transition() // pane EIGHT
-        .duration(speedFactor*800)
-        .attr('opacity',0)
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0]
-          let translateY = projection([d.longitude,d.latitude])[1]
-          return `translate(${translateX},${translateY})`
-        } )
       transitionTeardrops()
       teardropLines.selectAll("line").transition() // pane EIGHT
         .duration(speedFactor*800)
@@ -464,14 +456,6 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-      teardrops.selectAll("path").transition() // pane EIGHT
-        .duration(speedFactor*800)
-        .attr('opacity',0)
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0]
-          let translateY = projection([d.longitude,d.latitude])[1]
-          return `translate(${translateX},${translateY})`
-        } )
       transitionTeardrops()
       teardropLines.selectAll("line").transition() // pane EIGHT
         .duration(speedFactor*800)
@@ -511,7 +495,9 @@ window.createGraphic = function(graphicSelector) {
 		steps[step].call()
 	}
 
+  // move teardrops into their starting positions with opacity = 0
   function transitionTeardrops() {
+    tearTransOffset = 40
     teardrops.selectAll("path.TR")  // top right - sized by death toll
       .transition().duration(scaleFactor*600)
       .attr("opacity",0)
@@ -557,7 +543,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// SVG setup
 
-		// pane 1 - create display text
+		// pane ONE - create display text
 		function createDisplayText() {
 			textIntroNums = svgForeground.append("g") // this explanatory text shows up on the first pane
 				.attr("class", "textIntroNums") // this is purely to make the group easy to see in 'inspect'
@@ -589,7 +575,7 @@ window.createGraphic = function(graphicSelector) {
 
     // ALL SCALES set in SVG units and converted to canvas units when needed
 
-		// pane 2 - event counts by type
+		// pane TWO - event counts by type
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d => d[1])])
 			.range([ paneDim(2,1).left, paneDim(2,1).right - 60 ]); // 60 makes space for the label
@@ -598,7 +584,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([ paneDim(2,1).bottom , paneDim(2,1).top ])
 			.paddingInner(0.35);
 
-		// pane 3 - world map animated
+		// pane THREE - world map animated
 		scaleXyearSvg = d3.scaleLinear()
   		.domain([1960,2018])
   		.range([paneDim(3,1).left, paneDim(3,1).right]);
@@ -609,16 +595,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
 			.range([3,60])
 
-		// unlike the positional scales, this one is a time scale for helping to build the transitions
-		scaleYearPercent = d3.scaleLinear()
-			.domain([1960,2019])
-			.range([0,1])
-
-    scaleYearToSlideNum = d3.scaleLinear() // not currently in use
-      .domain([1960,2019])
-      .range([0,(2019-1960)*framesPerYear]) // create one slide number for every frame
-
-		// pane 4
+		// pane FOUR
 		scaleXtypes = d3.scaleBand()
 			.domain(["earthquake","storm","drought","flood","extreme temperature","landslide","volcanic activity"])
 			.range([ paneDim(4,1).left , paneDim(4,1).right ])
@@ -627,7 +604,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
 			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
 
-    // pane 6
+    // pane SIX
 		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
 			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
 			.range([paneDim(6,1).left, paneDim(6,1).right])
@@ -636,7 +613,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([paneDim(6,1).bottom, paneDim(6,1).top])
 
-    // pane 7
+    // pane SEVEN
 		scaleXyear = d3.scaleLinear()
 			.domain([1960,2018])
 			.range([paneDim(7,1).left, paneDim(7,1).right])
@@ -644,7 +621,7 @@ window.createGraphic = function(graphicSelector) {
 			.domain([0,450000])
 			.range([paneDim(7,1).bottom, paneDim(7,1).top])
 
-    // pane 8 - scales for teardrop shapes
+    // pane EIGHT - scales for teardrop shapes
     scaleRdamages = d3.scaleSqrt()
       .domain([0, d3.max(eventsFlat, d => d.damages)])
       .range([3,70])
@@ -652,7 +629,7 @@ window.createGraphic = function(graphicSelector) {
       .domain([0, d3.max(eventsFlat, d => d.totalAffected)])
       .range([3,54])
 
-    // pane 9
+    // pane NINE
     scaleRdeaths = d3.scaleSqrt()
       .domain([0, d3.max(eventsFlat, d => d.deaths)])
       .range([3,70])
@@ -714,7 +691,7 @@ window.createGraphic = function(graphicSelector) {
     }
     createLegends()
 
-		// panes 3 and 8 - world map
+		// panes THREE and EIGHT - world map
 		function createMap() {
 			mapGroup = svgBackground.append('g')
 				.attr('width', dispWidth)
@@ -736,7 +713,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createMap()
 
-		// pane 2 - create a bar chart of disaster counts by type
+		// pane TWO - create a bar chart of disaster counts by type
 		function createBars2() {
 			barsByTypeG = svgBackground.append("g")
 				.attr("class", "eventsByType") // this is purely to make the group easy to see in 'inspect'
@@ -778,7 +755,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createBars2()
 
-		// pane 3 - stacked area chart of events by year (colored by type)
+		// pane THREE - stacked area chart of events by year (colored by type)
 		function createStackedArea3() {
 			stackedAreaG = svgForeground.append('g')
 				.attr("class", "stackedArea")
@@ -799,7 +776,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createStackedArea3()
 
-		// pane 4 - create a bar chart of total death counts by type
+		// pane FOUR - create a bar chart of total death counts by type
 		function createBars4() {
 			deathsByTypeG = svgBackground.append("g")
 				.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
@@ -844,7 +821,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createBars4()
 
-		// pane 6 - create lightly colored background bars for the log plots
+		// pane SIX - create lightly colored background bars for the log plots
 		function createBars6() {
 			logBarsG = svgBackground.append("g")
 				.attr("class", "logBars") // this is purely to make the group easy to see in 'inspect'
@@ -863,7 +840,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createBars6()
 
-		// pane 7 - create lollipop lines
+		// pane SEVEN - create lollipop lines
 		function createLollipopLines() {
 			lollipopLines = svgBackground.append("g")
 				.attr("class", "lollipopLines") // this is purely to make the group easy to see in 'inspect'
@@ -881,61 +858,38 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createLollipopLines()
 
-    // pane 8 - create teardrop shapes on map
+    // pane EIGHT - create teardrop shapes on map
     function createTeardrops() {
-
       teardrops = svgForeground.append("g")
         .attr("class", "teardrops")
         .attr("opacity", 1)
-
-      tearTransOffset = 40
       teardrops.selectAll("path.TR")  // top right - sized by death toll
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TR")
         .attr( "d", d => teardrop( 0.6*scaleRdeaths(d.deaths), 1, 0) )
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
-          let translateY = projection([d.longitude,d.latitude])[1] + tearTransOffset
-          return `translate(${translateX},${translateY})`
-        } )
       teardrops.selectAll("path.BR")  // bottom right - sized by total affected
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BR")
         .attr( "d", d => teardrop( scaleRaffected(d.totalAffected), 1, 1) )
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
-          let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
-          return `translate(${translateX},${translateY})`
-        } )
       teardrops.selectAll("path.BL")  // bottom left - sized by damages
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BL")
         .attr( "d", d => teardrop( scaleRdamages(d.damages), 1, 2) )
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0] + tearTransOffset
-          let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
-          return `translate(${translateX},${translateY})`
-        } )
       teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TL")
         .attr( "d", d => teardrop( 1.2*scaleRgeo(d.geoIdCount), 1, 3) )
-        .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX + tearTransOffset
-          let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY + tearTransOffset
-          return `translate(${translateX},${translateY})`
-        } )
       teardrops.selectAll("path")  // add attributes shared by all teardrops
         .attr("fill",d => typeColor(d.disastertype))
-        .attr("opacity",0)
-
     }
     createTeardrops()
+    transitionTeardrops() // move them to their starting positions with opacity = 0
 
+    // initiate teardrop lines with zero length
     function createTeardropOffsetLines() {
       teardropLines = svgForeground.append("g")
         .attr("class", "teardropLines")
@@ -1188,7 +1142,7 @@ window.createGraphic = function(graphicSelector) {
 	} // interpCircMove()
 
   // iterate through every event and update the opacity value of circleStartInfo
-  //   to allow redrawing a single frame accordingly (for pane 3 part 2)
+  //   to allow redrawing a single frame accordingly (for pane THREE part TWO)
   function setOpacityForCircles( varies = true, value = 0 ) {
     for (let i = 0; i < eventsFlat.length; i++) {
       if (varies) {
