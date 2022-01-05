@@ -22,6 +22,7 @@ window.createGraphic = function(graphicSelector) {
   readyFor2ndAnim = false;
   yearInc = 1960;
   var fpsTarget = 4;
+  var framesPerYear = 4;
 	var lockInc = 0;
   infoState = "hide";  // needs to be global so we can access from waypoints script
 
@@ -304,20 +305,24 @@ window.createGraphic = function(graphicSelector) {
 			animateCircles(stepInc,true)
 
       let secondAnim = d3.interval(function() {
-        if (readyFor2ndAnim && stepInc === lockInc) {
+        if (readyFor2ndAnim && stepInc === lockInc && yearInc <= 2019) {
           console.log(yearInc)
           setOpacityForCircles()
           //console.log(circleStartInfo)
           drawCircles(mainCtx)
-          yearInc += (1/fpsTarget)
+          yearInc += (1/framesPerYear)
 
 
-        } else if (stepInc !== lockInc) {
+        } else if (stepInc !== lockInc || yearInc > 2019) {
+          if (yearInc > 2019) {  // end with all events being displayed
+            setOpacityForCircles(false, 0.3)
+            drawCircles(mainCtx)
+          }
           readyFor2ndAnim = false;
           yearInc = 1960;
           secondAnim.stop();
         }
-      }, 1000 )
+      }, 200 ) // needs fpsTarget incorporated here
 
 		}, // step2()
 
@@ -544,9 +549,9 @@ window.createGraphic = function(graphicSelector) {
 			.domain([1960,2019])
 			.range([0,1])
 
-    scaleYearToSlideNum = d3.scaleLinear()
+    scaleYearToSlideNum = d3.scaleLinear() // not currently in use
       .domain([1960,2019])
-      .range([0,(2019-1960)*fpsTarget]) // create one slide number for every frame - 1 year per second
+      .range([0,(2019-1960)*framesPerYear]) // create one slide number for every frame
 
 		// pane 4
 		scaleXtypes = d3.scaleBand()
@@ -1057,14 +1062,15 @@ window.createGraphic = function(graphicSelector) {
 	//  so I need to create a function that does the same thing for OPACITY
 	//  each event will show up suddenly with its year, then slowly fade into the background
 
-	// given a year, a jitter value, and a pct => returns an OPACITY
-	function eventOpacity(yearValue, currentInc, fadeDur) {
-		//startInc = scaleYearToSlideNum(yearValue) // should return an integer
+	// given a yearValue (year + random offset), the current year increment,
+  //   a fade duration (in years) and a maximum opacity => returns an OPACITY
+	function eventOpacity(yearValue, currentInc, fadeDur, maxOpac = 0.8) {
 		if (currentInc < yearValue) {return 0}
-    else if (currentInc === yearValue) {return 1}
-		else if (currentInc < yearValue+fadeDur*fpsTarget) {
-			//return 1-(pct-startPct)/0.02
-      return 0.5
+    else if (currentInc === yearValue) {return 0.8}
+		else if (currentInc <= yearValue+fadeDur) {
+
+			return maxOpac*(1-( currentInc - (yearValue + fadeDur) )/fadeDur)
+
 		} else {return 0}
 	}
 
@@ -1104,11 +1110,13 @@ window.createGraphic = function(graphicSelector) {
 
   // iterate through every event and update the opacity value of circleStartInfo
   //   to allow redrawing a single frame accordingly (for pane 3 part 2)
-  function setOpacityForCircles() {
+  function setOpacityForCircles( varies = true, value = 0 ) {
     for (let i = 0; i < eventsFlat.length; i++) {
-      //console.log(eventsFlat[i].yearCounter, yearInc)
-      //console.log(eventOpacity(eventsFlat[i].yearCounter, yearInc, 3))
-      circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
+      if (varies) {
+        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 2)
+      } else {
+        circleStartInfo[i].opacity = value
+      }
     }
   }
 
@@ -1211,7 +1219,7 @@ window.createGraphic = function(graphicSelector) {
 					otherNotes: d3.min(v, d => d.otherNotes),
 					jitter: Math.random(),
 					jitter2: Math.random(),
-          yearCounter: d3.min(v, d => +d.year + Math.floor(fpsTarget*Math.random())/fpsTarget)
+          yearCounter: d3.min(v, d => +d.year + Math.floor(framesPerYear*Math.random())/framesPerYear)
 		  	};
 			},
 		  d => d.disasterno
