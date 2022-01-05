@@ -381,6 +381,9 @@ window.createGraphic = function(graphicSelector) {
       teardrops.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
+      teardropLines.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',0)
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
 			transitionPane7()
 			animateCircles(stepInc)
@@ -401,6 +404,9 @@ window.createGraphic = function(graphicSelector) {
       teardrops.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',1)
+      teardropLines.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',1)
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
@@ -413,6 +419,9 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0)
       teardrops.transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',0)
+      teardropLines.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
@@ -549,7 +558,7 @@ window.createGraphic = function(graphicSelector) {
       .range([3,70])
     scaleRaffected = d3.scaleSqrt()
       .domain([0, d3.max(eventsFlat, d => d.totalAffected)])
-      .range([3,60])
+      .range([3,54])
 
     // pane 9
     scaleRdeaths = d3.scaleSqrt()
@@ -789,7 +798,7 @@ window.createGraphic = function(graphicSelector) {
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TR")
-        .attr( "d", d => teardrop( 0.7*scaleRdeaths(d.deaths), 1, 0) )
+        .attr( "d", d => teardrop( 0.6*scaleRdeaths(d.deaths), 1, 0) )
       teardrops.selectAll("path.BR")  // bottom right - sized by total affected
         .data(deadliestEvents)
         .join("path")
@@ -816,6 +825,24 @@ window.createGraphic = function(graphicSelector) {
 
     }
     createTeardrops()
+
+    function createTeardropOffsetLines() {
+      teardropLines = svgForeground.append("g")
+        .attr("class", "teardropLines")
+        .attr("opacity", 0)
+      teardropLines.selectAll("line")  // only create a line if an offset is present
+				.data(deadliestEvents.filter(d => d.offsetX !== 0))
+				.join("line")
+				.attr("stroke", d => typeColor(d.disastertype))
+				.attr("stroke-width", 1.5 )
+				.attr("x1", d => projection([d.longitude,d.latitude])[0])
+				.attr("y1", d => projection([d.longitude,d.latitude])[1])
+				.attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
+				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
+				.attr("opacity", 0.7)
+
+    }
+    createTeardropOffsetLines()
 
 		// create dicts to keep track of circle positions for the transitions
 		function initiateCircleInfo() {
@@ -959,8 +986,8 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': 20,
-				'opacity': 0.6
+				'r': 70,
+				'opacity': 0
 		}}
 	} // transitionPane8()
 
@@ -1175,8 +1202,14 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < deadliestEvents.length; i++) {
       thisEvent = deadliestEvents[i]
       if (thisEvent.disasterno == '2008-0192'){
-        deadliestEvents[i].offsetX = 70;
-        deadliestEvents[i].offsetY = 210;
+        deadliestEvents[i].offsetX = 40;
+        deadliestEvents[i].offsetY = 120;
+      } else if (thisEvent.disasterno == '1991-0120') {
+        deadliestEvents[i].offsetX = -20;
+        deadliestEvents[i].offsetY = -150;
+      } else if (thisEvent.disasterno == '1973-9005') {
+        deadliestEvents[i].offsetX = -90;
+        deadliestEvents[i].offsetY = -30;
       } else {
         deadliestEvents[i].offsetX = 0;
         deadliestEvents[i].offsetY = 0;
