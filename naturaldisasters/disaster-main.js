@@ -381,6 +381,7 @@ window.createGraphic = function(graphicSelector) {
       teardrops.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
+      d3.select(".teardropLegend").style("display", "none") // pane EIGHT
 			transitionPane7()
 			animateCircles(stepInc)
 		}, // step7()
@@ -400,6 +401,7 @@ window.createGraphic = function(graphicSelector) {
       teardrops.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',1)
+      d3.select(".teardropLegend").style("display", "block") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
 			animateCircles(stepInc)
@@ -413,6 +415,7 @@ window.createGraphic = function(graphicSelector) {
       teardrops.transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
+      d3.select(".teardropLegend").style("display", "none") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
@@ -748,10 +751,12 @@ window.createGraphic = function(graphicSelector) {
 			logBarsG.selectAll("rect")
 				.data(eventsByType)
 				.join("rect")
-				.attr("x", d => scaleXdeadliest(d[0])/scaleFactor ) // since the scale was written for canvas, need scaleFactor here...
-				.attr("y", d => paneDim(6,1).top )
-				.attr("width", scaleXdeadliest.bandwidth()/scaleFactor )
-				.attr("height", paneDim(6,1).bottom-paneDim(6,1).top )
+        // these dimensions/coordinates are a little funky because I want the rectangles
+        //   slighly larger than the space taken up by the data points
+				.attr("x", d => scaleXdeadliest(d[0])/scaleFactor - 0.05*scaleXdeadliest.bandwidth()/scaleFactor )
+				.attr("y", d => paneDim(6,1).top - 7 )
+				.attr("width", 1.1*scaleXdeadliest.bandwidth()/scaleFactor )
+				.attr("height", paneDim(6,1).bottom-paneDim(6,1).top + 14 )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.1);
 		}
@@ -817,7 +822,7 @@ window.createGraphic = function(graphicSelector) {
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TL")
-        .attr( "d", d => teardrop( scaleRgeo(d.geoIdCount), 1, 3) )
+        .attr( "d", d => teardrop( 1.5*scaleRgeo(d.geoIdCount), 1, 3) )
         .attr("fill",d => typeColor(d.disastertype))
         .attr("opacity",0.7)
         .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")

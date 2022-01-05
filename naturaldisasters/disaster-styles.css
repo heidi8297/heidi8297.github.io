@@ -155,10 +155,12 @@ header h2 {
 
 .legendTitle {
   font-size: 0.92rem;
+  fill: #3F3027;
 }
 
 .cell .label {
   font-size: 0.85rem;
+  fill: #3F3027;
 }
 
 .sizeLegend1 .swatch {
@@ -167,6 +169,13 @@ header h2 {
 
 .sizeLegend2 .swatch {
   fill: #A96830;
+}
+
+.teardropLegend {
+  width: 175px;
+  padding-left: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .absoluteWrapper {
@@ -216,7 +225,7 @@ header h2 {
 }
 
 .sizeLegend1 svg, .sizeLegend2 svg {
-  height: 110px;
+  height: 120px;
 }
 
 
