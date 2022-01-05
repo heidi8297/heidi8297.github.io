@@ -785,45 +785,34 @@ window.createGraphic = function(graphicSelector) {
         .attr("class", "teardrops")
         .attr("opacity", 0)
 
-      // top right - sized by death toll
-      teardrops.selectAll("path.TR")
+      teardrops.selectAll("path.TR")  // top right - sized by death toll
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TR")
         .attr( "d", d => teardrop( 0.7*scaleRdeaths(d.deaths), 1, 0) )
-        .attr("fill",d => typeColor(d.disastertype))
-        .attr("opacity",0.7)
-        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
-
-      // bottom right - sized by total affected
-      teardrops.selectAll("path.BR")
+      teardrops.selectAll("path.BR")  // bottom right - sized by total affected
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BR")
         .attr( "d", d => teardrop( scaleRaffected(d.totalAffected), 1, 1) )
-        .attr("fill",d => typeColor(d.disastertype))
-        .attr("opacity",0.7)
-        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
-
-      // bottom left - sized by damages
-      teardrops.selectAll("path.BL")
+      teardrops.selectAll("path.BL")  // bottom left - sized by damages
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BL")
         .attr( "d", d => teardrop( scaleRdamages(d.damages), 1, 2) )
-        .attr("fill",d => typeColor(d.disastertype))
-        .attr("opacity",0.7)
-        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
-
-      // top left - sized by geoIdCount
-      teardrops.selectAll("path.TL")
+      teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TL")
         .attr( "d", d => teardrop( 1.5*scaleRgeo(d.geoIdCount), 1, 3) )
+      teardrops.selectAll("path")  // add attributes shared by all teardrops
         .attr("fill",d => typeColor(d.disastertype))
         .attr("opacity",0.7)
-        .attr("transform", (d,i) => "translate(" + projection([d.longitude,d.latitude])[0] + ","+ projection([d.longitude,d.latitude])[1]+")")
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX
+          let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY
+          return `translate(${translateX},${translateY})`
+        } )
 
     }
     createTeardrops()
@@ -993,7 +982,7 @@ window.createGraphic = function(graphicSelector) {
 				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
 				'cy': canvasHeight/2,
 				'r':scaleFactor*scaleRdeaths(node.deaths),
-				'opacity': 0.4
+				'opacity': 0.3
 		}}
 	} // transitionPane9B()
 
@@ -1182,6 +1171,17 @@ window.createGraphic = function(graphicSelector) {
 		deadliestEvents = eventData.sort(function(a, b) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
+
+		for (let i = 0; i < deadliestEvents.length; i++) {
+      thisEvent = deadliestEvents[i]
+      if (thisEvent.disasterno == '2008-0192'){
+        deadliestEvents[i].offsetX = 70;
+        deadliestEvents[i].offsetY = 210;
+      } else {
+        deadliestEvents[i].offsetX = 0;
+        deadliestEvents[i].offsetY = 0;
+      }
+    }
 
 		// count total events by year
 		eventsByYearCounts = Array.from(

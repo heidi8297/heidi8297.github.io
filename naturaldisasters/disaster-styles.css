@@ -126,12 +126,19 @@ header h2 {
   opacity: 0.3;
 }
 
+/* this section is smaller because it's right above the legend icon */
 .graphic__prose .trigger.pane2 {
-	min-height: 200px;
+	min-height: 120px;
 }
 
 .legendInstructions {
   height: 380px;
+  opacity: 0.3;
+}
+
+.legendInstructions p {
+  padding-left: 49px;
+  padding-top: 4px;
 }
 
 .graphic__prose .preProse {

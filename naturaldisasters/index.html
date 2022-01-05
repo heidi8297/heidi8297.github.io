@@ -84,7 +84,9 @@
               <img src="teardropTextToPath.svg" class="teardropLegend" style="display: none;" alt="Teardrop legend for deadliest 15 events">
             </div>
           </div>
-          <div class="legendInstructions"></div>
+          <div class="legendInstructions">
+            <p><--- click here to show legends</p>
+          </div>
           <div class="variableSpacer"></div>
           <div class='trigger pane3' data-step='2'>
             <p>
@@ -181,6 +183,7 @@
         var triggerEls = selectionToArray(graphicEl.querySelectorAll('.trigger'))
         var preProse = document.querySelector('.preProse')
         var postProse = document.querySelector('.postProse')
+        var legendInst = document.querySelector('.legendInstructions')
 
         // a global function creates and handles all the vis + updates
         var graphic = createGraphic('.graphic')
@@ -201,16 +204,24 @@
               // tell our graphic to update with a specific step
               graphic.update(nextStep)
 
+              // managing the "active" states is made much more complicated by the fact
+              //   that there are three text sections that are NOT tied to waypoints
               if (direction === 'down') {
                 triggerEls[Math.max(0, step - 1)].classList.remove("active")
                 triggerEls[step].classList.add("active")
-                if (step === 1) {preProse.classList.remove("active")}
-                if (step === 11) {postProse.classList.add("active")}
+                if (step === 1) {
+                  preProse.classList.remove("active")
+                  legendInst.classList.add("active")
+                } else if (step === 2) {legendInst.classList.remove("active")}
+                else if (step === 11) {postProse.classList.add("active")}
               } else {
                 triggerEls[step].classList.remove("active")
                 triggerEls[nextStep].classList.add("active")
-                if (nextStep === 0) {preProse.classList.add("active")}
-                if (nextStep === 10) {postProse.classList.remove("active")}
+                if (nextStep === 0) {
+                  preProse.classList.add("active")
+                  legendInst.classList.remove("active")
+                } else if (nextStep === 1) {legendInst.classList.add("active")}
+                else if (nextStep === 10) {postProse.classList.remove("active")}
               }
 
             },
