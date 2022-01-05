@@ -21,7 +21,8 @@ window.createGraphic = function(graphicSelector) {
 	let eventsFlat = [];
   readyFor2ndAnim = false;
   yearInc = 1960;
-  var fpsTarget = 4;
+  const fpsTarget = 6;
+  const msTarget = Math.floor(1000/fpsTarget)
   var framesPerYear = 4;
 	var lockInc = 0;
   infoState = "hide";  // needs to be global so we can access from waypoints script
@@ -306,13 +307,9 @@ window.createGraphic = function(graphicSelector) {
 
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc && yearInc <= 2019) {
-          console.log(yearInc)
           setOpacityForCircles()
-          //console.log(circleStartInfo)
           drawCircles(mainCtx)
           yearInc += (1/framesPerYear)
-
-
         } else if (stepInc !== lockInc || yearInc > 2019) {
           if (yearInc > 2019) {  // end with all events being displayed
             setOpacityForCircles(false, 0.3)
@@ -322,7 +319,7 @@ window.createGraphic = function(graphicSelector) {
           yearInc = 1960;
           secondAnim.stop();
         }
-      }, 200 ) // needs fpsTarget incorporated here
+      }, msTarget )
 
 		}, // step2()
 
@@ -401,12 +398,12 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-      teardrops.transition() // pane EIGHT
+      teardrops.selectAll("path").transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
       teardropLines.transition() // pane EIGHT
         .duration(speedFactor*800)
-        .attr('opacity',0)
+        .attr('opacity',1)
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
 			transitionPane7()
 			animateCircles(stepInc)
@@ -424,12 +421,33 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',1)
-      teardrops.transition() // pane EIGHT
+
+      // a lot of lines here for the teardrop transitions...
+      // they look really sweet though, so I've accepted the mess *shrug*
+      teardrops.selectAll("path").transition() // pane EIGHT
+        .duration(speedFactor*800)
+        .attr('opacity',0.7)
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0]
+          let translateY = projection([d.longitude,d.latitude])[1]
+          return `translate(${translateX},${translateY})`
+        } )
+        .transition()
+        .delay(200)
+        .duration(speedFactor*800)
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX
+          let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY
+          return `translate(${translateX},${translateY})`
+        } )
+      teardropLines.selectAll("line").transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',1)
-      teardropLines.transition() // pane EIGHT
+        .transition()
+        .delay(200)
         .duration(speedFactor*800)
-        .attr('opacity',1)
+        .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
+				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
@@ -441,12 +459,12 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-      teardrops.transition() // pane EIGHT
+      teardrops.selectAll("path").transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
       teardropLines.transition() // pane EIGHT
         .duration(speedFactor*800)
-        .attr('opacity',0)
+        .attr('opacity',1)
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
@@ -542,7 +560,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
 		scaleRgeo = d3.scaleSqrt()
 			.domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
-			.range([3,35])
+			.range([3,60])
 
 		// unlike the positional scales, this one is a time scale for helping to build the transitions
 		scaleYearPercent = d3.scaleLinear()
@@ -821,36 +839,52 @@ window.createGraphic = function(graphicSelector) {
 
       teardrops = svgForeground.append("g")
         .attr("class", "teardrops")
-        .attr("opacity", 0)
+        .attr("opacity", 1)
 
+      tearTransOffset = 40
       teardrops.selectAll("path.TR")  // top right - sized by death toll
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TR")
         .attr( "d", d => teardrop( 0.6*scaleRdeaths(d.deaths), 1, 0) )
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
+          let translateY = projection([d.longitude,d.latitude])[1] + tearTransOffset
+          return `translate(${translateX},${translateY})`
+        } )
       teardrops.selectAll("path.BR")  // bottom right - sized by total affected
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BR")
         .attr( "d", d => teardrop( scaleRaffected(d.totalAffected), 1, 1) )
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
+          let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
+          return `translate(${translateX},${translateY})`
+        } )
       teardrops.selectAll("path.BL")  // bottom left - sized by damages
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BL")
         .attr( "d", d => teardrop( scaleRdamages(d.damages), 1, 2) )
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0] + tearTransOffset
+          let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
+          return `translate(${translateX},${translateY})`
+        } )
       teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TL")
-        .attr( "d", d => teardrop( 1.5*scaleRgeo(d.geoIdCount), 1, 3) )
-      teardrops.selectAll("path")  // add attributes shared by all teardrops
-        .attr("fill",d => typeColor(d.disastertype))
-        .attr("opacity",0.7)
+        .attr( "d", d => teardrop( 1.2*scaleRgeo(d.geoIdCount), 1, 3) )
         .attr("transform", function(d,i) {
-          let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX
-          let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY
+          let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX + tearTransOffset
+          let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY + tearTransOffset
           return `translate(${translateX},${translateY})`
         } )
+      teardrops.selectAll("path")  // add attributes shared by all teardrops
+        .attr("fill",d => typeColor(d.disastertype))
+        .attr("opacity",0)
 
     }
     createTeardrops()
@@ -858,7 +892,7 @@ window.createGraphic = function(graphicSelector) {
     function createTeardropOffsetLines() {
       teardropLines = svgForeground.append("g")
         .attr("class", "teardropLines")
-        .attr("opacity", 0)
+        .attr("opacity", 0.6)
       teardropLines.selectAll("line")  // only create a line if an offset is present
 				.data(deadliestEvents.filter(d => d.offsetX !== 0))
 				.join("line")
@@ -866,9 +900,9 @@ window.createGraphic = function(graphicSelector) {
 				.attr("stroke-width", 1.5 )
 				.attr("x1", d => projection([d.longitude,d.latitude])[0])
 				.attr("y1", d => projection([d.longitude,d.latitude])[1])
-				.attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
-				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
-				.attr("opacity", 0.7)
+				.attr("x2", d => projection([d.longitude,d.latitude])[0])
+				.attr("y2", d => projection([d.longitude,d.latitude])[1])
+				.attr("opacity", 1)
     }
     createTeardropOffsetLines()
 
@@ -1068,9 +1102,7 @@ window.createGraphic = function(graphicSelector) {
 		if (currentInc < yearValue) {return 0}
     else if (currentInc === yearValue) {return 0.8}
 		else if (currentInc <= yearValue+fadeDur) {
-
-			return maxOpac*(1-( currentInc - (yearValue + fadeDur) )/fadeDur)
-
+      return maxOpac*( 1 - ( (currentInc - yearValue)/fadeDur ) )
 		} else {return 0}
 	}
 
@@ -1113,7 +1145,7 @@ window.createGraphic = function(graphicSelector) {
   function setOpacityForCircles( varies = true, value = 0 ) {
     for (let i = 0; i < eventsFlat.length; i++) {
       if (varies) {
-        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 2)
+        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
       } else {
         circleStartInfo[i].opacity = value
       }
