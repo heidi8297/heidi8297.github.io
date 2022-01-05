@@ -401,9 +401,16 @@ window.createGraphic = function(graphicSelector) {
       teardrops.selectAll("path").transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
-      teardropLines.transition() // pane EIGHT
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0]
+          let translateY = projection([d.longitude,d.latitude])[1]
+          return `translate(${translateX},${translateY})`
+        } )
+      transitionTeardrops()
+      teardropLines.selectAll("line").transition() // pane EIGHT
         .duration(speedFactor*800)
-        .attr('opacity',1)
+        .attr("x2", d => projection([d.longitude,d.latitude])[0])
+        .attr("y2", d => projection([d.longitude,d.latitude])[1])
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
 			transitionPane7()
 			animateCircles(stepInc)
@@ -433,7 +440,7 @@ window.createGraphic = function(graphicSelector) {
           return `translate(${translateX},${translateY})`
         } )
         .transition()
-        .delay(200)
+        .delay(speedFactor*200)
         .duration(speedFactor*800)
         .attr("transform", function(d,i) {
           let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX
@@ -441,13 +448,11 @@ window.createGraphic = function(graphicSelector) {
           return `translate(${translateX},${translateY})`
         } )
       teardropLines.selectAll("line").transition() // pane EIGHT
-        .duration(speedFactor*800)
-        .attr('opacity',1)
-        .transition()
-        .delay(200)
+        .delay(speedFactor*1000)
         .duration(speedFactor*800)
         .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
+
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
@@ -462,9 +467,16 @@ window.createGraphic = function(graphicSelector) {
       teardrops.selectAll("path").transition() // pane EIGHT
         .duration(speedFactor*800)
         .attr('opacity',0)
-      teardropLines.transition() // pane EIGHT
+        .attr("transform", function(d,i) {
+          let translateX = projection([d.longitude,d.latitude])[0]
+          let translateY = projection([d.longitude,d.latitude])[1]
+          return `translate(${translateX},${translateY})`
+        } )
+      transitionTeardrops()
+      teardropLines.selectAll("line").transition() // pane EIGHT
         .duration(speedFactor*800)
-        .attr('opacity',1)
+        .attr("x2", d => projection([d.longitude,d.latitude])[0])
+				.attr("y2", d => projection([d.longitude,d.latitude])[1])
       d3.select(".teardropLegend").style("display", "none") // pane EIGHT
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
@@ -498,6 +510,41 @@ window.createGraphic = function(graphicSelector) {
 	function update(step) {
 		steps[step].call()
 	}
+
+  function transitionTeardrops() {
+    teardrops.selectAll("path.TR")  // top right - sized by death toll
+      .transition().duration(scaleFactor*600)
+      .attr("opacity",0)
+      .attr("transform", function(d,i) {
+        let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
+        let translateY = projection([d.longitude,d.latitude])[1] + tearTransOffset
+        return `translate(${translateX},${translateY})`
+      } )
+    teardrops.selectAll("path.BR")  // bottom right - sized by total affected
+      .transition().duration(scaleFactor*600)
+      .attr("opacity",0)
+      .attr("transform", function(d,i) {
+        let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
+        let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
+        return `translate(${translateX},${translateY})`
+      } )
+    teardrops.selectAll("path.BL")  // bottom left - sized by damages
+      .transition().duration(scaleFactor*600)
+      .attr("opacity",0)
+      .attr("transform", function(d,i) {
+        let translateX = projection([d.longitude,d.latitude])[0] + tearTransOffset
+        let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
+        return `translate(${translateX},${translateY})`
+      } )
+    teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
+      .transition().duration(scaleFactor*600)
+      .attr("opacity",0)
+      .attr("transform", function(d,i) {
+        let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX + tearTransOffset
+        let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY + tearTransOffset
+        return `translate(${translateX},${translateY})`
+      } )
+  }
 
 	// initiate the scales and all elements in the svg (background map, bar charts, etc)
 	function setupCharts() {
