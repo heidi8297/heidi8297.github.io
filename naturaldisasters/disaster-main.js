@@ -41,6 +41,7 @@ window.createGraphic = function(graphicSelector) {
 
 	// dataset to swtich between color of a circle (in the hidden canvas) and the node data
   let colToCircle = {};
+  let tooltipLock = false; // be able to turn off tooltips during part of the viz story
 
 	const canvasWidth = 4000;
 	const canvasHeight = 3200;
@@ -308,7 +309,7 @@ window.createGraphic = function(graphicSelector) {
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
 			transitionPane3()
 			animateCircles(stepInc,true)
-
+      tooltipLock = true
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc && yearInc <= yearStop) {
           setOpacityForCircles()
@@ -320,6 +321,7 @@ window.createGraphic = function(graphicSelector) {
             drawCircles(mainCtx)
           }
           readyFor2ndAnim = false;
+          tooltipLock = false;
           yearInc = 1960;
           secondAnim.stop();
         }
@@ -597,7 +599,7 @@ window.createGraphic = function(graphicSelector) {
 			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
 		scaleRgeo = d3.scaleSqrt()
 			.domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
-			.range([3,60])
+			.range([3,54])
 
 		// pane FOUR
 		scaleXtypes = d3.scaleBand()
@@ -1167,7 +1169,7 @@ window.createGraphic = function(graphicSelector) {
 			node = eventsFlat[i];
 			// set the fillstyle depending on whether we're using the mainCtx or the hiddenCtx
 			//   mainCtx gets the colors based on disaster type, hiddenCtx gets unique colors for each circle
-			if (hidden) {
+			if (hidden && tooltipLock === false) { // don't activate tooltips if the lock is activated
         if (node.color == null) {
           // If we have never drawn the node to the hidden canvas get a new color for it and put it in the dictionary.
           node.color = genColor();
