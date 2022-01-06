@@ -23,12 +23,14 @@ window.createGraphic = function(graphicSelector) {
 
   // variables for the events by year animation in pane THREE
   let readyFor2ndAnim = false;
+  let startingYearInc = 1960
   let yearInc = 1960;
   const fpsTarget = 9;
   const msTarget = Math.floor(1000/fpsTarget)
-  let framesPerYear = 6;
+  let framesPerYear = 5;
   let yearPausePoint = 2018.7 // the point at which to pause events by year animation
   let yearStop = 2021 // the point at which to reveal ALL events
+  let revealRectStarted = false
 
 	// variables needed for transition method
   let lockInc = 0;
@@ -283,9 +285,15 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
-			mapGroup.transition() // pane THREE
+			mapGroup.transition().delay(speedFactor*200) // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      stackedAreaBgRect.transition() // pane THREE
+        .duration(speedFactor*800)
+        .attr('opacity',0)
+      stackedAreaRevealRect.transition()
+        .duration(0)
+        .attr('width',0)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -303,15 +311,37 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',1)
-			stackedAreaG.transition() // pane THREE
-				.duration(speedFactor*800)
-				.attr('opacity',0.7)
+      stackedAreaBgRect.transition() // pane THREE
+        .duration(0)
+        .attr('opacity',1)
+      if (!revealRectStarted) {
+        stackedAreaRevealRect.transition() // pane THREE
+          .delay(speedFactor*800)
+          .duration(0)
+          .attr('width',paneDim(3,1).right - paneDim(3,1).left)
+        stackedAreaG.transition() // pane THREE
+  				.delay(speedFactor*800)
+          .duration(0)
+  				.attr('opacity',0.7)
+      } else {
+        stackedAreaG.transition() // pane THREE
+  				.duration(speedFactor*800)
+  				.attr('opacity',0.7)
+      }
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
 			transitionPane3()
 			animateCircles(stepInc,true)
       tooltipLock = true
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc && yearInc <= yearStop) {
+          if (!revealRectStarted) {
+            stackedAreaRevealRect.transition()
+              .duration(msTarget*framesPerYear*(yearPausePoint - startingYearInc))
+              .ease(d3.easeLinear)
+              .attr('x',paneDim(3,1).right)
+              .attr('width', paneDim(3,1).right - paneDim(3,1).left )
+            revealRectStarted = true;
+          }
           setOpacityForCircles()
           drawCircles(mainCtx)
           yearInc += (1/framesPerYear)
@@ -322,7 +352,7 @@ window.createGraphic = function(graphicSelector) {
           }
           readyFor2ndAnim = false;
           tooltipLock = false;
-          yearInc = 1960;
+          yearInc = startingYearInc;
           secondAnim.stop();
         }
       }, msTarget )
@@ -334,6 +364,12 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      stackedAreaBgRect.transition() // pane THREE
+        .duration(0)
+        .attr('opacity',1)
+      stackedAreaRevealRect.transition()
+        .duration(0)
+        .attr('width',0)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
@@ -350,6 +386,9 @@ window.createGraphic = function(graphicSelector) {
 			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
+      stackedAreaBgRect.transition().delay(speedFactor*200) // pane THREE
+        .duration(speedFactor*800)
+        .attr('opacity',0)
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -700,12 +739,13 @@ window.createGraphic = function(graphicSelector) {
 		// panes THREE and EIGHT - world map
 		function createMap() {
 			mapGroup = svgBackground.append('g')
+        .attr("class","mapGroup")
 				.attr('width', dispWidth)
 				.attr('height', dispHeight)
         .attr("opacity", 0);
 			projection = d3.geoNaturalEarth1()
 				.scale((dispWidth / 1.65) / Math.PI) // smaller values of 1.5 = more zoomed in
-				.translate([-30+ dispWidth / 2, (0.45)* dispHeight]);
+				.translate([-30+ dispWidth / 2, (0.48)* dispHeight]);
 			geoPath = d3.geoPath(projection);
 			// draw the map and set the opacity to 0
 			d3.json("map.geojson").then( function(worldData){
@@ -713,11 +753,21 @@ window.createGraphic = function(graphicSelector) {
 					.data(worldData.features)
 					.join('path')
 					.attr('fill', '#EAE0DB')
-					.attr('opacity', 0.8)
+					.attr('opacity', 0.9)
 					.attr('d', geoPath);
 			});
 		}
 		createMap()
+
+    // pane THREE - rectangle to block out antarctica from view (without creating a second map)
+    // MUST GET CREATED AFTER MAP, BUT BEFORE OTHER SVG ELEMENTS
+    stackedAreaBgRect = svgBackground.append('rect')
+      .attr("x", paneDim(3,1).left)
+      .attr("y", 3*paneDim(3,1).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("width", paneDim(3,1).right - paneDim(3,1).left )
+      .attr("height", paneDim(3,1).bottom/4)
+      .attr("fill", "#fbf9f9")
+      .attr("opacity",0);
 
 		// pane TWO - create a bar chart of disaster counts by type
 		function createBars2() {
@@ -781,6 +831,15 @@ window.createGraphic = function(graphicSelector) {
 				)
 		}
 		createStackedArea3()
+
+    // pane THREE - rectangle to progressively reveal stacked area chart
+    // MUST GET CREATED AFTER STACKED AREA
+    stackedAreaRevealRect = svgForeground.append('rect')
+      .attr("x", paneDim(3,1).left)
+      .attr("y", 3*paneDim(3,1).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("width", 0 )
+      .attr("height", paneDim(3,1).bottom/4)
+      .attr("fill", "#fbf9f9")
 
 		// pane FOUR - create a bar chart of total death counts by type
 		function createBars4() {
@@ -1201,7 +1260,7 @@ window.createGraphic = function(graphicSelector) {
 			drawCircles(mainCtx)
 			stats.end();
 			if (elapsed > setDuration || currentInc !== lockInc) {
-        if (secondAnimNeeded) { readyFor2ndAnim = true; }
+        if (secondAnimNeeded) {readyFor2ndAnim = true; }
         t.stop()
       };
 		});
