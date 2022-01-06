@@ -24,9 +24,11 @@ window.createGraphic = function(graphicSelector) {
   // variables for the events by year animation in pane THREE
   let readyFor2ndAnim = false;
   let yearInc = 1960;
-  const fpsTarget = 6;
+  const fpsTarget = 9;
   const msTarget = Math.floor(1000/fpsTarget)
-  let framesPerYear = 4;
+  let framesPerYear = 6;
+  let yearPausePoint = 2018.7 // the point at which to pause events by year animation
+  let yearStop = 2021 // the point at which to reveal ALL events
 
 	// variables needed for transition method
   let lockInc = 0;
@@ -308,12 +310,12 @@ window.createGraphic = function(graphicSelector) {
 			animateCircles(stepInc,true)
 
       let secondAnim = d3.interval(function() {
-        if (readyFor2ndAnim && stepInc === lockInc && yearInc <= 2019) {
+        if (readyFor2ndAnim && stepInc === lockInc && yearInc <= yearStop) {
           setOpacityForCircles()
           drawCircles(mainCtx)
           yearInc += (1/framesPerYear)
-        } else if (stepInc !== lockInc || yearInc > 2019) {
-          if (yearInc > 2019) {  // end with all events being displayed
+        } else if (stepInc !== lockInc || yearInc > yearStop) {
+          if (yearInc > yearStop) {  // end with all events being displayed
             setOpacityForCircles(false, 0.3)
             drawCircles(mainCtx)
           }
@@ -700,8 +702,8 @@ window.createGraphic = function(graphicSelector) {
 				.attr('height', dispHeight)
         .attr("opacity", 0);
 			projection = d3.geoNaturalEarth1()
-				.scale(dispWidth / 1.4 / Math.PI)
-				.translate([-20+ dispWidth / 2, dispHeight / 2]);
+				.scale((dispWidth / 1.65) / Math.PI) // smaller values of 1.5 = more zoomed in
+				.translate([-30+ dispWidth / 2, (0.45)* dispHeight]);
 			geoPath = d3.geoPath(projection);
 			// draw the map and set the opacity to 0
 			d3.json("map.geojson").then( function(worldData){
@@ -1073,7 +1075,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
 				'cy': canvasHeight/2,
-				'r':scaleFactor*scaleRdeaths(node.deaths),
+				'r': scaleFactor*scaleRdeaths(node.deaths),
 				'opacity': 0.3
 		}}
 	} // transitionPane9B()
@@ -1103,9 +1105,8 @@ window.createGraphic = function(graphicSelector) {
   //   a fade duration (in years) and a maximum opacity => returns an OPACITY
 	function eventOpacity(yearValue, currentInc, fadeDur, maxOpac = 0.8) {
 		if (currentInc < yearValue) {return 0}
-    else if (currentInc === yearValue) {return 0.8}
 		else if (currentInc <= yearValue+fadeDur) {
-      return maxOpac*( 1 - ( (currentInc - yearValue)/fadeDur ) )
+      return maxOpac*( 1 - ( (currentInc-yearValue)/fadeDur ) )
 		} else {return 0}
 	}
 
@@ -1147,7 +1148,9 @@ window.createGraphic = function(graphicSelector) {
   //   to allow redrawing a single frame accordingly (for pane THREE part TWO)
   function setOpacityForCircles( varies = true, value = 0 ) {
     for (let i = 0; i < eventsFlat.length; i++) {
-      if (varies) {
+      if (varies && yearInc > yearPausePoint) {  // pause the opacity changes at 2019
+        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearPausePoint, 3)
+      } else if (varies) {
         circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
       } else {
         circleStartInfo[i].opacity = value
@@ -1254,7 +1257,9 @@ window.createGraphic = function(graphicSelector) {
 					otherNotes: d3.min(v, d => d.otherNotes),
 					jitter: Math.random(),
 					jitter2: Math.random(),
-          yearCounter: d3.min(v, d => +d.year + Math.floor(framesPerYear*Math.random())/framesPerYear)
+          yearCounter: d3.min(v, d => +d.year + Math.floor(framesPerYear*Math.random())/framesPerYear),
+          offsetX: 0,
+          offsetY: 0
 		  	};
 			},
 		  d => d.disasterno
