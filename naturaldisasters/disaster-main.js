@@ -1056,10 +1056,24 @@ window.createGraphic = function(graphicSelector) {
 	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
+      let cx = 0
+      let cy = 0
+      let paneWidth = paneDim(9).right-paneDim(9).left
+      let paneHeight = paneDim(0).bottom-paneDim(9).top
+      if (node.year <= 1969) {
+        cx = -60+paneDim(9).left + node.jitter*(3/8)*paneWidth
+        cy = paneDim(9).top + (1/8)*paneHeight  + node.jitter2*(3/8)*paneHeight
+      } else if (node.year >= 2009) {
+        cx = -80+paneDim(9).left + 5/8*paneWidth + node.jitter*(3/8)*paneWidth
+        cy = paneDim(9).top + (1/8)*paneHeight  + node.jitter2*(3/8)*paneHeight
+      } else {
+        cx = node.jitter*canvasWidth
+        cy = canvasHeight*1.1
+      }
 			circleEndInfo[i] = {
-				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-				'r': scaleFactor*scaleRgeo(node.geoIdCount),
+				'cx': cx,
+				'cy': cy,
+				'r': 24,
 				'opacity': 0.4
 		}}
 	} // transitionPane3B()
