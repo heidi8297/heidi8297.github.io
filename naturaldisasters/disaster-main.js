@@ -322,6 +322,9 @@ window.createGraphic = function(graphicSelector) {
   				.attr('opacity',0.7)
       }
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
+      annotations3B.transition() // pane THREE B
+        .duration(speedFactor*800)
+        .attr("opacity",0)
 			transitionPane3()
 			animateCircles(stepInc,true)
       tooltipLock = true // turn off tooltips during the 'events by year' animation
@@ -370,6 +373,9 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
       d3.select(".sizeLegend1").style("display", "none") // pane THREE
+      annotations3B.transition() // pane THREE B
+        .duration(speedFactor*800)
+        .attr("opacity",1)
 			deactivatePane4()
 			transitionPane3B()
 			animateCircles(stepInc)
@@ -378,6 +384,9 @@ window.createGraphic = function(graphicSelector) {
 		function step4() {  // pane FOUR
 			let stepInc = lockInc += 1;
       deactivatePane3()
+      annotations3B.transition() // pane THREE B
+        .duration(speedFactor*800)
+        .attr("opacity",0)
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
@@ -466,6 +475,9 @@ window.createGraphic = function(graphicSelector) {
 		function step10() {  // pane NINE B
 			let stepInc = lockInc += 1;
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
+      d3.select(".finalWords").transition() // pane TEN
+        .duration(speedFactor*800)
+        .style("opacity","0")
 			transitionPane9B()
 			animateCircles(stepInc)
 		}, // step10()
@@ -473,6 +485,9 @@ window.createGraphic = function(graphicSelector) {
 		function step11() {  // pane TEN
 			let stepInc = lockInc += 1;
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
+      d3.select(".finalWords").transition() // pane TEN
+        .duration(speedFactor*800)
+        .style("opacity","1")
 			transitionPane10()
 			animateCircles(stepInc)
 		}, // step11()
@@ -908,7 +923,7 @@ window.createGraphic = function(graphicSelector) {
     createTeardrops()
     transitionTeardrops() // move them to their starting positions with opacity = 0
 
-    // initiate teardrop lines with zero length
+    // pane EIGHT - initiate teardrop lines with zero length
     function createTeardropOffsetLines() {
       teardropLines = svgForeground.append("g")
         .attr("class", "teardropLines")
@@ -951,7 +966,7 @@ window.createGraphic = function(graphicSelector) {
 		setupComplete = true;
 	}  // setupCharts
 
-  function createAnnotations2() {
+  function createAnnotations() {
     annotAttr2 = [
       {
         note: { label: "Floods and storms have been the most common disaster types" },
@@ -971,8 +986,31 @@ window.createGraphic = function(graphicSelector) {
       .attr("y1", d => 260)
       .attr("x2", d => 720)
       .attr("y2", d => 150)
+
+    annotAttr3B = [
+      {
+        note: { label: "1960-1969" },
+        x: paneDim(3).left + (0.03+1/8)*(paneDim(3).right-paneDim(3).left) ,
+        y: 390, dx: 0, dy: 0, wrap: 100,
+        color: ["#7F7269"]
+      },
+      {
+        note: { label: "2009-2018" },
+        x: paneDim(3).left+ (paneDim(3).right-paneDim(3).left)/2 ,
+        y: 390, dx: 0, dy: 0, wrap: 100,
+        color: ["#7F7269"]
+      }
+    ]
+    makeAnnotations3B = d3.annotation()
+      .annotations(annotAttr3B)
+      .disable('connector')
+      .type(d3.annotationLabel)
+    annotations3B = svgForeground.append("g")
+      .attr("class", "annotations3B")
+      .attr("opacity", 0)
+      .call(makeAnnotations3B)
   }
-  createAnnotations2()
+  createAnnotations()
 
   // initialize the visualization
 	function init() {
@@ -1039,7 +1077,7 @@ window.createGraphic = function(graphicSelector) {
       let paneWidth = paneDim(3,0).right-paneDim(3,0).left
       let paneHeight = paneDim(3,0).bottom-paneDim(3,0).top
       if (node.year <= 1969) {
-        cx = 80+paneDim(3,0).left + node.jitter*(1/4)*paneWidth
+        cx = paneDim(3,0).left+0.03*paneWidth + node.jitter*(1/4)*paneWidth
         cy = paneDim(3,0).top + 0.11*paneHeight  + node.jitter2*0.35*paneHeight
       } else if (node.year >= 2009) {
         cx = paneDim(3,0).left + 3/8*paneWidth + node.jitter*(1/4)*paneWidth
