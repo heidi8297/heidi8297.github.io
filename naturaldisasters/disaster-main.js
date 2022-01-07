@@ -19,7 +19,7 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
-  let infoState = "hide";
+  let infoState = "show";  // default to showing the legends
 
   // variables for the events by year animation in pane THREE
   let readyFor2ndAnim = false;
@@ -94,7 +94,7 @@ window.createGraphic = function(graphicSelector) {
 	]
 
 	// define custom margins for each pane
-	function margins(paneNum, units = 0) {
+	function margins(paneNum, units = 1) {
 	// paneNum is an integer from 1-10, units = 0 for canvas, 1 for svg
 	// returns an object of the form {top: 120, right: 120, bottom: 120, left: 120}
 	// usage:  margins(2,1).right  = give me the righthand margin for the 2nd pane in svg units
@@ -117,7 +117,7 @@ window.createGraphic = function(graphicSelector) {
 	}
 
 	// complementary function to the one above, but returns the actual values of left and right instead of the margins
-	function paneDim(paneNum, units = 0) {
+	function paneDim(paneNum, units = 1) { // units = 0 for canvas, 1 for svg
 		let draw;
 		units === 0 ? draw = {right: canvasWidth, bottom: canvasHeight} : draw = {right: dispWidth, bottom: dispHeight}
 		return {
@@ -235,23 +235,23 @@ window.createGraphic = function(graphicSelector) {
   legendWrapper = document.getElementById("legendIconWrapper");
   legendWrapper.addEventListener("click", showHide);
   function show() {
-    d3.select("#legendWrapper").style("opacity",1)
+    d3.select("#legendWrapper").style("display","block")
     d3.select(".legendHideIconImage").style("opacity",1)
+    d3.select(".variableSpacer").style("height", "120px")
   }
   function hide() {
-    d3.select("#legendWrapper").style("opacity",0)
+    d3.select("#legendWrapper").style("display","none")
     d3.select(".legendHideIconImage").style("opacity",0)
+    d3.select(".variableSpacer").style("height", "0")
   }
   // this is the only place where I intentionally change the height of something in the
   //   scrolly text section via javascript, as it affects the waypoint triggers
   function showHide() {
     if (infoState === "hide") {
       infoState = "show";
-      d3.select(".variableSpacer").style("height", "100px")
       show();
     } else {
       infoState = "hide";
-      d3.select(".variableSpacer").style("height", "0")
       hide();
     }
   }
@@ -318,7 +318,7 @@ window.createGraphic = function(graphicSelector) {
         stackedAreaRevealRect.transition() // pane THREE
           .delay(speedFactor*800)
           .duration(0)
-          .attr('width',paneDim(3,1).right - paneDim(3,1).left)
+          .attr('width',paneDim(3).right - paneDim(3).left)
         stackedAreaG.transition() // pane THREE
   				.delay(speedFactor*800)
           .duration(0)
@@ -338,8 +338,8 @@ window.createGraphic = function(graphicSelector) {
             stackedAreaRevealRect.transition()
               .duration(msTarget*framesPerYear*(yearPausePoint - startingYearInc))
               .ease(d3.easeLinear)
-              .attr('x',paneDim(3,1).right)
-              .attr('width', paneDim(3,1).right - paneDim(3,1).left )
+              .attr('x',paneDim(3).right)
+              .attr('width', paneDim(3).right - paneDim(3).left )
             revealRectStarted = true;
           }
           setOpacityForCircles()
@@ -373,7 +373,7 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
-      d3.select(".sizeLegend1").style("display", "block") // pane THREE
+      d3.select(".sizeLegend1").style("display", "none") // pane THREE
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*700)
 				.attr('opacity',0)
@@ -392,7 +392,6 @@ window.createGraphic = function(graphicSelector) {
 			stackedAreaG.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',0)
-      d3.select(".sizeLegend1").style("display", "none") // pane THREE
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
@@ -439,7 +438,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x1", d => scaleXyear(d.year)-8+16*d.jitter)
 				.attr("y1", d => scaleYdeaths(d.deaths)+6) // this is the top of the line
 				.attr("x2", d => scaleXyear(d.year)-8+16*d.jitter)
-				.attr("y2", d => paneDim(7,1).bottom ) // this is the bottom of the line
+				.attr("y2", d => paneDim(7).bottom ) // this is the bottom of the line
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',0)
@@ -623,19 +622,19 @@ window.createGraphic = function(graphicSelector) {
 		// pane TWO - event counts by type
 		scaleXeventCount = d3.scaleLinear()
 			.domain([0, d3.max(eventsByType,d => d[1])])
-			.range([ paneDim(2,1).left, paneDim(2,1).right - 60 ]); // 60 makes space for the label
+			.range([ paneDim(2).left, paneDim(2).right - 60 ]); // 60 makes space for the label
 		scaleYtypes = d3.scaleBand()
 			.domain(["volcanic activity","extreme temperature","drought","landslide","earthquake","storm","flood"])
-			.range([ paneDim(2,1).bottom , paneDim(2,1).top ])
+			.range([ paneDim(2).bottom , paneDim(2).top ])
 			.paddingInner(0.35);
 
 		// pane THREE - world map animated
 		scaleXyearSvg = d3.scaleLinear()
   		.domain([1960,2018])
-  		.range([paneDim(3,1).left, paneDim(3,1).right]);
+  		.range([paneDim(3).left, paneDim(3).right]);
 		scaleYeventCountSvg = d3.scaleLinear()
 			.domain([0, d3.max(eventsByYearCounts,d => d[1])])
-			.range([paneDim(3,1).bottom, 3*paneDim(3,1).bottom/4])
+			.range([paneDim(3).bottom, 3*paneDim(3).bottom/4])
 		scaleRgeo = d3.scaleSqrt()
 			.domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
 			.range([3,54])
@@ -643,28 +642,28 @@ window.createGraphic = function(graphicSelector) {
 		// pane FOUR
 		scaleXtypes = d3.scaleBand()
 			.domain(["earthquake","storm","drought","flood","extreme temperature","landslide","volcanic activity"])
-			.range([ paneDim(4,1).left , paneDim(4,1).right ])
+			.range([ paneDim(4).left , paneDim(4).right ])
 			.paddingInner(0.35);
 		scaleYdeathCount = d3.scaleLinear() // total death counts by type
 			.domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
-			.range([ paneDim(4,1).bottom, paneDim(4,1).top + 30 ]); // 30 makes space for the label
+			.range([ paneDim(4).bottom, paneDim(4).top + 30 ]); // 30 makes space for the label
 
     // pane SIX
 		scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of deadliest event types (log scale)
 			.domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
-			.range([paneDim(6,1).left, paneDim(6,1).right])
+			.range([paneDim(6).left, paneDim(6).right])
 			.paddingInner(0.3)
 		scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deadliest event types
 			.domain([0,450000])
-			.range([paneDim(6,1).bottom, paneDim(6,1).top])
+			.range([paneDim(6).bottom, paneDim(6).top])
 
     // pane SEVEN
 		scaleXyear = d3.scaleLinear()
 			.domain([1960,2018])
-			.range([paneDim(7,1).left, paneDim(7,1).right])
+			.range([paneDim(7).left, paneDim(7).right])
 		scaleYdeaths = d3.scaleLinear()
 			.domain([0,450000])
-			.range([paneDim(7,1).bottom, paneDim(7,1).top])
+			.range([paneDim(7).bottom, paneDim(7).top])
 
     // pane EIGHT - scales for teardrop shapes
     scaleRdamages = d3.scaleSqrt()
@@ -680,7 +679,7 @@ window.createGraphic = function(graphicSelector) {
       .range([3,70])
     scaleXgdp = d3.scaleLinear()
       .domain([0, d3.max(eventsFlat, d => d.gdpInUsdPerCountry)])
-      .range([ paneDim(9,1).left, paneDim(9,1).right ])
+      .range([ paneDim(9).left, paneDim(9).right ])
 
 
     function createLegends() {
@@ -762,10 +761,10 @@ window.createGraphic = function(graphicSelector) {
     // pane THREE - rectangle to block out antarctica from view (without creating a second map)
     // MUST GET CREATED AFTER MAP, BUT BEFORE OTHER SVG ELEMENTS
     stackedAreaBgRect = svgBackground.append('rect')
-      .attr("x", paneDim(3,1).left)
-      .attr("y", 3*paneDim(3,1).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
-      .attr("width", paneDim(3,1).right - paneDim(3,1).left )
-      .attr("height", paneDim(3,1).bottom/4)
+      .attr("x", paneDim(3).left)
+      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("width", paneDim(3).right - paneDim(3).left )
+      .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
       .attr("opacity",0);
 
@@ -780,7 +779,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","typeBg")
 				.attr("x", d => scaleXeventCount(0) )
 				.attr("y", d => scaleYtypes(d[0]) )
-				.attr("width", paneDim(2,1).right-paneDim(2,1).left )
+				.attr("width", paneDim(2).right-paneDim(2).left )
 				.attr("height", scaleYtypes.bandwidth() )
 				.attr("fill","#EFE8E4")
 				.attr("opacity", 0.9);
@@ -790,7 +789,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class","typeCounts")
 				.attr("x", d => scaleXeventCount(0) )
 				.attr("y", d => scaleYtypes(d[0]) )
-				.attr("width", d => scaleXeventCount(d[1]) - paneDim(2,1).left )
+				.attr("width", d => scaleXeventCount(d[1]) - paneDim(2).left )
 				.attr("height", scaleYtypes.bandwidth() )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.7);
@@ -799,7 +798,7 @@ window.createGraphic = function(graphicSelector) {
 				.data(eventsByType)
 				.join("text")
 				.text(d => d[0])
-				.attr("x", paneDim(2,1).left)
+				.attr("x", paneDim(2).left)
 				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
 			eventsByTypeLabels.selectAll("text.count") // eventCounts
 				.data(eventsByType)
@@ -835,10 +834,10 @@ window.createGraphic = function(graphicSelector) {
     // pane THREE - rectangle to progressively reveal stacked area chart
     // MUST GET CREATED AFTER STACKED AREA
     stackedAreaRevealRect = svgForeground.append('rect')
-      .attr("x", paneDim(3,1).left)
-      .attr("y", 3*paneDim(3,1).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("x", paneDim(3).left)
+      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
       .attr("width", 0 )
-      .attr("height", paneDim(3,1).bottom/4)
+      .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
 
 		// pane FOUR - create a bar chart of total death counts by type
@@ -851,9 +850,9 @@ window.createGraphic = function(graphicSelector) {
 				.join("rect")
 				.attr("class","typeBg")
 				.attr("x", d => scaleXtypes(d[0]) )
-				.attr("y", d => paneDim(4,1).top )
+				.attr("y", d => paneDim(4).top )
 				.attr("width", scaleXtypes.bandwidth() )
-				.attr("height", paneDim(4,1).bottom-paneDim(4,1).top )
+				.attr("height", paneDim(4).bottom-paneDim(4).top )
 				.attr("fill","#EFE8E4")
 				.attr("opacity", 0.9);
 			deathsByTypeG.selectAll("rect.typeCounts") // death toll bars
@@ -863,7 +862,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x", d => scaleXtypes(d[0]) )
 				.attr("y", d => scaleYdeathCount(d[1]) )
 				.attr("width", d => scaleXtypes.bandwidth() )
-				.attr("height", d => paneDim(4,1).bottom - scaleYdeathCount(d[1]) )
+				.attr("height", d => paneDim(4).bottom - scaleYdeathCount(d[1]) )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.8);
 				//.attr("opacity", 0.7);  // for the sized-by-death-toll version
@@ -874,7 +873,7 @@ window.createGraphic = function(graphicSelector) {
 				.text(d => d[0])
 				.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
 				.attr("text-anchor", "middle")
-				.attr("y", paneDim(4,1).bottom + 28)
+				.attr("y", paneDim(4).bottom + 28)
 			deathsByTypeLabels.selectAll("text.count") // eventCounts
 				.data(eventTypesByDeathTolls)
 				.join("text")
@@ -897,9 +896,9 @@ window.createGraphic = function(graphicSelector) {
         // these dimensions/coordinates are a little funky because I want the rectangles
         //   slighly larger than the space taken up by the data points
 				.attr("x", d => scaleXdeadliest(d[0]) - 0.05*scaleXdeadliest.bandwidth() )
-				.attr("y", d => paneDim(6,1).top - 7 )
+				.attr("y", d => paneDim(6).top - 7 )
 				.attr("width", 1.1*scaleXdeadliest.bandwidth() )
-				.attr("height", paneDim(6,1).bottom-paneDim(6,1).top + 14 )
+				.attr("height", paneDim(6).bottom-paneDim(6).top + 14 )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.1);
 		}
@@ -977,15 +976,15 @@ window.createGraphic = function(graphicSelector) {
 			for (let i = 0; i < eventsFlat.length; i++) {
 				node = eventsFlat[i]
 				circleStartInfo[i] = {
-					'cx': scaleFactor*node.gridX,
-					'cy': scaleFactor*node.gridY,
+					'cx': node.gridX,
+					'cy': node.gridY,
 					'r': 16,
 					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
 					'opacity': 0
 				}
 				circleEndInfo[i] = {
-					'cx':scaleFactor*node.gridX,
-					'cy': scaleFactor*node.gridY,
+					'cx': node.gridX,
+					'cy': node.gridY,
 					'r': 16,
 					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
 					'opacity': 0.3
@@ -1024,8 +1023,8 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*node.gridX,
-				'cy': scaleFactor*node.gridY,
+				'cx': node.gridX,
+				'cy': node.gridY,
 				'r': 16,
 				'opacity': 0.4
 		}}
@@ -1058,14 +1057,14 @@ window.createGraphic = function(graphicSelector) {
 			node = eventsFlat[i];
       let cx = 0
       let cy = 0
-      let paneWidth = paneDim(9).right-paneDim(9).left
-      let paneHeight = paneDim(0).bottom-paneDim(9).top
+      let paneWidth = paneDim(3,0).right-paneDim(3,0).left
+      let paneHeight = paneDim(3,0).bottom-paneDim(3,0).top
       if (node.year <= 1969) {
-        cx = -60+paneDim(9).left + node.jitter*(3/8)*paneWidth
-        cy = paneDim(9).top + (1/8)*paneHeight  + node.jitter2*(3/8)*paneHeight
+        cx = 80+paneDim(3,0).left + node.jitter*(1/4)*paneWidth
+        cy = paneDim(3,0).top + 0.11*paneHeight  + node.jitter2*0.35*paneHeight
       } else if (node.year >= 2009) {
-        cx = -80+paneDim(9).left + 5/8*paneWidth + node.jitter*(3/8)*paneWidth
-        cy = paneDim(9).top + (1/8)*paneHeight  + node.jitter2*(3/8)*paneHeight
+        cx = paneDim(3,0).left + 3/8*paneWidth + node.jitter*(1/4)*paneWidth
+        cy = paneDim(3,0).top + 0.11*paneHeight  + node.jitter2*0.35*paneHeight
       } else {
         cx = node.jitter*canvasWidth
         cy = canvasHeight*1.1
@@ -1073,7 +1072,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': cx,
 				'cy': cy,
-				'r': 24,
+				'r': 20,
 				'opacity': 0.4
 		}}
 	} // transitionPane3B()
@@ -1092,9 +1091,13 @@ window.createGraphic = function(graphicSelector) {
 	function transitionPane5() {   // slopegraphs - currently just a placeholder
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
+      let cx = 0
+      let cy = 0
+      if (node.year < 2007) {cx = 0.03*node.jitter*canvasWidth} else {cx = (0.97+0.03*node.jitter)*canvasWidth}
+      if (node.gridY < canvasHeight/2) {cy = 0.03*node.jitter2*canvasHeight} else {cy = (0.97+0.03*node.jitter2)*canvasHeight}
 			circleEndInfo[i] = {
-				'cx': canvasWidth*node.jitter*node.jitter,
-				'cy': canvasHeight*node.jitter2,
+				'cx': cx,
+				'cy': cy,
 				'r': 2*node.geoIdCount,
 				'opacity': 0.6
 		}}
@@ -1172,18 +1175,29 @@ window.createGraphic = function(graphicSelector) {
 	//  DRAWING FUNCTIONS
 	//----------------------------------------------------------------------------
 
-	// an interpolator takes a PERCENTAGE and returns a VALUE for a given ATTRIBUTE
-	//  so I need to create a function that does the same thing for OPACITY
-	//  each event will show up suddenly with its year, then slowly fade into the background
-
 	// given a yearValue (year + random offset), the current year increment,
   //   a fade duration (in years) and a maximum opacity => returns an OPACITY
+  // result makes each event show up suddenly within its year and then slowly fade
 	function eventOpacity(yearValue, currentInc, fadeDur, maxOpac = 0.8) {
 		if (currentInc < yearValue) {return 0}
 		else if (currentInc <= yearValue+fadeDur) {
       return maxOpac*( 1 - ( (currentInc-yearValue)/fadeDur ) )
 		} else {return 0}
 	}
+
+  // iterate through every event and update the opacity value of circleStartInfo
+  //   to allow redrawing a single frame accordingly (for pane THREE part TWO)
+  function setOpacityForCircles( varies = true, value = 0 ) {
+    for (let i = 0; i < eventsFlat.length; i++) {
+      if (varies && yearInc > yearPausePoint) {  // pause the opacity changes at 2019
+        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearPausePoint, 3)
+      } else if (varies) {
+        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
+      } else {
+        circleStartInfo[i].opacity = value
+      }
+    }
+  }
 
 	// on each waypoint trigger, create new interpolator functions to be used for drawing circles
 	function moveCircles() {
@@ -1219,25 +1233,10 @@ window.createGraphic = function(graphicSelector) {
 		}
 	} // interpCircMove()
 
-  // iterate through every event and update the opacity value of circleStartInfo
-  //   to allow redrawing a single frame accordingly (for pane THREE part TWO)
-  function setOpacityForCircles( varies = true, value = 0 ) {
-    for (let i = 0; i < eventsFlat.length; i++) {
-      if (varies && yearInc > yearPausePoint) {  // pause the opacity changes at 2019
-        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearPausePoint, 3)
-      } else if (varies) {
-        circleStartInfo[i].opacity = eventOpacity(eventsFlat[i].yearCounter, yearInc, 3)
-      } else {
-        circleStartInfo[i].opacity = value
-      }
-    }
-  }
-
 	// for each event, read the corresponding circleStartInfo entry and draw it on the canvas
 	// this function clears and redraws one frame onto the canvas
 	function drawCircles(chosenCtx, hidden = false) {
 		chosenCtx.clearRect(0,0,canvasWidth,canvasHeight);
-
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			// set the fillstyle depending on whether we're using the mainCtx or the hiddenCtx
@@ -1455,9 +1454,9 @@ window.createGraphic = function(graphicSelector) {
 				//   clear of circles so we can add text
 				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
 					xySet = true;
-					theArray[index].gridX = xCoor;
+					theArray[index].gridX = scaleFactor*xCoor;
 					manipulatedIndex >= 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST event circle off the canvas
-					theArray[index].gridY = yCoor;
+					theArray[index].gridY = scaleFactor*yCoor;
 				}
 				manipulatedIndex += 1
 			}

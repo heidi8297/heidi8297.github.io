@@ -68,10 +68,10 @@
     <div class='library__graphic graphic flex-container'>
       <!-- scrolly text section -->
       <div class='graphic__prose'>
-        <p class='preProse active'>If the visualisation doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
+        <p class='preProse active'>If the visualization doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
         <p class='trigger pane1 active' data-step='0'>pane ONE: This is a grid of all disasters in the data set.  I'll add some basic stats about the data to the graphic as well.</p>
         <p class='trigger pane2' data-step='1'>pane TWO: This will be a horizontal bar chart showing total disaster counts by type.</p>
-        <div class="legendSticky">  <!-- this div is to assist with positioning the legends -->
+        <div class="legendSticky">  <!-- this div is to assist with positioning/containing the legends -->
           <div class="absoluteWrapper">
             <div id="legendIconWrapper">
               <img src="legendIcon.svg" class="legendIconImage" alt="Legend icon - click to reveal applicable legends">
@@ -85,8 +85,10 @@
             </div>
           </div>
           <div class="legendInstructions">
-            <p><--- click here to show legends</p>
+            <p><--- click here to hide legend</p>
           </div>
+          <!-- the height of this div is updated based on whether or not the legends are being shown -->
+          <!-- doing so improves the waypoints trigger interactions and available reading space for the scrolly text -->
           <div class="variableSpacer"></div>
           <div class='trigger pane3' data-step='2'>
             <p>
@@ -161,6 +163,7 @@
   <!-- The scroll library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.js"></script>
 
+  <!-- FPS stats utility (for testing) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r14/Stats.js"></script>
 
   <!-- setting up the waypoints/triggers -->
@@ -178,7 +181,7 @@
       } // selectionToArray()
 
       function waypoints() {
-        // select elements
+        // select dom elements
         var graphicEl = document.querySelector('.graphic')
         var triggerEls = selectionToArray(graphicEl.querySelectorAll('.trigger'))
         var preProse = document.querySelector('.preProse')
@@ -204,6 +207,7 @@
               // tell our graphic to update with a specific step
               graphic.update(nextStep)
 
+              // the "active" class is shown with opacity 1, the others are shown with reduced opacity
               // managing the "active" states is made much more complicated by the fact
               //   that there are three text sections that are NOT tied to waypoints
               if (direction === 'down') {

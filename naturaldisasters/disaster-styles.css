@@ -219,10 +219,10 @@ header h2 {
 }
 
 .legendHideIconImage {
-  width: 100%;
+  width: 90%;
   position: absolute;
-  left: 0;
-  opacity: 0;
+  left: 2px;
+  top: 2px;
 }
 
 #legendWrapper {
@@ -230,10 +230,11 @@ header h2 {
   width: 240px;
   top: 58px;
   padding: 3px;
+  margin-top: 1px;
   background-color: #fbf9f9;
   border: 1px solid #EAE0DB;
-  z-index: 1000;
-  opacity: 0;
+  z-index: 900;
+  display: block;
 }
 
 .colorLegend1 svg {
