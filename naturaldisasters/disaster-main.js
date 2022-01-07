@@ -283,8 +283,11 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
+      annotations2.transition() // pane TWO
+        .duration(speedFactor*800)
+        .attr("opacity",1)
 			deactivatePane3()
-      stackedAreaRevealRect.transition()
+      stackedAreaRevealRect.transition() // pane THREE
         .duration(0)
         .attr('width',0)
       d3.select(".sizeLegend1").style("display", "none") // pane THREE
@@ -480,7 +483,7 @@ window.createGraphic = function(graphicSelector) {
 
 
 	//----------------------------------------------------------------------------
-	// UPDATE / SETUP FUNCTIONS - scales, initializing svg elements, create legends
+	// UPDATE / SETUP FUNCTIONS - scales, svg elements, legends, annotations
 	//----------------------------------------------------------------------------
 
 	// update our chart
@@ -948,6 +951,30 @@ window.createGraphic = function(graphicSelector) {
 		setupComplete = true;
 	}  // setupCharts
 
+  function createAnnotations2() {
+    annotAttr2 = [
+      {
+        note: { label: "Floods and storms have been the most common disaster types" },
+        x: 600, y: 230, dx: 150, dy: 30, wrap: 100,
+        color: ["#7F7269"]
+      }
+    ]
+    makeAnnotations2 = d3.annotation()
+      .annotations(annotAttr2)
+    annotations2 = svgForeground.append("g")
+      .attr("class", "annotations2")
+      .attr("opacity", 0)
+      .call(makeAnnotations2)
+    annotations2.append("line")
+      .attr("stroke", "#7F7269")
+      .attr("x1", d => 750)
+      .attr("y1", d => 260)
+      .attr("x2", d => 720)
+      .attr("y2", d => 150)
+  }
+  createAnnotations2()
+
+  // initialize the visualization
 	function init() {
 		let stepInc = lockInc += 1;
 		setupCharts()
@@ -1245,6 +1272,9 @@ window.createGraphic = function(graphicSelector) {
     barsByTypeG.transition() // pane TWO
       .duration(speedFactor*700)
       .attr('opacity',0)
+    annotations2.transition()
+      .duration(speedFactor*800)
+      .attr("opacity",0)
   }
   function deactivatePane3() {
     mapGroup.transition() // pane THREE
@@ -1477,7 +1507,6 @@ window.createGraphic = function(graphicSelector) {
 		init()
 
 	})   // end d3.csv.then
-
 
 	return {
 		update: update,

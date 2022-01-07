@@ -331,3 +331,7 @@ header h2 {
 .pane1text.livesCount tspan {
   font-size: 3.6rem;
 }
+
+g.annotations {
+  font-size: 0.86rem;
+}
