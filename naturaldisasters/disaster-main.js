@@ -101,19 +101,19 @@ window.createGraphic = function(graphicSelector) {
 		let fScale;
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
-			return {top: fScale*70, right: fScale*30, bottom: fScale*80, left: fScale*30}
+			return {top: fScale*85, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 4) { // bar chart - total death toll by type
-			return {top: fScale*40, right: fScale*70, bottom: fScale*80, left: fScale*70}
+			return {top: fScale*80, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 6) { // log scale / deaths per disaster
-			return {top: fScale*50, right: fScale*60, bottom: fScale*80, left: fScale*110}
+			return {top: fScale*80, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
-			return {top: fScale*35, right: fScale*35, bottom: fScale*50, left: fScale*35}
+			return {top: fScale*80, right: fScale*45, bottom: fScale*70, left: fScale*45}
 		} else if (paneNum === 9) { // deaths by Gdp
-      return {top: fScale*30, right: fScale*40, bottom: fScale*30, left: fScale*80}
+      return {top: fScale*30, right: fScale*40, bottom: fScale*30, left: fScale*92}
     }
 
 		// default margins
-		return {top: fScale*30, right: fScale*30, bottom: fScale*30, left: fScale*30}
+		return {top: fScale*80, right: fScale*30, bottom: fScale*30, left: fScale*30}
 	}
 
 	// complementary function to the one above, but returns the actual values of left and right instead of the margins
@@ -185,6 +185,30 @@ window.createGraphic = function(graphicSelector) {
 		// create an svg which we will use for axes and/or other plotting needs
 		svgForeground = d3.select("#viz-container").append('svg')
 			.attr("class", "svgForeground"); // this is purely to make it easy to see in 'inspect'
+
+    // create a text element for our graph titles
+    svgForeground.append("text")
+      .attr("class","graphTitle")
+      .text("This is my graph title")
+      .attr("x", 30)
+      .attr("y", 50)
+      .style("opacity",0)
+
+    // create a map to keep track of the graph titles
+    graphTitles = {
+      "1": "",
+      "2": "Total event counts by disaster type",
+      "3": "Events by year",
+      "3B": "An unsettling increase in frequency",
+      "4": "Total death counts by disaster type",
+      "5": "How things have changed over the last 60 years",
+      "6": "Deaths for each event by disaster type (log scale)",
+      "7": "Deaths for each event by year (linear scale)",
+      "8": "The deadliest 15 events",
+      "9": "The deadliest 15 events by GDP per capita",
+      "9B": "All events by GDP per capita",
+      "10": ""
+    }
 
 		// create a hidden canvas in which each circle will have a different color
     // we can use this for tooltips
@@ -266,6 +290,7 @@ window.createGraphic = function(graphicSelector) {
 		function step0() {  // pane ONE
 			if (setupComplete) {
 				let stepInc = lockInc += 1;
+        updateGraphTitle("1") // pane ONE
 				textIntroNums.transition() // pane ONE
 					.duration(speedFactor*800)
 					.attr("opacity",0.92)
@@ -280,12 +305,13 @@ window.createGraphic = function(graphicSelector) {
 			textIntroNums.transition() // pane ONE
 				.duration(speedFactor*500)
 				.attr("opacity",0)
+      updateGraphTitle("2") // pane TWO
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
       annotations2.transition() // pane TWO
         .duration(speedFactor*800)
-        .attr("opacity",1)
+        .attr("opacity",0)
 			deactivatePane3()
       stackedAreaRevealRect.transition() // pane THREE
         .duration(0)
@@ -299,6 +325,7 @@ window.createGraphic = function(graphicSelector) {
 			console.log(document.getElementsByTagName('*').length,"DOM elements")
 			let stepInc = lockInc += 1;
 			deactivatePane2()
+      updateGraphTitle("3") // pane
 			mapGroup.transition() // pane THREE
 				.duration(speedFactor*800)
 				.attr('opacity',1)
@@ -373,6 +400,7 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',0.7)
       d3.select(".sizeLegend1").style("display", "none") // pane THREE
+      updateGraphTitle("3B") // pane THREE B
       annotations3B.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",1)
@@ -387,6 +415,7 @@ window.createGraphic = function(graphicSelector) {
       annotations3B.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",0)
+      updateGraphTitle("4") // pane FOUR
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
@@ -398,12 +427,14 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
 			deactivatePane4()
 			deactivatePane6()
+      updateGraphTitle("5") // pane FIVE
 			transitionPane5()
 			animateCircles(stepInc)
 		}, // step5()
 
 		function step6() {  // pane SIX
 			let stepInc = lockInc += 1;
+      updateGraphTitle("6") // pane SIX
 			logBarsG.transition() // pane SIX
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
@@ -415,6 +446,7 @@ window.createGraphic = function(graphicSelector) {
 		function step7() {  // pane SEVEN
 			let stepInc = lockInc += 1;
 			deactivatePane6()
+      updateGraphTitle("7") // pane SEVEN
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
@@ -430,6 +462,7 @@ window.createGraphic = function(graphicSelector) {
 		function step8() {  // pane EIGHT
 			let stepInc = lockInc += 1;
 			deactivatePane7()
+      updateGraphTitle("8") // pane EIGHT
 			mapGroup.transition() // pane EIGHT
 				.duration(speedFactor*800)
 				.attr('opacity',1)
@@ -467,6 +500,7 @@ window.createGraphic = function(graphicSelector) {
 		function step9() {  // pane NINE A
 			let stepInc = lockInc += 1;
 			deactivatePane8()
+      updateGraphTitle("9") // pane NINE
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
@@ -474,6 +508,7 @@ window.createGraphic = function(graphicSelector) {
 
 		function step10() {  // pane NINE B
 			let stepInc = lockInc += 1;
+      updateGraphTitle("9B") // pane NINE B
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
       d3.select(".finalWords").transition() // pane TEN
         .duration(speedFactor*800)
@@ -485,6 +520,7 @@ window.createGraphic = function(graphicSelector) {
 		function step11() {  // pane TEN
 			let stepInc = lockInc += 1;
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
+      updateGraphTitle("10") // pane TEN
       d3.select(".finalWords").transition() // pane TEN
         .duration(speedFactor*800)
         .style("opacity","1")
@@ -505,6 +541,35 @@ window.createGraphic = function(graphicSelector) {
 	function update(step) {
 		steps[step].call()
 	}
+
+  // initialize the visualization
+  function init() {
+    let stepInc = lockInc += 1;
+    setupCharts()
+    // the below is just 'animateCircles' without the 'moveCircles' step
+    let dt = 0;
+    let t = d3.timer(function(elapsed) {
+      stats.begin();
+      interpCircMove(elapsed - dt);
+      dt = elapsed;
+      drawCircles(mainCtx)
+      stats.end();
+      if (elapsed > setDuration || stepInc !== lockInc) t.stop();
+    });
+    update(0)
+  } // init()
+
+  function updateGraphTitle(paneIdentifier) {
+    d3.select(".graphTitle").transition()
+      .duration(speedFactor*700)
+      .style("opacity",0)
+      .transition()
+      .duration(0)
+      .text(graphTitles[paneIdentifier])
+      .transition()
+      .duration(speedFactor*700)
+      .style("opacity",1)
+  }
 
   // move teardrops into their starting positions with opacity = 0
   function transitionTeardrops() {
@@ -580,7 +645,7 @@ window.createGraphic = function(graphicSelector) {
       scaleXtypes = d3.scaleBand()
         .domain(["earthquake","storm","drought","flood","extreme temperature","landslide","volcanic activity"])
         .range([ paneDim(4).left , paneDim(4).right ])
-        .paddingInner(0.35);
+        .paddingInner(0.39);
       scaleYdeathCount = d3.scaleLinear() // total death counts by type
         .domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
         .range([ paneDim(4).bottom, paneDim(4).top + 30 ]); // 30 makes space for the label
@@ -991,13 +1056,13 @@ window.createGraphic = function(graphicSelector) {
       {
         note: { label: "1960-1969" },
         x: paneDim(3).left + (0.03+1/8)*(paneDim(3).right-paneDim(3).left) ,
-        y: 390, dx: 0, dy: 0, wrap: 100,
+        y: 410, dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       },
       {
         note: { label: "2009-2018" },
         x: paneDim(3).left+ (paneDim(3).right-paneDim(3).left)/2 ,
-        y: 390, dx: 0, dy: 0, wrap: 100,
+        y: 410, dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       }
     ]
@@ -1011,23 +1076,6 @@ window.createGraphic = function(graphicSelector) {
       .call(makeAnnotations3B)
   }
   createAnnotations()
-
-  // initialize the visualization
-	function init() {
-		let stepInc = lockInc += 1;
-		setupCharts()
-		// the below is just 'animateCircles' without the 'moveCircles' step
-		let dt = 0;
-		let t = d3.timer(function(elapsed) {
-			stats.begin();
-			interpCircMove(elapsed - dt);
-			dt = elapsed;
-			drawCircles(mainCtx)
-			stats.end();
-			if (elapsed > setDuration || stepInc !== lockInc) t.stop();
-		});
-		update(0)
-	} // init()
 
 
 

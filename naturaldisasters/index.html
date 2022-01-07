@@ -69,8 +69,19 @@
       <!-- scrolly text section -->
       <div class='graphic__prose'>
         <p class='preProse active'>If the visualization doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
-        <p class='trigger pane1 active' data-step='0'>pane ONE: This is a grid of all disasters in the data set.  I'll add some basic stats about the data to the graphic as well.</p>
-        <p class='trigger pane2' data-step='1'>pane TWO: This will be a horizontal bar chart showing total disaster counts by type.</p>
+        <div class='trigger pane1 active' data-step='0'>
+          <p>This is the story of nearly 9000 natural disasters that have occurred
+            globally between 1960 and 2018.  If it feels like more disasters have
+            occurred in recent years, your perception is correct.  The increasing
+            frequency is troubling (particularly when broken down by type) as is
+            the nature and impact of those events, and who is most affected by them.
+            Let's take a look...</p>
+        </div>
+        <div class='trigger pane2' data-step='1'>
+          <p>This data set chronicles disasters across 7 different categories shown
+            here by total event count.  The most frequent types of disasters
+            have been floods and storms.</p>
+        </div>
         <div class="legendSticky">  <!-- this div is to assist with positioning/containing the legends -->
           <div class="absoluteWrapper">
             <div id="legendIconWrapper">
@@ -83,30 +94,53 @@
               <div class="sizeLegend2"></div>
               <img src="teardropTextToPath.svg" class="teardropLegend" style="display: none;" alt="Teardrop legend for deadliest 15 events">
             </div>
-          </div>
+          </div>  <!-- absoluteWrapper -->
           <div class="legendInstructions">
             <p><--- click here to hide legend</p>
           </div>
           <!-- the height of this div is updated based on whether or not the legends are being shown -->
           <!-- doing so improves the waypoints trigger interactions and available reading space for the scrolly text -->
           <div class="variableSpacer"></div>
+
           <div class='trigger pane3' data-step='2'>
-            <p>
-              pane THREE: This will be an animation showing a map of events by year.  I may also have an area chart at the bottom showing event counts by year and type.
-            </p>
+            <p>Here is a look at how those events have played out across the globe.</p>
           </div>
           <div class="trigger pane4" data-step='3'>
-            <p>pane THREE B: I may add another step here where I then summarize the total increase in events between the first ten years and the last ten years of the data set.</p>
+            <p>If we compare the first 10 years of the data set with the last 10
+              years, the trend is clear: disasters are occurring now more than ever.
+              How long can we realistically sustain (survive) this?</p>
           </div>
-          <p class='trigger pane4' data-step='4'>pane FOUR: This will be a vertical bar chart showing the deadliest overall event types.</p>
-          <p class='trigger pane5' data-step='5'>pane FIVE: This will be a set of slopegraphs showing event frequency increases and death rate changes by type.</p>
-          <p class='trigger pane6' data-step='6'>pane SIX: This will be a log plot showing deaths for each event, along with their 'typical' (median) values for each type.</p>
-          <p class='trigger pane7' data-step='7'>pane SEVEN: This is a plot of deaths for each event (linear scale this time) to highlight that a small subset of events are responsible for the majority of the deaths.</p>
-          <p class='trigger pane8' data-step='8'>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
-          <p class='trigger pane9' data-step='9'>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
+          <div class='trigger pane4' data-step='4'>
+            <p>So what is the impact?  Where are we seeing the largest loss of life?
+              If we look at total death counts by event type, we can see that so
+              far the largest death tolls have been from earthquakes and storms.</p>
+          </div>
+          <div class='trigger pane5' data-step='5'>
+            <p>How are these things changing?</p>
+          </div>
+          <div class='trigger pane6' data-step='6'>
+            <p>If we look now at the death toll for each individual event and how
+              those tolls are distributed for each type, we can see which types of
+              events are most likely to cause loss of life.  The highest typical
+              death toll is for "extreme temperature", which is particularly troubling
+              when combined with the trends from the previous pane. </p>
+          </div>
+          <div class='trigger pane7' data-step='7'>
+            <p>pane SEVEN: This is a plot of deaths for each event (linear scale this time) to highlight that a small subset of events are responsible for the majority of the deaths.</p>
+          </div>
+          <div class='trigger pane8' data-step='8'>
+            <p>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
+          </div>
+          <div class='trigger pane9' data-step='9'>
+            <p>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
+          </div>
+        </div> <!-- legendSticky -->
+        <div class='trigger pane9B' data-step='10'>
+          <p>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
         </div>
-        <p class='trigger pane9B' data-step='10'>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
-        <p class='trigger pane10' data-step='11'>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
+        <div class='trigger pane10' data-step='11'>
+          <p>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
+        </div>
         <div class='postProse thanks'>
           Built on the shoulders of giants.
           <ul>
@@ -135,9 +169,10 @@
       <div id="viz-container">
         <div class="finalWords">
           <p>
-            Some text here about what's happening.<br />
-            Some other text here about what's happening.<br /><br />
-            Fly less.  Buy electric.  Eat less meat.<br /><br />
+            While no single event can definitively be attributed to climate change, the evidence is abundantly clear that the trend is
+            ___ and it's indisputable at this point that our actions are causing climate change to occur in the first place.<br />
+            It's not too late to start taking your carbon footprint seriously.<br /> <br />
+            Fly less. &nbsp&nbsp Buy electric. &nbsp&nbsp Eat less meat.<br /><br />
             Don't dismiss the power of small actions over time, don't dismiss the influence that your actions will have on those around you, and - most of all - don't dismiss hope.
             <br /><br />The next generation is counting on us.
           </p>
