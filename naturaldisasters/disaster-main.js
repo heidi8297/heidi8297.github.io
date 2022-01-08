@@ -19,6 +19,8 @@ window.createGraphic = function(graphicSelector) {
 	let lastTenYears = [];
   let eventChangesByType = [];
   let deathChangesByType = [];
+  let eventsByTypeFirstLast = [];
+  let deathsByTypeFirstLast = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
   let infoState = "show";  // default to showing the legends
@@ -113,7 +115,9 @@ window.createGraphic = function(graphicSelector) {
 			return {top: fScale*85, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 4) { // bar chart - total death toll by type
 			return {top: fScale*80, right: fScale*30, bottom: fScale*60, left: fScale*30}
-		} else if (paneNum === 6) { // log scale / deaths per disaster
+		} else if (paneNum === 5) {
+      return {top: fScale*160, right: fScale*30, bottom: fScale*60, left: fScale*30}
+    } else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*80, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
 			return {top: fScale*80, right: fScale*45, bottom: fScale*70, left: fScale*45}
@@ -152,7 +156,7 @@ window.createGraphic = function(graphicSelector) {
 		}
 		var col = "rgb(" + ret.join(',') + ")";
 		return col;
-	} // genColor()
+	}
 
 	var stats = new Stats();
 	stats.setMode(0); // 0: fps, 1: ms, 2: mb
@@ -428,6 +432,7 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
+      deactivatePane5()
 			transitionPane4()
 			animateCircles(stepInc)
 		}, // step4()
@@ -437,12 +442,16 @@ window.createGraphic = function(graphicSelector) {
 			deactivatePane4()
 			deactivatePane6()
       updateGraphTitle("5") // pane FIVE
+      slopegraphG.transition() // pane FIVE
+        .duration(speedFactor*800)
+        .attr('opacity',1)
 			transitionPane5()
 			animateCircles(stepInc)
 		}, // step5()
 
 		function step6() {  // pane SIX
 			let stepInc = lockInc += 1;
+      deactivatePane5()
       updateGraphTitle("6") // pane SIX
 			logBarsG.transition() // pane SIX
 				.duration(speedFactor*1100)
@@ -650,7 +659,7 @@ window.createGraphic = function(graphicSelector) {
       scaleXyear3 = d3.scaleLinear()
         .domain([1960,2018])
         .range([paneDim(3).left, paneDim(3).right]);
-      scaleYeventCountSvg = d3.scaleLinear()
+      scaleYeventCount3 = d3.scaleLinear()
         .domain([0, d3.max(eventsByYearCounts,d => d[1])])
         .range([paneDim(3).bottom, 3*paneDim(3).bottom/4])
       scaleRgeo = d3.scaleSqrt()
@@ -658,10 +667,10 @@ window.createGraphic = function(graphicSelector) {
         .range([3,54])
 
       // pane THREE B - comparison of first 10 years vs last 10
-      scaleXpct = d3.scaleLinear()
+      scaleXpct3B = d3.scaleLinear()
         .domain([0,1])
         .range([paneDim(3).left, paneDim(3).right])
-      scaleYpct = d3.scaleLinear()
+      scaleYpct3B = d3.scaleLinear()
         .domain([0,1])
         .range([paneDim(3).top, paneDim(3).bottom])
 
@@ -675,18 +684,21 @@ window.createGraphic = function(graphicSelector) {
         .range([ paneDim(4).bottom, paneDim(4).top + 30 ]); // 30 makes space for the label
 
       // pane FIVE
-      scaleYeventCount = d3.scaleLinear()
+      scaleYeventCount5 = d3.scaleLinear()
         .domain([0,Math.max(d3.max(eventsByTypeFirst10, d => d[1]), d3.max(eventsByTypeLast10, d => d[1]))])
         .range([paneDim(5).bottom, paneDim(5).top])
-      scaleYdeathCount = d3.scaleLinear()
+      scaleYdeathCount5 = d3.scaleLinear()
         .domain([0,Math.max(d3.max(deathsByTypeFirst10, d => d[1]), d3.max(deathsByTypeLast10, d => d[1]))])
         .range([paneDim(5).bottom, paneDim(5).top])
+      scaleXpct5 = d3.scaleLinear()
+        .domain([0,1])
+        .range([paneDim(5).left, paneDim(5).right])
       scaleXeventPct = d3.scaleLinear()
         .domain([-1,d3.max(eventChangesByType, d => d[1])])
-        .range([600,750]) //////////////////////////////////////////////////////////////////
+        .range([scaleXpct5(0.6),scaleXpct5(0.75)])
       scaleXdeathPct = d3.scaleLinear()
         .domain([-1,d3.max(deathChangesByType, d => d[1])])
-        .range([800,950]) //////////////////////////////////////////////////////////////////
+        .range([scaleXpct5(0.8),scaleXpct5(0.95)])
 
       // pane SIX
       scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of event types (log scale)
@@ -835,7 +847,7 @@ window.createGraphic = function(graphicSelector) {
     // MUST GET CREATED AFTER MAP, BUT BEFORE OTHER SVG ELEMENTS
     stackedAreaBgRect = svgBackground.append('rect')
       .attr("x", paneDim(3).left)
-      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
       .attr("width", paneDim(3).right - paneDim(3).left )
       .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
@@ -897,9 +909,9 @@ window.createGraphic = function(graphicSelector) {
 						.curve(d3.curveNatural)
 						.x((d,i) => scaleXyear3(d.data.key) )
 						.y0( function(d) {
-							return scaleYeventCountSvg(d[0])
+							return scaleYeventCount3(d[0])
 						}   )
-						.y1( d => scaleYeventCountSvg(d[1]) )
+						.y1( d => scaleYeventCount3(d[1]) )
 				)
 		}
 		createStackedArea3()
@@ -908,7 +920,7 @@ window.createGraphic = function(graphicSelector) {
     // MUST GET CREATED AFTER STACKED AREA
     stackedAreaRevealRect = svgForeground.append('rect')
       .attr("x", paneDim(3).left)
-      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCountSvg
+      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
       .attr("width", 0 )
       .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
@@ -957,6 +969,39 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y", d => scaleYdeathCount(d[1]) - 11 );
 		}
 		createBars4()
+
+    // pane FIVE - create slope lines
+    function createSlopegraph5() {
+      slopegraphG = svgBackground.append('g')
+        .attr("class","slopegraphs")
+        .attr("opacity",0)
+      slopegraphG.selectAll("line.eventChanges")
+        .data(eventsByTypeFirstLast)
+        .join("line")
+        .attr("class","eventChanges")
+				.attr("x1", scaleXpct5(0.03))
+				.attr("y1", d => scaleYeventCount5(d[1]))
+				.attr("x2", scaleXpct5(0.23))
+				.attr("y2", d => scaleYeventCount5(d[2]))
+      slopegraphG.selectAll("line.deathChanges")
+        .data(deathsByTypeFirstLast)
+        .join("line")
+        .attr("class","deathChanges")
+				.attr("x1", scaleXpct5(0.33))
+				.attr("y1", d => scaleYdeathCount5(d[1]))
+				.attr("x2", scaleXpct5(0.53))
+				.attr("y2", d => scaleYdeathCount5(d[2]))
+
+      slopegraphG.selectAll("line")
+        .attr("stroke", d => typeColor(d[0]))
+        .attr("stroke-width", 4 )
+        .attr("stroke-linecap", "round")
+        .attr("opacity", 0.7)
+
+
+
+    }
+    createSlopegraph5()
 
 		// pane SIX - create lightly colored background bars for the log plots
 		function createBars6() {
@@ -1093,15 +1138,15 @@ window.createGraphic = function(graphicSelector) {
     annotAttr3B = [
       {
         note: { label: "1960-1969" },
-        x: scaleXpct(0.05 + 0.125),
-        y: scaleYpct(0.1 + 0.35 + 0.02),
+        x: scaleXpct3B(0.05 + 0.125),
+        y: scaleYpct3B(0.1 + 0.35 + 0.02),
         dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct(0.375 + 0.125),
-        y: scaleYpct(0.1 + 0.35 + 0.02),
+        x: scaleXpct3B(0.375 + 0.125),
+        y: scaleYpct3B(0.1 + 0.35 + 0.02),
         dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       }
@@ -1162,11 +1207,11 @@ window.createGraphic = function(graphicSelector) {
       let cx = 0
       let cy = 0
       if (node.year <= 1969) {
-        cx = scaleFactor*scaleXpct(0.05 + node.jitter*0.25)
-        cy = scaleFactor*scaleYpct(0.1 + node.jitter2*0.35)
+        cx = scaleFactor*scaleXpct3B(0.05 + node.jitter*0.25)
+        cy = scaleFactor*scaleYpct3B(0.1 + node.jitter2*0.35)
       } else if (node.year >= 2009) {
-        cx = scaleFactor*scaleXpct(0.375 + node.jitter*0.25)
-        cy = scaleFactor*scaleYpct(0.1 + node.jitter2*0.35)
+        cx = scaleFactor*scaleXpct3B(0.375 + node.jitter*0.25)
+        cy = scaleFactor*scaleYpct3B(0.1 + node.jitter2*0.35)
       } else {
         cx = node.jitter*canvasWidth
         cy = canvasHeight*1.1
@@ -1415,6 +1460,11 @@ window.createGraphic = function(graphicSelector) {
       .duration(speedFactor*700)
       .attr('opacity',0)
     }
+  function deactivatePane5() {
+    slopegraphG.transition() // pane FIVE
+      .duration(speedFactor*800)
+      .attr('opacity',0)
+  }
   function deactivatePane6() {
     logBarsG.transition() // pane SIX
       .duration(speedFactor*700)
@@ -1521,11 +1571,12 @@ window.createGraphic = function(graphicSelector) {
     eventsByTypeLast10 = d3.rollup(lastTenYears, v => v.length, d => d.disastertype)
     deathsByTypeFirst10 = d3.rollup(firstTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
     deathsByTypeLast10 = d3.rollup(lastTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
-    eventChangesByType = []
-    deathChangesByType = []
 
+    // populate all four arrays defined above, one for each of the slopegraphs (or percentage graphs)
     for (let i = 0; i < typeGroups.length; i++) {
       let thisType = typeGroups[i]
+      eventsByTypeFirstLast.push([thisType,eventsByTypeFirst10.get(thisType),eventsByTypeLast10.get(thisType)])
+      deathsByTypeFirstLast.push([thisType,deathsByTypeFirst10.get(thisType),deathsByTypeLast10.get(thisType)])
       eventsPctChg = (eventsByTypeLast10.get(thisType)-eventsByTypeFirst10.get(thisType)) / eventsByTypeFirst10.get(thisType)
       eventChangesByType.push([thisType,eventsPctChg])
       deathsPctChg = (deathsByTypeLast10.get(thisType)-deathsByTypeFirst10.get(thisType)) / deathsByTypeFirst10.get(thisType)
