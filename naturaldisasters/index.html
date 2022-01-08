@@ -123,27 +123,30 @@
           <div class='trigger pane5' data-step='5'>
             <p>pane FIVE: How are these things changing over time?</p>
           </div>
-          <div class='trigger pane6' data-step='6'>
+          <div class='trigger pane5B' data-step='6'>
+            <p>pane FIVE B: How are these things changing over time?</p>
+          </div>
+          <div class='trigger pane6' data-step='7'>
             <p>pane SIX: If we look now at the death toll for each individual event and how
               those tolls are distributed for each type, we can see which types of
               events are most likely to cause loss of life.  The highest typical
               death toll is for "extreme temperature", which is particularly troubling
               when combined with the trends from the previous pane. </p>
           </div>
-          <div class='trigger pane7' data-step='7'>
+          <div class='trigger pane7' data-step='8'>
             <p>pane SEVEN: This is a plot of deaths for each event (linear scale this time) to highlight that a small subset of events are responsible for the majority of the deaths.</p>
           </div>
-          <div class='trigger pane8' data-step='8'>
+          <div class='trigger pane8' data-step='9'>
             <p>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
           </div>
-          <div class='trigger pane9' data-step='9'>
+          <div class='trigger pane9' data-step='10'>
             <p>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
           </div>
         </div> <!-- legendSticky -->
-        <div class='trigger pane9B' data-step='10'>
+        <div class='trigger pane9B' data-step='11'>
           <p>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
         </div>
-        <div class='trigger pane10' data-step='11'>
+        <div class='trigger pane10' data-step='12'>
           <p></p>
         </div>
         <div class='postProse thanks'>
@@ -272,7 +275,7 @@
                   preProse.classList.remove("active")
                   legendInst.classList.add("active")
                 } else if (step === 2) {legendInst.classList.remove("active")}
-                else if (step === 11) {postProse.classList.add("active")}
+                else if (step === 12) {postProse.classList.add("active")}
               } else {
                 triggerEls[step].classList.remove("active")
                 triggerEls[nextStep].classList.add("active")
@@ -280,7 +283,7 @@
                   preProse.classList.add("active")
                   legendInst.classList.remove("active")
                 } else if (nextStep === 1) {legendInst.classList.add("active")}
-                else if (nextStep === 10) {postProse.classList.remove("active")}
+                else if (nextStep === 11) {postProse.classList.remove("active")}
               }
 
             },

@@ -116,7 +116,7 @@ window.createGraphic = function(graphicSelector) {
 		} else if (paneNum === 4) { // bar chart - total death toll by type
 			return {top: fScale*80, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 5) {
-      return {top: fScale*160, right: fScale*30, bottom: fScale*60, left: fScale*30}
+      return {top: fScale*180, right: fScale*30, bottom: fScale*90, left: fScale*30}
     } else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*80, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
@@ -215,6 +215,7 @@ window.createGraphic = function(graphicSelector) {
       "3B": "An unsettling increase in frequency",
       "4": "Total death counts by disaster type",
       "5": "How things have changed over the last 60 years",
+      "5B": "How things have changed part II",
       "6": "Deaths for each event by disaster type (log scale)",
       "7": "Deaths for each event by year (linear scale)",
       "8": "The deadliest 15 events",
@@ -445,11 +446,51 @@ window.createGraphic = function(graphicSelector) {
       slopegraphG.transition() // pane FIVE
         .duration(speedFactor*800)
         .attr('opacity',1)
+      slopegraphG.selectAll("line.eventChanges")
+        .data(eventsByTypeFirstLast)
+        .join("line")
+        .transition()
+        .duration(speedFactor*800)
+        .attr("y1", d => scaleYeventCount5(d[1]))
+        .attr("y2", d => scaleYeventCount5(d[2]))
+      slopegraphG.selectAll("line.deathChanges")
+        .data(deathsByTypeFirstLast)
+        .join("line")
+        .transition()
+        .duration(speedFactor*800)
+        .attr("y1", d => scaleYdeathCount5(d[1]))
+        .attr("y2", d => scaleYdeathCount5(d[2]))
 			transitionPane5()
 			animateCircles(stepInc)
 		}, // step5()
 
-		function step6() {  // pane SIX
+    function step6() {  // pane FIVE B
+      let stepInc = lockInc += 1;
+      deactivatePane4()
+      deactivatePane6()
+      updateGraphTitle("5B") // pane FIVE B
+      slopegraphG.transition() // pane FIVE B
+        .duration(speedFactor*800)
+        .attr('opacity',1)
+      slopegraphG.selectAll("line.eventChanges") // pane FIVE B
+        .data(eventChangesByType)
+        .join("line")
+        .transition()
+        .duration(speedFactor*800)
+				.attr("y1", d => scaleYeventPct(1))
+				.attr("y2", d => scaleYeventPct(d[1]))
+      slopegraphG.selectAll("line.deathChanges") // pane FIVE B
+        .data(deathChangesByType)
+        .join("line")
+        .transition()
+        .duration(speedFactor*800)
+				.attr("y1", d => scaleYdeathPct(1))
+				.attr("y2", d => scaleYdeathPct(d[1]))
+      transitionPane5()
+      animateCircles(stepInc)
+    }, // step6()
+
+		function step7() {  // pane SIX
 			let stepInc = lockInc += 1;
       deactivatePane5()
       updateGraphTitle("6") // pane SIX
@@ -459,9 +500,9 @@ window.createGraphic = function(graphicSelector) {
 			deactivatePane7()
 			transitionPane6()
 			animateCircles(stepInc)
-		}, // step6()
+		}, // step7()
 
-		function step7() {  // pane SEVEN
+		function step8() {  // pane SEVEN
 			let stepInc = lockInc += 1;
 			deactivatePane6()
       updateGraphTitle("7") // pane SEVEN
@@ -475,9 +516,9 @@ window.createGraphic = function(graphicSelector) {
 			deactivatePane8()
 			transitionPane7()
 			animateCircles(stepInc)
-		}, // step7()
+		}, // step8()
 
-		function step8() {  // pane EIGHT
+		function step9() {  // pane EIGHT
 			let stepInc = lockInc += 1;
 			deactivatePane7()
       updateGraphTitle("8") // pane EIGHT
@@ -514,18 +555,18 @@ window.createGraphic = function(graphicSelector) {
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
 			transitionPane8()
 			animateCircles(stepInc)
-		}, // step8()
+		}, // step9()
 
-		function step9() {  // pane NINE A
+		function step10() {  // pane NINE A
 			let stepInc = lockInc += 1;
 			deactivatePane8()
       updateGraphTitle("9") // pane NINE
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
-		}, // step9()
+		}, // step10()
 
-		function step10() {  // pane NINE B
+		function step11() {  // pane NINE B
 			let stepInc = lockInc += 1;
       updateGraphTitle("9B") // pane NINE B
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
@@ -534,9 +575,9 @@ window.createGraphic = function(graphicSelector) {
         .style("opacity","0")
 			transitionPane9B()
 			animateCircles(stepInc)
-		}, // step10()
+		}, // step11()
 
-		function step11() {  // pane TEN
+		function step12() {  // pane TEN
 			let stepInc = lockInc += 1;
       d3.select(".sizeLegend2").style("display", "none") // pane NINE
       updateGraphTitle("10") // pane TEN
@@ -545,7 +586,7 @@ window.createGraphic = function(graphicSelector) {
         .style("opacity","1")
 			transitionPane10()
 			animateCircles(stepInc)
-		}, // step11()
+		}, // step12()
 
 
 	] // steps
@@ -693,12 +734,16 @@ window.createGraphic = function(graphicSelector) {
       scaleXpct5 = d3.scaleLinear()
         .domain([0,1])
         .range([paneDim(5).left, paneDim(5).right])
-      scaleXeventPct = d3.scaleLinear()
+      scaleYeventPct = d3.scaleLinear()
         .domain([-1,d3.max(eventChangesByType, d => d[1])])
-        .range([scaleXpct5(0.6),scaleXpct5(0.75)])
-      scaleXdeathPct = d3.scaleLinear()
+        .range([paneDim(5).bottom, paneDim(5).top])
+      scaleYdeathPct = d3.scaleLinear()
         .domain([-1,d3.max(deathChangesByType, d => d[1])])
-        .range([scaleXpct5(0.8),scaleXpct5(0.95)])
+        .range([paneDim(5).bottom, paneDim(5).top])
+      // need a second scale to transition to, because one value (extreme temperature) distorts the entire graph
+      scaleYdeathPctPt2 = d3.scaleLinear()
+        .domain([-1,100])
+        .range([paneDim(5).bottom, paneDim(5).top])
 
       // pane SIX
       scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of event types (log scale)
@@ -979,17 +1024,17 @@ window.createGraphic = function(graphicSelector) {
         .data(eventsByTypeFirstLast)
         .join("line")
         .attr("class","eventChanges")
-				.attr("x1", scaleXpct5(0.03))
+				.attr("x1", scaleXpct5(0.13))
 				.attr("y1", d => scaleYeventCount5(d[1]))
-				.attr("x2", scaleXpct5(0.23))
+				.attr("x2", scaleXpct5(0.43))
 				.attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .attr("class","deathChanges")
-				.attr("x1", scaleXpct5(0.33))
+				.attr("x1", scaleXpct5(0.57))
 				.attr("y1", d => scaleYdeathCount5(d[1]))
-				.attr("x2", scaleXpct5(0.53))
+				.attr("x2", scaleXpct5(0.87))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
 
       slopegraphG.selectAll("line")
@@ -1245,7 +1290,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': cx,
 				'cy': cy,
-				'r': 2*node.geoIdCount,
+				'r': node.jitter*node.geoIdCount,
 				'opacity': 0.6
 		}}
 	} // transitionPane5()
@@ -1464,6 +1509,11 @@ window.createGraphic = function(graphicSelector) {
     slopegraphG.transition() // pane FIVE
       .duration(speedFactor*800)
       .attr('opacity',0)
+    slopegraphG.selectAll("line")
+      .transition()
+      .duration(speedFactor*800)
+      .attr("y1", d => scaleYeventPct(-1))
+      .attr("y2", d => scaleYeventPct(-1))
   }
   function deactivatePane6() {
     logBarsG.transition() // pane SIX
@@ -1582,6 +1632,8 @@ window.createGraphic = function(graphicSelector) {
       deathsPctChg = (deathsByTypeLast10.get(thisType)-deathsByTypeFirst10.get(thisType)) / deathsByTypeFirst10.get(thisType)
       deathChangesByType.push([thisType,deathsPctChg])
     }
+
+    console.log(deathChangesByType)
 
 		// find the 15 deadliest events
 		deadliestEvents = eventData.sort(function(a, b) {
