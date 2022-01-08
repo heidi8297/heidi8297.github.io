@@ -12,14 +12,18 @@ window.createGraphic = function(graphicSelector) {
 	let mapData = [];
 	let eventData = [];
 	let eventsByType = [];
-	let eventTypesByDeathTolls = [];
+	let deathsByType = [];
 	let deadliestEvents = [];
 	let lollipopEvents = [];
 	let firstTenYears = [];
 	let lastTenYears = [];
+  let eventChangesByType = [];
+  let deathChangesByType = [];
 	let eventsByYear = [];
 	let eventsFlat = [];
   let infoState = "show";  // default to showing the legends
+  // determines the sort/stack order of the area segments
+  let typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
 
   // variables for the events by year animation in pane THREE
   let readyFor2ndAnim = false;
@@ -475,7 +479,7 @@ window.createGraphic = function(graphicSelector) {
       // a lot of lines of code here for the teardrop transitions...
       // they look really sweet though, so I've accepted the mess *shrug*
       teardrops.selectAll("path").transition() // pane EIGHT
-        .delay(speedFactor*200)
+        .delay(speedFactor*300)
         .duration(speedFactor*1000)
         .attr('opacity',0.7)
         .attr("transform", function(d,i) {  // first position the teardrops at lat/long
@@ -492,7 +496,7 @@ window.createGraphic = function(graphicSelector) {
           return `translate(${translateX},${translateY})`
         } )
       teardropLines.selectAll("line").transition() // pane EIGHT
-        .delay(speedFactor*1400)
+        .delay(speedFactor*1500)
         .duration(speedFactor*800)  // add/extend the lines at the same time as moving the teardrops
         .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
@@ -667,8 +671,22 @@ window.createGraphic = function(graphicSelector) {
         .range([ paneDim(4).left , paneDim(4).right ])
         .paddingInner(0.39);
       scaleYdeathCount = d3.scaleLinear() // total death counts by type
-        .domain([0, d3.max(eventTypesByDeathTolls, d => d[1])])
+        .domain([0, d3.max(deathsByType, d => d[1])])
         .range([ paneDim(4).bottom, paneDim(4).top + 30 ]); // 30 makes space for the label
+
+      // pane FIVE
+      scaleYeventCount = d3.scaleLinear()
+        .domain([0,Math.max(d3.max(eventsByTypeFirst10, d => d[1]), d3.max(eventsByTypeLast10, d => d[1]))])
+        .range([paneDim(5).bottom, paneDim(5).top])
+      scaleYdeathCount = d3.scaleLinear()
+        .domain([0,Math.max(d3.max(deathsByTypeFirst10, d => d[1]), d3.max(deathsByTypeLast10, d => d[1]))])
+        .range([paneDim(5).bottom, paneDim(5).top])
+      scaleXeventPct = d3.scaleLinear()
+        .domain([-1,d3.max(eventChangesByType, d => d[1])])
+        .range([600,750]) //////////////////////////////////////////////////////////////////
+      scaleXdeathPct = d3.scaleLinear()
+        .domain([-1,d3.max(deathChangesByType, d => d[1])])
+        .range([800,950]) //////////////////////////////////////////////////////////////////
 
       // pane SIX
       scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of event types (log scale)
@@ -901,7 +919,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
 				.attr("opacity",0)
 			deathsByTypeG.selectAll("rect.typeBg") // background bars
-				.data(eventTypesByDeathTolls)
+				.data(deathsByType)
 				.join("rect")
 				.attr("class","typeBg")
 				.attr("x", d => scaleXtypes(d[0]) )
@@ -911,7 +929,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fill","#EFE8E4")
 				.attr("opacity", 0.9);
 			deathsByTypeG.selectAll("rect.typeCounts") // death toll bars
-				.data(eventTypesByDeathTolls)
+				.data(deathsByType)
 				.join("rect")
 				.attr("class","typeCounts")
 				.attr("x", d => scaleXtypes(d[0]) )
@@ -923,14 +941,14 @@ window.createGraphic = function(graphicSelector) {
 				//.attr("opacity", 0.7);  // for the sized-by-death-toll version
 			deathsByTypeLabels = deathsByTypeG.append("g")
 			deathsByTypeLabels.selectAll("text") // disaster type names
-				.data(eventTypesByDeathTolls)
+				.data(deathsByType)
 				.join("text")
 				.text(d => d[0])
 				.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
 				.attr("text-anchor", "middle")
 				.attr("y", paneDim(4).bottom + 28)
 			deathsByTypeLabels.selectAll("text.count") // eventCounts
-				.data(eventTypesByDeathTolls)
+				.data(deathsByType)
 				.join("text")
 				.attr("class","count")
 				.text(d => d[1])
@@ -1489,14 +1507,30 @@ window.createGraphic = function(graphicSelector) {
 		eventsByTypeObject = Object.fromEntries(eventsByType); // create an object to use below
 
 		// get total death toll by disaster type
-		eventTypesByDeathTolls = Array.from(
+		deathsByType = Array.from(
 			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disastertype).entries()
 		);
-		eventTypesDeathTollsObject = Object.fromEntries(eventTypesByDeathTolls); // create an object to use below
+		deathsByTypeObject = Object.fromEntries(deathsByType); // create an object to use below
 
 		// create sets for the first ten years of events and for the last ten years
 		firstTenYears = eventData.filter(d => d.year < 1970)
 		lastTenYears = eventData.filter(d => d.year > 2008)
+
+    // count total events and deaths of each type from the subsets we just created
+    eventsByTypeFirst10 = d3.rollup(firstTenYears, v => v.length, d => d.disastertype)
+    eventsByTypeLast10 = d3.rollup(lastTenYears, v => v.length, d => d.disastertype)
+    deathsByTypeFirst10 = d3.rollup(firstTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
+    deathsByTypeLast10 = d3.rollup(lastTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
+    eventChangesByType = []
+    deathChangesByType = []
+
+    for (let i = 0; i < typeGroups.length; i++) {
+      let thisType = typeGroups[i]
+      eventsPctChg = (eventsByTypeLast10.get(thisType)-eventsByTypeFirst10.get(thisType)) / eventsByTypeFirst10.get(thisType)
+      eventChangesByType.push([thisType,eventsPctChg])
+      deathsPctChg = (deathsByTypeLast10.get(thisType)-deathsByTypeFirst10.get(thisType)) / deathsByTypeFirst10.get(thisType)
+      deathChangesByType.push([thisType,deathsPctChg])
+    }
 
 		// find the 15 deadliest events
 		deadliestEvents = eventData.sort(function(a, b) {
@@ -1552,9 +1586,6 @@ window.createGraphic = function(graphicSelector) {
 		// ultimately this section 'stacks' the eventsByYear data by TYPE
 		//   each type will be represented on top of each other (by a unique color)
 
-		// determines the sort/stack order of the area segments
-		typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
-
 		// this is the first data step - it approximates the results of d3.nest, I think?
 		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values}));
 
@@ -1605,7 +1636,7 @@ window.createGraphic = function(graphicSelector) {
 			}
 			// for each event, also log the total event count and death toll for that disaster type
 			theArray[index].typeCount = eventsByTypeObject[event.disastertype]
-			theArray[index].typeDeathCount = eventTypesDeathTollsObject[event.disastertype]
+			theArray[index].typeDeathCount = deathsByTypeObject[event.disastertype]
 		});
 
 		// INITIALIZE THE VISUALIZATION
