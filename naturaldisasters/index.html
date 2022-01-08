@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Natural Disasters</title>
+  <title>Natural Disasters: Our New Normal</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -68,9 +68,14 @@
     <div class='library__graphic graphic flex-container'>
       <!-- scrolly text section -->
       <div class='graphic__prose'>
-        <p class='preProse active'>If the visualization doesn't fit your screen, try zooming out with ctrl + - / Cmd + -.</p>
+        <p class='preProse active'>If the visualization doesn't fit your screen,
+          try zooming out with ctrl + - / Cmd + -.<br /><br />
+          Having a hard time discerning the colors?
+          <a href="http://heidistockton.com/naturaldisasters?colorblind=true">Click here</a>
+          to reload in colorblind mode.
+        </p>
         <div class='trigger pane1 active' data-step='0'>
-          <p>This is the story of nearly 9000 natural disasters that have occurred
+          <p>pane ONE: This is the story of nearly 9000 natural disasters that have occurred
             globally between 1960 and 2018.  If it feels like more disasters have
             occurred in recent years, your perception is correct.  The increasing
             frequency is troubling (particularly when broken down by type) as is
@@ -78,7 +83,7 @@
             Let's take a look...</p>
         </div>
         <div class='trigger pane2' data-step='1'>
-          <p>This data set chronicles disasters across 7 different categories shown
+          <p>pane TWO: This data set chronicles disasters across 7 different categories shown
             here by total event count.  The most frequent types of disasters
             have been floods and storms.</p>
         </div>
@@ -103,23 +108,23 @@
           <div class="variableSpacer"></div>
 
           <div class='trigger pane3' data-step='2'>
-            <p>Here is a look at how those events have played out across the globe.</p>
+            <p>pane THREE: Here is a look at how those events have played out across the globe.</p>
           </div>
           <div class="trigger pane4" data-step='3'>
-            <p>If we compare the first 10 years of the data set with the last 10
+            <p>pane THREE B: If we compare the first 10 years of the data set with the last 10
               years, the trend is clear: disasters are occurring now more than ever.
               How long can we realistically sustain (survive) this?</p>
           </div>
           <div class='trigger pane4' data-step='4'>
-            <p>So what is the impact?  Where are we seeing the largest loss of life?
+            <p>pane FOUR: So what is the impact?  Where are we seeing the largest loss of life?
               If we look at total death counts by event type, we can see that so
               far the largest death tolls have been from earthquakes and storms.</p>
           </div>
           <div class='trigger pane5' data-step='5'>
-            <p>How are these things changing?</p>
+            <p>pane FIVE: How are these things changing over time?</p>
           </div>
           <div class='trigger pane6' data-step='6'>
-            <p>If we look now at the death toll for each individual event and how
+            <p>pane SIX: If we look now at the death toll for each individual event and how
               those tolls are distributed for each type, we can see which types of
               events are most likely to cause loss of life.  The highest typical
               death toll is for "extreme temperature", which is particularly troubling
@@ -139,7 +144,7 @@
           <p>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
         </div>
         <div class='trigger pane10' data-step='11'>
-          <p>pane TEN: This is the final landing step - some artsy randomness as a backdrop for some final words.</p>
+          <p></p>
         </div>
         <div class='postProse thanks'>
           Built on the shoulders of giants.
@@ -167,13 +172,18 @@
 
       <!-- this is where the drawing spaces will sit (canvas and svg) -->
       <div id="viz-container">
+        <!-- most elements needed for the viz are created in javascript, but this one is
+        almost entirely text so I'm building it here. -->
         <div class="finalWords">
           <p>
-            While no single event can definitively be attributed to climate change, the evidence is abundantly clear that the trend is
-            ___ and it's indisputable at this point that our actions are causing climate change to occur in the first place.<br />
+            While no single event can definitively be attributed to climate change,
+            the evidence is abundantly clear that the trend is certainly causally
+            related, and it's indisputable at this point that our actions are causing
+            climate change to occur in the first place.<br />
             It's not too late to start taking your carbon footprint seriously.<br /> <br />
             Fly less. &nbsp&nbsp Buy electric. &nbsp&nbsp Eat less meat.<br /><br />
-            Don't dismiss the power of small actions over time, don't dismiss the influence that your actions will have on those around you, and - most of all - don't dismiss hope.
+            Don't dismiss the power of small actions over time, don't dismiss the
+            influence that your actions will have on those around you, and - most of all - don't dismiss hope.
             <br /><br />The next generation is counting on us.
           </p>
         </div>

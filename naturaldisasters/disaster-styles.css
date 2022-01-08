@@ -132,6 +132,11 @@ header h2 {
 	min-height: 150px;
 }
 
+/* this section is smaller because it's empty from text - I want the user to read the viz pane instead */
+.graphic__prose .trigger.pane10 {
+	min-height: 300px;
+}
+
 .legendInstructions {
   height: 380px;
   opacity: 0.3;
@@ -140,6 +145,10 @@ header h2 {
 .legendInstructions p {
   padding-left: 49px;
   padding-top: 4px;
+}
+
+.variableSpacer {
+  height: 120px;
 }
 
 .graphic__prose .preProse {
@@ -354,6 +363,7 @@ g.annotations {
   -moz-transform: translateY(-50%);
   transform: translateY(-50%);
   opacity: 0;
+  pointer-events: none;
 }
 
 .finalWords p {

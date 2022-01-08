@@ -57,6 +57,11 @@ window.createGraphic = function(graphicSelector) {
 
 	let setupComplete = false;
 
+  // check to see if colorblind mode has been activated
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  (urlParams.get('colorblind') == null) ? colorblindMode = false : colorblindMode = true
+
 	// create an svg path in a teardrop shape of specified size, spacer and orientation
 	// size = radius of circle, spacer = pixels from origin
 	function teardrop(size=10, spacer=3, orientation=0) {
@@ -467,10 +472,11 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*800)
 				.attr('opacity',1)
 
-      // a lot of lines here for the teardrop transitions...
+      // a lot of lines of code here for the teardrop transitions...
       // they look really sweet though, so I've accepted the mess *shrug*
       teardrops.selectAll("path").transition() // pane EIGHT
-        .duration(speedFactor*800)
+        .delay(speedFactor*200)
+        .duration(speedFactor*1000)
         .attr('opacity',0.7)
         .attr("transform", function(d,i) {  // first position the teardrops at lat/long
           let translateX = projection([d.longitude,d.latitude])[0]
@@ -486,7 +492,7 @@ window.createGraphic = function(graphicSelector) {
           return `translate(${translateX},${translateY})`
         } )
       teardropLines.selectAll("line").transition() // pane EIGHT
-        .delay(speedFactor*1000)
+        .delay(speedFactor*1400)
         .duration(speedFactor*800)  // add/extend the lines at the same time as moving the teardrops
         .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
@@ -546,6 +552,7 @@ window.createGraphic = function(graphicSelector) {
   function init() {
     let stepInc = lockInc += 1;
     setupCharts()
+    createAnnotations()
     // the below is just 'animateCircles' without the 'moveCircles' step
     let dt = 0;
     let t = d3.timer(function(elapsed) {
@@ -612,10 +619,15 @@ window.createGraphic = function(graphicSelector) {
 	function setupCharts() {
 
 		// the sole color scale for disaster circles - based on disaster type
-		typeColor = d3.scaleOrdinal()
-			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
-			.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
-
+    if (colorblindMode) {
+      typeColor = d3.scaleOrdinal()
+  			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
+  			.range(["#BBBBBB","#CC3311","#33BBEE","#0077BB","#EE7733","#009988","#EE3377"]);
+    } else {
+      typeColor = d3.scaleOrdinal()
+  			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
+  			.range(["#A96830","#693410","#176F90","#394C97","#BE7C11","#2B6A2F","#B13D06"]);
+    }
 
 		// SVG setup
 
@@ -640,6 +652,14 @@ window.createGraphic = function(graphicSelector) {
       scaleRgeo = d3.scaleSqrt()
         .domain([1, d3.max(eventsFlat,d => d.geoIdCount)])
         .range([3,54])
+
+      // pane THREE B - comparison of first 10 years vs last 10
+      scaleXpct = d3.scaleLinear()
+        .domain([0,1])
+        .range([paneDim(3).left, paneDim(3).right])
+      scaleYpct = d3.scaleLinear()
+        .domain([0,1])
+        .range([paneDim(3).top, paneDim(3).bottom])
 
       // pane FOUR
       scaleXtypes = d3.scaleBand()
@@ -1055,14 +1075,16 @@ window.createGraphic = function(graphicSelector) {
     annotAttr3B = [
       {
         note: { label: "1960-1969" },
-        x: paneDim(3).left + (0.03+1/8)*(paneDim(3).right-paneDim(3).left) ,
-        y: 410, dx: 0, dy: 0, wrap: 100,
+        x: scaleXpct(0.05 + 0.125),
+        y: scaleYpct(0.1 + 0.35 + 0.02),
+        dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       },
       {
         note: { label: "2009-2018" },
-        x: paneDim(3).left+ (paneDim(3).right-paneDim(3).left)/2 ,
-        y: 410, dx: 0, dy: 0, wrap: 100,
+        x: scaleXpct(0.375 + 0.125),
+        y: scaleYpct(0.1 + 0.35 + 0.02),
+        dx: 0, dy: 0, wrap: 100,
         color: ["#7F7269"]
       }
     ]
@@ -1075,7 +1097,6 @@ window.createGraphic = function(graphicSelector) {
       .attr("opacity", 0)
       .call(makeAnnotations3B)
   }
-  createAnnotations()
 
 
 
@@ -1122,14 +1143,12 @@ window.createGraphic = function(graphicSelector) {
 			node = eventsFlat[i];
       let cx = 0
       let cy = 0
-      let paneWidth = paneDim(3,0).right-paneDim(3,0).left
-      let paneHeight = paneDim(3,0).bottom-paneDim(3,0).top
       if (node.year <= 1969) {
-        cx = paneDim(3,0).left+0.03*paneWidth + node.jitter*(1/4)*paneWidth
-        cy = paneDim(3,0).top + 0.11*paneHeight  + node.jitter2*0.35*paneHeight
+        cx = scaleFactor*scaleXpct(0.05 + node.jitter*0.25)
+        cy = scaleFactor*scaleYpct(0.1 + node.jitter2*0.35)
       } else if (node.year >= 2009) {
-        cx = paneDim(3,0).left + 3/8*paneWidth + node.jitter*(1/4)*paneWidth
-        cy = paneDim(3,0).top + 0.11*paneHeight  + node.jitter2*0.35*paneHeight
+        cx = scaleFactor*scaleXpct(0.375 + node.jitter*0.25)
+        cy = scaleFactor*scaleYpct(0.1 + node.jitter2*0.35)
       } else {
         cx = node.jitter*canvasWidth
         cy = canvasHeight*1.1
@@ -1196,7 +1215,7 @@ window.createGraphic = function(graphicSelector) {
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(projection([node.longitude,node.latitude])[0]+node.offsetX),
 				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*(projection([node.longitude,node.latitude])[1]+node.offsetY),
-				'r': 80,
+				'r': 90,
 				'opacity': 0
 		}}
 	} // transitionPane8()
