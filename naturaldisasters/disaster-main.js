@@ -10,13 +10,14 @@ window.createGraphic = function(graphicSelector) {
 	//----------------------------------------------------------------------------
 	let data = [];
 	let mapData = [];
-	//let eventData = [];
-	//let eventsByType = [];
-	//let deathsByType = [];
-	//let deadliestEvents = [];
-	//let lollipopEvents = [];
-	//let firstTenYears = [];
-	//let lastTenYears = [];
+	let eventData = [];
+	let eventsByType = [];
+	let deathsByType = [];
+  let eventsStackedByType = [];
+	let deadliestEvents = [];
+	let lollipopEvents = [];
+	let firstTenYears = [];
+	let lastTenYears = [];
   let eventChangesByType = [];
   let deathChangesByType = [];
   let eventsByTypeFirstLast = [];
@@ -25,25 +26,25 @@ window.createGraphic = function(graphicSelector) {
 	let eventsFlat = [];
   let infoState = "show";  // default to showing the legends
   // determines the sort/stack order of the area segments
-  let typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
+  const typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
 
   // variables for the events by year animation in pane THREE
-  let readyFor2ndAnim = false;
-  let startingYearInc = 1960
-  let yearInc = 1960;
+  const startingYearInc = 1960;
+  const yearPausePoint = 2018.7; // the point at which to pause events by year animation
+  const yearStop = 2021; // the point at which to reveal ALL events
   const fpsTarget = 11;   // I like 9 here
   const msTarget = Math.floor(1000/fpsTarget)
   let framesPerYear = 4;  // I like 5 here
-  let yearPausePoint = 2018.7 // the point at which to pause events by year animation
-  let yearStop = 2021 // the point at which to reveal ALL events
-  let revealRectStarted = false
+  let yearInc = 1960;
+  let readyFor2ndAnim = false;
+  let revealRectStarted = false;
 
 	// variables needed for transition method
   let lockInc = 0;
 	let circleStartInfo = {};
 	let circleEndInfo = {};
-	let ease = d3.easeCubicInOut;
-	let setDuration = 2000;
+	const ease = d3.easeCubicInOut;
+	const setDuration = 2000;
 	let timeElapsed = 0;
 	let interpolators = null;
 
@@ -60,6 +61,7 @@ window.createGraphic = function(graphicSelector) {
 	const scaleFactor = canvasWidth/dispWidth;
 
 	const speedFactor = 1.5;
+  let colorblindMode = false;
 
 	let setupComplete = false;
 
@@ -145,7 +147,7 @@ window.createGraphic = function(graphicSelector) {
 
 	//Generates the next color in the sequence, going from 0,0,0 to 255,255,255.
 	//From: https://bocoup.com/weblog/2d-picking-in-canvas
-	var nextCol = 1;
+	let nextCol = 1;
 	function genColor() {
 		var ret = [];
 		if (nextCol < 16777215) {   // via http://stackoverflow.com/a/15804183
@@ -158,7 +160,7 @@ window.createGraphic = function(graphicSelector) {
 		return col;
 	}
 
-	var stats = new Stats();
+	let stats = new Stats();
 	stats.setMode(0); // 0: fps, 1: ms, 2: mb
 
 	// align top-left
@@ -189,11 +191,6 @@ window.createGraphic = function(graphicSelector) {
 			.attr('height', canvasHeight)
 			.attr("class", "mainCanvas"); // this is purely to make it easy to see in 'inspect'
 		mainCtx = mainCanvas.node().getContext('2d');
-
-		// create a 'custom' element that will be part of a 'virtual' DOM
-		//   we will use this to bind our data without cluttering the actual DOM
-		detachedContainer = document.createElement("custom");
-		dataContainer = d3.select(detachedContainer);
 
 		// create an svg which we will use for axes and/or other plotting needs
 		svgForeground = d3.select("#viz-container").append('svg')
@@ -226,7 +223,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// create a hidden canvas in which each circle will have a different color
     // we can use this for tooltips
-    hiddenCanvas  = d3.select('#viz-container')
+    let hiddenCanvas  = d3.select('#viz-container')
 			.append('canvas')
 			.attr('width', canvasWidth)
 			.attr('height', canvasHeight)
@@ -242,7 +239,7 @@ window.createGraphic = function(graphicSelector) {
 	initializeDrawingSpaces()
 
 	// activate tooltip when the mouse moves over an event circle
-	d3.select('.mainCanvas').on('mousemove', function(e) {
+	mainCanvas.on('mousemove', function(e) {
 	  drawCircles(hiddenCtx, true); // draw the hidden canvas
 		let mouseX = e.layerX || e.offsetX;
 		let mouseY = e.layerY || e.offsetY;
@@ -252,25 +249,21 @@ window.createGraphic = function(graphicSelector) {
 		let nodeData = colToCircle[colKey];  // get the data from our map!
 		if (nodeData) {
 			// Show the tooltip only when there is nodeData found by the mouse
-	    d3.select('.tooltipMain')
-	      .style('opacity', 0.8)
+	    tooltipMain.style('opacity', 0.8)
 				.style('left', mouseX + 5 + 'px')
 	      .style('top', mouseY + 5 + 'px')
 				.html(capitalize(nodeData.disasterType) + " in " +nodeData.country +"<br>"+nodeData.year + (nodeData.deaths > 0 ? "<br>Deaths: " +nodeData.deaths : "" ) );
 	  	} else {
 	  	// Hide the tooltip when the mouse doesn't find nodeData
-	    d3.select('.tooltipMain').style('opacity', 0);
+	    tooltipMain.style('opacity', 0);
   	}
 	});
 
-	// hide tooltip when mouse leaves main canvas
-	d3.select(".mainCanvas").on("mouseout", function(d) {
-		d3.select(".tooltipMain")
-		 .style("opacity", 0);
-	});
+	// hide tooltip when mouse leaves main canvas (not sure why 'd =>' is needed here, but it errors w/o)
+	mainCanvas.on("mouseout", d => tooltipMain.style("opacity", 0));
 
   // turn the legendIconWrapper into a button that shows/hides the legends
-  legendWrapper = document.getElementById("legendIconWrapper");
+  let legendWrapper = document.getElementById("legendIconWrapper");
   legendWrapper.addEventListener("click", showHide);
   function show() {
     d3.select("#legendWrapper").style("display","block")
@@ -800,7 +793,7 @@ window.createGraphic = function(graphicSelector) {
   			.append("g")
   			.attr("class", "sizeLegend")
   			.attr("transform", "translate(13,20)");
-  		var legendSize1 = d3.legendSize()
+      let legendSize1 = d3.legendSize()
   			.scale(scaleRgeo)
   			.shape('circle')
   			.cells([1,10,50,100])
@@ -818,7 +811,7 @@ window.createGraphic = function(graphicSelector) {
         .append("g")
         .attr("class", "sizeLegend")
         .attr("transform", "translate(13,20)");
-      var legendSize2 = d3.legendSize()
+      let legendSize2 = d3.legendSize()
         .scale(scaleRdeaths)
         .shape('circle')
         .cells([10,5000,20000,100000])
@@ -875,7 +868,7 @@ window.createGraphic = function(graphicSelector) {
 			projection = d3.geoNaturalEarth1()
 				.scale((dispWidth / 1.65) / Math.PI) // smaller values of 1.5 = more zoomed in
 				.translate([-30+ dispWidth / 2, (0.48)* dispHeight]);
-			geoPath = d3.geoPath(projection);
+			let geoPath = d3.geoPath(projection);
 			// draw the map and set the opacity to 0
 			d3.json("map.geojson").then( function(worldData){
 				mapGroup.selectAll('path')
@@ -995,7 +988,6 @@ window.createGraphic = function(graphicSelector) {
 				.attr("height", d => paneDim(4).bottom - scaleYdeathCount(d[1]) )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.8);
-				//.attr("opacity", 0.7);  // for the sized-by-death-toll version
 			deathsByTypeLabels = deathsByTypeG.append("g")
 			deathsByTypeLabels.selectAll("text") // disaster type names
 				.data(deathsByType)
@@ -1134,7 +1126,7 @@ window.createGraphic = function(graphicSelector) {
 		// create dicts to keep track of circle positions for the transitions
 		function initiateCircleInfo() {
 			for (let i = 0; i < eventsFlat.length; i++) {
-				node = eventsFlat[i]
+				let node = eventsFlat[i]
 				circleStartInfo[i] = {
 					'cx': node.gridX,
 					'cy': node.gridY,
@@ -1212,7 +1204,7 @@ window.createGraphic = function(graphicSelector) {
 	// update circleEndInfo with new target formatting for each eventCircle
 	function transitionPane1() {  // "grid" of events with summary numbers
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': node.gridX,
 				'cy': node.gridY,
@@ -1223,7 +1215,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane2() {  // horizontal bar chart of event counts by type
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
 				'cy': scaleFactor*(scaleYtypes(node.disasterType)+scaleYtypes.bandwidth()*node.jitter),
@@ -1234,7 +1226,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane3() {  // world map animation of events by year
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
 				'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
@@ -1245,7 +1237,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
       let cx = 0
       let cy = 0
       if (node.year <= 1969) {
@@ -1268,7 +1260,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane4() {   // vertical bar chart for total death count by disaster type
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(scaleXtypes(node.disasterType)+scaleXtypes.bandwidth()*node.jitter),
 				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
@@ -1279,7 +1271,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane5() {   // slopegraphs - currently just a placeholder
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
       let cx = 0
       let cy = 0
       if (node.year < 2007) {cx = 0.03*node.jitter*canvasWidth} else {cx = (0.97+0.03*node.jitter)*canvasWidth}
@@ -1294,7 +1286,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane6() {   // deadliest individual events / log scale
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(scaleXdeadliest(node.disasterType) + scaleXdeadliest.bandwidth()*node.jitter),
 				'cy': scaleFactor*scaleYdeadliest(node.deaths),
@@ -1305,7 +1297,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane7() {   // deaths by year lollipop chart
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*scaleXyear7(node.year)-32+64*node.jitter,
 				'cy': scaleFactor*scaleYdeaths(node.deaths),
@@ -1316,7 +1308,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane8() {   // map of top 15 deadliest events / teardrop
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(projection([node.longitude,node.latitude])[0]+node.offsetX),
 				'cy': (node.deaths < 37000)? canvasHeight*1.1 : scaleFactor*(projection([node.longitude,node.latitude])[1]+node.offsetY),
@@ -1327,18 +1319,26 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane9A() {   // deaths top 15 by GDP
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
-			circleEndInfo[i] = {
-				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
-				'cy': (node.deaths < 37000)? canvasHeight*1.1 : canvasHeight/2,
-				'r': scaleFactor*scaleRdeaths(node.deaths),
-				'opacity': 0.6
-		}}
+			let node = eventsFlat[i];
+      let cx = 0;
+      let cy = 0;
+      let r = 0;
+      if (node.deaths < 37000) {
+        cx = -0.5*canvasWidth + 2*canvasWidth*node.jitter
+        cy = 1.1*canvasHeight
+        r = 2*scaleFactor*scaleRdeaths(node.deaths)
+      } else {
+        cx = scaleFactor*scaleXgdp(node.gdpInUsdPerCountry)
+        cy = canvasHeight/2
+        r = scaleFactor*scaleRdeaths(node.deaths)
+      }
+			circleEndInfo[i] = {'cx': cx, 'cy': cy, 'r':r, 'opacity': 0.6}
+    }
 	} // transitionPane9A()
 
 	function transitionPane9B() {   // deaths by GDP
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
 				'cy': canvasHeight/2,
@@ -1349,7 +1349,7 @@ window.createGraphic = function(graphicSelector) {
 
 	function transitionPane10() {   // final words
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': canvasWidth*node.jitter,
 				'cy': canvasHeight*node.jitter2,
@@ -1427,7 +1427,7 @@ window.createGraphic = function(graphicSelector) {
 	function drawCircles(chosenCtx, hidden = false) {
 		chosenCtx.clearRect(0,0,canvasWidth,canvasHeight);
 		for (let i = 0; i < eventsFlat.length; i++) {
-			node = eventsFlat[i];
+			let node = eventsFlat[i];
 			// set the fillstyle depending on whether we're using the mainCtx or the hiddenCtx
 			//   mainCtx gets the colors based on disaster type, hiddenCtx gets unique colors for each circle
 			if (hidden && tooltipLock === false) { // don't activate tooltips if the lock is activated
@@ -1687,10 +1687,10 @@ window.createGraphic = function(graphicSelector) {
 		//   each type will be represented on top of each other (by a unique color)
 
 		// this is the first data step - it approximates the results of d3.nest, I think?
-		eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values}));
+		let eventsByYearNest = Array.from(eventsByYear, ([key,values]) => ({key, values}));
 
 		// need a slightly different format as input for d3.stack including generating a 'count' value for EVERY disaster type
-		newEventsByYearNest = [];
+		let newEventsByYearNest = [];
 		for (let i = 0; i < eventsByYearNest.length; i++) {
 			let valuePairs = d3.rollup(eventsByYearNest[i].values, v => v.length, d => d.disasterType) // map of the form {'flood'=>5, 'storm'=>6}
 			let newValuePairs = typeGroups.map( function(type) {   // sort by type and fill in with zeros for any missing values
@@ -1729,7 +1729,7 @@ window.createGraphic = function(graphicSelector) {
 				if (insideTheWalls(xCoor,yCoor,textRectangles) === false) {
 					xySet = true;
 					theArray[index].gridX = scaleFactor*xCoor;
-					manipulatedIndex >= 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST event circle off the canvas
+					manipulatedIndex >= 10890 ? yCoor += 10 : yCoor = yCoor;  // "bump" the LAST two circles off the canvas
 					theArray[index].gridY = scaleFactor*yCoor;
 				}
 				manipulatedIndex += 1
