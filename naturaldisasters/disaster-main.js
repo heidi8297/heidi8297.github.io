@@ -10,13 +10,13 @@ window.createGraphic = function(graphicSelector) {
 	//----------------------------------------------------------------------------
 	let data = [];
 	let mapData = [];
-	let eventData = [];
-	let eventsByType = [];
-	let deathsByType = [];
-	let deadliestEvents = [];
-	let lollipopEvents = [];
-	let firstTenYears = [];
-	let lastTenYears = [];
+	//let eventData = [];
+	//let eventsByType = [];
+	//let deathsByType = [];
+	//let deadliestEvents = [];
+	//let lollipopEvents = [];
+	//let firstTenYears = [];
+	//let lastTenYears = [];
   let eventChangesByType = [];
   let deathChangesByType = [];
   let eventsByTypeFirstLast = [];
@@ -256,7 +256,7 @@ window.createGraphic = function(graphicSelector) {
 	      .style('opacity', 0.8)
 				.style('left', mouseX + 5 + 'px')
 	      .style('top', mouseY + 5 + 'px')
-				.html(capitalize(nodeData.disastertype) + " in " +nodeData.country +"<br>"+nodeData.year + (nodeData.deaths > 0 ? "<br>Deaths: " +nodeData.deaths : "" ) );
+				.html(capitalize(nodeData.disasterType) + " in " +nodeData.country +"<br>"+nodeData.year + (nodeData.deaths > 0 ? "<br>Deaths: " +nodeData.deaths : "" ) );
 	  	} else {
 	  	// Hide the tooltip when the mouse doesn't find nodeData
 	    d3.select('.tooltipMain').style('opacity', 0);
@@ -742,7 +742,7 @@ window.createGraphic = function(graphicSelector) {
         .range([paneDim(5).bottom, paneDim(5).top])
       // need a second scale to transition to, because one value (extreme temperature) distorts the entire graph
       scaleYdeathPctPt2 = d3.scaleLinear()
-        .domain([-1,100])
+        .domain([-1,50])
         .range([paneDim(5).bottom, paneDim(5).top])
 
       // pane SIX
@@ -1037,14 +1037,11 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x2", scaleXpct5(0.87))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
 
-      slopegraphG.selectAll("line")
+      slopegraphG.selectAll("line") // additional attributes for all lines
         .attr("stroke", d => typeColor(d[0]))
-        .attr("stroke-width", 4 )
+        .attr("stroke-width", 3 )
         .attr("stroke-linecap", "round")
         .attr("opacity", 0.7)
-
-
-
     }
     createSlopegraph5()
 
@@ -1075,7 +1072,7 @@ window.createGraphic = function(graphicSelector) {
 			lollipopLines.selectAll("line")
 				.data(lollipopEvents)
 				.join("line")
-				.attr("stroke", d => typeColor(d.disastertype))
+				.attr("stroke", d => typeColor(d.disasterType))
 				.attr("stroke-width", 1.5 )
 				.attr("x1", d => scaleXyear7(d.year)-8+16*d.jitter)
 				.attr("y1", d => dispHeight*1.2)
@@ -1111,7 +1108,7 @@ window.createGraphic = function(graphicSelector) {
         .attr("class", "TL")
         .attr( "d", d => teardrop( 1.2*scaleRgeo(d.geoIdCount), 1, 3) )
       teardrops.selectAll("path")  // add attributes shared by all teardrops
-        .attr("fill",d => typeColor(d.disastertype))
+        .attr("fill",d => typeColor(d.disasterType))
     }
     createTeardrops()
     transitionTeardrops() // move them to their starting positions with opacity = 0
@@ -1124,7 +1121,7 @@ window.createGraphic = function(graphicSelector) {
       teardropLines.selectAll("line")  // only create a line if an offset is present
 				.data(deadliestEvents.filter(d => d.offsetX !== 0))
 				.join("line")
-				.attr("stroke", d => typeColor(d.disastertype))
+				.attr("stroke", d => typeColor(d.disasterType))
 				.attr("stroke-width", 1.5 )
 				.attr("x1", d => projection([d.longitude,d.latitude])[0])
 				.attr("y1", d => projection([d.longitude,d.latitude])[1])
@@ -1142,14 +1139,14 @@ window.createGraphic = function(graphicSelector) {
 					'cx': node.gridX,
 					'cy': node.gridY,
 					'r': 16,
-					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
+					'fill': typeColor(node.disasterType), // set fill once and then leave it alone
 					'opacity': 0
 				}
 				circleEndInfo[i] = {
 					'cx': node.gridX,
 					'cy': node.gridY,
 					'r': 16,
-					'fill': typeColor(node.disastertype), // set fill once and then leave it alone
+					'fill': typeColor(node.disasterType), // set fill once and then leave it alone
 					'opacity': 0.3
 				}
 			}
@@ -1229,7 +1226,7 @@ window.createGraphic = function(graphicSelector) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': 7+scaleFactor*scaleXeventCount(node.jitter2*(node.typeCount-14)),
-				'cy': scaleFactor*(scaleYtypes(node.disastertype)+scaleYtypes.bandwidth()*node.jitter),
+				'cy': scaleFactor*(scaleYtypes(node.disasterType)+scaleYtypes.bandwidth()*node.jitter),
 				'r': 16,
 				'opacity': 0.4
 		}}
@@ -1273,7 +1270,7 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*(scaleXtypes(node.disastertype)+scaleXtypes.bandwidth()*node.jitter),
+				'cx': scaleFactor*(scaleXtypes(node.disasterType)+scaleXtypes.bandwidth()*node.jitter),
 				'cy': 7+scaleFactor*scaleYdeathCount(node.jitter2*(node.typeDeathCount-14)),
 				'r': 16,
 				'opacity': 0.4
@@ -1299,7 +1296,7 @@ window.createGraphic = function(graphicSelector) {
 		for (let i = 0; i < eventsFlat.length; i++) {
 			node = eventsFlat[i];
 			circleEndInfo[i] = {
-				'cx': scaleFactor*(scaleXdeadliest(node.disastertype) + scaleXdeadliest.bandwidth()*node.jitter),
+				'cx': scaleFactor*(scaleXdeadliest(node.disasterType) + scaleXdeadliest.bandwidth()*node.jitter),
 				'cy': scaleFactor*scaleYdeadliest(node.deaths),
 				'r': 13,
 				'opacity': 0.5
@@ -1554,9 +1551,9 @@ window.createGraphic = function(graphicSelector) {
 			country: d.country,
 			iso3: d.iso3,
 			year: +d.year,
-			geo_id: +d.geo_id,
-			disastertype: d.disastertype.trim(),
-			disasterno: d.disasterno,
+			geoId: +d.geo_id,
+			disasterType: d.disastertype.trim(),
+			disasterNum: d.disasterno,
 			latitude: +d.latitude,
 			longitude: +d.longitude,
 			deathsPerDisaster: +d.deathsPerDisaster,
@@ -1576,12 +1573,12 @@ window.createGraphic = function(graphicSelector) {
 			data,
 			function(v) {
 				return {
-					disasterno: d3.min(v, d => d.disasterno),
+					disasterNum: d3.min(v, d => d.disasterNum),
 			    geoIdCount: v.length,
 					country: d3.min(v, d => d.country),  // does this make sense?
           gdpInUsdPerCountry: d3.mean(v, d => d.gdpInUsdPerCountry),  // does this make sense???
 					year: d3.min(v, d => +d.year),
-					disastertype: d3.min(v, d => d.disastertype),
+					disasterType: d3.min(v, d => d.disasterType),
 					latitude: d3.mean(v, d => +d.latitude),
 					longitude: d3.mean(v, d => +d.longitude),
 			    deaths: d3.min(v, d => d.deathsPerDisaster ),
@@ -1597,18 +1594,18 @@ window.createGraphic = function(graphicSelector) {
           offsetY: 0
 		  	};
 			},
-		  d => d.disasterno
-		).values()).filter(d => d.disastertype != "mass movement (dry)"); // remove this disaster type
+		  d => d.disasterNum
+		).values()).filter(d => d.disasterType != "mass movement (dry)"); // remove this disaster type
 
 		// count total events of each type
 		eventsByType = Array.from(
-			d3.rollup(eventData, v => v.length, d => d.disastertype).entries()
+			d3.rollup(eventData, v => v.length, d => d.disasterType).entries()
 		).sort((a,b) => d3.descending(+a[1], +b[1]) );
 		eventsByTypeObject = Object.fromEntries(eventsByType); // create an object to use below
 
 		// get total death toll by disaster type
 		deathsByType = Array.from(
-			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disastertype).entries()
+			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disasterType).entries()
 		);
 		deathsByTypeObject = Object.fromEntries(deathsByType); // create an object to use below
 
@@ -1617,10 +1614,10 @@ window.createGraphic = function(graphicSelector) {
 		lastTenYears = eventData.filter(d => d.year > 2008)
 
     // count total events and deaths of each type from the subsets we just created
-    eventsByTypeFirst10 = d3.rollup(firstTenYears, v => v.length, d => d.disastertype)
-    eventsByTypeLast10 = d3.rollup(lastTenYears, v => v.length, d => d.disastertype)
-    deathsByTypeFirst10 = d3.rollup(firstTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
-    deathsByTypeLast10 = d3.rollup(lastTenYears, v => d3.sum(v, d => d.deaths), d => d.disastertype)
+    eventsByTypeFirst10 = d3.rollup(firstTenYears, v => v.length, d => d.disasterType)
+    eventsByTypeLast10 = d3.rollup(lastTenYears, v => v.length, d => d.disasterType)
+    deathsByTypeFirst10 = d3.rollup(firstTenYears, v => d3.sum(v, d => d.deaths), d => d.disasterType)
+    deathsByTypeLast10 = d3.rollup(lastTenYears, v => d3.sum(v, d => d.deaths), d => d.disasterType)
 
     // populate all four arrays defined above, one for each of the slopegraphs (or percentage graphs)
     for (let i = 0; i < typeGroups.length; i++) {
@@ -1642,13 +1639,13 @@ window.createGraphic = function(graphicSelector) {
 
 		for (let i = 0; i < deadliestEvents.length; i++) {
       thisEvent = deadliestEvents[i]
-      if (thisEvent.disasterno == '2008-0192'){
+      if (thisEvent.disasterNum == '2008-0192'){
         deadliestEvents[i].offsetX = 40;
         deadliestEvents[i].offsetY = 120;
-      } else if (thisEvent.disasterno == '1991-0120') {
+      } else if (thisEvent.disasterNum == '1991-0120') {
         deadliestEvents[i].offsetX = -20;
         deadliestEvents[i].offsetY = -150;
-      } else if (thisEvent.disasterno == '1973-9005') {
+      } else if (thisEvent.disasterNum == '1973-9005') {
         deadliestEvents[i].offsetX = -90;
         deadliestEvents[i].offsetY = -30;
       } else {
@@ -1673,7 +1670,7 @@ window.createGraphic = function(graphicSelector) {
 		for (let key of eventsByYear.keys()) {
 			eventsByYear.get(key).sort(function(a, b) {
 				// within each year - sort by disaster number
-				return b.disasterno-a.disasterno;
+				return b.disasterNum-a.disasterNum;
 			})
 			eventsByYear.get(key).forEach(function(event, index, theArray) {
 				theArray[index].vertNum = index;
@@ -1695,7 +1692,7 @@ window.createGraphic = function(graphicSelector) {
 		// need a slightly different format as input for d3.stack including generating a 'count' value for EVERY disaster type
 		newEventsByYearNest = [];
 		for (let i = 0; i < eventsByYearNest.length; i++) {
-			let valuePairs = d3.rollup(eventsByYearNest[i].values, v => v.length, d => d.disastertype) // map of the form {'flood'=>5, 'storm'=>6}
+			let valuePairs = d3.rollup(eventsByYearNest[i].values, v => v.length, d => d.disasterType) // map of the form {'flood'=>5, 'storm'=>6}
 			let newValuePairs = typeGroups.map( function(type) {   // sort by type and fill in with zeros for any missing values
 				return ({type: type, count: (valuePairs.get(type) ? valuePairs.get(type) : 0) })
 			} )
@@ -1738,8 +1735,8 @@ window.createGraphic = function(graphicSelector) {
 				manipulatedIndex += 1
 			}
 			// for each event, also log the total event count and death toll for that disaster type
-			theArray[index].typeCount = eventsByTypeObject[event.disastertype]
-			theArray[index].typeDeathCount = deathsByTypeObject[event.disastertype]
+			theArray[index].typeCount = eventsByTypeObject[event.disasterType]
+			theArray[index].typeDeathCount = deathsByTypeObject[event.disasterType]
 		});
 
 		// INITIALIZE THE VISUALIZATION
