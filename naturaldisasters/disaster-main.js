@@ -25,7 +25,8 @@ window.createGraphic = function(graphicSelector) {
 	let eventsByYear = [];
 	let eventsFlat = [];
   let infoState = "show";  // default to showing the legends
-  // determines the sort/stack order of the area segments
+  let currentPane = "0";
+  // determines the sort/stack order of the area segments in the stacked area chart
   const typeGroups = ["flood","storm","earthquake","landslide","extreme temperature","drought","volcanic activity"]
 
   // variables for the events by year animation in pane THREE
@@ -145,18 +146,31 @@ window.createGraphic = function(graphicSelector) {
 
 	function capitalize(word) { return word[0].toUpperCase() + word.slice(1) }
 
+  // define tooltips for each pane
+  function paneTooltips(paneNum, d) {
+    if (paneNum === "8") {
+      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year
+        + (d.deaths > 0 ? "<br>Deaths: " + d3.format(",")(d.deaths) : "")
+        + "<br>Total affected: " + (d.totalAffected === 0 ? "unknown" : d3.formatPrefix(".1", d.totalAffected)(d.totalAffected))
+        + "<br>Total damages (USD '21): $"
+        + (d.damages === 0 ? "none" : d3.formatPrefix(".1", d.damages)(d.damages)) + "<br>Location count: " + d.geoIdCount
+    } else {
+      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year + (d.deaths > 0 ? "<br>Deaths: " +d.deaths : "")
+    }
+  }
+
 	//Generates the next color in the sequence, going from 0,0,0 to 255,255,255.
 	//From: https://bocoup.com/weblog/2d-picking-in-canvas
 	let nextCol = 1;
 	function genColor() {
-		var ret = [];
+		let ret = [];
 		if (nextCol < 16777215) {   // via http://stackoverflow.com/a/15804183
 				ret.push(nextCol & 0xff); // R
 				ret.push((nextCol & 0xff00) >> 8); // G
 				ret.push((nextCol & 0xff0000) >> 16); // B
 				nextCol += 1;
 		}
-		var col = "rgb(" + ret.join(',') + ")";
+		let col = "rgb(" + ret.join(',') + ")";
 		return col;
 	}
 
@@ -249,10 +263,10 @@ window.createGraphic = function(graphicSelector) {
 		let nodeData = colToCircle[colKey];  // get the data from our map!
 		if (nodeData) {
 			// Show the tooltip only when there is nodeData found by the mouse
-	    tooltipMain.style('opacity', 0.8)
+	    tooltipMain.style('opacity', 0.88)
 				.style('left', mouseX + 5 + 'px')
 	      .style('top', mouseY + 5 + 'px')
-				.html(capitalize(nodeData.disasterType) + " in " +nodeData.country +"<br>"+nodeData.year + (nodeData.deaths > 0 ? "<br>Deaths: " +nodeData.deaths : "" ) );
+        .html(paneTooltips(currentPane, nodeData));
 	  	} else {
 	  	// Hide the tooltip when the mouse doesn't find nodeData
 	    tooltipMain.style('opacity', 0);
@@ -295,16 +309,14 @@ window.createGraphic = function(graphicSelector) {
 	// actions to take on each step of our scroll-driven story
 	var steps = [
 		function step0() {  // pane ONE
-			if (setupComplete) {
-				let stepInc = lockInc += 1;
-        updateGraphTitle("1") // pane ONE
-				textIntroNums.transition() // pane ONE
-					.duration(speedFactor*800)
-					.attr("opacity",0.92)
-				deactivatePane2()
-				transitionPane1()
-				animateCircles(stepInc)
-			}
+			let stepInc = lockInc += 1;
+      updateGraphTitle("1") // pane ONE
+			textIntroNums.transition() // pane ONE
+				.duration(speedFactor*800)
+				.attr("opacity",0.92)
+			deactivatePane2()
+			transitionPane1()
+			animateCircles(stepInc)
 		}, // step0()
 
 		function step1() {  // pane TWO
@@ -316,9 +328,6 @@ window.createGraphic = function(graphicSelector) {
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
-      annotations2.transition() // pane TWO
-        .duration(speedFactor*800)
-        .attr("opacity",0)
 			deactivatePane3()
       stackedAreaRevealRect.transition() // pane THREE
         .duration(0)
@@ -426,6 +435,9 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',0.8)
+      annotations4.transition() // pane TWO
+        .duration(speedFactor*800)
+        .attr("opacity",1)
       deactivatePane5()
 			transitionPane4()
 			animateCircles(stepInc)
@@ -453,6 +465,9 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
+      annotations5.transition()
+        .duration(speedFactor*800)
+        .attr("opacity",1)
 			transitionPane5()
 			animateCircles(stepInc)
 		}, // step5()
@@ -479,6 +494,9 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
 				.attr("y1", d => scaleYdeathPct(1))
 				.attr("y2", d => scaleYdeathPct(d[1]))
+      annotations5.transition()
+        .duration(speedFactor*800)
+        .attr("opacity",1)
       transitionPane5()
       animateCircles(stepInc)
     }, // step6()
@@ -592,7 +610,7 @@ window.createGraphic = function(graphicSelector) {
 
 	// update our chart
 	function update(step) {
-		steps[step].call()
+    if (setupComplete) { steps[step].call() }
 	}
 
   // initialize the visualization
@@ -614,6 +632,7 @@ window.createGraphic = function(graphicSelector) {
   } // init()
 
   function updateGraphTitle(paneIdentifier) {
+    currentPane = paneIdentifier;
     d3.select(".graphTitle").transition()
       .duration(speedFactor*700)
       .style("opacity",0)
@@ -732,10 +751,6 @@ window.createGraphic = function(graphicSelector) {
         .range([paneDim(5).bottom, paneDim(5).top])
       scaleYdeathPct = d3.scaleLinear()
         .domain([-1,d3.max(deathChangesByType, d => d[1])])
-        .range([paneDim(5).bottom, paneDim(5).top])
-      // need a second scale to transition to, because one value (extreme temperature) distorts the entire graph
-      scaleYdeathPctPt2 = d3.scaleLinear()
-        .domain([-1,50])
         .range([paneDim(5).bottom, paneDim(5).top])
 
       // pane SIX
@@ -1078,7 +1093,6 @@ window.createGraphic = function(graphicSelector) {
     function createTeardrops() {
       teardrops = svgForeground.append("g")
         .attr("class", "teardrops")
-        .attr("opacity", 1)
       teardrops.selectAll("path.TR")  // top right - sized by death toll
         .data(deadliestEvents)
         .join("path")
@@ -1088,7 +1102,7 @@ window.createGraphic = function(graphicSelector) {
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BR")
-        .attr( "d", d => teardrop( scaleRaffected(d.totalAffected), 1, 1) )
+        .attr( "d", d => teardrop( d.totalAffected === 0? 0 : scaleRaffected(d.totalAffected), 1, 1) )
       teardrops.selectAll("path.BL")  // bottom left - sized by damages
         .data(deadliestEvents)
         .join("path")
@@ -1101,6 +1115,7 @@ window.createGraphic = function(graphicSelector) {
         .attr( "d", d => teardrop( 1.2*scaleRgeo(d.geoIdCount), 1, 3) )
       teardrops.selectAll("path")  // add attributes shared by all teardrops
         .attr("fill",d => typeColor(d.disasterType))
+        .attr("opacity", 0)
     }
     createTeardrops()
     transitionTeardrops() // move them to their starting positions with opacity = 0
@@ -1149,43 +1164,21 @@ window.createGraphic = function(graphicSelector) {
 	}  // setupCharts
 
   function createAnnotations() {
-    annotAttr2 = [
-      {
-        note: { label: "Floods and storms have been the most common disaster types" },
-        x: 600, y: 230, dx: 150, dy: 30, wrap: 100,
-        color: ["#7F7269"]
-      }
-    ]
-    makeAnnotations2 = d3.annotation()
-      .annotations(annotAttr2)
-    annotations2 = svgForeground.append("g")
-      .attr("class", "annotations2")
-      .attr("opacity", 0)
-      .call(makeAnnotations2)
-    annotations2.append("line")
-      .attr("stroke", "#7F7269")
-      .attr("x1", d => 750)
-      .attr("y1", d => 260)
-      .attr("x2", d => 720)
-      .attr("y2", d => 150)
-
-    annotAttr3B = [
+    let annotAttr3B = [
       {
         note: { label: "1960-1969" },
         x: scaleXpct3B(0.05 + 0.125),
         y: scaleYpct3B(0.1 + 0.35 + 0.02),
-        dx: 0, dy: 0, wrap: 100,
-        color: ["#7F7269"]
+        dx: 0, dy: 0, wrap: 100
       },
       {
         note: { label: "2009-2018" },
         x: scaleXpct3B(0.375 + 0.125),
         y: scaleYpct3B(0.1 + 0.35 + 0.02),
-        dx: 0, dy: 0, wrap: 100,
-        color: ["#7F7269"]
+        dx: 0, dy: 0, wrap: 100
       }
     ]
-    makeAnnotations3B = d3.annotation()
+    let makeAnnotations3B = d3.annotation()
       .annotations(annotAttr3B)
       .disable('connector')
       .type(d3.annotationLabel)
@@ -1193,6 +1186,80 @@ window.createGraphic = function(graphicSelector) {
       .attr("class", "annotations3B")
       .attr("opacity", 0)
       .call(makeAnnotations3B)
+
+
+    let annotAttr4 = [
+      {
+        note: { label: "Varying densities reflect the varying death tolls per event" },
+        x: scaleXtypes("flood") - 0.4*scaleXtypes.bandwidth(), y: scaleYdeathCount(600000), dx: 130, dy: -30, wrap: 100
+      }
+    ]
+    let makeAnnotations4 = d3.annotation()
+      .annotations(annotAttr4)
+    annotations4 = svgForeground.append("g")
+      .attr("class", "annotations4")
+      .attr("opacity", 0)
+      .call(makeAnnotations4)
+    annotations4.append("line")
+      .attr("stroke", "#7F7269")
+      .attr("x1", d => scaleXtypes("flood") - 0.4*scaleXtypes.bandwidth()+130)
+      .attr("y1", d => scaleYdeathCount(600000)-30)
+      .attr("x2", d => scaleXtypes("flood") + 0.5*scaleXtypes.bandwidth() )
+      .attr("y2", d => scaleYdeathCount(360000))
+
+    let annotAttr5 = [
+      {
+        note: { label: "Total event counts" },
+        x: scaleXpct5(0.28),
+        y: scaleYeventCount5(1400),
+        dx: 0, dy: 0, wrap: 200
+      },
+      {
+        note: { label: "Total death counts" },
+        x: scaleXpct5(0.72),
+        y: scaleYeventCount5(1400),
+        dx: 0, dy: 0, wrap: 200
+      },
+      {
+        note: { label: "1960-1969" },
+        x: scaleXpct5(0.13),
+        y: scaleYeventCount5(0)+10,
+        dx: 0, dy: 0//, type: d3.annotationLabel
+      },
+      {
+        note: { label: "2009-2018" },
+        x: scaleXpct5(0.43),
+        y: scaleYeventCount5(0)+10,
+        dx: 0, dy: 0//, type: d3.annotationLabel
+      },
+      {
+        note: { label: "1960-1969" },
+        x: scaleXpct5(0.57),
+        y: scaleYeventCount5(0)+10,
+        dx: 0, dy: 0//, type: d3.annotationLabel
+      },
+      {
+        note: { label: "2009-2018" },
+        x: scaleXpct5(0.87),
+        y: scaleYeventCount5(0)+10,
+        dx: 0, dy: 0//, type: d3.annotationLabel
+      },
+      {
+        note: { label: "This is my callout" },
+        x: scaleXpct5(0.88),
+        y: scaleYeventCount5(800)+10,
+        dx: 30, dy: -40, type: d3.annotationCallout
+      }
+    ]
+    let makeAnnotations5 = d3.annotation()
+      .annotations(annotAttr5)
+      //.disable('connector')
+      .type(d3.annotationLabel)
+    annotations5 = svgForeground.append("g")
+      .attr("class", "annotations5")
+      .attr("opacity", 0)
+      .call(makeAnnotations5)
+
   }
 
 
@@ -1407,18 +1474,14 @@ window.createGraphic = function(graphicSelector) {
 	function interpCircMove(dt) {
 		if (interpolators) {
 			timeElapsed += dt;
-			var pct = Math.min(ease(timeElapsed / setDuration), 1.0);
-
+			let pct = Math.min(ease(timeElapsed / setDuration), 1.0);
 			for (let i = 0; i < eventsFlat.length; i++) {
 				circleStartInfo[i].cx = Math.floor(interpolators[i][0](pct));
 				circleStartInfo[i].cy = Math.floor(interpolators[i][1](pct));
 				circleStartInfo[i].r = Math.floor(interpolators[i][2](pct));
 				circleStartInfo[i].opacity = interpolators[i][3](pct);
 			}
-
-			if (timeElapsed >= setDuration) {
-				interpolators = null;
-			}
+			if (timeElapsed >= setDuration) { interpolators = null; }
 		}
 	} // interpCircMove()
 
@@ -1482,9 +1545,6 @@ window.createGraphic = function(graphicSelector) {
     barsByTypeG.transition() // pane TWO
       .duration(speedFactor*700)
       .attr('opacity',0)
-    annotations2.transition()
-      .duration(speedFactor*800)
-      .attr("opacity",0)
   }
   function deactivatePane3() {
     mapGroup.transition() // pane THREE
@@ -1501,6 +1561,9 @@ window.createGraphic = function(graphicSelector) {
     deathsByTypeG.transition() // pane FOUR
       .duration(speedFactor*700)
       .attr('opacity',0)
+    annotations4.transition()
+      .duration(speedFactor*800)
+      .attr("opacity",0)
     }
   function deactivatePane5() {
     slopegraphG.transition() // pane FIVE
@@ -1511,6 +1574,9 @@ window.createGraphic = function(graphicSelector) {
       .duration(speedFactor*800)
       .attr("y1", d => scaleYeventPct(-1))
       .attr("y2", d => scaleYeventPct(-1))
+    annotations5.transition()
+      .duration(speedFactor*800)
+      .attr("opacity",0)
   }
   function deactivatePane6() {
     logBarsG.transition() // pane SIX
@@ -1619,7 +1685,7 @@ window.createGraphic = function(graphicSelector) {
     deathsByTypeFirst10 = d3.rollup(firstTenYears, v => d3.sum(v, d => d.deaths), d => d.disasterType)
     deathsByTypeLast10 = d3.rollup(lastTenYears, v => d3.sum(v, d => d.deaths), d => d.disasterType)
 
-    // populate all four arrays defined above, one for each of the slopegraphs (or percentage graphs)
+    // populate four arrays, one for each of the slopegraphs
     for (let i = 0; i < typeGroups.length; i++) {
       let thisType = typeGroups[i]
       eventsByTypeFirstLast.push([thisType,eventsByTypeFirst10.get(thisType),eventsByTypeLast10.get(thisType)])
@@ -1630,24 +1696,24 @@ window.createGraphic = function(graphicSelector) {
       deathChangesByType.push([thisType,deathsPctChg])
     }
 
-    console.log(deathChangesByType)
-
 		// find the 15 deadliest events
 		deadliestEvents = eventData.sort(function(a, b) {
 			return d3.descending(+a.deaths, +b.deaths);
 		}).slice(0, 15);
 
+
+    // define offsets for the teardrop map
+    let offsetValues = {
+      '2008-0192':[40,120],
+      '1970-0063':[-20,-150],
+      '1973-9005':[-90,-30],
+      '1991-0120':[120,-10]
+    }
 		for (let i = 0; i < deadliestEvents.length; i++) {
       thisEvent = deadliestEvents[i]
-      if (thisEvent.disasterNum == '2008-0192'){
-        deadliestEvents[i].offsetX = 40;
-        deadliestEvents[i].offsetY = 120;
-      } else if (thisEvent.disasterNum == '1991-0120') {
-        deadliestEvents[i].offsetX = -20;
-        deadliestEvents[i].offsetY = -150;
-      } else if (thisEvent.disasterNum == '1973-9005') {
-        deadliestEvents[i].offsetX = -90;
-        deadliestEvents[i].offsetY = -30;
+      if (offsetValues[thisEvent.disasterNum]) {
+        deadliestEvents[i].offsetX = offsetValues[thisEvent.disasterNum][0];
+        deadliestEvents[i].offsetY = offsetValues[thisEvent.disasterNum][1];
       } else {
         deadliestEvents[i].offsetX = 0;
         deadliestEvents[i].offsetY = 0;

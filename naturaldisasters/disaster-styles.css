@@ -348,8 +348,13 @@ header h2 {
   font-size: 3.6rem;
 }
 
-g.annotations {
+g.annotations, .annotation-note-label {
   font-size: 0.86rem;
+  fill: #7F7269;
+}
+
+.annotations3B .annotation-note-label, .annotations5 .annotation-note-label {
+  font-size: 0.92rem;
 }
 
 .finalWords {
