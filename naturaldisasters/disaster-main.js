@@ -120,7 +120,7 @@ window.createGraphic = function(graphicSelector) {
 		} else if (paneNum === 4) { // bar chart - total death toll by type
 			return {top: fScale*80, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 5) {
-      return {top: fScale*180, right: fScale*30, bottom: fScale*90, left: fScale*30}
+      return {top: fScale*145, right: fScale*30, bottom: fScale*90, left: fScale*30}
     } else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*80, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
@@ -454,6 +454,7 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
         .attr("opacity",1)
       deactivatePane5()
+      deactivatePane5A()
 			transitionPane4()
 			animateCircles(stepInc)
 		}, // step4()
@@ -461,6 +462,7 @@ window.createGraphic = function(graphicSelector) {
 		function step5() {  // pane FIVE
 			let stepInc = lockInc += 1;
 			deactivatePane4()
+      deactivatePane5B()
 			deactivatePane6()
       updateGraphTitle("5") // pane FIVE
       slopegraphG.transition() // pane FIVE
@@ -480,7 +482,7 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
-      annotations5.transition()
+      slopegraphG5.transition()
         .duration(speedFactor*800)
         .attr("opacity",1)
 			transitionPane5()
@@ -490,6 +492,7 @@ window.createGraphic = function(graphicSelector) {
     function step6() {  // pane FIVE B
       let stepInc = lockInc += 1;
       deactivatePane4()
+      deactivatePane5A()
       deactivatePane6()
       updateGraphTitle("5B") // pane FIVE B
       slopegraphG.transition() // pane FIVE B
@@ -509,9 +512,6 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
 				.attr("y1", d => scaleYdeathPct(1))
 				.attr("y2", d => scaleYdeathPct(d[1]))
-      annotations5.transition()
-        .duration(speedFactor*800)
-        .attr("opacity",1)
       transitionPane5()
       animateCircles(stepInc)
     }, // step6()
@@ -519,6 +519,7 @@ window.createGraphic = function(graphicSelector) {
 		function step7() {  // pane SIX
 			let stepInc = lockInc += 1;
       deactivatePane5()
+      deactivatePane5B()
       updateGraphTitle("6") // pane SIX
 			logBarsG.transition() // pane SIX
 				.duration(speedFactor*1100)
@@ -1072,16 +1073,25 @@ window.createGraphic = function(graphicSelector) {
         .attr("class","slopegraphs")
         .attr("opacity",0)
       let bgPad = 65
-      slopegraphG.selectAll("rect.typeBg") // background bars
-        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two bars at once
+      let bgPadTop = 60
+      slopegraphG.selectAll("rect.typeBg") // background boxes to delineate each section
+        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two boxes at once
         .join("rect")
         .attr("class","typeBg")
         .attr("x", d => scaleXpct5(d[0])-bgPad )
-        .attr("y", d => scaleYeventCount5(1490) )
+        .attr("y", d => scaleYeventPct(d3.max(eventChangesByType, d => d[1])) - bgPadTop )
         .attr("width", d => scaleXpct5(d[1])-scaleXpct5(d[0]) + 2*bgPad )
-        .attr("height", 670 )
+        .attr("height", scaleYeventPct(-1) - scaleYeventPct(d3.max(eventChangesByType, d => d[1])) + 1.7*bgPadTop )
         .attr("fill","#F4EFED")
-        .attr("opacity", 0.9);
+      slopegraphG.selectAll("rect.graphBg") // background boxes to delineate graph portion
+        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two boxes at once
+        .join("rect")
+        .attr("class","graphBg")
+        .attr("x", d => scaleXpct5(d[0]) )
+        .attr("y", d => scaleYeventPct(d3.max(eventChangesByType, d => d[1])) )
+        .attr("width", d => scaleXpct5(d[1])-scaleXpct5(d[0]) )
+        .attr("height", scaleYeventPct(-1) - scaleYeventPct(d3.max(eventChangesByType, d => d[1])) )
+        .attr("fill","#EFE8E4")
       slopegraphG.selectAll("line.eventChanges")
         .data(eventsByTypeFirstLast)
         .join("line")
@@ -1098,24 +1108,84 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => scaleYdeathCount5(d[1]))
 				.attr("x2", scaleXpct5(0.93))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
-
       slopegraphG.selectAll("line") // additional attributes for all lines
         .attr("stroke", d => typeColor(d[0]))
         .attr("stroke-width", 3 )
         .attr("stroke-linecap", "round")
         .attr("opacity", 0.7)
+
+      // create subheader text elements
+      slopegraphG.append("text")
+        .attr("class","subtitle eventsSubtitle")
+        .attr("x", scaleXpct5((0.07+0.41)/2))
+        .attr("y", scaleYeventCount5(1315))
+      slopegraphG.append("text")
+        .attr("class","subtitle deathsSubtitle")
+        .attr("x", scaleXpct5((0.59+0.93)/2))
+        .attr("y", scaleYeventCount5(1315))
+
+      slopegraphG5 = slopegraphG.append('g') // elements that only apply to pane 5 (A)
+        .attr("class","slopegraphsPane5")
+        .attr("opacity",1)
+      slopegraphG5B = slopegraphG.append('g') // elements that only apply to pane 5B
+        .attr("class","slopegraphsPane5B")
+
+      // create labels for lines
+      // definitely some hardcoding here, unfortunately
+      // I looked into it and it was going to be a lot of effort to do otherwise
+      //   (and still likely difficult to read)
+      slopegraphG5.selectAll("text.labelEventStart")
+        .data(eventsByTypeFirstLast)
+        .join("text")
+        .attr("class","labelEventStart")
+        .text(function(d) {
+          if (d[0] == 'flood' || d[0] == 'storm' || d[0] == 'earthquake') {
+            return d[1]
+          } else if (d[0] == 'volcanic activity') {
+            return "2-17"
+          }
+        })
+        .attr("x", scaleXpct5(0.07) - 4)
+        .attr("y", d => scaleYeventCount5(d[1])+4)
+        .attr("dy", d => d[0] == 'storm' ? -6 : 0)
+        .attr("text-anchor", "end")
+        .style("font-size", "0.8rem")
+      slopegraphG5.selectAll("text.labelEventEnd")
+        .data(eventsByTypeFirstLast)
+        .join("text")
+        .attr("class","labelEventEnd")
+        .text(d => d[2])
+        .attr("x", scaleXpct5(0.41) + 4)
+        .attr("y", d => scaleYeventCount5(d[2])+4)
+        .attr("text-anchor", "start")
+        .style("font-size", "0.8rem")
+      slopegraphG5.selectAll("text.labelDeathStart")
+        .data(deathsByTypeFirstLast)
+        .join("text")
+        .attr("class","labelDeathStart")
+        .text(function(d) {
+          if (d[0] == 'flood' || d[0] == 'storm' || d[0] == 'earthquake') {
+            return d3.formatPrefix(".0", d[1])(d[1])
+          } else if (d[0] == 'volcanic activity') {
+            return "2-17"
+          }
+        })
+        .attr("x", scaleXpct5(0.59) - 4)
+        .attr("y", d => scaleYdeathCount5(d[1])+4)
+        .attr("text-anchor", "end")
+        .style("font-size", "0.8rem")
+      slopegraphG5.selectAll("text.labelDeathEnd")
+        .data(deathsByTypeFirstLast)
+        .join("text")
+        .attr("class","labelDeathEnd")
+        .text(d => d3.formatPrefix(".0", d[2])(d[2]))
+        .attr("x", scaleXpct5(0.93) + 4)
+        .attr("y", d => scaleYdeathCount5(d[2])+4)
+        .attr("text-anchor", "start")
+        .style("font-size", "0.8rem")
+
     }
     createSlopegraph5()
-
-    // pane FIVE - create subheader text elements
-    slopegraphG.append("text")
-      .attr("class","subtitle eventsSubtitle")
-      .attr("x", scaleXpct5((0.07+0.41)/2))
-      .attr("y", scaleYeventCount5(1400))
-    slopegraphG.append("text")
-      .attr("class","subtitle deathsSubtitle")
-      .attr("x", scaleXpct5((0.59+0.93)/2))
-      .attr("y", scaleYeventCount5(1400))
 
 
 		// pane SIX - create lightly colored background bars for the log plots
@@ -1277,25 +1347,25 @@ window.createGraphic = function(graphicSelector) {
       {
         note: { label: "1960-1969" },
         x: scaleXpct5(0.07),
-        y: scaleYeventCount5(0)+10,
+        y: scaleYeventCount5(0)+14,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
         x: scaleXpct5(0.41),
-        y: scaleYeventCount5(0)+10,
+        y: scaleYeventCount5(0)+14,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "1960-1969" },
         x: scaleXpct5(0.59),
-        y: scaleYeventCount5(0)+10,
+        y: scaleYeventCount5(0)+14,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
         x: scaleXpct5(0.93),
-        y: scaleYeventCount5(0)+10,
+        y: scaleYeventCount5(0)+14,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
@@ -1307,9 +1377,8 @@ window.createGraphic = function(graphicSelector) {
     ]
     let makeAnnotations5 = d3.annotation()
       .annotations(annotAttr5)
-      //.disable('connector')
       .type(d3.annotationLabel)
-    annotations5 = svgForeground.append("g")
+    annotations5 = slopegraphG.append("g")
       .attr("class", "annotations5")
       .attr("opacity", 0)
       .call(makeAnnotations5)
@@ -1628,7 +1697,14 @@ window.createGraphic = function(graphicSelector) {
       .duration(speedFactor*800)
       .attr("y1", d => scaleYeventPct(-1))
       .attr("y2", d => scaleYeventPct(-1))
-    annotations5.transition()
+  }
+  function deactivatePane5A() {
+    slopegraphG5.transition()
+      .duration(speedFactor*800)
+      .attr("opacity",0)
+  }
+  function deactivatePane5B() {
+    slopegraphG5B.transition()
       .duration(speedFactor*800)
       .attr("opacity",0)
   }
@@ -1730,8 +1806,8 @@ window.createGraphic = function(graphicSelector) {
 		deathsByTypeObject = Object.fromEntries(deathsByType); // create an object to use below
 
 		// create sets for the first ten years of events and for the last ten years
-		firstTenYears = eventData.filter(d => d.year < 1970)
-		lastTenYears = eventData.filter(d => d.year > 2008)
+		firstTenYears = eventData.filter(d => d.year <= 1969)
+		lastTenYears = eventData.filter(d => d.year >= 2009)
 
     // count total events and deaths of each type from the subsets we just created
     eventsByTypeFirst10 = d3.rollup(firstTenYears, v => v.length, d => d.disasterType)
