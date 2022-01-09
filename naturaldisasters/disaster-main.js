@@ -982,6 +982,7 @@ window.createGraphic = function(graphicSelector) {
     // pane THREE - rectangle to progressively reveal stacked area chart
     // MUST GET CREATED AFTER STACKED AREA
     stackedAreaRevealRect = svgForeground.append('rect')
+      .attr("class", "stackedAreaRevealRect")
       .attr("x", paneDim(3).left)
       .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
       .attr("width", 0 )
@@ -1041,17 +1042,17 @@ window.createGraphic = function(graphicSelector) {
         .data(eventsByTypeFirstLast)
         .join("line")
         .attr("class","eventChanges")
-				.attr("x1", scaleXpct5(0.13))
+				.attr("x1", scaleXpct5(0.07))
 				.attr("y1", d => scaleYeventCount5(d[1]))
-				.attr("x2", scaleXpct5(0.43))
+				.attr("x2", scaleXpct5(0.42))
 				.attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .attr("class","deathChanges")
-				.attr("x1", scaleXpct5(0.57))
+				.attr("x1", scaleXpct5(0.58))
 				.attr("y1", d => scaleYdeathCount5(d[1]))
-				.attr("x2", scaleXpct5(0.87))
+				.attr("x2", scaleXpct5(0.93))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
 
       slopegraphG.selectAll("line") // additional attributes for all lines
@@ -1061,6 +1062,19 @@ window.createGraphic = function(graphicSelector) {
         .attr("opacity", 0.7)
     }
     createSlopegraph5()
+
+    // pane FIVE - create subheader text elements
+    slopegraphG.append("text")
+      .attr("class","subtitle eventsSubtitle")
+      .text("Total event counts")
+      .attr("x", scaleXpct5((0.07+0.42)/2))
+      .attr("y", scaleYeventCount5(1400))
+    slopegraphG.append("text")
+      .attr("class","subtitle deathsSubtitle")
+      .text("Total death counts")
+      .attr("x", scaleXpct5((0.58+0.93)/2))
+      .attr("y", scaleYeventCount5(1400))
+
 
 		// pane SIX - create lightly colored background bars for the log plots
 		function createBars6() {
@@ -1219,38 +1233,26 @@ window.createGraphic = function(graphicSelector) {
 
     let annotAttr5 = [
       {
-        note: { label: "Total event counts" },
-        x: scaleXpct5(0.28),
-        y: scaleYeventCount5(1400),
-        dx: 0, dy: 0, wrap: 200
-      },
-      {
-        note: { label: "Total death counts" },
-        x: scaleXpct5(0.72),
-        y: scaleYeventCount5(1400),
-        dx: 0, dy: 0, wrap: 200
-      },
-      {
         note: { label: "1960-1969" },
-        x: scaleXpct5(0.13),
+        x: scaleXpct5(0.07),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct5(0.43),
+        x: scaleXpct5(0.42),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "1960-1969" },
-        x: scaleXpct5(0.57),
+        x: scaleXpct5(0.58),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct5(0.87),
+        x: scaleXpct5(0.93),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },

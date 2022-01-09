@@ -53,6 +53,10 @@ p {
   margin: 1.5rem 0;
 }
 
+svg text {
+  fill: #3F3027;
+}
+
 a {
   /* likely should keep this the same color as the 'footerLink' color below */
   color: #4E3C30;
@@ -94,7 +98,6 @@ header h2 {
   position: relative;
   bottom: 15px;
 }
-
 
 /* GRAPHIC STYLES */
 
@@ -312,6 +315,10 @@ header h2 {
   font-size: 1.25rem;
 }
 
+.subtitle {
+  text-anchor: middle;
+}
+
 .pane1text {
   text-anchor: middle;
   font-size: 1.8rem;
@@ -360,7 +367,7 @@ g.annotations, .annotation-note-label {
 .finalWords {
   position: absolute;
   z-index: 900000;
-  background-color: #fbf9f972;
+  background-color: #fbf9f992;
   margin-left: 170px;
   margin-right: 170px;
   top: 50%;
@@ -374,5 +381,5 @@ g.annotations, .annotation-note-label {
 .finalWords p {
   text-align: center;
   display: table-cell;
-  padding: 40px;
+  padding: 50px;
 }
