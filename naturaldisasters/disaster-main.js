@@ -32,13 +32,14 @@ window.createGraphic = function(graphicSelector) {
   // variables for the events by year animation in pane THREE
   const startingYearInc = 1960;
   const yearPausePoint = 2018.7; // the point at which to pause events by year animation
+  const yearCountAnim = yearPausePoint - startingYearInc;
   const yearStop = 2021; // the point at which to reveal ALL events
   const fpsTarget = 11;   // I like 9 here
   const msTarget = Math.floor(1000/fpsTarget)
   let framesPerYear = 4;  // I like 5 here
   let yearInc = 1960;
   let readyFor2ndAnim = false;
-  let revealRectStarted = false;
+  let revealRectComplete = false;
 
 	// variables needed for transition method
   let lockInc = 0;
@@ -148,14 +149,21 @@ window.createGraphic = function(graphicSelector) {
 
   // define tooltips for each pane
   function paneTooltips(paneNum, d) {
-    if (paneNum === "8") {
+    if (paneNum === "3") {
+      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
+        (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "") + "<br>Location count: " + d.geoIdCount
+    } else if (paneNum === "8") {
       return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year
-        + (d.deaths > 0 ? "<br>Deaths: " + d3.format(",")(d.deaths) : "")
-        + "<br>Total affected: " + (d.totalAffected === 0 ? "unknown" : d3.formatPrefix(".1", d.totalAffected)(d.totalAffected))
+        + (d.deaths > 0 ? "<br>Deaths: " + d3.format(",")(d.deaths) : "") + "<br>Total affected: "
+        + (d.totalAffected === 0 ? "unknown" : d3.formatPrefix(".1", d.totalAffected)(d.totalAffected))
         + "<br>Total damages (USD '21): $"
         + (d.damages === 0 ? "none" : d3.formatPrefix(".1", d.damages)(d.damages)) + "<br>Location count: " + d.geoIdCount
+    } else if (paneNum === "9" || paneNum === "9B") {
+      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
+        (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "") + "<br>GDP per capita (USD): " + d.gdpInUsdPerCountry
     } else {
-      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year + (d.deaths > 0 ? "<br>Deaths: " +d.deaths : "")
+      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
+        (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "")
     }
   }
 
@@ -350,7 +358,7 @@ window.createGraphic = function(graphicSelector) {
         .attr('opacity',1)
       // only run this "reveal" section of code once - the stacked area chart will
       //   be visible on subsequent views via scrolling
-      if (!revealRectStarted) {
+      if (!revealRectComplete) {
         stackedAreaRevealRect.transition() // pane THREE
           .delay(speedFactor*800)
           .duration(0)
@@ -375,13 +383,14 @@ window.createGraphic = function(graphicSelector) {
       // made more complicated (but more performant!) by not using d3 transitions
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc && yearInc <= yearStop) {
-          if (!revealRectStarted) {
+          if (!revealRectComplete) {  // this section is only run on the first scroll
+            let percentComplete = yearInc >= yearPausePoint ? 1 : (yearInc - startingYearInc)/yearCountAnim;
+            let paneWidth = paneDim(3).right-paneDim(3).left
             stackedAreaRevealRect.transition()
-              .duration(msTarget*framesPerYear*(yearPausePoint - startingYearInc))
+              .duration(msTarget)
               .ease(d3.easeLinear)
-              .attr('x',paneDim(3).right)
-              .attr('width', paneDim(3).right - paneDim(3).left )
-            revealRectStarted = true;
+              .attr('x',paneDim(3).left + percentComplete*paneWidth)
+              .attr('width', (1-percentComplete)*paneWidth )
           }
           setOpacityForCircles()
           drawCircles(mainCtx)
@@ -393,8 +402,9 @@ window.createGraphic = function(graphicSelector) {
           }
           // reset variables and then stop the animation
           readyFor2ndAnim = false;
-          tooltipLock = false;
-          yearInc = startingYearInc;
+          tooltipLock = false; // turn tooltips back on
+          yearInc = startingYearInc; // reset to starting point
+          revealRectComplete = true; // this will now remain true until a page reload
           secondAnim.stop();
         }
       }, msTarget )
