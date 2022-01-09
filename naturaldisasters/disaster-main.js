@@ -243,6 +243,11 @@ window.createGraphic = function(graphicSelector) {
       "10": ""
     }
 
+    graphSubtitles = {
+      "5": ["Total event counts","Total death counts"],
+      "5B": ["Percent change in event counts","Percent change in death counts"]
+    }
+
 		// create a hidden canvas in which each circle will have a different color
     // we can use this for tooltips
     let hiddenCanvas  = d3.select('#viz-container')
@@ -643,15 +648,43 @@ window.createGraphic = function(graphicSelector) {
 
   function updateGraphTitle(paneIdentifier) {
     currentPane = paneIdentifier;
-    d3.select(".graphTitle").transition()
+    d3.select(".graphTitle").transition() // fade out
       .duration(speedFactor*700)
       .style("opacity",0)
-      .transition()
+      .transition() // change text
       .duration(0)
       .text(graphTitles[paneIdentifier])
-      .transition()
+      .transition() // fade in
       .duration(speedFactor*700)
       .style("opacity",1)
+    if (paneIdentifier === "5" || paneIdentifier === "5B") {
+      d3.select(".subtitle.eventsSubtitle").transition()
+        .duration(speedFactor*700)
+        .style("opacity",0)
+        .transition()
+        .duration(0)
+        .text(graphSubtitles[paneIdentifier][0])
+        .transition()
+        .duration(speedFactor*700)
+        .style("opacity",1)
+      d3.select(".subtitle.deathsSubtitle").transition()
+        .duration(speedFactor*700)
+        .style("opacity",0)
+        .transition()
+        .duration(0)
+        .text(graphSubtitles[paneIdentifier][1])
+        .transition()
+        .duration(speedFactor*700)
+        .style("opacity",1)
+    } else {
+      d3.selectAll(".subtitle").transition() // clear subtitles
+        .duration(speedFactor*700)
+        .style("opacity",0)
+        .transition()
+        .duration(0)
+        .text("")
+    }
+
   }
 
   // move teardrops into their starting positions with opacity = 0
@@ -1038,19 +1071,30 @@ window.createGraphic = function(graphicSelector) {
       slopegraphG = svgBackground.append('g')
         .attr("class","slopegraphs")
         .attr("opacity",0)
+      let bgPad = 65
+      slopegraphG.selectAll("rect.typeBg") // background bars
+        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two bars at once
+        .join("rect")
+        .attr("class","typeBg")
+        .attr("x", d => scaleXpct5(d[0])-bgPad )
+        .attr("y", d => scaleYeventCount5(1490) )
+        .attr("width", d => scaleXpct5(d[1])-scaleXpct5(d[0]) + 2*bgPad )
+        .attr("height", 670 )
+        .attr("fill","#F4EFED")
+        .attr("opacity", 0.9);
       slopegraphG.selectAll("line.eventChanges")
         .data(eventsByTypeFirstLast)
         .join("line")
         .attr("class","eventChanges")
 				.attr("x1", scaleXpct5(0.07))
 				.attr("y1", d => scaleYeventCount5(d[1]))
-				.attr("x2", scaleXpct5(0.42))
+				.attr("x2", scaleXpct5(0.41))
 				.attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .attr("class","deathChanges")
-				.attr("x1", scaleXpct5(0.58))
+				.attr("x1", scaleXpct5(0.59))
 				.attr("y1", d => scaleYdeathCount5(d[1]))
 				.attr("x2", scaleXpct5(0.93))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
@@ -1066,13 +1110,11 @@ window.createGraphic = function(graphicSelector) {
     // pane FIVE - create subheader text elements
     slopegraphG.append("text")
       .attr("class","subtitle eventsSubtitle")
-      .text("Total event counts")
-      .attr("x", scaleXpct5((0.07+0.42)/2))
+      .attr("x", scaleXpct5((0.07+0.41)/2))
       .attr("y", scaleYeventCount5(1400))
     slopegraphG.append("text")
       .attr("class","subtitle deathsSubtitle")
-      .text("Total death counts")
-      .attr("x", scaleXpct5((0.58+0.93)/2))
+      .attr("x", scaleXpct5((0.59+0.93)/2))
       .attr("y", scaleYeventCount5(1400))
 
 
@@ -1240,13 +1282,13 @@ window.createGraphic = function(graphicSelector) {
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct5(0.42),
+        x: scaleXpct5(0.41),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "1960-1969" },
-        x: scaleXpct5(0.58),
+        x: scaleXpct5(0.59),
         y: scaleYeventCount5(0)+10,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
@@ -1257,9 +1299,9 @@ window.createGraphic = function(graphicSelector) {
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
-        note: { label: "This is my callout" },
-        x: scaleXpct5(0.88),
-        y: scaleYeventCount5(800)+10,
+        note: { label: "Fewer deaths from storms and volcanic activity are generally attributed to better alert systems" },
+        x: scaleXpct5(0.77),
+        y: scaleYeventCount5(330),
         dx: 30, dy: -40, type: d3.annotationCallout
       }
     ]
