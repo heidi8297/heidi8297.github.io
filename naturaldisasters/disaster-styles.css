@@ -356,7 +356,11 @@ header h2 {
 }
 
 g.annotations, .annotation-note-label {
-  font-size: 0.86rem;
+  font-size: 0.82rem;
+  fill: #7F7269;
+}
+
+.graphLabel {
   fill: #7F7269;
 }
 
