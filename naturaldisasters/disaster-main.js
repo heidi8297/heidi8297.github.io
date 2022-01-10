@@ -133,6 +133,9 @@ window.createGraphic = function(graphicSelector) {
 		return {top: fScale*80, right: fScale*30, bottom: fScale*30, left: fScale*30}
 	}
 
+  // define markers for pane 5 (A & B) to be used in various places
+  let markers5 = { L1: 0.07, L2: 0.41, R1: 0.59, R2: 0.93 }
+
 	// complementary function to the one above, but returns the actual values of left and right instead of the margins
 	function paneDim(paneNum, units = 1) { // units = 0 for canvas, 1 for svg
 		let draw;
@@ -1079,7 +1082,7 @@ window.createGraphic = function(graphicSelector) {
       let bgPad = 65
       let bgPadTop = 60
       slopegraphG.selectAll("rect.typeBg") // background boxes to delineate each section
-        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two boxes at once
+        .data([[markers5.L1,markers5.L2],[markers5.R1,markers5.R2]]) // data to help create two boxes at once
         .join("rect")
         .attr("class","typeBg")
         .attr("x", d => scaleXpct5(d[0])-bgPad )
@@ -1088,7 +1091,7 @@ window.createGraphic = function(graphicSelector) {
         .attr("height", scaleYeventPct(-1) - scaleYeventPct(d3.max(eventChangesByType, d => d[1])) + 1.7*bgPadTop )
         .attr("fill","#F4EFED")
       slopegraphG.selectAll("rect.graphBg") // background boxes to delineate graph portion
-        .data([[0.07,0.41],[0.59,0.93]]) // data to help create two boxes at once
+        .data([[markers5.L1,markers5.L2],[markers5.R1,markers5.R2]]) // data to help create two boxes at once
         .join("rect")
         .attr("class","graphBg")
         .attr("x", d => scaleXpct5(d[0]) )
@@ -1100,17 +1103,17 @@ window.createGraphic = function(graphicSelector) {
         .data(eventsByTypeFirstLast)
         .join("line")
         .attr("class","eventChanges")
-				.attr("x1", scaleXpct5(0.07))
+				.attr("x1", scaleXpct5(markers5.L1))
 				.attr("y1", d => scaleYeventCount5(d[1]))
-				.attr("x2", scaleXpct5(0.41))
+				.attr("x2", scaleXpct5(markers5.L2))
 				.attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .attr("class","deathChanges")
-				.attr("x1", scaleXpct5(0.59))
+				.attr("x1", scaleXpct5(markers5.R1))
 				.attr("y1", d => scaleYdeathCount5(d[1]))
-				.attr("x2", scaleXpct5(0.93))
+				.attr("x2", scaleXpct5(markers5.R2))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
       slopegraphG.selectAll("line") // additional attributes for all lines
         .attr("stroke", d => typeColor(d[0]))
@@ -1121,11 +1124,11 @@ window.createGraphic = function(graphicSelector) {
       // create subheader text elements
       slopegraphG.append("text")
         .attr("class","subtitle eventsSubtitle")
-        .attr("x", scaleXpct5((0.07+0.41)/2))
+        .attr("x", scaleXpct5((markers5.L1+markers5.L2)/2))
         .attr("y", scaleYeventCount5(1315))
       slopegraphG.append("text")
         .attr("class","subtitle deathsSubtitle")
-        .attr("x", scaleXpct5((0.59+0.93)/2))
+        .attr("x", scaleXpct5((markers5.R1+markers5.R2)/2))
         .attr("y", scaleYeventCount5(1315))
 
       slopegraphG5 = slopegraphG.append('g') // elements that only apply to pane 5 (A)
@@ -1148,7 +1151,7 @@ window.createGraphic = function(graphicSelector) {
             return "2-17"
           }
         })
-        .attr("x", scaleXpct5(0.07) - 4)
+        .attr("x", scaleXpct5(markers5.L1) - 4)
         .attr("y", d => scaleYeventCount5(d[1])+4)
         .attr("dy", d => d[0] == 'storm' ? -6 : 0)
         .attr("text-anchor", "end")
@@ -1158,7 +1161,7 @@ window.createGraphic = function(graphicSelector) {
         .join("text")
         .attr("class","graphLabel labelEventEnd")
         .text(d => d[2])
-        .attr("x", scaleXpct5(0.41) + 4)
+        .attr("x", scaleXpct5(markers5.L2) + 4)
         .attr("y", d => scaleYeventCount5(d[2])+4)
         .attr("text-anchor", "start")
         .style("font-size", "0.8rem")
@@ -1177,7 +1180,7 @@ window.createGraphic = function(graphicSelector) {
             return ""
           }
         })
-        .attr("x", scaleXpct5(0.59) - 4)
+        .attr("x", scaleXpct5(markers5.R1) - 4)
         .attr("y", d => scaleYdeathCount5(d[1])+4)
         .attr("text-anchor", "end")
         .style("font-size", "0.8rem")
@@ -1186,7 +1189,7 @@ window.createGraphic = function(graphicSelector) {
         .join("text")
         .attr("class","graphLabel labelDeathEnd")
         .text(d => d3.formatPrefix(".0", d[2])(d[2]))
-        .attr("x", scaleXpct5(0.93) + 4)
+        .attr("x", scaleXpct5(markers5.R2) + 4)
         .attr("y", d => scaleYdeathCount5(d[2])+4)
         .attr("text-anchor", "start")
         .style("font-size", "0.8rem")
@@ -1195,7 +1198,7 @@ window.createGraphic = function(graphicSelector) {
         .join("text")
         .attr("class", d => "graphLabel labelEventPct" + (d[0] == 'extreme temperature'? " ext" : ""))
         .text(d => d3.format(".3p")(d[1]) )
-        .attr("x", scaleXpct5(0.41) + 4)
+        .attr("x", scaleXpct5(markers5.L2) + 4)
         .attr("y", d => scaleYeventPct(d[1])+4)
         .attr("text-anchor", "start")
         .style("font-size", "0.8rem")
@@ -1216,7 +1219,7 @@ window.createGraphic = function(graphicSelector) {
             return "434%"
           } else {return ""}
         } )
-        .attr("x", scaleXpct5(0.93) + 4)
+        .attr("x", scaleXpct5(markers5.R2) + 4)
         .attr("y", d => scaleYdeathPct(d[1])+4)
         .attr("dy", d => d[0] == 'earthquake' ? -6 : 0)
         .attr("text-anchor", "start")
@@ -1227,7 +1230,6 @@ window.createGraphic = function(graphicSelector) {
         .attr("dx", -46)
     }
     createSlopegraph5()
-
 
 		// pane SIX - create lightly colored background bars for the log plots
 		function createBars6() {
@@ -1386,25 +1388,25 @@ window.createGraphic = function(graphicSelector) {
     let annotAttr5 = [
       {
         note: { label: "1960-1969" },
-        x: scaleXpct5(0.07),
+        x: scaleXpct5(markers5.L1),
         y: scaleYeventCount5(0)+12,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct5(0.41),
+        x: scaleXpct5(markers5.L2),
         y: scaleYeventCount5(0)+12,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "1960-1969" },
-        x: scaleXpct5(0.59),
+        x: scaleXpct5(markers5.R1),
         y: scaleYeventCount5(0)+12,
         dx: 0, dy: 0//, type: d3.annotationLabel
       },
       {
         note: { label: "2009-2018" },
-        x: scaleXpct5(0.93),
+        x: scaleXpct5(markers5.R2),
         y: scaleYeventCount5(0)+12,
         dx: 0, dy: 0//, type: d3.annotationLabel
       }
@@ -1507,18 +1509,39 @@ window.createGraphic = function(graphicSelector) {
 		}}
 	} // transitionPane4()
 
+  // LEFT (jitter2 < 0.5)
+  // .attr("x1", scaleXpct5(markers5.L1))
+  // .attr("y1", d => scaleYeventCount5(d[1]))
+  // .attr("x2", scaleXpct5(markers5.L2))
+  // .attr("y2", d => scaleYeventCount5(d[2]))
+
+  // RIGHT (jitter2 >= 0.5)
+  // .attr("x1", scaleXpct5(markers5.R1))
+  // .attr("y1", d => scaleYdeathCount5(d[1]))
+  // .attr("x2", scaleXpct5(markers5.R2))
+  // .attr("y2", d => scaleYdeathCount5(d[2]))
+
+
 	function transitionPane5() {   // slopegraphs - currently just a placeholder
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
       let cx = 0
       let cy = 0
-      if (node.year < 2007) {cx = 0.03*node.jitter*canvasWidth} else {cx = (0.97+0.03*node.jitter)*canvasWidth}
-      if (node.gridY < canvasHeight/2) {cy = 0.03*node.jitter2*canvasHeight} else {cy = (0.97+0.03*node.jitter2)*canvasHeight}
+      let dL = events1map.get(node.disasterType)
+      let dR = deaths1map.get(node.disasterType)
+      let pctOfLine = Math.min(1, (node.yearCounter - startingYearInc)/yearCountAnim )
+      if (node.jitter2 < 0.5) {
+        cx = scaleXpct5(markers5.L1) + pctOfLine*(scaleXpct5(markers5.L2) - scaleXpct5(markers5.L1));
+        cy = scaleYeventCount5(dL[0]) + pctOfLine*(scaleYeventCount5(dL[1]) - scaleYeventCount5(dL[0]));
+      } else {
+        cx = scaleXpct5(markers5.R1) + pctOfLine*(scaleXpct5(markers5.R2) - scaleXpct5(markers5.R1))
+        cy = scaleYdeathCount5(dR[0]) + pctOfLine*(scaleYdeathCount5(dR[1]) - scaleYdeathCount5(dR[0]));
+      }
 			circleEndInfo[i] = {
-				'cx': cx,
-				'cy': cy,
-				'r': node.jitter*node.geoIdCount,
-				'opacity': 0.6
+				'cx': scaleFactor*cx,
+				'cy': scaleFactor*cy,
+				'r': 9,
+				'opacity': 0.3
 		}}
 	} // transitionPane5()
 
@@ -1819,8 +1842,8 @@ window.createGraphic = function(graphicSelector) {
 				return {
 					disasterNum: d3.min(v, d => d.disasterNum),
 			    geoIdCount: v.length,
-					country: d3.min(v, d => d.country),  // does this make sense?
-          gdpInUsdPerCountry: d3.mean(v, d => d.gdpInUsdPerCountry),  // does this make sense???
+					country: d3.min(v, d => d.country),  // can probably make this better at some point
+          gdpInUsdPerCountry: d3.mean(v, d => d.gdpInUsdPerCountry), // average across all locations recorded
 					year: d3.min(v, d => +d.year),
 					disasterType: d3.min(v, d => d.disasterType),
 					latitude: d3.mean(v, d => +d.latitude),
@@ -1873,6 +1896,12 @@ window.createGraphic = function(graphicSelector) {
       deathsPctChg = (deathsByTypeLast10.get(thisType)-deathsByTypeFirst10.get(thisType)) / deathsByTypeFirst10.get(thisType)
       deathChangesByType.push([thisType,deathsPctChg])
     }
+
+    // create map objects from the arrays above - to be used for pane 5 circle transitions
+    events1map = new Map(eventsByTypeFirstLast.map(key => [key[0], [key[1],key[2]]]));
+    deaths1map = new Map(deathsByTypeFirstLast.map(key => [key[0], [key[1],key[2]]]));
+    events2map = new Map(eventChangesByType.map(key => [key[0], key[1]]));
+    deaths2map = new Map(deathChangesByType.map(key => [key[0], key[1]]));
 
 		// find the 15 deadliest events
 		deadliestEvents = eventData.sort(function(a, b) {
