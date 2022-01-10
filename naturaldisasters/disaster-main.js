@@ -179,7 +179,11 @@ window.createGraphic = function(graphicSelector) {
 				ret.push(nextCol & 0xff); // R
 				ret.push((nextCol & 0xff00) >> 8); // G
 				ret.push((nextCol & 0xff0000) >> 16); // B
-				nextCol += 1;
+        // you could set this to increment by 1, but I was having a lot of color
+        //   collisions which were resulting in incorrect tooltips being displayed
+        // this fix doesn't eliminate the issue, but it does minimize it
+        // the increment used is based on needing 9000 unique colors
+        nextCol += 1800;
 		}
 		let col = "rgb(" + ret.join(',') + ")";
 		return col;
@@ -1509,20 +1513,7 @@ window.createGraphic = function(graphicSelector) {
 		}}
 	} // transitionPane4()
 
-  // LEFT (jitter2 < 0.5)
-  // .attr("x1", scaleXpct5(markers5.L1))
-  // .attr("y1", d => scaleYeventCount5(d[1]))
-  // .attr("x2", scaleXpct5(markers5.L2))
-  // .attr("y2", d => scaleYeventCount5(d[2]))
-
-  // RIGHT (jitter2 >= 0.5)
-  // .attr("x1", scaleXpct5(markers5.R1))
-  // .attr("y1", d => scaleYdeathCount5(d[1]))
-  // .attr("x2", scaleXpct5(markers5.R2))
-  // .attr("y2", d => scaleYdeathCount5(d[2]))
-
-
-	function transitionPane5() {   // slopegraphs - currently just a placeholder
+	function transitionPane5() {   // slopegraphs part 1
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
       let cx = 0
@@ -1544,6 +1535,29 @@ window.createGraphic = function(graphicSelector) {
 				'opacity': 0.3
 		}}
 	} // transitionPane5()
+
+  function transitionPane5B() {   // slopegraphs part 1
+    for (let i = 0; i < eventsFlat.length; i++) {
+      let node = eventsFlat[i];
+      let cx = 0
+      let cy = 0
+      let dL = events1map.get(node.disasterType)
+      let dR = deaths1map.get(node.disasterType)
+      let pctOfLine = Math.min(1, (node.yearCounter - startingYearInc)/yearCountAnim )
+      if (node.jitter2 < 0.5) {
+        cx = scaleXpct5(markers5.L1) + pctOfLine*(scaleXpct5(markers5.L2) - scaleXpct5(markers5.L1));
+        cy = scaleYeventCount5(dL[0]) + pctOfLine*(scaleYeventCount5(dL[1]) - scaleYeventCount5(dL[0]));
+      } else {
+        cx = scaleXpct5(markers5.R1) + pctOfLine*(scaleXpct5(markers5.R2) - scaleXpct5(markers5.R1))
+        cy = scaleYdeathCount5(dR[0]) + pctOfLine*(scaleYdeathCount5(dR[1]) - scaleYdeathCount5(dR[0]));
+      }
+      circleEndInfo[i] = {
+        'cx': scaleFactor*cx,
+        'cy': scaleFactor*cy,
+        'r': 9,
+        'opacity': 0.3
+    }}
+  } // transitionPane5()
 
 	function transitionPane6() {   // deadliest individual events / log scale
 		for (let i = 0; i < eventsFlat.length; i++) {
