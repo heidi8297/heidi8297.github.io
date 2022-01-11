@@ -126,7 +126,7 @@ window.createGraphic = function(graphicSelector) {
 		} else if (paneNum === 7) { // deaths by year, linear scale
 			return {top: fScale*80, right: fScale*45, bottom: fScale*70, left: fScale*45}
 		} else if (paneNum === 9) { // deaths by Gdp
-      return {top: fScale*160, right: fScale*40, bottom: fScale*130, left: fScale*92}
+      return {top: fScale*150, right: fScale*40, bottom: fScale*130, left: fScale*92}
     }
 
 		// default margins
@@ -163,7 +163,7 @@ window.createGraphic = function(graphicSelector) {
         + (d.damages === 0 ? "none" : d3.formatPrefix(".1", d.damages)(d.damages)) + "<br>Location count: " + d.geoIdCount
     } else if (paneNum === "9" || paneNum === "9B") {
       return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
-        (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "") + "<br>GDP per capita (USD): " + d3.format("$,.0f")(d.gdpInUsdPerCountry)
+        (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "") + "<br>GDP per capita** (USD): " + d3.format("$,.0f")(d.gdpInUsdPerCountry)
     } else {
       return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
         (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "")
@@ -245,8 +245,8 @@ window.createGraphic = function(graphicSelector) {
       "6": "Deaths for each event by disaster type (log scale)",
       "7": "Deaths for each event by year (linear scale)",
       "8": "The deadliest 15 events",
-      "9": "The deadliest 15 events by GDP per capita*",
-      "9B": "All events by GDP per capita*",
+      "9": "The deadliest 15 events by GDP per capita**",
+      "9B": "All events by GDP per capita**",
       "10": ""
     }
 
@@ -459,8 +459,7 @@ window.createGraphic = function(graphicSelector) {
       svgPane3B.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",1)
-      d3.select(".stackedAreaHideRect").transition()
-        .delay(speedFactor*800)
+      stackedAreaHideRect.transition()
         .duration(speedFactor*800)
         .attr("opacity",0.7)
 			deactivatePane4()
@@ -501,14 +500,14 @@ window.createGraphic = function(graphicSelector) {
         .data(eventsByTypeFirstLast)
         .join("line")
         .transition()
-        .duration(speedFactor*800)
+        .duration(speedFactor*1000)
         .attr("y1", d => scaleYeventCount5(d[1]))
         .attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .transition()
-        .duration(speedFactor*800)
+        .duration(speedFactor*1000)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
       slopegraphG5.transition()
@@ -531,14 +530,14 @@ window.createGraphic = function(graphicSelector) {
         .data(eventChangesByType)
         .join("line")
         .transition()
-        .duration(speedFactor*800)
+        .duration(speedFactor*1000)
 				.attr("y1", d => scaleYeventPct(0))
 				.attr("y2", d => scaleYeventPct(d[1]))
       slopegraphG.selectAll("line.deathChanges") // pane FIVE B
         .data(deathChangesByType)
         .join("line")
         .transition()
-        .duration(speedFactor*800)
+        .duration(speedFactor*1000)
 				.attr("y1", d => scaleYdeathPct(0))
 				.attr("y2", d => scaleYdeathPct(d[1]))
       slopegraphG5B.transition()
@@ -621,7 +620,10 @@ window.createGraphic = function(graphicSelector) {
 			deactivatePane8()
       updateGraphTitles("9") // pane NINE
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
-      annotations9.transition()
+      gdpAxis.transition() // pane NINE
+        .duration(speedFactor*800)
+        .attr("opacity", 0.4)
+      annotations9.transition() // pane NINE
         .duration(speedFactor*800)
         .attr("opacity", 1)
 			transitionPane9A()
@@ -632,7 +634,10 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       updateGraphTitles("9B") // pane NINE B
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
-      annotations9.transition()
+      gdpAxis.transition() // pane NINE
+        .duration(speedFactor*800)
+        .attr("opacity", 0.4)
+      annotations9.transition() // pane NINE
         .duration(speedFactor*800)
         .attr("opacity", 1)
       d3.select(".finalWords").transition() // pane TEN
@@ -1032,7 +1037,7 @@ window.createGraphic = function(graphicSelector) {
 
 		// pane THREE - stacked area chart of events by year (colored by type)
 		function createStackedArea3() {
-			stackedAreaG = svgForeground.append('g')
+			stackedAreaG = svgBackground.append('g')
 				.attr("class", "stackedArea")
 				.attr("opacity", 0)
 			stackedAreaG.selectAll("path")
@@ -1062,6 +1067,15 @@ window.createGraphic = function(graphicSelector) {
       .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
 
+    stackedAreaHideRect = svgBackground.append("rect")
+      .attr("class", "stackedAreaHideRect")
+      .attr("x", scaleXyear3(1969.5) )
+      .attr("y", Math.min(...scaleYeventCount3.range()) )
+      .attr("width", scaleXyear3(2008.5) - scaleXyear3(1969.5) )
+      .attr("height", Math.max(...scaleYeventCount3.range()) - Math.min(...scaleYeventCount3.range()) )
+      .attr("fill", "#fbf9f9")
+      .attr("opacity", 0)
+
     // pane THREE B - rectangle to represent the future
     svgPane3B = svgForeground.append("g")
       .attr("class","svgPane3B")
@@ -1079,14 +1093,6 @@ window.createGraphic = function(graphicSelector) {
       .attr("x", scaleXpct3B(0.7)+(scaleXpct3B(0.95) - scaleXpct3B(0.7))/2)
       .attr("y", scaleYpct3B(0.1) + (scaleYpct3B(0.45) - scaleYpct3B(0.1))/2)
       .attr("dy", 17)
-    svgPane3B.append("rect")
-      .attr("class", "stackedAreaHideRect")
-      .attr("x", scaleXyear3(1969.5) )
-      .attr("y", Math.min(...scaleYeventCount3.range()) )
-      .attr("width", scaleXyear3(2008.5) - scaleXyear3(1969.5) )
-      .attr("height", Math.max(...scaleYeventCount3.range()) - Math.min(...scaleYeventCount3.range()) )
-      .attr("fill", "#fbf9f9")
-      .attr("opacity", 0)
     svgPane3B.append("line") // 1960-1969
       .attr("stroke", "#7F7269")
       .attr("x1", scaleXpct3B(0.05 + 0.125) )
@@ -1397,6 +1403,15 @@ window.createGraphic = function(graphicSelector) {
 				.attr("opacity", 0.6)
     }
     createTeardropOffsetLines()
+
+    gdpAxis = svgBackground.append("line")
+      .attr("class","gdpAxis")
+      .attr("stroke", "#7F7269")
+      .attr("opacity",0)
+      .attr("x1", d => paneDim(9).left)
+      .attr("y1", d => paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2 )
+      .attr("x2", d => paneDim(9).right)
+      .attr("y2", d => paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2)
 
 		// create dicts to keep track of circle positions for the transitions
 		function initiateCircleInfo() {
@@ -1709,7 +1724,7 @@ window.createGraphic = function(graphicSelector) {
         r = 2*scaleFactor*scaleRdeaths(node.deaths)
       } else {
         cx = scaleFactor*scaleXgdp(node.gdpInUsdPerCountry)
-        cy = canvasHeight/2
+        cy = scaleFactor*(paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2)
         r = scaleFactor*scaleRdeaths(node.deaths)
       }
 			circleEndInfo[i] = {'cx': cx, 'cy': cy, 'r':r, 'opacity': 0.6}
@@ -1721,7 +1736,7 @@ window.createGraphic = function(graphicSelector) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*scaleXgdp(node.gdpInUsdPerCountry),
-				'cy': canvasHeight/2,
+				'cy': scaleFactor*(paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2),
 				'r': scaleFactor*scaleRdeaths(node.deaths),
 				'opacity': 0.3
 		}}
@@ -1871,7 +1886,7 @@ window.createGraphic = function(graphicSelector) {
       .attr('opacity',0)
   }
   function deactivatePane3B() {
-    d3.select(".stackedAreaHideRect").transition()
+    stackedAreaHideRect.transition()
       .duration(speedFactor*800)
       .attr("opacity",0)
   }
@@ -1931,6 +1946,9 @@ window.createGraphic = function(graphicSelector) {
   function deactivatePane9() {
     d3.select(".sizeLegend2").style("display", "none") // pane NINE
     annotations9.transition()
+      .duration(speedFactor*800)
+      .attr("opacity", 0)
+    gdpAxis.transition()
       .duration(speedFactor*800)
       .attr("opacity", 0)
   }
