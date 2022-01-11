@@ -309,13 +309,17 @@ header h2 {
   text-align: left;
 }
 
+.tooltipAux {
+  z-index: 900000;
+}
+
 .graphTitle {
   fill: #3F3027;
   font-weight: 600;
   font-size: 1.25rem;
 }
 
-.subtitle {
+.subtitle {  /* pane FIVE */
   text-anchor: middle;
 }
 
@@ -368,6 +372,23 @@ g.annotations, .annotation-note-label {
   font-size: 0.92rem;
 }
 
+.qMark {
+  font-size: 5rem;
+  font-family: 'Cabin Sketch', cursive;
+  fill: #3F3027;
+  opacity: 0.84;
+  font-weight: 700;
+}
+
+.gdp.annotation:not(.above):not(.anomaly) path {
+  stroke-dasharray: 2,5;
+  stroke-width: 2px;
+}
+
+.gdp .note-line {
+  stroke: none;
+}
+
 .finalWords {
   position: absolute;
   z-index: 900000;
@@ -386,4 +407,9 @@ g.annotations, .annotation-note-label {
   text-align: center;
   display: table-cell;
   padding: 50px;
+}
+
+.footnote {
+  font-size: 0.82rem;
+  line-height: 1;
 }

@@ -101,7 +101,7 @@
             </div>
           </div>  <!-- absoluteWrapper -->
           <div class="legendInstructions">
-            <p><--- click here to hide legend</p>
+            <p><--- click here to <tspan class="showHideText">hide</tspan> legend</p>
           </div>
           <!-- the height of this div is updated based on whether or not the legends are being shown -->
           <!-- doing so improves the waypoints trigger interactions and available reading space for the scrolly text -->
@@ -140,11 +140,21 @@
             <p>pane EIGHT: This will be a map of the top 15 deadliest events.</p>
           </div>
           <div class='trigger pane9' data-step='10'>
-            <p>pane NINE: This will plot the top 15 deadliest events by GDP.</p>
+            <p>
+              pane NINE: This will plot the top 15 deadliest events by GDP.
+              <br /><br /><tspan class="footnote">*Some events take place in more than one country.  In this case, only
+              one of the affected countries is listed and GDP per capita is reported as an
+              average across all countries, weighted by location count.</tspan>
+            </p>
           </div>
         </div> <!-- legendSticky -->
         <div class='trigger pane9B' data-step='11'>
-          <p>pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).</p>
+          <p>
+            pane NINE B: This will plot all events by GDP (shown below the above graph, will need a duplicate set of elements).
+            <br /><br /><tspan class="footnote">*Some events take place in more than one country.  In this case, only
+            one of the affected countries is listed and GDP per capita is reported as an
+            average across all countries, weighted by location count.</tspan>
+          </p>
         </div>
         <div class='trigger pane10' data-step='12'>
           <p></p>
