@@ -1118,7 +1118,7 @@ window.createGraphic = function(graphicSelector) {
       .attr("y", Math.min(...scaleYeventCount3.range())+8)
     stackedAreaAux.append("g") // axis for stacked area chart
       .attr("class", "eventCountAxis")
-      .attr("transform", `translate(${65},0)`)      // This controls the vertical position of the Axis
+      .attr("transform", `translate(${65},0)`)      // This controls the horizontal position of the Axis
       .call(d3.axisLeft(scaleYeventCount3)
         .ticks(4)
       )
@@ -1388,6 +1388,19 @@ window.createGraphic = function(graphicSelector) {
 				.text(d => d[0])
 				.attr("x", d => scaleXdeadliest(d[0]) + scaleXdeadliest.bandwidth()/2 )
 				.attr("y", paneDim(6).bottom + 28)
+      svgPane6.append("g") // axis for log scale
+        .attr("class", "logScaleAxis")
+        .attr("transform", `translate(${85},0)`)      // This controls the horizontal position of the Axis
+        .call(d3.axisLeft(scaleYdeadliest)
+          .tickValues([0,1,10,100,1000,10000,100000])
+          .tickFormat(d3.format(".1s"))
+        )
+      svgPane6.append("text") // add title ti y-axis
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -paneDim(7).left + 88) // add here to move label RIGHT
+        .attr("x", -paneDim(7).top - (paneDim(7).bottom-paneDim(7).top)/2) // subtract here to move label DOWN
+        .text("Death count")
 		}
 		createBars6()
 
