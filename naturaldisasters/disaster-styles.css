@@ -135,7 +135,7 @@ header h2 {
     width: 170px;
   }
   .graphic__prose .trigger {
-    min-height: 700px;
+    min-height: 900px;
   }
 }
 
@@ -175,6 +175,12 @@ header h2 {
 .graphic__prose .preProse {
   min-height: 260px;
   opacity: 0.3;
+}
+
+@media (max-width: 1000px) {
+  .graphic__prose .preProse {
+    min-height: 900px;
+  }
 }
 
 .graphic__prose .postProse {

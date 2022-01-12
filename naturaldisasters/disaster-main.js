@@ -1,4 +1,5 @@
 // scroll to top of page on refresh (prevents issues of rendering things in the wrong order)
+// from https://www.designcise.com/web/tutorial/how-to-force-scroll-to-the-top-of-the-page-on-page-reload-using-javascript
 if (history.scrollRestoration) {
     history.scrollRestoration = 'manual';
 } else {
@@ -130,7 +131,7 @@ window.createGraphic = function(graphicSelector) {
     } else if (paneNum === 6) { // log scale / deaths per disaster
 			return {top: fScale*80, right: fScale*60, bottom: fScale*80, left: fScale*110}
 		} else if (paneNum === 7) { // deaths by year, linear scale
-			return {top: fScale*80, right: fScale*45, bottom: fScale*70, left: fScale*45}
+			return {top: fScale*80, right: fScale*45, bottom: fScale*70, left: fScale*110}
 		} else if (paneNum === 9) { // deaths by Gdp
       return {top: fScale*150, right: fScale*40, bottom: fScale*130, left: fScale*92}
     }
@@ -1390,17 +1391,17 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y", paneDim(6).bottom + 28)
       svgPane6.append("g") // axis for log scale
         .attr("class", "logScaleAxis")
-        .attr("transform", `translate(${85},0)`)      // This controls the horizontal position of the Axis
+        .attr("transform", `translate(${90},0)`)      // This controls the horizontal position of the Axis
         .call(d3.axisLeft(scaleYdeadliest)
           .tickValues([0,1,10,100,1000,10000,100000])
           .tickFormat(d3.format(".1s"))
         )
-      svgPane6.append("text") // add title ti y-axis
+      svgPane6.append("text") // add title to y-axis
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("y", -paneDim(7).left + 88) // add here to move label RIGHT
-        .attr("x", -paneDim(7).top - (paneDim(7).bottom-paneDim(7).top)/2) // subtract here to move label DOWN
-        .text("Death count")
+        .attr("y", -paneDim(6).left + 154) // add here to move label RIGHT  ///////////////////////////////////////////////////
+        .attr("x", -paneDim(6).top - (paneDim(6).bottom-paneDim(6).top)/2) // subtract here to move label DOWN //////////////////////
+        .text("Death count (log scale)")
 		}
 		createBars6()
 
@@ -1422,11 +1423,27 @@ window.createGraphic = function(graphicSelector) {
       svgPane7 = svgForeground.append("g")
         .attr("class", "svgPane7")
         .attr("opacity",0)
+      pane7yearAxis = svgPane7.append("g")
+        .attr("class", "pane7yearAxis")
         .attr("transform", `translate(0,${paneDim(7).bottom+15})`)      // This controls the vertical position of the Axis
         .call(d3.axisBottom(scaleXyear7)
           .ticks(6)
           .tickFormat(d3.format("d"))
         )
+      pane7deathAxis = svgPane7.append("g") // axis for linear scale of death counts
+        .attr("class", "pane7deathAxis")
+        .attr("transform", `translate(${95},0)`)      // This controls the horizontal position of the Axis
+        .call(d3.axisLeft(scaleYdeaths)
+          .ticks(5)
+          .tickFormat(d3.format(".1s"))
+        )
+      svgPane7.append("text") // add title to y-axis
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -paneDim(7).left + 154) // add here to move label RIGHT
+        .attr("x", -paneDim(7).top - (paneDim(7).bottom-paneDim(7).top)/2) // subtract here to move label DOWN
+        .text("Death count (linear scale)")
+
 		}
 		createLollipopLines()
 
