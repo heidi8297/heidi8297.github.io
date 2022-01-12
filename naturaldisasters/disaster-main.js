@@ -117,7 +117,9 @@ window.createGraphic = function(graphicSelector) {
 		units === 0 ? fScale = scaleFactor : fScale = 1 ;
 		if (paneNum === 2) { // bar chart - event count by type
 			return {top: fScale*85, right: fScale*30, bottom: fScale*60, left: fScale*30}
-		} else if (paneNum === 4) { // bar chart - total death toll by type
+		} else if (paneNum === 3) {
+      return {top: fScale*70, right: fScale*30, bottom: fScale*30, left: fScale*30}
+    } else if (paneNum === 4) { // bar chart - total death toll by type
 			return {top: fScale*80, right: fScale*30, bottom: fScale*60, left: fScale*30}
 		} else if (paneNum === 5) {
       return {top: fScale*145, right: fScale*30, bottom: fScale*90, left: fScale*30}
@@ -150,13 +152,24 @@ window.createGraphic = function(graphicSelector) {
 
 	function capitalize(word) { return word[0].toUpperCase() + word.slice(1) }
 
+  // define settings for standard transitions
+  function fadeOutStd(transition) {
+    transition.duration(speedFactor*800).attr("opacity",0)
+  }
+  function fadeInStd(transition) {
+    transition.duration(speedFactor*800).attr("opacity",1)
+  }
+
   // define tooltips for each pane
   function paneTooltips(paneNum, d) {
     if (paneNum === "3") {
       return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year +
         (d.deaths > 0 ? "<br>Deaths: " +d3.format(",")(d.deaths) : "") + "<br>Location count: " + d.geoIdCount
     } else if (paneNum === "8") {
-      return capitalize(d.disasterType) + " in " +d.country +"<br>"+d.year
+      let stormName = ""
+      if (d.disasterNum === "2008-0184") {stormName = " (Cyclone Nargis)"}
+      else if (d.disasterNum === "1991-0120") {stormName = " (Cyclone Gorky)"}
+      return capitalize(d.disasterType) + stormName + " in " +d.country +"<br>"+d.year
         + (d.deaths > 0 ? "<br>Deaths: " + d3.format(",")(d.deaths) : "") + "<br>Total affected: "
         + (d.totalAffected === 0 ? "unknown" : d3.formatPrefix(".1", d.totalAffected)(d.totalAffected))
         + "<br>Total damages (USD '21): $"
@@ -226,7 +239,7 @@ window.createGraphic = function(graphicSelector) {
 			.attr("class", "svgForeground"); // this is purely to make it easy to see in 'inspect'
 
     // create a text element for our graph titles
-    svgForeground.append("text")
+    mainGraphTitle = svgForeground.append("text")
       .attr("class","graphTitle")
       .text("This is my graph title")
       .attr("x", 30)
@@ -237,7 +250,7 @@ window.createGraphic = function(graphicSelector) {
     graphTitles = {
       "1": "",
       "2": "Total event counts by disaster type",
-      "3": "Events by year",
+      "3": "1960",
       "3B": "An unsettling increase in frequency",
       "4": "Total death counts by disaster type",
       "5": "How things have changed over the last 60 years",
@@ -251,6 +264,7 @@ window.createGraphic = function(graphicSelector) {
     }
 
     graphSubtitles = {
+      "3": ["Events by year"],
       "5": ["Total event counts","Total death counts"],
       "5B": ["Percent change in event counts","Percent change in death counts"]
     }
@@ -346,7 +360,6 @@ window.createGraphic = function(graphicSelector) {
 	var steps = [
 		function step0() {  // pane ONE
 			let stepInc = lockInc += 1;
-      updateGraphTitles("1") // pane ONE
 			textIntroNums.transition() // pane ONE
 				.duration(speedFactor*800)
 				.attr("opacity",0.92)
@@ -360,11 +373,11 @@ window.createGraphic = function(graphicSelector) {
 			textIntroNums.transition() // pane ONE
 				.duration(speedFactor*500)
 				.attr("opacity",0)
-      updateGraphTitles("2") // pane TWO
 			barsByTypeG.transition() // pane TWO
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
 			deactivatePane3()
+      svgPane3.transition().call(fadeOutStd) // pane THREE A
       stackedAreaRevealRect.transition() // pane THREE
         .duration(0)
         .attr('width',0)
@@ -378,10 +391,8 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
 			deactivatePane2()
       deactivatePane3B()
-      updateGraphTitles("3") // pane
-			mapGroup.transition() // pane THREE
-				.duration(speedFactor*800)
-				.attr('opacity',1)
+			mapGroup.transition().call(fadeInStd) // pane THREE
+      svgPane3.transition().call(fadeInStd) // pane THREE
       stackedAreaBgRect.transition() // pane THREE
         .duration(0)
         .attr('opacity',1)
@@ -397,14 +408,10 @@ window.createGraphic = function(graphicSelector) {
           .duration(0)
   				.attr('opacity',1)
       } else {
-        stackedAreaG.transition() // pane THREE
-  				.duration(speedFactor*800)
-  				.attr('opacity',1)
+        stackedAreaG.transition().call(fadeInStd) // pane THREE
       }
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
-      svgPane3B.transition() // pane THREE B
-        .duration(speedFactor*800)
-        .attr("opacity",0)
+      svgPane3B.transition().call(fadeOutStd) // pane THREE B
 			transitionPane3()
 			animateCircles(stepInc,true)
       tooltipLock = true // turn off tooltips during the 'events by year' animation
@@ -421,6 +428,13 @@ window.createGraphic = function(graphicSelector) {
               .attr('x',paneDim(3).left + percentComplete*paneWidth)
               .attr('width', (1-percentComplete)*paneWidth )
           }
+          sliderRect.transition()
+            .duration(msTarget)
+            .ease(d3.easeCubicInOut)
+            .attr("x",Math.min(scaleXyear3(yearInc)-3,paneDim(3).right-3))
+          mainGraphTitle.transition() // fade out
+            .duration(0)
+            .text(Math.floor(Math.min(2018,yearInc)))
           setOpacityForCircles()
           drawCircles(mainCtx)
           yearInc += (1/framesPerYear)
@@ -442,24 +456,18 @@ window.createGraphic = function(graphicSelector) {
 
 		function step3() {  // pane THREE B
 			let stepInc = lockInc += 1;
-			mapGroup.transition() // pane THREE
-				.duration(speedFactor*800)
-				.attr('opacity',0)
-      stackedAreaBgRect.transition() // pane THREE
+			mapGroup.transition().call(fadeOutStd) // pane THREE A
+      svgPane3.transition().call(fadeOutStd) // pane THREE A
+      stackedAreaBgRect.transition() // pane THREE A
         .duration(0)
         .attr('opacity',1)
-      stackedAreaRevealRect.transition() // pane THREE
+      stackedAreaRevealRect.transition() // pane THREE A
         .duration(0)
         .attr('width',0)
-			stackedAreaG.transition() // pane THREE
-				.duration(speedFactor*800)
-				.attr('opacity',1)
-      d3.select(".sizeLegend1").style("display", "none") // pane THREE
-      updateGraphTitles("3B") // pane THREE B
-      svgPane3B.transition() // pane THREE B
-        .duration(speedFactor*800)
-        .attr("opacity",1)
-      stackedAreaHideRect.transition()
+      d3.select(".sizeLegend1").style("display", "none") // pane THREE A
+      stackedAreaG.transition().call(fadeInStd) // pane THREE
+      svgPane3B.transition().call(fadeInStd) // pane THREE B
+      stackedAreaHideRect.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",0.7)
 			deactivatePane4()
@@ -471,16 +479,11 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       deactivatePane3()
       deactivatePane3B()
-      svgPane3B.transition() // pane THREE B
-        .duration(speedFactor*800)
-        .attr("opacity",0)
-      updateGraphTitles("4") // pane FOUR
+      svgPane3B.transition().call(fadeOutStd) // pane THREE B
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
-      annotations4.transition() // pane TWO
-        .duration(speedFactor*800)
-        .attr("opacity",1)
+      annotations4.transition().call(fadeInStd) // pane TWO
       deactivatePane5()
       deactivatePane5A()
 			transitionPane4()
@@ -491,11 +494,7 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
 			deactivatePane4()
       deactivatePane5B()
-			deactivatePane6()
-      updateGraphTitles("5") // pane FIVE
-      slopegraphG.transition() // pane FIVE
-        .duration(speedFactor*800)
-        .attr('opacity',1)
+      slopegraphG.transition().call(fadeInStd) // pane FIVE
       slopegraphG.selectAll("line.eventChanges")
         .data(eventsByTypeFirstLast)
         .join("line")
@@ -510,22 +509,16 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*1000)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
-      slopegraphG5.transition()
-        .duration(speedFactor*800)
-        .attr("opacity",1)
+      slopegraphG5.transition().call(fadeInStd) // pane FIVE
 			transitionPane5()
 			animateCircles(stepInc)
 		}, // step5()
 
     function step6() {  // pane FIVE B
       let stepInc = lockInc += 1;
-      deactivatePane4()
       deactivatePane5A()
       deactivatePane6()
-      updateGraphTitles("5B") // pane FIVE B
-      slopegraphG.transition() // pane FIVE B
-        .duration(speedFactor*800)
-        .attr('opacity',1)
+      slopegraphG.transition().call(fadeInStd) // pane FIVE B
       slopegraphG.selectAll("line.eventChanges") // pane FIVE B
         .data(eventChangesByType)
         .join("line")
@@ -540,9 +533,7 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*1000)
 				.attr("y1", d => scaleYdeathPct(0))
 				.attr("y2", d => scaleYdeathPct(d[1]))
-      slopegraphG5B.transition()
-        .duration(speedFactor*800)
-        .attr("opacity",1)
+      slopegraphG5B.transition().call(fadeInStd) // pane FIVE B
       transitionPane5B()
       animateCircles(stepInc)
     }, // step6()
@@ -551,10 +542,10 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       deactivatePane5()
       deactivatePane5B()
-      updateGraphTitles("6") // pane SIX
 			logBarsG.transition() // pane SIX
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
+      svgPane6.transition().call(fadeInStd) // pane SIX
 			deactivatePane7()
 			transitionPane6()
 			animateCircles(stepInc)
@@ -563,7 +554,6 @@ window.createGraphic = function(graphicSelector) {
 		function step8() {  // pane SEVEN
 			let stepInc = lockInc += 1;
 			deactivatePane6()
-      updateGraphTitles("7") // pane SEVEN
 			lollipopLines.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
@@ -579,10 +569,7 @@ window.createGraphic = function(graphicSelector) {
 		function step9() {  // pane EIGHT
 			let stepInc = lockInc += 1;
 			deactivatePane7()
-      updateGraphTitles("8") // pane EIGHT
-			mapGroup.transition() // pane EIGHT
-				.duration(speedFactor*800)
-				.attr('opacity',1)
+			mapGroup.transition().call(fadeInStd) // pane EIGHT
 
       // a lot of lines of code here for the teardrop transitions...
       // they look really sweet though, so I've accepted the mess *shrug*
@@ -610,6 +597,8 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
+      annotations8.transition().call(fadeInStd)
+        .delay(speedFactor*1900)
       deactivatePane9() // pane NINE
 			transitionPane8()
 			animateCircles(stepInc)
@@ -618,28 +607,22 @@ window.createGraphic = function(graphicSelector) {
 		function step10() {  // pane NINE A
 			let stepInc = lockInc += 1;
 			deactivatePane8()
-      updateGraphTitles("9") // pane NINE
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
       gdpAxis.transition() // pane NINE
         .duration(speedFactor*800)
         .attr("opacity", 0.4)
-      annotations9.transition() // pane NINE
-        .duration(speedFactor*800)
-        .attr("opacity", 1)
+      annotations9.transition().call(fadeInStd) // pane NINE
 			transitionPane9A()
 			animateCircles(stepInc)
 		}, // step10()
 
 		function step11() {  // pane NINE B
 			let stepInc = lockInc += 1;
-      updateGraphTitles("9B") // pane NINE B
       d3.select(".sizeLegend2").style("display", "block") // pane NINE
       gdpAxis.transition() // pane NINE
         .duration(speedFactor*800)
         .attr("opacity", 0.4)
-      annotations9.transition() // pane NINE
-        .duration(speedFactor*800)
-        .attr("opacity", 1)
+      annotations9.transition().call(fadeInStd) // pane NINE
       d3.select(".finalWords").transition() // pane TEN
         .duration(speedFactor*800)
         .style("opacity","0")
@@ -650,7 +633,6 @@ window.createGraphic = function(graphicSelector) {
 		function step12() {  // pane TEN
 			let stepInc = lockInc += 1;
       deactivatePane9() // pane NINE
-      updateGraphTitles("10") // pane TEN
       d3.select(".finalWords").transition() // pane TEN
         .duration(speedFactor*800)
         .style("opacity","1")
@@ -692,7 +674,7 @@ window.createGraphic = function(graphicSelector) {
 
   function updateGraphTitles(paneIdentifier) {
     currentPane = paneIdentifier;
-    d3.select(".graphTitle").transition() // fade out
+    mainGraphTitle.transition() // fade out
       .duration(speedFactor*700)
       .style("opacity",0)
       .transition() // change text
@@ -701,7 +683,17 @@ window.createGraphic = function(graphicSelector) {
       .transition() // fade in
       .duration(speedFactor*700)
       .style("opacity",1)
-    if (paneIdentifier === "5" || paneIdentifier === "5B") {
+    if (paneIdentifier === "3") {
+      d3.select(".subtitle.animationSubtitle").transition()
+        .duration(speedFactor*700)
+        .style("opacity",0)
+        .transition()
+        .duration(0)
+        .text(graphSubtitles[paneIdentifier][0])
+        .transition()
+        .duration(speedFactor*700)
+        .style("opacity",1)
+    } else if (paneIdentifier === "5" || paneIdentifier === "5B") {
       d3.select(".subtitle.eventsSubtitle").transition()
         .duration(speedFactor*700)
         .style("opacity",0)
@@ -798,7 +790,7 @@ window.createGraphic = function(graphicSelector) {
       // pane THREE - world map animated
       scaleXyear3 = d3.scaleLinear()
         .domain([1960,2018])
-        .range([paneDim(3).left, paneDim(3).right]);
+        .range([paneDim(3).left + 3, paneDim(3).right - 3]); // making space for the "slider" rectangle
       scaleYeventCount3 = d3.scaleLinear()
         .domain([0, d3.max(eventsByYearCounts,d => d[1])])
         .range([paneDim(3).bottom, 3*paneDim(3).bottom/4])
@@ -844,7 +836,7 @@ window.createGraphic = function(graphicSelector) {
       scaleXdeadliest = d3.scaleBand()  // band scale for X-axis of event types (log scale)
         .domain(["volcanic activity","storm","landslide","flood","extreme temperature","earthquake","drought"])
         .range([paneDim(6).left, paneDim(6).right])
-        .paddingInner(0.3)
+        .paddingInner(0.38)
       scaleYdeadliest = d3.scaleSymlog() // log scale for Y-axis of deaths per event
         .domain([0,450000])
         .range([paneDim(6).bottom, paneDim(6).top])
@@ -1022,6 +1014,7 @@ window.createGraphic = function(graphicSelector) {
 			eventsByTypeLabels.selectAll("text") // disaster type names
 				.data(eventsByType)
 				.join("text")
+        .attr("class", "typeLabels pane2")
 				.text(d => d[0])
 				.attr("x", paneDim(2).left)
 				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()+17 );
@@ -1067,6 +1060,7 @@ window.createGraphic = function(graphicSelector) {
       .attr("height", paneDim(3).bottom/4)
       .attr("fill", "#fbf9f9")
 
+    // pane THREE B - rectangle to "hide" the middle section of the stacked area chart
     stackedAreaHideRect = svgBackground.append("rect")
       .attr("class", "stackedAreaHideRect")
       .attr("x", scaleXyear3(1969.5) )
@@ -1075,6 +1069,28 @@ window.createGraphic = function(graphicSelector) {
       .attr("height", Math.max(...scaleYeventCount3.range()) - Math.min(...scaleYeventCount3.range()) )
       .attr("fill", "#fbf9f9")
       .attr("opacity", 0)
+
+    svgPane3 = svgForeground.append("g")
+      .attr("class", "svgPane3")
+      .attr("opacity", 0)
+    svgPane3.append("line") // slider line
+      .attr("class", "annotLine")
+      .attr("x1", scaleXyear3(1960) )
+      .attr("y1", paneDim(3).top + 6  )
+      .attr("x2", scaleXyear3(2018) )
+      .attr("y2", paneDim(3).top + 6 )
+    sliderRect = svgPane3.append("rect") // slider box
+      .attr("class", "sliderRect")
+      .attr("x", scaleXyear3(1960) )
+      .attr("y", paneDim(3).top )
+      .attr("width", 6 )
+      .attr("height", 12 )
+      .attr("fill", "#bdb6b1")
+      .attr("stroke", "#7f7269")
+    svgPane3.append("text") // subtitle for stacked area chart
+      .attr("class","subtitle animationSubtitle")
+      .attr("x", 30)
+      .attr("y", Math.min(...scaleYeventCount3.range())+25)
 
     // pane THREE B - rectangle to represent the future
     svgPane3B = svgForeground.append("g")
@@ -1094,13 +1110,13 @@ window.createGraphic = function(graphicSelector) {
       .attr("y", scaleYpct3B(0.1) + (scaleYpct3B(0.45) - scaleYpct3B(0.1))/2)
       .attr("dy", 17)
     svgPane3B.append("line") // 1960-1969
-      .attr("stroke", "#7F7269")
+      .attr("class", "dotted annotLine")
       .attr("x1", scaleXpct3B(0.05 + 0.125) )
       .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
       .attr("x2", scaleXyear3(1960) + (scaleXyear3(1969.5)-scaleXyear3(1960))/2 )
       .attr("y2", Math.min(...scaleYeventCount3.range()) + 140 )
     svgPane3B.append("line") // 2009-2018
-      .attr("stroke", "#7F7269")
+      .attr("class", "dotted annotLine")
       .attr("x1", scaleXpct3B(0.375 + 0.125) )
       .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
       .attr("x2", scaleXyear3(2008.5) + (scaleXyear3(2018)-scaleXyear3(2008.5))/2 )
@@ -1136,9 +1152,9 @@ window.createGraphic = function(graphicSelector) {
 			deathsByTypeLabels.selectAll("text") // disaster type names
 				.data(deathsByType)
 				.join("text")
+        .attr("class", "typeLabels")
 				.text(d => d[0])
 				.attr("x", d => scaleXtypes(d[0]) + scaleXtypes.bandwidth()/2 )
-				.attr("text-anchor", "middle")
 				.attr("y", paneDim(4).bottom + 28)
 			deathsByTypeLabels.selectAll("text.count") // eventCounts
 				.data(deathsByType)
@@ -1247,15 +1263,6 @@ window.createGraphic = function(graphicSelector) {
         .join("text")
         .attr("class","graphLabel labelDeathStart")
         .text(function(d) {
-          // if (d[0] == 'storm' || d[0] == 'earthquake') {
-          //   return d3.formatPrefix(".0", d[1])(d[1])
-          // } else if (d[0] == 'drought') {
-          //   return "262-"
-          // } else if (d[0] == 'volcanic activity') {
-          //   return "11k"
-          // } else {
-          //   return ""
-          // }
           if (d[0] == 'drought' || d[0] == 'landslide' || d[0] == 'volcanic activity') {
             return ""
           } else {
@@ -1294,13 +1301,6 @@ window.createGraphic = function(graphicSelector) {
         .join("text")
         .attr("class", d => "graphLabel labelDeathPct" + (d[0] == 'extreme temperature'? " ext" : ""))
         .text(function(d) {
-          // if (d[0] == 'extreme temperature') {
-          //   return d3.format(".3p")(d[1])
-          // } else if (d[0] == 'earthquake') {
-          //   return "-70 -"
-          // } else if (d[0] == 'landslide') {
-          //   return "434%"
-          // } else {return ""}
           if (d[0] == 'extreme temperature' || d[0] == 'earthquake' || d[0] == 'storm') {
             return d3.format(".3p")(d[1])
           } else if (d[0] == 'storm') {
@@ -1335,6 +1335,32 @@ window.createGraphic = function(graphicSelector) {
 				.attr("height", paneDim(6).bottom-paneDim(6).top + 14 )
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.1);
+      svgPane6 = svgForeground.append("g")
+        .attr("class","svgPane6")
+        .attr("opacity",0)
+      svgPane6.selectAll("line")
+        .data(medianDeathsByType)
+        .join("line")
+        .attr("class", "logLine")
+        .attr("x1", d => scaleXdeadliest(d[0])-14)
+        .attr("y1", d => scaleYdeadliest(d[1]))
+        .attr("x2", d => scaleXdeadliest(d[0])+ scaleXdeadliest.bandwidth()+14)
+        .attr("y2", d => scaleYdeadliest(d[1]))
+      svgPane6.selectAll("text")
+        .data(medianDeathsByType)
+        .join("text")
+        .attr("class", "logLabel")
+        .text(d => Math.ceil(d[1]))
+        .attr("x", d => scaleXdeadliest(d[0])+ scaleXdeadliest.bandwidth()+6)
+        .attr("y", d => scaleYdeadliest(d[1]) - 10)
+      svgPane6.selectAll("text.typeLabels") // disaster type names
+				.data(medianDeathsByType)
+				.join("text")
+        .attr("class", "typeLabels")
+				.text(d => d[0])
+				.attr("x", d => scaleXdeadliest(d[0]) + scaleXdeadliest.bandwidth()/2 )
+				.attr("y", paneDim(6).bottom + 28)
+
 		}
 		createBars6()
 
@@ -1405,8 +1431,7 @@ window.createGraphic = function(graphicSelector) {
     createTeardropOffsetLines()
 
     gdpAxis = svgBackground.append("line")
-      .attr("class","gdpAxis")
-      .attr("stroke", "#7F7269")
+      .attr("class","gdpAxis annotLine")
       .attr("opacity",0)
       .attr("x1", d => paneDim(9).left)
       .attr("y1", d => paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2 )
@@ -1475,7 +1500,7 @@ window.createGraphic = function(graphicSelector) {
       .attr("opacity", 0)
       .call(makeAnnotations4)
     annotations4.append("line")
-      .attr("stroke", "#7F7269")
+      .attr("class", "annotLine")
       .attr("x1", d => scaleXtypes("flood") - 0.4*scaleXtypes.bandwidth()+130)
       .attr("y1", d => scaleYdeathCount(600000)-30)
       .attr("x2", d => scaleXtypes("flood") + 0.5*scaleXtypes.bandwidth() )
@@ -1517,34 +1542,66 @@ window.createGraphic = function(graphicSelector) {
     let annotAttr5A = [
       {
         note: { label: "Fewer deaths from storms and volcanic activity are generally attributed to better alert systems" },
-        x: scaleXpct5(0.77),
+        x: scaleXpct5(0.76),
         y: scaleYeventCount5(330),
-        dx: 30, dy: -40, type: d3.annotationCallout
+        dx: 30, dy: -40
       }
     ]
     let makeAnnotations5A = d3.annotation()
       .annotations(annotAttr5A)
-      .type(d3.annotationLabel)
+      .type(d3.annotationCallout)
     slopegraphG5.append("g")
       .attr("class", "annotations5A")
       .call(makeAnnotations5A)
+
+    let annotAttr6 = [
+      {
+        note: { label: "Median values show 'typical' death tolls for each type" },
+        x: scaleXdeadliest('extreme temperature') + scaleXdeadliest.bandwidth()/6,
+        y: scaleYdeadliest(40), dx: 38, dy: -182
+      }
+    ]
+    let makeAnnotations6 = d3.annotation()
+      .textWrap(73)
+      .annotations(annotAttr6)
+      .type(d3.annotationCallout)
+    svgPane6.append("g")
+      .attr("class", "annotations6")
+      .call(makeAnnotations6)
+
+    let annotAttr8 = [
+      {
+        note: { label: "Europe's 2003 heat wave was recorded in 155 distinct locations across 15 countries" },
+        x: 510, y: 185, dx: 30, dy: -35
+      },
+      {
+        note: { label: "This drought in Africa (The Congo, Ethiopa and Sudan) caused a famine that killed an estimated 450,000 people." },
+        x: 560, y: 370, dx: -55, dy: 40
+      },
+      {
+        note: { label: "46M people were affected by the 8.0 magnitude Great Sichuan earthquake of 2008.  It caused over $100M in damages and killed over 87,000 people." },
+        x: 808, y: 475, dx: -50, dy: 40
+      }
+    ]
+    let makeAnnotations8 = d3.annotation()
+      .textWrap(160)
+      .annotations(annotAttr8)
+      .type(d3.annotationCallout)
+    annotations8 = svgForeground.append("g")
+      .attr("class", "annotations8")
+      .call(makeAnnotations8)
+      .attr("opacity",0)
 
     let annotAttr9 = [
       {
         note: { label: "World: $11,339" },
         x: scaleXgdp(11339), y: paneDim(9).top, dy: paneDim(9).bottom - paneDim(9).top, className: "gdp",
-        subject: {
-              y1: paneDim(9).top,
-              y2: paneDim(9).bottom
-            }
+        subject: { y1: paneDim(9).top, y2: paneDim(9).bottom }
       },
       {
         note: { label: "US: $68,309" },
         x: scaleXgdp(68309), y: paneDim(9).top, dy: paneDim(9).bottom - paneDim(9).top, className: "gdp",
-        subject: {
-              y1: paneDim(9).top,
-              y2: paneDim(9).bottom
-            }
+        subject: { y1: paneDim(9).top, y2: paneDim(9).bottom }
       }
     ]
     let makeAnnotations9 = d3.annotation()
@@ -1567,6 +1624,7 @@ window.createGraphic = function(graphicSelector) {
 
 	// update circleEndInfo with new target formatting for each eventCircle
 	function transitionPane1() {  // "grid" of events with summary numbers
+    updateGraphTitles("1")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1578,6 +1636,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane1()
 
 	function transitionPane2() {  // horizontal bar chart of event counts by type
+    updateGraphTitles("2")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1589,6 +1648,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane2()
 
 	function transitionPane3() {  // world map animation of events by year
+    updateGraphTitles("3")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1600,6 +1660,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane3()
 
 	function transitionPane3B() {  // world map follow up - comparison of first and last 10 years
+    updateGraphTitles("3B")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
       let cx = 0
@@ -1623,6 +1684,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane3B()
 
 	function transitionPane4() {   // vertical bar chart for total death count by disaster type
+    updateGraphTitles("4")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1634,6 +1696,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane4()
 
 	function transitionPane5() {   // slopegraphs part 1
+    updateGraphTitles("5")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
       let cx = 0
@@ -1657,6 +1720,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane5()
 
   function transitionPane5B() {   // slopegraphs part 2
+    updateGraphTitles("5B")
     for (let i = 0; i < eventsFlat.length; i++) {
       let node = eventsFlat[i];
       let cx = 0
@@ -1680,17 +1744,19 @@ window.createGraphic = function(graphicSelector) {
   } // transitionPane5B()
 
 	function transitionPane6() {   // deadliest individual events / log scale
+    updateGraphTitles("6")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
 				'cx': scaleFactor*(scaleXdeadliest(node.disasterType) + scaleXdeadliest.bandwidth()*node.jitter),
 				'cy': scaleFactor*scaleYdeadliest(node.deaths),
 				'r': 13,
-				'opacity': 0.5
+				'opacity': 0.38
 		}}
 	} // transitionPane6()
 
 	function transitionPane7() {   // deaths by year lollipop chart
+    updateGraphTitles("7")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1702,6 +1768,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane7()
 
 	function transitionPane8() {   // map of top 15 deadliest events / teardrop
+    updateGraphTitles("8")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1713,6 +1780,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane8()
 
 	function transitionPane9A() {   // deaths top 15 by GDP
+    updateGraphTitles("9")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
       let cx = 0;
@@ -1732,6 +1800,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane9A()
 
 	function transitionPane9B() {   // deaths by GDP
+    updateGraphTitles("9B")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1743,6 +1812,7 @@ window.createGraphic = function(graphicSelector) {
 	} // transitionPane9B()
 
 	function transitionPane10() {   // final words
+    updateGraphTitles("10")
 		for (let i = 0; i < eventsFlat.length; i++) {
 			let node = eventsFlat[i];
 			circleEndInfo[i] = {
@@ -1875,33 +1945,22 @@ window.createGraphic = function(graphicSelector) {
       .attr('opacity',0)
   }
   function deactivatePane3() {
-    mapGroup.transition() // pane THREE
-      .duration(speedFactor*800)
-      .attr('opacity',0)
-    stackedAreaBgRect.transition().delay(speedFactor*200) // pane THREE
-      .duration(speedFactor*800)
-      .attr('opacity',0)
-    stackedAreaG.transition() // pane THREE
-      .duration(speedFactor*800)
-      .attr('opacity',0)
+    mapGroup.transition().call(fadeOutStd) // pane THREE
+    stackedAreaBgRect.transition().call(fadeOutStd) // pane THREE
+      .delay(speedFactor*200)
+    stackedAreaG.transition().call(fadeOutStd) // pane THREE
   }
   function deactivatePane3B() {
-    stackedAreaHideRect.transition()
-      .duration(speedFactor*800)
-      .attr("opacity",0)
+    stackedAreaHideRect.transition().call(fadeOutStd)
   }
   function deactivatePane4() {
     deathsByTypeG.transition() // pane FOUR
       .duration(speedFactor*700)
       .attr('opacity',0)
-    annotations4.transition()
-      .duration(speedFactor*800)
-      .attr("opacity",0)
+    annotations4.transition().call(fadeOutStd)
     }
   function deactivatePane5() {
-    slopegraphG.transition() // pane FIVE
-      .duration(speedFactor*800)
-      .attr('opacity',0)
+    slopegraphG.transition().call(fadeOutStd) // pane FIVE
     slopegraphG.selectAll("line")
       .transition()
       .duration(speedFactor*800)
@@ -1909,19 +1968,16 @@ window.createGraphic = function(graphicSelector) {
       .attr("y2", d => scaleYeventPct(-1))
   }
   function deactivatePane5A() {
-    slopegraphG5.transition()
-      .duration(speedFactor*800)
-      .attr("opacity",0)
+    slopegraphG5.transition().call(fadeOutStd)
   }
   function deactivatePane5B() {
-    slopegraphG5B.transition()
-      .duration(speedFactor*800)
-      .attr("opacity",0)
+    slopegraphG5B.transition().call(fadeOutStd)
   }
   function deactivatePane6() {
     logBarsG.transition() // pane SIX
       .duration(speedFactor*700)
       .attr('opacity',0)
+    svgPane6.transition().call(fadeOutStd) // pane SIX
   }
   function deactivatePane7() {
     lollipopLines.selectAll("line") // pane SEVEN
@@ -1933,24 +1989,19 @@ window.createGraphic = function(graphicSelector) {
       .attr("y2", d => dispHeight*1.2)
   }
   function deactivatePane8() {
-    mapGroup.transition() // pane EIGHT
-      .duration(speedFactor*800)
-      .attr('opacity',0)
+    mapGroup.transition().call(fadeOutStd) // pane EIGHT
     transitionTeardrops()
     teardropLines.selectAll("line").transition() // pane EIGHT
       .duration(speedFactor*800)
       .attr("x2", d => projection([d.longitude,d.latitude])[0])
       .attr("y2", d => projection([d.longitude,d.latitude])[1])
     d3.select(".teardropLegend").style("display", "none") // pane EIGHT
+    annotations8.transition().call(fadeOutStd)
   }
   function deactivatePane9() {
     d3.select(".sizeLegend2").style("display", "none") // pane NINE
-    annotations9.transition()
-      .duration(speedFactor*800)
-      .attr("opacity", 0)
-    gdpAxis.transition()
-      .duration(speedFactor*800)
-      .attr("opacity", 0)
+    annotations9.transition().call(fadeOutStd)
+    gdpAxis.transition().call(fadeOutStd)
   }
 
 
@@ -2026,6 +2077,13 @@ window.createGraphic = function(graphicSelector) {
 			d3.rollup(eventData, v => d3.sum(v, d => d.deaths), d => d.disasterType).entries()
 		);
 		deathsByTypeObject = Object.fromEntries(deathsByType); // create an object to use below
+
+    // get median death count of each type
+    medianDeathsByType = d3.rollup(eventData, v => d3.median(v, d => d.deaths), d => d.disasterType)
+
+    medianDeathsByType = Array.from(
+      d3.rollup(eventData, v => d3.median(v, d => d.deaths), d => d.disasterType).entries()
+    );
 
 		// create sets for the first ten years of events and for the last ten years
 		firstTenYears = eventData.filter(d => d.year <= 1969)
