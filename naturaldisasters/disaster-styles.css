@@ -399,7 +399,7 @@ g.annotations, .annotation-note-label {
   text-anchor: middle;
 }
 
-.subtitle.animationSubtitle { /* pane THREE */
+.animationSubtitle { /* pane THREE */
   text-anchor: start;
 }
 
@@ -410,8 +410,7 @@ g.annotations, .annotation-note-label {
 .qMark { /* pane THREE B */
   font-size: 5rem;
   font-family: 'Cabin Sketch', cursive;
-  fill: #3F3027;
-  opacity: 0.84;
+  fill: #5e5047;
   font-weight: 700;
 }
 
