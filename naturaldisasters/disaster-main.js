@@ -253,8 +253,8 @@ window.createGraphic = function(graphicSelector) {
       "3": "1960",
       "3B": "An unsettling increase in frequency",
       "4": "Total death counts by disaster type",
-      "5": "How things have changed over the last 60 years",
-      "5B": "How things have changed part II",
+      "5": "How things have changed over the last 59 years (total counts)",
+      "5B": "How things have changed (percent change from 1960-1969)",
       "6": "Deaths for each event by disaster type (log scale)",
       "7": "Deaths for each event by year (linear scale)",
       "8": "The deadliest 15 events",
@@ -432,7 +432,7 @@ window.createGraphic = function(graphicSelector) {
             .duration(msTarget)
             .ease(d3.easeCubicInOut)
             .attr("x",Math.min(scaleXyear3(yearInc)-3,paneDim(3).right-3))
-          mainGraphTitle.transition() // fade out
+          mainGraphTitle.transition()
             .duration(0)
             .text(Math.floor(Math.min(2018,yearInc)))
           setOpacityForCircles()
@@ -442,6 +442,9 @@ window.createGraphic = function(graphicSelector) {
           if (yearInc > yearStop) {  // end with all events being displayed
             setOpacityForCircles(false, 0.3) // set all opacities equal to 0.3
             drawCircles(mainCtx)
+            mainGraphTitle.transition()
+              .duration(0)
+              .text("1960-2018")
           }
           // reset variables and then stop the animation
           readyFor2ndAnim = false;
@@ -561,6 +564,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => scaleYdeaths(d.deaths)+6) // this is the top of the line
 				.attr("x2", d => scaleXyear7(d.year)-8+16*d.jitter)
 				.attr("y2", d => paneDim(7).bottom ) // this is the bottom of the line
+      svgPane7.transition().call(fadeInStd)
 			deactivatePane8()
 			transitionPane7()
 			animateCircles(stepInc)
@@ -1236,7 +1240,7 @@ window.createGraphic = function(graphicSelector) {
       slopegraphG5.selectAll("text.labelEventStart")
         .data(eventsByTypeFirstLast)
         .join("text")
-        .attr("class","graphLabel labelEventStart")
+        .attr("class","graphLabel labelEventStart anchorEnd")
         .text(function(d) {
           if (d[0] == 'flood' || d[0] == 'storm' || d[0] == 'earthquake') {
             return d[1]
@@ -1247,21 +1251,17 @@ window.createGraphic = function(graphicSelector) {
         .attr("x", scaleXpct5(markers5.L1) - 4)
         .attr("y", d => scaleYeventCount5(d[1])+4)
         .attr("dy", d => d[0] == 'storm' ? -6 : 0)
-        .attr("text-anchor", "end")
-        .style("font-size", "0.8rem")
       slopegraphG5.selectAll("text.labelEventEnd")
         .data(eventsByTypeFirstLast)
         .join("text")
-        .attr("class","graphLabel labelEventEnd")
+        .attr("class","graphLabel labelEventEnd anchorStart")
         .text(d => d[2])
         .attr("x", scaleXpct5(markers5.L2) + 4)
         .attr("y", d => scaleYeventCount5(d[2])+4)
-        .attr("text-anchor", "start")
-        .style("font-size", "0.8rem")
       slopegraphG5.selectAll("text.labelDeathStart")
         .data(deathsByTypeFirstLast)
         .join("text")
-        .attr("class","graphLabel labelDeathStart")
+        .attr("class","graphLabel labelDeathStart anchorEnd")
         .text(function(d) {
           if (d[0] == 'drought' || d[0] == 'landslide' || d[0] == 'volcanic activity') {
             return ""
@@ -1271,27 +1271,21 @@ window.createGraphic = function(graphicSelector) {
         })
         .attr("x", scaleXpct5(markers5.R1) - 4)
         .attr("y", d => scaleYdeathCount5(d[1])+4)
-        .attr("text-anchor", "end")
-        .style("font-size", "0.8rem")
       slopegraphG5.selectAll("text.labelDeathEnd")
         .data(deathsByTypeFirstLast)
         .join("text")
-        .attr("class","graphLabel labelDeathEnd")
+        .attr("class","graphLabel labelDeathEnd anchorStart")
         .text(d => d3.formatPrefix(".0", d[2])(d[2]))
         .attr("x", scaleXpct5(markers5.R2) + 4)
         .attr("y", d => scaleYdeathCount5(d[2])+4)
-        .attr("text-anchor", "start")
-        .style("font-size", "0.8rem")
       slopegraphG5B.selectAll("text.labelEventPct")
         .data(eventChangesByType)
         .join("text")
-        .attr("class", d => "graphLabel labelEventPct" + (d[0] == 'extreme temperature'? " ext" : ""))
+        .attr("class", d => "graphLabel labelEventPct anchorStart" + (d[0] == 'extreme temperature'? " ext" : ""))
         .text(d => d3.format(".3p")(d[1]) )
         .attr("x", scaleXpct5(markers5.L2) + 4)
         .attr("y", d => scaleYeventPct(d[1])+4)
         .attr("dy", d => d[0] == 'volcanic activity' ? -3 : (d[0] == 'earthquake' ? 3 : 0) )
-        .attr("text-anchor", "start")
-        .style("font-size", "0.8rem")
       d3.select(".ext").append("tspan")
         .text("(51X)")
         .attr("dy", 17)
@@ -1299,7 +1293,7 @@ window.createGraphic = function(graphicSelector) {
       slopegraphG5B.selectAll("text.labelDeathPct")
         .data(deathChangesByType)
         .join("text")
-        .attr("class", d => "graphLabel labelDeathPct" + (d[0] == 'extreme temperature'? " ext" : ""))
+        .attr("class", d => "graphLabel labelDeathPct anchorStart" + (d[0] == 'extreme temperature'? " ext" : ""))
         .text(function(d) {
           if (d[0] == 'extreme temperature' || d[0] == 'earthquake' || d[0] == 'storm') {
             return d3.format(".3p")(d[1])
@@ -1310,12 +1304,20 @@ window.createGraphic = function(graphicSelector) {
         .attr("x", scaleXpct5(markers5.R2) + 4)
         .attr("y", d => scaleYdeathPct(d[1])+4)
         .attr("dy", d => d[0] == 'earthquake' ? -6 : 0)
-        .attr("text-anchor", "start")
-        .style("font-size", "0.8rem")
       d3.select(".labelDeathPct.ext").append("tspan")
         .text("(275X)")
         .attr("dy", 17)
         .attr("dx", -46)
+      slopegraphG5B.append("text")
+        .attr("class", "graphLabel anchorEnd")
+        .text("0")
+        .attr("x", scaleXpct5(markers5.L1) - 4)
+        .attr("y", scaleYeventPct(0))
+      slopegraphG5B.append("text")
+        .attr("class", "graphLabel anchorEnd")
+        .text("0")
+        .attr("x", scaleXpct5(markers5.R1) - 4)
+        .attr("y", scaleYdeathPct(0))
     }
     createSlopegraph5()
 
@@ -1379,6 +1381,14 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x2", d => scaleXyear7(d.year)-8+16*d.jitter)
 				.attr("y2", d => dispHeight*1.2)
 				.attr("opacity", 0.7)
+      svgPane7 = svgForeground.append("g")
+        .attr("class", "svgPane7")
+        .attr("opacity",0)
+        .attr("transform", `translate(0,${paneDim(7).bottom+15})`)      // This controls the vertical position of the Axis
+        .call(d3.axisBottom(scaleXyear7)
+          .ticks(6)
+          .tickFormat(d3.format("d"))
+        )
 		}
 		createLollipopLines()
 
@@ -1980,6 +1990,7 @@ window.createGraphic = function(graphicSelector) {
     svgPane6.transition().call(fadeOutStd) // pane SIX
   }
   function deactivatePane7() {
+    svgPane7.transition().call(fadeOutStd)
     lollipopLines.selectAll("line") // pane SEVEN
       .transition()
       .duration(speedFactor*800)

@@ -380,6 +380,15 @@ g.annotations, .annotation-note-label {
 
 .graphLabel {
   fill: #7F7269;
+  font-size: 0.8rem;
+}
+
+.graphLabel.anchorEnd {
+  text-anchor: end;
+}
+
+.graphLabel.anchorStart {
+  text-anchor: start;
 }
 
 .annotLine {
@@ -432,6 +441,15 @@ g.annotations, .annotation-note-label {
   color: #6e6158;
   font-size: 0.82rem;
   text-anchor: start;
+}
+
+.tick line, path.domain { /* pane SEVEN */
+  stroke: none;
+}
+
+.tick text {
+  font-size: 0.82rem;
+  font-family: 'Raleway', sans-serif;
 }
 
 .gdp.annotation:not(.above):not(.anomaly) path { /* pane NINE */
