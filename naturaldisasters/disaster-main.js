@@ -625,6 +625,10 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
+      deadliestEventNote.transition()
+        .delay(speedFactor*2100)
+        .duration(speedFactor*800)
+        .style("opacity",1)
       annotations8.transition().call(fadeInStd)
         .delay(speedFactor*1900)
       deactivatePane9() // pane NINE
@@ -1502,6 +1506,15 @@ window.createGraphic = function(graphicSelector) {
     }
     createTeardropOffsetLines()
 
+    deadliestEventNote = svgForeground.append("text")
+      .attr("class","deadliestEventNote")
+      .attr("x", paneDim(8).left + (paneDim(8).right - paneDim(8).left)/2)
+      .attr("y", 737)
+      .style("opacity",0)
+    document.querySelector(".deadliestEventNote").innerHTML = "These 15 events account "+
+      "for &nbsp<tspan>68%</tspan>&nbsp of the total deaths recorded in this time period."
+
+    // pane NINE A/B
     gdpAxis = svgBackground.append("line")
       .attr("class","gdpAxis annotLine")
       .attr("opacity",0)
@@ -2070,6 +2083,9 @@ window.createGraphic = function(graphicSelector) {
       .attr("y2", d => projection([d.longitude,d.latitude])[1])
     d3.select(".teardropLegend").style("display", "none") // pane EIGHT
     annotations8.transition().call(fadeOutStd)
+    deadliestEventNote.transition()
+      .duration(speedFactor*800)
+      .style("opacity",0)
   }
   function deactivatePane9() {
     d3.select(".sizeLegend2").style("display", "none") // pane NINE

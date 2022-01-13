@@ -515,6 +515,17 @@ g.annotations, .annotation-note-label {
   font-family: 'Raleway', sans-serif;
 }
 
+.deadliestEventNote {
+  font-size: 1.3rem;
+  font-family: 'Cabin Sketch', cursive;
+  text-anchor: middle;
+}
+
+.deadliestEventNote tspan {
+  font-size: 2.6rem;
+  font-weight: bold;
+}
+
 .gdp.annotation:not(.above):not(.anomaly) path { /* pane NINE */
   stroke-dasharray: 2,5;
   stroke-width: 2px;
