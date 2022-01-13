@@ -135,7 +135,7 @@ header h2 {
     width: 170px;
   }
   .graphic__prose .trigger {
-    min-height: 900px;
+    min-height: 950px;
   }
 }
 
@@ -161,6 +161,12 @@ header h2 {
 .legendInstructions {
   height: 380px;
   opacity: 0.3;
+}
+
+@media (max-width: 1000px) {
+  .legendInstructions {
+    height: 760px;
+  }
 }
 
 .legendInstructions p {

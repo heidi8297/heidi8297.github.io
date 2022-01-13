@@ -781,6 +781,8 @@ window.createGraphic = function(graphicSelector) {
       typeColor = d3.scaleOrdinal()
   			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
   			.range(["#BBBBBB","#CC3311","#33BBEE","#0077BB","#EE7733","#009988","#EE3377"]);
+      document.querySelector(".colorblindMsg").innerHTML = "You are currently viewing "+
+        "this page in colorblind mode.  <a href='http://heidistockton.com/naturaldisasters'>Click here</a> to return to normal color mode."
     } else {
       typeColor = d3.scaleOrdinal()
   			.domain(["drought","earthquake","flood","storm","extreme temperature","landslide","volcanic activity"])
@@ -1399,8 +1401,8 @@ window.createGraphic = function(graphicSelector) {
       svgPane6.append("text") // add title to y-axis
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("y", -paneDim(6).left + 154) // add here to move label RIGHT  ///////////////////////////////////////////////////
-        .attr("x", -paneDim(6).top - (paneDim(6).bottom-paneDim(6).top)/2) // subtract here to move label DOWN //////////////////////
+        .attr("y", -paneDim(6).left + 154) // add here to move label RIGHT
+        .attr("x", -paneDim(6).top - (paneDim(6).bottom-paneDim(6).top)/2) // subtract here to move label DOWN
         .text("Death count (log scale)")
 		}
 		createBars6()
