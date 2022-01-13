@@ -102,13 +102,13 @@ header h2 {
 .mobileWarning {
   display: none;
   text-align: center;
+  background-color: #bdb6b1;
+  padding: 50px 5px;
 }
 
 @media (max-width: 1000px) {
   .mobileWarning {
     display: block;
-    height: 200px;
-    background-color: #bdb6b1;
   }
 }
 
