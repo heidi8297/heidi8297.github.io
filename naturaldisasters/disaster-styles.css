@@ -255,6 +255,10 @@ a.button:hover {
   padding-top: 30px;
 }
 
+
+
+/* LEGENDS */
+
 .cell .swatch { /* opacity for all legend swatches */
   opacity: 0.8;
 }
@@ -341,6 +345,9 @@ a.button:hover {
 }
 
 
+
+/* VIZ CONTAINER AND TOOLTIPS */
+
 /* div wrapper for svg */
 #viz-container {
 	position: sticky;
@@ -363,11 +370,6 @@ a.button:hover {
 	position: absolute;
 	height: 800px;
 	width: 1000px;
-  /* not clear on whether the following attributes were doing anything */
-  /* top: 50%;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	transform: translateY(-50%); */
 }
 
 .svgForeground, .hiddenCanvas {
@@ -395,10 +397,19 @@ a.button:hover {
   z-index: 900000;
 }
 
+
+
+/* VIZ PANES */
+
 .graphTitle {
   fill: #3F3027;
   font-weight: 600;
   font-size: 1.25rem;
+}
+
+g.annotations, .annotation-note-label {
+  font-size: 0.82rem;
+  fill: #7F7269;
 }
 
 .pane1text {
@@ -437,11 +448,6 @@ a.button:hover {
   font-size: 3.6rem;
 }
 
-g.annotations, .annotation-note-label {
-  font-size: 0.82rem;
-  fill: #7F7269;
-}
-
 .graphLabel {
   fill: #7F7269;
   font-size: 0.8rem;
@@ -457,6 +463,12 @@ g.annotations, .annotation-note-label {
 
 .annotLine {
   stroke: #7F7269;
+}
+
+.typeLabels.pane2 { /* pane TWO */
+  text-anchor: start;
+  font-size: 0.9rem;
+  fill: #5e5047;
 }
 
 .subtitle {  /* pane THREE and pane FIVE */
@@ -490,12 +502,6 @@ g.annotations, .annotation-note-label {
   fill: #5e5047;
 }
 
-.typeLabels.pane2 { /* pane TWO */
-  text-anchor: start;
-  font-size: 0.9rem;
-  fill: #5e5047;
-}
-
 .logLine { /* pane SIX */
   stroke: #6e6158;
 }
@@ -515,13 +521,13 @@ g.annotations, .annotation-note-label {
   font-family: 'Raleway', sans-serif;
 }
 
-.deadliestEventNote {
+.deadliestEventNote { /* pane EIGHT */
   font-size: 1.3rem;
   font-family: 'Cabin Sketch', cursive;
   text-anchor: middle;
 }
 
-.deadliestEventNote tspan {
+.deadliestEventNote tspan { /* pane EIGHT */
   font-size: 2.6rem;
   font-weight: bold;
 }

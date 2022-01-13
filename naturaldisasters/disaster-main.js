@@ -13,6 +13,8 @@ function proceedAnyway() {
   d3.select(".mobileWarning").style("display", "none")
 }
 
+// one function to rule them all
+// this function handles all the viz + updates, it is used in the setupWaypointsTriggers.js script
 window.createGraphic = function(graphicSelector) {
 
 	//----------------------------------------------------------------------------
@@ -145,9 +147,6 @@ window.createGraphic = function(graphicSelector) {
 		return {top: fScale*80, right: fScale*30, bottom: fScale*30, left: fScale*30}
 	}
 
-  // define markers for pane 5 (A & B) to be used in various places
-  let markers5 = { L1: 0.07, L2: 0.41, R1: 0.59, R2: 0.93 }
-
 	// complementary function to the one above, but returns the actual values of left and right instead of the margins
 	function paneDim(paneNum, units = 1) { // units = 0 for canvas, 1 for svg
 		let draw;
@@ -159,6 +158,9 @@ window.createGraphic = function(graphicSelector) {
 			left: margins(paneNum, units).left
 		}
 	}
+
+  // define markers for pane 5 (A & B) to be used in various places
+  let markers5 = { L1: 0.07, L2: 0.41, R1: 0.59, R2: 0.93 }
 
 	function capitalize(word) { return word[0].toUpperCase() + word.slice(1) }
 
@@ -1076,94 +1078,97 @@ window.createGraphic = function(graphicSelector) {
 		}
 		createStackedArea3()
 
-    // pane THREE - rectangle to progressively reveal stacked area chart
-    // MUST GET CREATED AFTER STACKED AREA
-    stackedAreaRevealRect = svgForeground.append('rect')
-      .attr("class", "stackedAreaRevealRect")
-      .attr("x", paneDim(3).left)
-      .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
-      .attr("width", 0 )
-      .attr("height", paneDim(3).bottom/4)
-      .attr("fill", "#fbf9f9")
+    function buildRestOfPane3() {
+      // pane THREE A - rectangle to progressively reveal stacked area chart
+      // MUST GET CREATED AFTER STACKED AREA
+      stackedAreaRevealRect = svgForeground.append('rect')
+        .attr("class", "stackedAreaRevealRect")
+        .attr("x", paneDim(3).left)
+        .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
+        .attr("width", 0 )
+        .attr("height", paneDim(3).bottom/4)
+        .attr("fill", "#fbf9f9")
 
-    // pane THREE B - rectangle to "hide" the middle section of the stacked area chart
-    stackedAreaHideRect = svgBackground.append("rect")
-      .attr("class", "stackedAreaHideRect")
-      .attr("x", scaleXyear3(1969.5) )
-      .attr("y", Math.min(...scaleYeventCount3.range()) )
-      .attr("width", scaleXyear3(2008.5) - scaleXyear3(1969.5) )
-      .attr("height", Math.max(...scaleYeventCount3.range()) - Math.min(...scaleYeventCount3.range()) )
-      .attr("fill", "#fbf9f9")
-      .attr("opacity", 0)
+      // pane THREE B - rectangle to "hide" the middle section of the stacked area chart
+      stackedAreaHideRect = svgBackground.append("rect")
+        .attr("class", "stackedAreaHideRect")
+        .attr("x", scaleXyear3(1969.5) )
+        .attr("y", Math.min(...scaleYeventCount3.range()) )
+        .attr("width", scaleXyear3(2008.5) - scaleXyear3(1969.5) )
+        .attr("height", Math.max(...scaleYeventCount3.range()) - Math.min(...scaleYeventCount3.range()) )
+        .attr("fill", "#fbf9f9")
+        .attr("opacity", 0)
 
-    svgBgPane3A = svgBackground.append("g")
-      .attr("class", "svgBgPane3A")
-      .attr("opacity", 0)
-    svgBgPane3A.append("line") // slider line
-      .attr("class", "annotLine")
-      .attr("x1", scaleXyear3(1960) )
-      .attr("y1", paneDim(3).top + 6  )
-      .attr("x2", scaleXyear3(2018) )
-      .attr("y2", paneDim(3).top + 6 )
-    sliderRect = svgBgPane3A.append("rect") // slider box
-      .attr("class", "sliderRect")
-      .attr("x", scaleXyear3(1960) )
-      .attr("y", paneDim(3).top )
-      .attr("width", 6 )
-      .attr("height", 12 )
-      .attr("fill", "#bdb6b1")
-      .attr("stroke", "#7f7269")
-    titleHiderPane3A = svgBgPane3A.append("rect") // rectangle to hide the left part of the slider bar at the very end
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 137)
-      .attr("height", 70)
-      .attr("fill","#fbf9f9")
-      .attr("opacity",0)
-    stackedAreaAux = svgForeground.append("g") // auxiliary components for stacked area chart (subtitle, axis)
-      .attr("class", "stackedAreaAux")
-      .attr("opacity", 0)
-    stackedAreaAux.append("text") // subtitle for stacked area chart
-      .attr("class","animationSubtitle")
-      .text("Events by year")
-      .attr("x", 30)
-      .attr("y", Math.min(...scaleYeventCount3.range())+8)
-    stackedAreaAux.append("g") // axis for stacked area chart
-      .attr("class", "eventCountAxis")
-      .attr("transform", `translate(${65},0)`)      // This controls the horizontal position of the Axis
-      .call(d3.axisLeft(scaleYeventCount3)
-        .ticks(4)
-      )
+      svgBgPane3A = svgBackground.append("g")
+        .attr("class", "svgBgPane3A")
+        .attr("opacity", 0)
+      svgBgPane3A.append("line") // slider line
+        .attr("class", "annotLine")
+        .attr("x1", scaleXyear3(1960) )
+        .attr("y1", paneDim(3).top + 6  )
+        .attr("x2", scaleXyear3(2018) )
+        .attr("y2", paneDim(3).top + 6 )
+      sliderRect = svgBgPane3A.append("rect") // slider box
+        .attr("class", "sliderRect")
+        .attr("x", scaleXyear3(1960) )
+        .attr("y", paneDim(3).top )
+        .attr("width", 6 )
+        .attr("height", 12 )
+        .attr("fill", "#bdb6b1")
+        .attr("stroke", "#7f7269")
+      titleHiderPane3A = svgBgPane3A.append("rect") // rectangle to hide the left part of the slider bar at the very end
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 137)
+        .attr("height", 70)
+        .attr("fill","#fbf9f9")
+        .attr("opacity",0)
+      stackedAreaAux = svgForeground.append("g") // auxiliary components for stacked area chart (subtitle, axis)
+        .attr("class", "stackedAreaAux")
+        .attr("opacity", 0)
+      stackedAreaAux.append("text") // subtitle for stacked area chart
+        .attr("class","animationSubtitle")
+        .text("Events by year")
+        .attr("x", 30)
+        .attr("y", Math.min(...scaleYeventCount3.range())+8)
+      stackedAreaAux.append("g") // axis for stacked area chart
+        .attr("class", "eventCountAxis")
+        .attr("transform", `translate(${65},0)`)      // This controls the horizontal position of the Axis
+        .call(d3.axisLeft(scaleYeventCount3)
+          .ticks(4)
+        )
 
-    // pane THREE B - rectangle to represent the future
-    svgPane3B = svgForeground.append("g")
-      .attr("class","svgPane3B")
-      .attr("opacity",0)
-    svgPane3B.append("rect")
-      .attr("x", scaleXpct3B(0.7) )
-      .attr("y", scaleYpct3B(0.1))
-      .attr("width", scaleXpct3B(0.95) - scaleXpct3B(0.7))
-      .attr("height", scaleYpct3B(0.45) - scaleYpct3B(0.1))
-      .attr("fill", "#EFE8E4")
-    svgPane3B.append("text")
-      .attr("class", "qMark")
-      .text("?")
-      .attr("text-anchor", "middle")
-      .attr("x", scaleXpct3B(0.7)+(scaleXpct3B(0.95) - scaleXpct3B(0.7))/2)
-      .attr("y", scaleYpct3B(0.1) + (scaleYpct3B(0.45) - scaleYpct3B(0.1))/2)
-      .attr("dy", 17)
-    svgPane3B.append("line") // 1960-1969
-      .attr("class", "dotted annotLine")
-      .attr("x1", scaleXpct3B(0.05 + 0.125) )
-      .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
-      .attr("x2", scaleXyear3(1960) + (scaleXyear3(1969.5)-scaleXyear3(1960))/2 )
-      .attr("y2", Math.min(...scaleYeventCount3.range()) + 140 )
-    svgPane3B.append("line") // 2009-2018
-      .attr("class", "dotted annotLine")
-      .attr("x1", scaleXpct3B(0.375 + 0.125) )
-      .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
-      .attr("x2", scaleXyear3(2008.5) + (scaleXyear3(2018)-scaleXyear3(2008.5))/2 )
-      .attr("y2", Math.min(...scaleYeventCount3.range()) +20 )
+      // pane THREE B - rectangle to represent the future
+      svgPane3B = svgForeground.append("g")
+        .attr("class","svgPane3B")
+        .attr("opacity",0)
+      svgPane3B.append("rect")
+        .attr("x", scaleXpct3B(0.7) )
+        .attr("y", scaleYpct3B(0.1))
+        .attr("width", scaleXpct3B(0.95) - scaleXpct3B(0.7))
+        .attr("height", scaleYpct3B(0.45) - scaleYpct3B(0.1))
+        .attr("fill", "#EFE8E4")
+      svgPane3B.append("text")
+        .attr("class", "qMark")
+        .text("?")
+        .attr("text-anchor", "middle")
+        .attr("x", scaleXpct3B(0.7)+(scaleXpct3B(0.95) - scaleXpct3B(0.7))/2)
+        .attr("y", scaleYpct3B(0.1) + (scaleYpct3B(0.45) - scaleYpct3B(0.1))/2)
+        .attr("dy", 17)
+      svgPane3B.append("line") // 1960-1969
+        .attr("class", "dotted annotLine")
+        .attr("x1", scaleXpct3B(0.05 + 0.125) )
+        .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
+        .attr("x2", scaleXyear3(1960) + (scaleXyear3(1969.5)-scaleXyear3(1960))/2 )
+        .attr("y2", Math.min(...scaleYeventCount3.range()) + 140 )
+      svgPane3B.append("line") // 2009-2018
+        .attr("class", "dotted annotLine")
+        .attr("x1", scaleXpct3B(0.375 + 0.125) )
+        .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
+        .attr("x2", scaleXyear3(2008.5) + (scaleXyear3(2018)-scaleXyear3(2008.5))/2 )
+        .attr("y2", Math.min(...scaleYeventCount3.range()) +20 )
+    }
+    buildRestOfPane3()
 
 		// pane FOUR - create a bar chart of total death counts by type
 		function createBars4() {
@@ -1506,6 +1511,7 @@ window.createGraphic = function(graphicSelector) {
     }
     createTeardropOffsetLines()
 
+    // pane EIGHT
     deadliestEventNote = svgForeground.append("text")
       .attr("class","deadliestEventNote")
       .attr("x", paneDim(8).left + (paneDim(8).right - paneDim(8).left)/2)
