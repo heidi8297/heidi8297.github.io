@@ -99,6 +99,57 @@ header h2 {
   bottom: 15px;
 }
 
+.mobileWarning {
+  display: none;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .mobileWarning {
+    display: block;
+    height: 200px;
+    background-color: #bdb6b1;
+  }
+}
+
+.button {
+	padding: 5px 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+	display: inline;
+	background-color: #7F7269;
+	border: none;
+	color: #fbf9f9;
+	cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+	font-weight: bold;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.button:hover {
+	background-color: #9e938c;
+}
+a.button {
+  text-decoration: none;
+  text-align: center;
+}
+a.button:hover {
+  color: #fbf9f9;
+}
+
+.button.noCTA {
+  background-color: #EAE0DB;
+  color: #7F7269;
+}
+.button.noCTA:hover {
+  background-color: #d8cdc7;
+}
+
+
+
+
 /* GRAPHIC STYLES */
 
 /* wrapper for the scrolly text and viz / svg */
@@ -244,6 +295,7 @@ header h2 {
 
 #legendIconWrapper {
   position: sticky;
+  cursor: pointer;
   width: 36px;
   top: 20px;
   padding: 3px;

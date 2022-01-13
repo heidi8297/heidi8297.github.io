@@ -8,6 +8,11 @@ if (history.scrollRestoration) {
     }
 }
 
+// hide mobilewarning message when user clicks "proceed anyway" button
+function proceedAnyway() {
+  d3.select(".mobileWarning").style("display", "none")
+}
+
 window.createGraphic = function(graphicSelector) {
 
 	//----------------------------------------------------------------------------

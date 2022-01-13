@@ -9,7 +9,6 @@ h4 {
 
 
 
-
 /*--------------------------------------------------------------
 # Sections General
 --------------------------------------------------------------*/
@@ -716,4 +715,12 @@ and make sure the svg is still positioned well */
     padding-left: 3%;
     padding-right: 3%;
   }
+}
+
+/* not clear why, but for some reason this section is needed to get 'Pompiere' font to show up on Firefox */
+@font-face {
+  font-family: "Raleway script=all rev=1"; src: url("https://fonts.gstatic.com/l/font?kit=1Ptug8zYS_SKggPN-C8CSKlvN0Sb5XoxxYWpNp0VDhtw7-GVUBN0tDQ-67CvTk-woiU_UymhWc6uZamsR35zmHRfyzWjoiw7o7kw5Cy088v_T6WrQ2XcRWAzJTTgukaVqjA8PQJqdFi1ilVbebFIF71mYrPQCLorAa4hBYx769_zJyZEfk3VhmaBGl52VPzym3VOl_rqQJBim4QbO5jMGnIYQFAlgGTH9CJb8xs4_pLVjMlwCWbx0X0hdNf25Qs_1RcTNllUZeNFdreHJ-G304Im9ziUeHgA62bBFTOOi5zV36XW80-Jwos_j07sTJLOnwju4mE9uDE_63Th-Iu1dR5JD1LqSKaYSFmbPtcky_VG59BTKPMvayZrx8vfaSEf2lOjjUQlZwnS7rnByXdUKZJt0iEoNxp_KyAEUilT_kCop6QLEFBvSeo_Dm7cLPCOfNBUcBmUiIN-YFn12OT3tLpPeHoqz2CUObs40kvm_PyN8DNH36afaDLSnuauNgk8094p8qW7zadeNAySN_DNvUykwUmnIzsrdI4hiq-M8DBVliOVF7xMCnKGdd9W00uXO-40thQ0UePfnP8eYMxNX3rziZvjvDd1oZyXURMo5knNN0TgMVcOQ6-GPI6yDcEtjb9MpNg3i5KENOxQEz6TIHM_RxvvnOJiTd5oizJOO48qt__DOH8zVc1DRObnO7jvQiNsP7TLvXwsDdbQp99-0ONhWdpJBZa9z9IN5W7KZwQCT4A88SsmP0rXDvQZWARvxwLLeJSIhV9XtzjE9VhkvygGq_ANRwm1DBu6dLmiizVZCW247qetoNTlSPK9JsUIXDubXyWzAuiSJ7t6MzVoG72vVxdy111am4RSF0jddFWCy3wuQQk20bu0HjhWmpwkibsypI3o7V_-jUpXu0mrIs_Gcbzzrjm_64QG1nfz56JRA52B16QRp9s&skey=30a27f2564731c64&v=v22") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
 }
