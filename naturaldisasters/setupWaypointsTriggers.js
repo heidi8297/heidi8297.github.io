@@ -20,6 +20,7 @@
     var preProse = document.querySelector('.preProse')
     var postProse = document.querySelector('.postProse')
     var legendInst = document.querySelector('.legendInstructions')
+    var varSpacer = document.querySelector('.variableSpacer')
 
     // a global function creates and handles all the vis + updates
     var graphic = createGraphic('.graphic')
@@ -49,7 +50,11 @@
             if (step === 1) {
               preProse.classList.remove("active")
               legendInst.classList.add("active")
-            } else if (step === 2) {legendInst.classList.remove("active")}
+              varSpacer.classList.add("active")
+            } else if (step === 2) {
+              legendInst.classList.remove("active")
+              varSpacer.classList.remove("active")
+            }
             else if (step === 12) {postProse.classList.add("active")}
           } else {
             triggerEls[step].classList.remove("active")
@@ -57,7 +62,11 @@
             if (nextStep === 0) {
               preProse.classList.add("active")
               legendInst.classList.remove("active")
-            } else if (nextStep === 1) {legendInst.classList.add("active")}
+              varSpacer.classList.remove("active")
+            } else if (nextStep === 1) {
+              legendInst.classList.add("active")
+              varSpacer.classList.add("active")
+            }
             else if (nextStep === 11 ) {postProse.classList.remove("active")}
           }
 

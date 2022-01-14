@@ -190,11 +190,18 @@ a.button:hover {
   }
 }
 
+.scrollToDiscover {
+  display: none;
+}
+
 /* if larger than 1360, the user should be able to see all the content */
 @media (min-width: 1360px) {
   @media (min-height: 800px) {
     .zoomInstruct {
       display: none;
+    }
+    .scrollToDiscover {
+      display: block;
     }
   }
 }
@@ -206,11 +213,11 @@ a.button:hover {
 
 /* this section is smaller because it's empty from text - I want the user to read the viz pane instead */
 .graphic__prose .trigger.pane10 {
-	min-height: 300px;
+	min-height: 360px;
 }
 
 .legendInstructions {
-  height: 380px;
+  height: 390px;
   opacity: 0.3;
 }
 
@@ -226,7 +233,8 @@ a.button:hover {
 }
 
 .variableSpacer {
-  height: 120px;
+  height: 270px;
+  opacity: 0.3;
 }
 
 .graphic__prose .preProse {
@@ -294,12 +302,14 @@ a.button:hover {
 
 .absoluteWrapper {
   position: absolute;
+  pointer-events: none;
   height: 100%;
 }
 
 #legendIconWrapper {
   position: sticky;
   cursor: pointer;
+  pointer-events: all;
   width: 36px;
   top: 20px;
   padding: 3px;

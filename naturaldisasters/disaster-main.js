@@ -214,15 +214,15 @@ window.createGraphic = function(graphicSelector) {
 		return col;
 	}
 
-	let stats = new Stats();
-	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+	// let stats = new Stats();
+	// stats.setMode(0); // 0: fps, 1: ms, 2: mb
+  //
+	// // align top-left
+	// stats.domElement.style.position = 'fixed';
+	// stats.domElement.style.left = '0px';
+	// stats.domElement.style.top = '0px';
 
-	// align top-left
-	stats.domElement.style.position = 'fixed';
-	stats.domElement.style.left = '0px';
-	stats.domElement.style.top = '0px';
-
-	document.body.appendChild( stats.domElement );
+	// document.body.appendChild( stats.domElement );
 
 
 
@@ -329,13 +329,13 @@ window.createGraphic = function(graphicSelector) {
   function show() {
     d3.select("#legendWrapper").style("display","block")
     d3.select(".legendHideIconImage").style("opacity",1)
-    d3.select(".variableSpacer").style("height", "120px")
+    d3.select(".legendInstructions").style("height", "390px")
     document.querySelector(".showHideText").innerHTML = "hide"
   }
   function hide() {
     d3.select("#legendWrapper").style("display","none")
     d3.select(".legendHideIconImage").style("opacity",0)
-    d3.select(".variableSpacer").style("height", "0")
+    d3.select(".legendInstructions").style("height", "270px")
     document.querySelector(".showHideText").innerHTML = "show"
   }
   // this is the only place where I intentionally change the height of something in the
@@ -696,11 +696,11 @@ window.createGraphic = function(graphicSelector) {
     // the below is just 'animateCircles' without the 'moveCircles' step
     let dt = 0;
     let t = d3.timer(function(elapsed) {
-      stats.begin();
+      // stats.begin();
       interpCircMove(elapsed - dt);
       dt = elapsed;
       drawCircles(mainCtx)
-      stats.end();
+      // stats.end();
       if (elapsed > setDuration || stepInc !== lockInc) t.stop();
     });
     update(0)
@@ -2008,11 +2008,11 @@ window.createGraphic = function(graphicSelector) {
 		moveCircles()
 		let dt = 0;
 		let t = d3.timer(function(elapsed) {
-			stats.begin();
+			// stats.begin();
 			interpCircMove(elapsed - dt);
 			dt = elapsed;
 			drawCircles(mainCtx)
-			stats.end();
+			// stats.end();
 			if (elapsed > setDuration || currentInc !== lockInc) {
         if (secondAnimNeeded) {readyFor2ndAnim = true; }
         t.stop()
