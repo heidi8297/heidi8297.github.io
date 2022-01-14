@@ -46,9 +46,9 @@ window.createGraphic = function(graphicSelector) {
   const yearPausePoint = 2018.7; // the point at which to pause events by year animation
   const yearCountAnim = yearPausePoint - startingYearInc;
   const yearStop = 2021; // the point at which to reveal ALL events
-  const fpsTarget = 11;   // I like 9 here
+  const fpsTarget = 10;   // I like 9 here
   const msTarget = Math.floor(1000/fpsTarget)
-  let framesPerYear = 4;  // I like 5 here
+  let framesPerYear = 5;  // I like 5 here
   let yearInc = 1960;
   let readyFor2ndAnim = false;
   let revealRectComplete = false;
@@ -74,7 +74,7 @@ window.createGraphic = function(graphicSelector) {
 	const dispHeight = 800;
 	const scaleFactor = canvasWidth/dispWidth;
 
-	const speedFactor = 1.5;
+	const speedFactor = 1.6;
   let colorblindMode = false;
 
 	let setupComplete = false;
@@ -628,7 +628,7 @@ window.createGraphic = function(graphicSelector) {
 
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
       deadliestEventNote.transition()
-        .delay(speedFactor*2100)
+        .delay(speedFactor*3000)
         .duration(speedFactor*800)
         .style("opacity",1)
       annotations8.transition().call(fadeInStd)
@@ -1066,7 +1066,7 @@ window.createGraphic = function(graphicSelector) {
 				.join("path")
 					.style("fill", function(d) { type = typeGroups[d.key] ;  return typeColor(type); })
 					.style("stroke", "none")
-          .style("opacity", 0.7 )
+          .style("opacity", 0.78 )
 					.attr("d", d3.area()
 						.curve(d3.curveNatural)
 						.x((d,i) => scaleXyear3(d.data.key) )
@@ -1517,7 +1517,7 @@ window.createGraphic = function(graphicSelector) {
       .attr("x", paneDim(8).left + (paneDim(8).right - paneDim(8).left)/2)
       .attr("y", 737)
       .style("opacity",0)
-    document.querySelector(".deadliestEventNote").innerHTML = "These 15 events account "+
+    document.querySelector(".deadliestEventNote").innerHTML = "These events account "+
       "for &nbsp<tspan>68%</tspan>&nbsp of the total deaths recorded in this time period."
 
     // pane NINE A/B

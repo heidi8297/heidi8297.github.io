@@ -449,7 +449,7 @@ g.annotations, .annotation-note-label {
 }
 
 .graphLabel {
-  fill: #7F7269;
+  fill: #5e5047;
   font-size: 0.8rem;
 }
 
@@ -481,6 +481,7 @@ g.annotations, .annotation-note-label {
 
 .annotations3B .annotation-note-label, .annotations5 .annotation-note-label { /* pane THREE B, pane FIVE */
   font-size: 0.92rem;
+  fill: #5e5047;
 }
 
 .qMark { /* pane THREE B */
