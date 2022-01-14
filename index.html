@@ -19,13 +19,13 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script type="text/javascript">
     var analytics = true;
-    try {
+    //try {
       if(
         'localStorage' in window &&
         window['localStorage'] !== null &&
         localStorage["analytics"] == 'no' // check for local 'analytics' variable
       ) { analytics = false }             // if value is set to no, DO NOT TRACK
-    } catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {
       window.dataLayer = window.dataLayer || [];
       function gtag() {dataLayer.push(arguments);}
@@ -222,23 +222,46 @@
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
           <div class="portfolio-wrap">
-            <img src="images/workSampleOrgChartCropped.png" class="img-fluid" alt="Org chart exploration tool">
+            <img src="images/workSampleNaturalDisastersLarger.gif" class="img-fluid" alt="An exploration of natural disasters across the world told in scrollytelling style and utilizing d3, canvas and svg">
             <img src="images/newContentBanner.png" class="img-fluid new-content" alt="New content banner">
             <div class="portfolio-info">
-              <a href="http://heidistockton.com/orgchart/">
-                <h4>Org Chart Explorer</h4>
-                <p class="desc">A guided search tool for finding people and the teams
-                  they belong to within a large organization</p>
-                <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              <a href="http://heidistockton.com/naturaldisasters/">
+                <h4>Natural Disasters</h4>
+                <p class="desc">An exploration of how natural disasters have increased
+                  across the globe over the last 60 years</p>
+                <p class="tech">Javascript, D3.js, Canvas, HTML, CSS</p>
               </a>
               <div class="portfolio-links">
                 <a
-                  href="images/workSampleOrgChart.png"
+                  href="images/workSampleNaturalDisastersLarger.gif"
                   data-gallery="portfolioGallery"
                   class="portfolio-lightbox"
-                  title="Org Chart Explorer - thanks to Brandon O'Brien for helping get this project off the ground"
+                  title="Natural Disasters - my first foray into 'scrollytelling'"
                 ><i class="bx bx-plus"></i></a>
-                <a href="http://heidistockton.com/orgchart/"><i class="bx bx-link"></i></a>
+                <a href="http://heidistockton.com/naturaldisasters/"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleFireIceCropped.png" class="img-fluid" alt="A radial chart showing some of the extreme weather in Portland, OR">
+            <div class="portfolio-info">
+              <a href="http://heidistockton.com/fireandice/">
+                <h4>Fire and Ice</h4>
+                <p class="desc">A look at some of the extreme weather happening in Portland, OR</p>
+                <p class="tech">D3.js, Bootstrap, Javascript, HTML, CSS</p>
+              </a>
+              <div class="portfolio-links">
+                <a
+                  href="images/workSampleFireIce.png"
+                  data-gallery="portfolioGallery"
+                  class="portfolio-lightbox"
+                  title="Fire and Ice - thanks to Glenn Handley for inspiring the name and overall direction of this viz"
+                ><i class="bx bx-plus"></i></a>
+                <a href="http://heidistockton.com/fireandice/"><i class="bx bx-link"></i></a>
               </div>
             </div>
           </div>
@@ -295,28 +318,6 @@
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleFireIceCropped.png" class="img-fluid" alt="A radial chart showing some of the extreme weather in Portland, OR">
-            <div class="portfolio-info">
-              <a href="http://heidistockton.com/fireandice/">
-                <h4>Fire and Ice</h4>
-                <p class="desc">A look at some of the extreme weather happening in Portland, OR</p>
-                <p class="tech">D3.js, Bootstrap, Javascript, HTML, CSS</p>
-              </a>
-              <div class="portfolio-links">
-                <a
-                  href="images/workSampleFireIce.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="Fire and Ice - thanks to Glenn Handley for inspiring the name and overall direction of this viz"
-                ><i class="bx bx-plus"></i></a>
-                <a href="http://heidistockton.com/fireandice/"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
           <div class="portfolio-wrap">
@@ -331,6 +332,77 @@
                 <h4>Sourced Demand vs Strategy</h4>
                 <p class="desc">Tracking sourcing strategy against the incoming demand signal</p>
                 <p class="tech">Tableau, Snowflake</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleFootCropped.png" class="img-fluid" alt="Baseline assessment - a personalized report for athletes visiting Nike">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleBaselineSQ.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="Baseline Assessment - in collaboration with Michael Showell, Cailee Caldwell, Peter Kirby, and Ian Wright"
+              >
+                <h4>Baseline Assessment</h4>
+                <p class="desc">A customized immediate-turnaround report for athletes
+                  visiting the Sport Research Lab at Nike's WHQ</p>
+                <p class="tech">Tableau</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleOrgChartCropped.png" class="img-fluid" alt="Org chart exploration tool">
+            <div class="portfolio-info">
+              <a href="http://heidistockton.com/orgchart/">
+                <h4>Org Chart Explorer</h4>
+                <p class="desc">A guided search tool for finding people and the teams
+                  they belong to within a large organization</p>
+                <p class="tech">D3.js, Bootstrap, Javascript, Python, HTML, CSS</p>
+              </a>
+              <div class="portfolio-links">
+                <a
+                  href="images/workSampleOrgChart.png"
+                  data-gallery="portfolioGallery"
+                  class="portfolio-lightbox"
+                  title="Org Chart Explorer - thanks to Brandon O'Brien for helping get this project off the ground"
+                ><i class="bx bx-plus"></i></a>
+                <a href="http://heidistockton.com/orgchart/"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-tableau filter-personal">
+          <div class="portfolio-wrap">
+            <img src="images/workSampleClimate.png" class="img-fluid" alt="Visual results of a climate change survey">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleClimate.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="ECAP Climate Change survey - for Luna Abadia, a truly inspiring young activist"
+              >
+                <h4>ECAP Climate Change survey</h4>
+                <p class="desc">Results of a survey looking at public knowledge, attitudes
+                  and behaviors pertaining to climate change</p>
+                <p class="tech">Tableau, Python</p>
                 <div class="portfolio-links">
                   <i class="bx bx-plus"></i>
                 </div>
@@ -384,49 +456,6 @@
         </div>
 
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleFootCropped.png" class="img-fluid" alt="Baseline assessment - a personalized report for athletes visiting Nike">
-            <div class="portfolio-info">
-              <a
-                href="images/workSampleBaselineSQ.png"
-                data-gallery="portfolioGallery"
-                class="portfolio-lightbox"
-                title="Baseline Assessment - in collaboration with Michael Showell, Cailee Caldwell, Peter Kirby, and Ian Wright"
-              >
-                <h4>Baseline Assessment</h4>
-                <p class="desc">A customized immediate-turnaround report for athletes
-                  visiting the Sport Research Lab at Nike's WHQ</p>
-                <p class="tech">Tableau</p>
-                <div class="portfolio-links">
-                  <i class="bx bx-plus"></i>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-tableau filter-personal">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleClimate.png" class="img-fluid" alt="Visual results of a climate change survey">
-            <div class="portfolio-info">
-              <a
-                href="images/workSampleClimate.png"
-                data-gallery="portfolioGallery"
-                class="portfolio-lightbox"
-                title="ECAP Climate Change survey - for Luna Abadia, a truly inspiring young activist"
-              >
-                <h4>ECAP Climate Change survey</h4>
-                <p class="desc">Results of a survey looking at public knowledge, attitudes
-                  and behaviors pertaining to climate change</p>
-                <p class="tech">Tableau, Python</p>
-                <div class="portfolio-links">
-                  <i class="bx bx-plus"></i>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
           <div class="portfolio-wrap">

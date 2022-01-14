@@ -9,13 +9,13 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script type="text/javascript">
     var analytics = true;
-    try {
+    //try {   // temporarily removing error handling so I can see why this sometimes fails
       if(
         'localStorage' in window &&
         window['localStorage'] !== null &&
         localStorage["analytics"] == 'no' // check for local 'analytics' variable
       ) { analytics = false }             // if value is set to no, DO NOT TRACK
-    } catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {
       window.dataLayer = window.dataLayer || [];
       function gtag() {dataLayer.push(arguments);}
@@ -116,7 +116,7 @@
             </div>
           </div>  <!-- absoluteWrapper -->
           <div class="legendInstructions">
-            <p><--- click here to <tspan class="showHideText">hide</tspan> legend</p>
+            <p><--- click here to <tspan class="showHideText">hide</tspan> legend(s)</p>
           </div>
           <!-- the height of this div is updated based on whether or not the legends are being shown -->
           <!-- doing so improves the waypoints trigger interactions and available reading space for the scrolly text -->

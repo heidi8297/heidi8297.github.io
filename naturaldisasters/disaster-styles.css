@@ -481,6 +481,10 @@ g.annotations, .annotation-note-label {
   fill: #5e5047;
 }
 
+.count { /* pane TWO and FOUR */
+  font-size: 0.92rem;
+}
+
 .subtitle {  /* pane THREE and pane FIVE */
   text-anchor: middle;
 }

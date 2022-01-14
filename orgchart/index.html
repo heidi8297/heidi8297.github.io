@@ -9,13 +9,13 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script type="text/javascript">
     var analytics = true;
-    try {
+    //try {
       if(
         'localStorage' in window &&
         window['localStorage'] !== null &&
         localStorage["analytics"] == 'no' // check for local 'analytics' variable
       ) { analytics = false }             // if value is set to no, DO NOT TRACK
-    } catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {
       window.dataLayer = window.dataLayer || [];
       function gtag() {dataLayer.push(arguments);}

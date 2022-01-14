@@ -1006,6 +1006,7 @@ window.createGraphic = function(graphicSelector) {
     // pane THREE - rectangle to block out antarctica from view (without creating a second map)
     // MUST GET CREATED AFTER MAP, BUT BEFORE OTHER SVG ELEMENTS
     stackedAreaBgRect = svgBackground.append('rect')
+      .attr("class","maskingRect3A")
       .attr("x", paneDim(3).left)
       .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
       .attr("width", paneDim(3).right - paneDim(3).left )
@@ -1039,6 +1040,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.65);
 			eventsByTypeLabels = barsByTypeG.append("g")
+        .attr("class","eventsByTypeLabels")
 			eventsByTypeLabels.selectAll("text") // disaster type names
 				.data(eventsByType)
 				.join("text")
@@ -1196,6 +1198,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("fill", d => typeColor(d[0]) )
 				.attr("opacity", 0.65);
 			deathsByTypeLabels = deathsByTypeG.append("g")
+        .attr("class","deathsByTypeLabels")
 			deathsByTypeLabels.selectAll("text") // disaster type names
 				.data(deathsByType)
 				.join("text")
