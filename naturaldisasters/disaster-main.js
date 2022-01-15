@@ -371,7 +371,7 @@ window.createGraphic = function(graphicSelector) {
 	var steps = [
 		function step0() {  // pane ONE
 			let stepInc = lockInc += 1;
-			textIntroNums.transition() // pane ONE
+			textIntroNums1.transition() // pane ONE
 				.duration(speedFactor*800)
 				.attr("opacity",0.92)
 			deactivatePane2()
@@ -381,7 +381,7 @@ window.createGraphic = function(graphicSelector) {
 
 		function step1() {  // pane TWO
 			let stepInc = lockInc += 1;
-			textIntroNums.transition() // pane ONE
+			textIntroNums1.transition() // pane ONE
 				.duration(speedFactor*500)
 				.attr("opacity",0)
 			barsByTypeG.transition() // pane TWO
@@ -389,7 +389,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr('opacity',1)
 			deactivatePane3()
       svgBgPane3A.transition().call(fadeOutStd) // pane THREE A
-      stackedAreaAux.transition().call(fadeOutStd) // pane THREE A
+      stackedAreaAux3.transition().call(fadeOutStd) // pane THREE A
       titleHiderPane3A.transition() // pane THREE A
         .delay(speedFactor*300)
         .duration(speedFactor*300)
@@ -409,7 +409,7 @@ window.createGraphic = function(graphicSelector) {
       deactivatePane3B()
 			mapGroup.transition().call(fadeInStd) // pane THREE
       svgBgPane3A.transition().call(fadeInStd) // pane THREE
-      stackedAreaAux.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
+      stackedAreaAux3.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
       stackedAreaBgRect.transition() // pane THREE
         .duration(0)
         .attr('opacity',1)
@@ -428,7 +428,7 @@ window.createGraphic = function(graphicSelector) {
         stackedAreaG.transition().call(fadeInStd) // pane THREE
       }
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
-      svgPane3B.transition().call(fadeOutStd) // pane THREE B
+      svgBgPane3B.transition().call(fadeOutStd) // pane THREE B
 			transitionPane3()
 			animateCircles(stepInc,true)
       tooltipLock = true // turn off tooltips during the 'events by year' animation
@@ -481,7 +481,7 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
 			mapGroup.transition().call(fadeOutStd) // pane THREE A
       svgBgPane3A.transition().call(fadeOutStd) // pane THREE A
-      stackedAreaAux.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
+      stackedAreaAux3.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
       titleHiderPane3A.transition() // pane THREE A
         .delay(speedFactor*300)
         .duration(speedFactor*300)
@@ -494,7 +494,7 @@ window.createGraphic = function(graphicSelector) {
         .attr('width',0)
       d3.select(".sizeLegend1").style("display", "none") // pane THREE A
       stackedAreaG.transition().call(fadeInStd) // pane THREE
-      svgPane3B.transition().call(fadeInStd) // pane THREE B
+      svgBgPane3B.transition().call(fadeInStd) // pane THREE B
       stackedAreaHideRect.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",0.7)
@@ -507,8 +507,8 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       deactivatePane3()
       deactivatePane3B()
-      stackedAreaAux.transition().call(fadeOutStd) // pane THREE
-      svgPane3B.transition().call(fadeOutStd) // pane THREE B
+      stackedAreaAux3.transition().call(fadeOutStd) // pane THREE
+      svgBgPane3B.transition().call(fadeOutStd) // pane THREE B
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
@@ -523,15 +523,15 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
 			deactivatePane4()
       deactivatePane5B()
-      slopegraphG.transition().call(fadeInStd) // pane FIVE
-      slopegraphG.selectAll("line.eventChanges")
+      slopegraphG5.transition().call(fadeInStd) // pane FIVE
+      slopegraphG5.selectAll("line.eventChanges")
         .data(eventsByTypeFirstLast)
         .join("line")
         .transition()
         .duration(speedFactor*1000)
         .attr("y1", d => scaleYeventCount5(d[1]))
         .attr("y2", d => scaleYeventCount5(d[2]))
-      slopegraphG.selectAll("line.deathChanges")
+      slopegraphG5.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .transition()
@@ -547,15 +547,15 @@ window.createGraphic = function(graphicSelector) {
       let stepInc = lockInc += 1;
       deactivatePane5A()
       deactivatePane6()
-      slopegraphG.transition().call(fadeInStd) // pane FIVE B
-      slopegraphG.selectAll("line.eventChanges") // pane FIVE B
+      slopegraphG5.transition().call(fadeInStd) // pane FIVE B
+      slopegraphG5.selectAll("line.eventChanges") // pane FIVE B
         .data(eventChangesByType)
         .join("line")
         .transition()
         .duration(speedFactor*1000)
 				.attr("y1", d => scaleYeventPct(0))
 				.attr("y2", d => scaleYeventPct(d[1]))
-      slopegraphG.selectAll("line.deathChanges") // pane FIVE B
+      slopegraphG5.selectAll("line.deathChanges") // pane FIVE B
         .data(deathChangesByType)
         .join("line")
         .transition()
@@ -571,7 +571,7 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       deactivatePane5()
       deactivatePane5B()
-			logBarsG.transition() // pane SIX
+			logBarsG6.transition() // pane SIX
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
       svgPane6.transition().call(fadeInStd) // pane SIX
@@ -583,7 +583,7 @@ window.createGraphic = function(graphicSelector) {
 		function step8() {  // pane SEVEN
 			let stepInc = lockInc += 1;
 			deactivatePane6()
-			lollipopLines.selectAll("line") // pane SEVEN
+			lollipopLinesG7.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
 				.attr("x1", d => scaleXyear7(d.year)-8+16*d.jitter)
@@ -603,7 +603,7 @@ window.createGraphic = function(graphicSelector) {
 
       // a lot of lines of code here for the teardrop transitions...
       // they look really sweet though, so I've accepted the mess *shrug*
-      teardrops.selectAll("path").transition() // pane EIGHT
+      teardropsG8.selectAll("path").transition() // pane EIGHT
         .delay(speedFactor*300)
         .duration(speedFactor*1000)
         .attr('opacity',0.7)
@@ -620,15 +620,15 @@ window.createGraphic = function(graphicSelector) {
           let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY
           return `translate(${translateX},${translateY})`
         } )
-      teardropLines.selectAll("line").transition() // pane EIGHT
+      teardropLinesG8.selectAll("line").transition() // pane EIGHT
         .delay(speedFactor*1500)
         .duration(speedFactor*800)  // add/extend the lines at the same time as moving the teardrops
         .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
-      deadliestEventNote.transition()
-        .delay(speedFactor*3000)
+      deadliestEventNote8.transition()
+        .delay(speedFactor*2800)
         .duration(speedFactor*800)
         .style("opacity",1)
       annotations8.transition().call(fadeInStd)
@@ -657,7 +657,7 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*800)
         .attr("opacity", 0.4)
       annotations9.transition().call(fadeInStd) // pane NINE
-      d3.select(".finalWords").transition() // pane TEN
+      d3.select(".finalWords10").transition() // pane TEN
         .duration(speedFactor*800)
         .style("opacity","0")
 			transitionPane9B()
@@ -667,7 +667,7 @@ window.createGraphic = function(graphicSelector) {
 		function step12() {  // pane TEN
 			let stepInc = lockInc += 1;
       deactivatePane9() // pane NINE
-      d3.select(".finalWords").transition() // pane TEN
+      d3.select(".finalWords10").transition() // pane TEN
         .duration(speedFactor*800)
         .style("opacity","1")
 			transitionPane10()
@@ -748,9 +748,9 @@ window.createGraphic = function(graphicSelector) {
   }
 
   // move teardrops into their starting positions with opacity = 0
-  function transitionTeardrops() {
+  function transitionTeardrops8() {
     tearTransOffset = 40
-    teardrops.selectAll("path.TR")  // top right - sized by death toll
+    teardropsG8.selectAll("path.TR")  // top right - sized by death toll
       .transition().duration(scaleFactor*600)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
@@ -758,7 +758,7 @@ window.createGraphic = function(graphicSelector) {
         let translateY = projection([d.longitude,d.latitude])[1] + tearTransOffset
         return `translate(${translateX},${translateY})`
       } )
-    teardrops.selectAll("path.BR")  // bottom right - sized by total affected
+    teardropsG8.selectAll("path.BR")  // bottom right - sized by total affected
       .transition().duration(scaleFactor*600)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
@@ -766,7 +766,7 @@ window.createGraphic = function(graphicSelector) {
         let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
         return `translate(${translateX},${translateY})`
       } )
-    teardrops.selectAll("path.BL")  // bottom left - sized by damages
+    teardropsG8.selectAll("path.BL")  // bottom left - sized by damages
       .transition().duration(scaleFactor*600)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
@@ -774,7 +774,7 @@ window.createGraphic = function(graphicSelector) {
         let translateY = projection([d.longitude,d.latitude])[1] - tearTransOffset
         return `translate(${translateX},${translateY})`
       } )
-    teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
+    teardropsG8.selectAll("path.TL")  // top left - sized by geoIdCount
       .transition().duration(scaleFactor*600)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
@@ -952,22 +952,22 @@ window.createGraphic = function(graphicSelector) {
 
     // pane ONE - create display text
     function createDisplayText() {
-      textIntroNums = svgForeground.append("g") // this explanatory text shows up on the first pane
-        .attr("class", "textIntroNums") // this is purely to make the group easy to see in 'inspect'
+      textIntroNums1 = svgForeground.append("g") // this explanatory text shows up on the first pane
+        .attr("class", "textIntroNums1") // this is purely to make the group easy to see in 'inspect'
         .attr("opacity",0)
-      textIntroNums.append("text") // "59 years"
+      textIntroNums1.append("text") // "59 years"
         .attr("class", "pane1text yearCount")
         .attr("x", (textRectangles[0]["x1"]+textRectangles[0]["x2"])/2 )
         .attr("y", 23+(textRectangles[0]["y1"]+textRectangles[0]["y2"])/2 );
-      textIntroNums.append("text") // "8,982 disasters"
+      textIntroNums1.append("text") // "8,982 disasters"
         .attr("class", "pane1text eventCount")
         .attr("x", (textRectangles[1]["x1"]+textRectangles[1]["x2"])/2 )
         .attr("y", 20+(textRectangles[1]["y1"]+textRectangles[1]["y2"])/2 );
-      textIntroNums.append("text") // "3,428,650 lives lost"
+      textIntroNums1.append("text") // "3,428,650 lives lost"
         .attr("class", "pane1text deathCount")
         .attr("x", (textRectangles[2]["x1"]+textRectangles[2]["x2"])/2 )
         .attr("y", 18+(textRectangles[2]["y1"]+textRectangles[2]["y2"])/2 );
-      textIntroNums.append("text") // "countless lives altered"
+      textIntroNums1.append("text") // "countless lives altered"
         .attr("class", "pane1text livesCount")
         .attr("x", (textRectangles[3]["x1"]+textRectangles[3]["x2"])/2 )
         .attr("y", 18+(textRectangles[3]["y1"]+textRectangles[3]["y2"])/2 );
@@ -1017,7 +1017,7 @@ window.createGraphic = function(graphicSelector) {
 		// pane TWO - create a bar chart of disaster counts by type
 		function createBars2() {
 			barsByTypeG = svgBackground.append("g")
-				.attr("class", "eventsByType") // this is purely to make the group easy to see in 'inspect'
+				.attr("class", "eventsByType2") // this is purely to make the group easy to see in 'inspect'
 				.attr("opacity",0)
 			barsByTypeG.selectAll("rect.typeBg") // background bars
 				.data(eventsByType)
@@ -1061,7 +1061,7 @@ window.createGraphic = function(graphicSelector) {
 		// pane THREE - stacked area chart of events by year (colored by type)
 		function createStackedArea3() {
 			stackedAreaG = svgBackground.append('g')
-				.attr("class", "stackedArea")
+				.attr("class", "stackedArea3")
 				.attr("opacity", 0)
 			stackedAreaG.selectAll("path")
 				.data(eventsStackedByType)
@@ -1125,15 +1125,15 @@ window.createGraphic = function(graphicSelector) {
         .attr("height", 70)
         .attr("fill","#fbf9f9")
         .attr("opacity",0)
-      stackedAreaAux = svgForeground.append("g") // auxiliary components for stacked area chart (subtitle, axis)
-        .attr("class", "stackedAreaAux")
+      stackedAreaAux3 = svgForeground.append("g") // auxiliary components for stacked area chart (subtitle, axis)
+        .attr("class", "stackedAreaAux3")
         .attr("opacity", 0)
-      stackedAreaAux.append("text") // subtitle for stacked area chart
+      stackedAreaAux3.append("text") // subtitle for stacked area chart
         .attr("class","animationSubtitle")
         .text("Events by year")
         .attr("x", 30)
         .attr("y", Math.min(...scaleYeventCount3.range())+8)
-      stackedAreaAux.append("g") // axis for stacked area chart
+      stackedAreaAux3.append("g") // axis for stacked area chart
         .attr("class", "eventCountAxis")
         .attr("transform", `translate(${65},0)`)      // This controls the horizontal position of the Axis
         .call(d3.axisLeft(scaleYeventCount3)
@@ -1141,29 +1141,29 @@ window.createGraphic = function(graphicSelector) {
         )
 
       // pane THREE B - rectangle to represent the future
-      svgPane3B = svgForeground.append("g")
-        .attr("class","svgPane3B")
+      svgBgPane3B = svgBackground.append("g")
+        .attr("class","svgBgPane3B")
         .attr("opacity",0)
-      svgPane3B.append("rect")
+      svgBgPane3B.append("rect")
         .attr("x", scaleXpct3B(0.7) )
         .attr("y", scaleYpct3B(0.1))
         .attr("width", scaleXpct3B(0.95) - scaleXpct3B(0.7))
         .attr("height", scaleYpct3B(0.45) - scaleYpct3B(0.1))
         .attr("fill", "#EFE8E4")
-      svgPane3B.append("text")
+      svgBgPane3B.append("text")
         .attr("class", "qMark")
         .text("?")
         .attr("text-anchor", "middle")
         .attr("x", scaleXpct3B(0.7)+(scaleXpct3B(0.95) - scaleXpct3B(0.7))/2)
         .attr("y", scaleYpct3B(0.1) + (scaleYpct3B(0.45) - scaleYpct3B(0.1))/2)
         .attr("dy", 17)
-      svgPane3B.append("line") // 1960-1969
+      svgBgPane3B.append("line") // 1960-1969
         .attr("class", "dotted annotLine")
         .attr("x1", scaleXpct3B(0.05 + 0.125) )
         .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
         .attr("x2", scaleXyear3(1960) + (scaleXyear3(1969.5)-scaleXyear3(1960))/2 )
         .attr("y2", Math.min(...scaleYeventCount3.range()) + 140 )
-      svgPane3B.append("line") // 2009-2018
+      svgBgPane3B.append("line") // 2009-2018
         .attr("class", "dotted annotLine")
         .attr("x1", scaleXpct3B(0.375 + 0.125) )
         .attr("y1", scaleYpct3B(0.1 + 0.35 + 0.02) + 30 )
@@ -1175,7 +1175,7 @@ window.createGraphic = function(graphicSelector) {
 		// pane FOUR - create a bar chart of total death counts by type
 		function createBars4() {
 			deathsByTypeG = svgBackground.append("g")
-				.attr("class", "deathsByType") // this is purely to make the group easy to see in 'inspect'
+				.attr("class", "deathsByType4") // this is purely to make the group easy to see in 'inspect'
 				.attr("opacity",0)
 			deathsByTypeG.selectAll("rect.typeBg") // background bars
 				.data(deathsByType)
@@ -1219,12 +1219,12 @@ window.createGraphic = function(graphicSelector) {
 
     // pane FIVE - create slope lines
     function createSlopegraph5() {
-      slopegraphG = svgBackground.append('g')
-        .attr("class","slopegraphs")
+      slopegraphG5 = svgBackground.append('g')
+        .attr("class","slopegraphs5")
         .attr("opacity",0)
       let bgPad = 65
       let bgPadTop = 60
-      slopegraphG.selectAll("rect.typeBg") // background boxes to delineate each section
+      slopegraphG5.selectAll("rect.typeBg") // background boxes to delineate each section
         .data([[markers5.L1,markers5.L2],[markers5.R1,markers5.R2]]) // data to help create two boxes at once
         .join("rect")
         .attr("class","typeBg")
@@ -1233,7 +1233,7 @@ window.createGraphic = function(graphicSelector) {
         .attr("width", d => scaleXpct5(d[1])-scaleXpct5(d[0]) + 2*bgPad )
         .attr("height", scaleYeventPct(-1) - scaleYeventPct(d3.max(eventChangesByType, d => d[1])) + 1.7*bgPadTop )
         .attr("fill","#F4EFED")
-      slopegraphG.selectAll("rect.graphBg") // background boxes to delineate graph portion
+      slopegraphG5.selectAll("rect.graphBg") // background boxes to delineate graph portion
         .data([[markers5.L1,markers5.L2],[markers5.R1,markers5.R2]]) // data to help create two boxes at once
         .join("rect")
         .attr("class","graphBg")
@@ -1242,7 +1242,7 @@ window.createGraphic = function(graphicSelector) {
         .attr("width", d => scaleXpct5(d[1])-scaleXpct5(d[0]) )
         .attr("height", scaleYeventPct(-1) - scaleYeventPct(d3.max(eventChangesByType, d => d[1])) )
         .attr("fill","#EFE8E4")
-      slopegraphG.selectAll("line.eventChanges")
+      slopegraphG5.selectAll("line.eventChanges")
         .data(eventsByTypeFirstLast)
         .join("line")
         .attr("class","eventChanges")
@@ -1250,7 +1250,7 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => scaleYeventCount5(d[1]))
 				.attr("x2", scaleXpct5(markers5.L2))
 				.attr("y2", d => scaleYeventCount5(d[2]))
-      slopegraphG.selectAll("line.deathChanges")
+      slopegraphG5.selectAll("line.deathChanges")
         .data(deathsByTypeFirstLast)
         .join("line")
         .attr("class","deathChanges")
@@ -1258,25 +1258,25 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y1", d => scaleYdeathCount5(d[1]))
 				.attr("x2", scaleXpct5(markers5.R2))
 				.attr("y2", d => scaleYdeathCount5(d[2]))
-      slopegraphG.selectAll("line") // additional attributes for all lines
+      slopegraphG5.selectAll("line") // additional attributes for all lines
         .attr("stroke", d => typeColor(d[0]))
         .attr("stroke-width", 3 )
         .attr("stroke-linecap", "round")
         .attr("opacity", 0.7)
 
       // create subheader text elements
-      slopegraphG.append("text")
+      slopegraphG5.append("text")
         .attr("class","subtitle eventsSubtitle")
         .attr("x", scaleXpct5((markers5.L1+markers5.L2)/2))
         .attr("y", scaleYeventCount5(1315))
-      slopegraphG.append("text")
+      slopegraphG5.append("text")
         .attr("class","subtitle deathsSubtitle")
         .attr("x", scaleXpct5((markers5.R1+markers5.R2)/2))
         .attr("y", scaleYeventCount5(1315))
 
-      slopegraphG5A = slopegraphG.append('g') // elements that only apply to pane 5 (A)
+      slopegraphG5A = slopegraphG5.append('g') // elements that only apply to pane 5 (A)
         .attr("class","slopegraphsPane5A")
-      slopegraphG5B = slopegraphG.append('g') // elements that only apply to pane 5B
+      slopegraphG5B = slopegraphG5.append('g') // elements that only apply to pane 5B
         .attr("class","slopegraphsPane5B")
 
       // create labels for lines
@@ -1369,10 +1369,10 @@ window.createGraphic = function(graphicSelector) {
 
 		// pane SIX - create lightly colored background bars for the log plots
 		function createBars6() {
-			logBarsG = svgBackground.append("g")
-				.attr("class", "logBars") // this is purely to make the group easy to see in 'inspect'
+			logBarsG6 = svgBackground.append("g")
+				.attr("class", "logBarsG6") // this is purely to make the group easy to see in 'inspect'
 				.attr("opacity",0)
-			logBarsG.selectAll("rect")
+			logBarsG6.selectAll("rect")
 				.data(eventsByType)
 				.join("rect")
         // these dimensions/coordinates are a little funky because I want the rectangles
@@ -1425,11 +1425,11 @@ window.createGraphic = function(graphicSelector) {
 		createBars6()
 
 		// pane SEVEN - create lollipop lines and year axis
-		function createLollipopLines() {
-			lollipopLines = svgBackground.append("g")
-				.attr("class", "lollipopLines") // this is purely to make the group easy to see in 'inspect'
+		function createLollipopLines7() {
+			lollipopLinesG7 = svgBackground.append("g")
+				.attr("class", "lollipopLinesG7") // this is purely to make the group easy to see in 'inspect'
 				.attr("opacity",1)
-			lollipopLines.selectAll("line")
+			lollipopLinesG7.selectAll("line")
 				.data(lollipopEvents)
 				.join("line")
 				.attr("stroke", d => typeColor(d.disasterType))
@@ -1464,44 +1464,44 @@ window.createGraphic = function(graphicSelector) {
         .text("Death count (linear scale)")
 
 		}
-		createLollipopLines()
+		createLollipopLines7()
 
     // pane EIGHT - create teardrop shapes on map
-    function createTeardrops() {
-      teardrops = svgForeground.append("g")
-        .attr("class", "teardrops")
-      teardrops.selectAll("path.TR")  // top right - sized by death toll
+    function createTeardrops8() {
+      teardropsG8 = svgForeground.append("g")
+        .attr("class", "teardropsG8")
+      teardropsG8.selectAll("path.TR")  // top right - sized by death toll
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TR")
         .attr( "d", d => teardrop( 0.6*scaleRdeaths(d.deaths), 1, 0) )
-      teardrops.selectAll("path.BR")  // bottom right - sized by total affected
+      teardropsG8.selectAll("path.BR")  // bottom right - sized by total affected
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BR")
         .attr( "d", d => teardrop( d.totalAffected === 0? 0 : scaleRaffected(d.totalAffected), 1, 1) )
-      teardrops.selectAll("path.BL")  // bottom left - sized by damages
+      teardropsG8.selectAll("path.BL")  // bottom left - sized by damages
         .data(deadliestEvents)
         .join("path")
         .attr("class", "BL")
         .attr( "d", d => teardrop( scaleRdamages(d.damages), 1, 2) )
-      teardrops.selectAll("path.TL")  // top left - sized by geoIdCount
+      teardropsG8.selectAll("path.TL")  // top left - sized by geoIdCount
         .data(deadliestEvents)
         .join("path")
         .attr("class", "TL")
         .attr( "d", d => teardrop( 1.2*scaleRgeo(d.geoIdCount), 1, 3) )
-      teardrops.selectAll("path")  // add attributes shared by all teardrops
+      teardropsG8.selectAll("path")  // add attributes shared by all teardrops
         .attr("fill",d => typeColor(d.disasterType))
         .attr("opacity", 0)
     }
-    createTeardrops()
-    transitionTeardrops() // move them to their starting positions with opacity = 0
+    createTeardrops8()
+    transitionTeardrops8() // move them to their starting positions with opacity = 0
 
     // pane EIGHT - initiate teardrop lines with zero length
-    function createTeardropOffsetLines() {
-      teardropLines = svgForeground.append("g")
-        .attr("class", "teardropLines")
-      teardropLines.selectAll("line")  // only create a line if an offset is present
+    function createTeardropLines8() {
+      teardropLinesG8 = svgForeground.append("g")
+        .attr("class", "teardropLinesG8")
+      teardropLinesG8.selectAll("line")  // only create a line if an offset is present
 				.data(deadliestEvents.filter(d => d.offsetX !== 0))
 				.join("line")
 				.attr("stroke", d => typeColor(d.disasterType))
@@ -1512,15 +1512,15 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => projection([d.longitude,d.latitude])[1])
 				.attr("opacity", 0.6)
     }
-    createTeardropOffsetLines()
+    createTeardropLines8()
 
     // pane EIGHT
-    deadliestEventNote = svgForeground.append("text")
-      .attr("class","deadliestEventNote")
+    deadliestEventNote8 = svgForeground.append("text")
+      .attr("class","deadliestEventNote8")
       .attr("x", paneDim(8).left + (paneDim(8).right - paneDim(8).left)/2)
       .attr("y", 737)
       .style("opacity",0)
-    document.querySelector(".deadliestEventNote").innerHTML = "These events account "+
+    document.querySelector(".deadliestEventNote8").innerHTML = "These events account "+
       "for &nbsp<tspan>68%</tspan>&nbsp of the total deaths recorded in this time period."
 
     // pane NINE A/B
@@ -1576,7 +1576,7 @@ window.createGraphic = function(graphicSelector) {
       .annotations(annotAttr3B)
       .disable('connector')
       .type(d3.annotationLabel)
-    annotations3B = svgPane3B.append("g")
+    annotations3B = svgBgPane3B.append("g")
       .attr("class", "annotations3B")
       .call(makeAnnotations3B)
 
@@ -1629,7 +1629,7 @@ window.createGraphic = function(graphicSelector) {
     let makeAnnotations5 = d3.annotation()
       .annotations(annotAttr5)
       .type(d3.annotationLabel)
-    slopegraphG.append("g")
+    slopegraphG5.append("g")
       .attr("class", "annotations5")
       .call(makeAnnotations5)
 
@@ -2054,8 +2054,8 @@ window.createGraphic = function(graphicSelector) {
     annotations4.transition().call(fadeOutStd)
     }
   function deactivatePane5() {
-    slopegraphG.transition().call(fadeOutStd) // pane FIVE
-    slopegraphG.selectAll("line")
+    slopegraphG5.transition().call(fadeOutStd) // pane FIVE
+    slopegraphG5.selectAll("line")
       .transition()
       .duration(speedFactor*800)
       .attr("y1", d => scaleYeventPct(-1))
@@ -2068,14 +2068,14 @@ window.createGraphic = function(graphicSelector) {
     slopegraphG5B.transition().call(fadeOutStd)
   }
   function deactivatePane6() {
-    logBarsG.transition() // pane SIX
+    logBarsG6.transition() // pane SIX
       .duration(speedFactor*700)
       .attr('opacity',0)
     svgPane6.transition().call(fadeOutStd) // pane SIX
   }
   function deactivatePane7() {
     svgPane7.transition().call(fadeOutStd)
-    lollipopLines.selectAll("line") // pane SEVEN
+    lollipopLinesG7.selectAll("line") // pane SEVEN
       .transition()
       .duration(speedFactor*800)
       .attr("x1", d => scaleXyear7(d.year)-8+16*d.jitter)
@@ -2085,14 +2085,14 @@ window.createGraphic = function(graphicSelector) {
   }
   function deactivatePane8() {
     mapGroup.transition().call(fadeOutStd) // pane EIGHT
-    transitionTeardrops()
-    teardropLines.selectAll("line").transition() // pane EIGHT
+    transitionTeardrops8()
+    teardropLinesG8.selectAll("line").transition() // pane EIGHT
       .duration(speedFactor*800)
       .attr("x2", d => projection([d.longitude,d.latitude])[0])
       .attr("y2", d => projection([d.longitude,d.latitude])[1])
     d3.select(".teardropLegend").style("display", "none") // pane EIGHT
     annotations8.transition().call(fadeOutStd)
-    deadliestEventNote.transition()
+    deadliestEventNote8.transition()
       .duration(speedFactor*800)
       .style("opacity",0)
   }
