@@ -14,7 +14,12 @@
         'localStorage' in window &&
         window['localStorage'] !== null &&
         localStorage["analytics"] == 'no' // check for local 'analytics' variable
-      ) { analytics = false }             // if value is set to no, DO NOT TRACK
+      ) { analytics = false } else
+      {
+        console.log('localStorage' in window)
+        console.log(window['localStorage'] !== null)
+        console.log(localStorage["analytics"] == 'no')
+      }            // if value is set to no, DO NOT TRACK
     //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {
       window.dataLayer = window.dataLayer || [];
@@ -166,7 +171,7 @@
               of events are responsible for the largest loss of life.</p>
           </div>
           <div class='trigger pane8' data-step='9'>
-            <p>The top 15 deadliest events include earthquakes, storms, droughts and
+            <p>The deadliest 15 events include earthquakes, storms, droughts and
               extreme temperature events.</p>
           </div>
           <div class='trigger pane9' data-step='10'>
@@ -183,9 +188,6 @@
         <div class='trigger pane9B' data-step='11'>
           <p>This same inequality persists when we look at all events.</p>
           <br /><br />
-          <!-- <p class="footnote">**Some events take place in more than one country.
-            In this case, only one of the affected countries is listed and GDP per
-            capita is reported as an average across all countries, weighted by location count.</p> -->
         </div>
         <div class='trigger pane10' data-step='12'>
           <p></p>

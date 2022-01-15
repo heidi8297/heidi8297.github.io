@@ -24,7 +24,12 @@
         'localStorage' in window &&
         window['localStorage'] !== null &&
         localStorage["analytics"] == 'no' // check for local 'analytics' variable
-      ) { analytics = false }             // if value is set to no, DO NOT TRACK
+      ) { analytics = false } else
+      {
+        console.log('localStorage' in window)
+        console.log(window['localStorage'] !== null)
+        console.log(localStorage["analytics"] == 'no')
+      }            // if value is set to no, DO NOT TRACK
     //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {
       window.dataLayer = window.dataLayer || [];
