@@ -12,6 +12,7 @@ if (history.scrollRestoration) {
 //   this allows us to create a "stacked" view for the viz and the text
 //   and thus allows the viz-container to take up the width of the screen
 function orderPrimaryElements() {
+  console.log("ordering elements")
   let viewWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   (() => {
     const list = document.querySelector(".library__graphic");
@@ -23,7 +24,7 @@ function orderPrimaryElements() {
   })();
 }
 orderPrimaryElements()
-window.addEventListener('resize', orderPrimaryElements());
+window.addEventListener('resize', orderPrimaryElements);
 
 // hide mobilewarning message when user clicks "proceed anyway" button
 function proceedAnyway() {
