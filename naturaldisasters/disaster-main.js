@@ -46,12 +46,11 @@ window.createGraphic = function(graphicSelector) {
   const yearPausePoint = 2018.7; // the point at which to pause events by year animation
   const yearCountAnim = yearPausePoint - startingYearInc;
   const yearStop = 2021; // the point at which to reveal ALL events
-  const fpsTarget = 10;   // I like 9 here
+  const fpsTarget = 10;   // I like 10 here
   const msTarget = Math.floor(1000/fpsTarget)
   let framesPerYear = 5;  // I like 5 here
   let yearInc = 1960;
   let readyFor2ndAnim = false;
-  let revealRectComplete = false;
 
 	// variables needed for transition method
   let lockInc = 0;
@@ -388,47 +387,37 @@ window.createGraphic = function(graphicSelector) {
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
 			deactivatePane3()
-      svgBgPane3A.transition().call(fadeOutStd) // pane THREE A
-      stackedAreaAux3.transition().call(fadeOutStd) // pane THREE A
-      titleHiderPane3A.transition() // pane THREE A
-        .delay(speedFactor*300)
-        .duration(speedFactor*300)
-        .attr("opacity", 0)
-      stackedAreaRevealRect.transition() // pane THREE
-        .duration(0)
-        .attr('width',0)
-      d3.select(".sizeLegend1").style("display", "none") // pane THREE
+      deactivatePane3A()
 			transitionPane2()
 			animateCircles(stepInc)
 		}, // step1()
 
-		function step2() {  // pane THREE
+		function step2() {  // pane THREE A
 			console.log(document.getElementsByTagName('*').length,"DOM elements")
 			let stepInc = lockInc += 1;
 			deactivatePane2()
       deactivatePane3B()
 			mapGroup.transition().call(fadeInStd) // pane THREE
-      svgBgPane3A.transition().call(fadeInStd) // pane THREE
+      svgBgPane3A.transition().call(fadeInStd) // pane THREE A
       stackedAreaAux3.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
       stackedAreaBgRect.transition() // pane THREE
         .duration(0)
         .attr('opacity',1)
-      // only run this "reveal" section of code once - the stacked area chart will
-      //   be visible on subsequent views via scrolling
-      if (!revealRectComplete) {
-        stackedAreaRevealRect.transition() // pane THREE
-          .delay(speedFactor*800)
+      // since we haven't reset the 'currentPane' variable yet, we can use it to tell
+      //   which pane the user is coming from, and transition accordingly
+      if (currentPane === "2") { // must be scrolling DOWN
+        stackedAreaRevealRect.transition()
           .duration(0)
+          .attr("x",paneDim(3).left)
           .attr('width',paneDim(3).right - paneDim(3).left)
-        stackedAreaG.transition() // pane THREE
-          .delay(speedFactor*801)
-          .duration(0)
-  				.attr('opacity',1)
-      } else {
-        stackedAreaG.transition().call(fadeInStd) // pane THREE
+          .attr("opacity",1)
+      } else if (currentPane === "3B") { // must be scrolling UP
+        stackedAreaRevealRect.transition().call(fadeInStd)
+          .attr("x",paneDim(3).left)
+          .attr('width',paneDim(3).right - paneDim(3).left)
       }
+      stackedAreaPaths.transition().call(fadeInStd)
       d3.select(".sizeLegend1").style("display", "block") // pane THREE
-      svgBgPane3B.transition().call(fadeOutStd) // pane THREE B
 			transitionPane3()
 			animateCircles(stepInc,true)
       tooltipLock = true // turn off tooltips during the 'events by year' animation
@@ -436,15 +425,13 @@ window.createGraphic = function(graphicSelector) {
       // made more complicated (but more performant!) by not using d3 transitions
       let secondAnim = d3.interval(function() {
         if (readyFor2ndAnim && stepInc === lockInc && yearInc <= yearStop) {
-          if (!revealRectComplete) {  // this section is only run on the first scroll
-            let percentComplete = yearInc >= yearPausePoint ? 1 : (yearInc - startingYearInc)/yearCountAnim;
-            let paneWidth = paneDim(3).right-paneDim(3).left
-            stackedAreaRevealRect.transition()
-              .duration(msTarget)
-              .ease(d3.easeLinear)
-              .attr('x',paneDim(3).left + percentComplete*paneWidth)
-              .attr('width', (1-percentComplete)*paneWidth )
-          }
+          let percentComplete = yearInc >= yearPausePoint ? 1 : (yearInc - startingYearInc)/yearCountAnim;
+          let paneWidth = paneDim(3).right-paneDim(3).left
+          stackedAreaRevealRect.transition()
+            .duration(msTarget)
+            .ease(d3.easeLinear)
+            .attr('x',paneDim(3).left + percentComplete*paneWidth)
+            .attr('width', (1-percentComplete)*paneWidth )
           sliderRect.transition()
             .duration(msTarget)
             .ease(d3.easeCubicInOut)
@@ -470,7 +457,6 @@ window.createGraphic = function(graphicSelector) {
           readyFor2ndAnim = false;
           tooltipLock = false; // turn tooltips back on
           yearInc = startingYearInc; // reset to starting point
-          revealRectComplete = true; // this will now remain true until a page reload
           secondAnim.stop();
         }
       }, msTarget )
@@ -479,25 +465,13 @@ window.createGraphic = function(graphicSelector) {
 
 		function step3() {  // pane THREE B
 			let stepInc = lockInc += 1;
-			mapGroup.transition().call(fadeOutStd) // pane THREE A
-      svgBgPane3A.transition().call(fadeOutStd) // pane THREE A
       stackedAreaAux3.transition().delay(speedFactor*600).call(fadeInStd) // pane THREE
-      titleHiderPane3A.transition() // pane THREE A
-        .delay(speedFactor*300)
-        .duration(speedFactor*300)
-        .attr("opacity", 0)
-      stackedAreaBgRect.transition() // pane THREE A
-        .duration(0)
-        .attr('opacity',1)
-      stackedAreaRevealRect.transition() // pane THREE A
-        .duration(0)
-        .attr('width',0)
-      d3.select(".sizeLegend1").style("display", "none") // pane THREE A
-      stackedAreaG.transition().call(fadeInStd) // pane THREE
+      stackedAreaPaths.transition().call(fadeInStd) // pane THREE
       svgBgPane3B.transition().call(fadeInStd) // pane THREE B
       stackedAreaHideRect.transition() // pane THREE B
         .duration(speedFactor*800)
         .attr("opacity",0.7)
+      deactivatePane3A()
 			deactivatePane4()
 			transitionPane3B()
 			animateCircles(stepInc)
@@ -507,12 +481,10 @@ window.createGraphic = function(graphicSelector) {
 			let stepInc = lockInc += 1;
       deactivatePane3()
       deactivatePane3B()
-      stackedAreaAux3.transition().call(fadeOutStd) // pane THREE
-      svgBgPane3B.transition().call(fadeOutStd) // pane THREE B
 			deathsByTypeG.transition() // pane FOUR
 				.duration(speedFactor*1100)
 				.attr('opacity',1)
-      annotations4.transition().call(fadeInStd) // pane TWO
+      annotations4.transition().call(fadeInStd) // pane FOUR
       deactivatePane5()
       deactivatePane5A()
 			transitionPane4()
@@ -538,7 +510,7 @@ window.createGraphic = function(graphicSelector) {
         .duration(speedFactor*1000)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
-      slopegraphG5A.transition().call(fadeInStd) // pane FIVE
+      slopegraphG5A.transition().call(fadeInStd) // pane FIVE A
 			transitionPane5A()
 			animateCircles(stepInc)
 		}, // step5()
@@ -627,11 +599,11 @@ window.createGraphic = function(graphicSelector) {
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 
       d3.select(".teardropLegend").style("display", "block") // pane EIGHT
-      deadliestEventNote8.transition()
+      deadliestEventNote8.transition() // pane EIGHT
         .delay(speedFactor*2800)
         .duration(speedFactor*800)
         .style("opacity",1)
-      annotations8.transition().call(fadeInStd)
+      annotations8.transition().call(fadeInStd) // pane EIGHT
         .delay(speedFactor*1900)
       deactivatePane9() // pane NINE
 			transitionPane8()
@@ -1056,14 +1028,17 @@ window.createGraphic = function(graphicSelector) {
 				.attr("x", d => scaleXeventCount(d[1])+5 )
 				.attr("y", d => scaleYtypes(d[0])+scaleYtypes.bandwidth()/2+5 );
 		}
-		createBars2()
+		//createBars2()
 
 		// pane THREE - stacked area chart of events by year (colored by type)
 		function createStackedArea3() {
-			stackedAreaG = svgBackground.append('g')
-				.attr("class", "stackedArea3")
-				.attr("opacity", 0)
-			stackedAreaG.selectAll("path")
+			stackedAreaG3 = svgBackground.append('g')
+				.attr("class", "stackedAreaG3")
+				//.attr("opacity", 0)
+      stackedAreaPaths = stackedAreaG3.append('g')
+        .attr("class", "stackedAreaPaths")
+        .attr("opacity",0)
+			stackedAreaPaths.selectAll("path")
 				.data(eventsStackedByType)
 				.join("path")
 					.style("fill", function(d) { type = typeGroups[d.key] ;  return typeColor(type); })
@@ -1077,20 +1052,25 @@ window.createGraphic = function(graphicSelector) {
 						}   )
 						.y1( d => scaleYeventCount3(d[1]) )
 				)
-		}
-		createStackedArea3()
-
-    function buildRestOfPane3() {
       // pane THREE A - rectangle to progressively reveal stacked area chart
       // MUST GET CREATED AFTER STACKED AREA
-      stackedAreaRevealRect = svgForeground.append('rect')
+      stackedAreaRevealRect = stackedAreaG3.append('rect')
         .attr("class", "stackedAreaRevealRect")
         .attr("x", paneDim(3).left)
         .attr("y", 3*paneDim(3).bottom/4)  // needs to be the same as the value found in scaleYeventCount3
-        .attr("width", 0 )
+        .attr("width", paneDim(3).right - paneDim(3).left )
         .attr("height", paneDim(3).bottom/4)
         .attr("fill", "#fbf9f9")
+        .attr("opacity",0)
+		}
+		createStackedArea3()
 
+    // need to create this bar chart AFTER the stacked area sections in order to have a clean transition
+    //   from pane 2 to pane 3A (it allows the "reveal rect" to show up instantly without looking weird)
+    createBars2()
+
+
+    function buildRestOfPane3() {
       // pane THREE B - rectangle to "hide" the middle section of the stacked area chart
       stackedAreaHideRect = svgBackground.append("rect")
         .attr("class", "stackedAreaHideRect")
@@ -2039,13 +2019,30 @@ window.createGraphic = function(graphicSelector) {
       .attr('opacity',0)
   }
   function deactivatePane3() {
-    mapGroup.transition().call(fadeOutStd) // pane THREE
     stackedAreaBgRect.transition().call(fadeOutStd) // pane THREE
       .delay(speedFactor*200)
-    stackedAreaG.transition().call(fadeOutStd) // pane THREE
+    stackedAreaPaths.transition()
+      .duration(speedFactor*600)
+      .attr("opacity",0)
+    stackedAreaAux3.transition().call(fadeOutStd) // pane THREE
+  }
+  function deactivatePane3A() {
+    mapGroup.transition().call(fadeOutStd) // pane THREE
+    stackedAreaRevealRect.transition()
+      .duration(speedFactor*1000)
+      .attr("x",paneDim(3).left)
+      .attr('width',paneDim(3).right - paneDim(3).left)
+      .attr("opacity",0)
+    svgBgPane3A.transition().call(fadeOutStd)
+    titleHiderPane3A.transition() // pane THREE A
+      .delay(speedFactor*300)
+      .duration(speedFactor*300)
+      .attr("opacity", 0)
+    d3.select(".sizeLegend1").style("display", "none") // pane THREE
   }
   function deactivatePane3B() {
     stackedAreaHideRect.transition().call(fadeOutStd)
+    svgBgPane3B.transition().call(fadeOutStd) // pane THREE B
   }
   function deactivatePane4() {
     deathsByTypeG.transition() // pane FOUR
