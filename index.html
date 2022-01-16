@@ -20,6 +20,8 @@
   <script type="text/javascript">
     var analytics = true;
     //try {
+      let loc = window.location
+      console.log("hostname: ",loc.hostname,"    port: ",loc.port,"    protocol: ",loc.protocol)
       if(
         'localStorage' in window &&
         window['localStorage'] !== null &&
@@ -29,6 +31,7 @@
         console.log('localStorage' in window)
         console.log(window['localStorage'] !== null)
         console.log(localStorage["analytics"] == 'no')
+        console.log(localStorage["analytics"])
       }            // if value is set to no, DO NOT TRACK
     //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
     if (analytics) {

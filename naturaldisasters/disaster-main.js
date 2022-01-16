@@ -452,6 +452,12 @@ window.createGraphic = function(graphicSelector) {
             titleHiderPane3A.transition()
               .duration(0)
               .attr("opacity", 1)
+            // this step isn't necessary, but improves the transition if you're scrolling up
+            stackedAreaRevealRect.transition()
+              .duration(0)
+              .attr("x",paneDim(3).left)
+              .attr('width',paneDim(3).right - paneDim(3).left)
+              .attr("opacity",0)
           }
           // reset variables and then stop the animation
           readyFor2ndAnim = false;
@@ -676,7 +682,7 @@ window.createGraphic = function(graphicSelector) {
       if (elapsed > setDuration || stepInc !== lockInc) t.stop();
     });
     update(0)
-  } // init()
+  }; // init()
 
   function updateGraphTitles(paneIdentifier) {
     currentPane = paneIdentifier;
@@ -864,7 +870,7 @@ window.createGraphic = function(graphicSelector) {
       scaleXgdp = d3.scaleLinear()
         .domain([0, d3.max(eventsFlat, d => d.gdpInUsdPerCountry)])
         .range([ paneDim(9).left, paneDim(9).right ])
-    }
+    }; // createScales()
     createScales()
 
     function createLegends() {
@@ -917,7 +923,7 @@ window.createGraphic = function(graphicSelector) {
       d3.select(".sizeLegend2 .sizeLegend")
         .call(legendSize2);
       d3.select(".sizeLegend2").style("display", "none")
-    }
+    }; // createLegends
     createLegends()
 
     // CREATE OTHER NECESSARY SVG ELEMENTS
@@ -949,7 +955,7 @@ window.createGraphic = function(graphicSelector) {
       document.querySelector(".pane1text.eventCount").innerHTML = "<tspan>8,982</tspan> disasters"
       document.querySelector(".pane1text.deathCount").innerHTML = "<tspan>3,428,650</tspan> lives lost"
       document.querySelector(".pane1text.livesCount").innerHTML = "<tspan>Countless</tspan> lives altered"
-    }
+    }; // createDisplayText
     createDisplayText()
 
 		// panes THREE and EIGHT - world map

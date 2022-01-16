@@ -9,6 +9,8 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script type="text/javascript">
     var analytics = true;
+    let loc = window.location
+    console.log("hostname: ",loc.hostname,"    port: ",loc.port,"    protocol: ",loc.protocol)
     //try {   // temporarily removing error handling so I can see why this sometimes fails
       if(
         'localStorage' in window &&
