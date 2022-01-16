@@ -8,6 +8,23 @@ if (history.scrollRestoration) {
     }
 }
 
+// for smaller devices/screens, move the viz container div above the graphic prose div
+//   this allows us to create a "stacked" view for the viz and the text
+//   and thus allows the viz-container to take up the width of the screen
+function orderPrimaryElements() {
+  let viewWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+  (() => {
+    const list = document.querySelector(".library__graphic");
+    if (viewWidth < 1000) {
+      list.appendChild(document.querySelector(".graphic__prose"));
+    } else {
+      list.appendChild(document.querySelector("#viz-container"));
+    }
+  })();
+}
+orderPrimaryElements()
+window.addEventListener('resize', orderPrimaryElements());
+
 // hide mobilewarning message when user clicks "proceed anyway" button
 function proceedAnyway() {
   d3.select(".mobileWarning").style("display", "none")

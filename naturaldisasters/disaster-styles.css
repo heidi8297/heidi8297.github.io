@@ -167,8 +167,17 @@ a.button:hover {
 }
 
 @media only screen and (max-device-width: 1000px) {
+  header {
+    width: 100%;
+  }
+
+  .library__graphic.graphic {
+    display: block;
+    width: 100%;
+  }
+
   .graphic__prose {
-    width: 170px;
+    width: 100%;
   }
   .graphic__prose .trigger {
     min-height: 950px;
@@ -363,6 +372,12 @@ a.button:hover {
 	position: absolute;
 	height: 800px;
 	width: 1000px;
+}
+
+@media only screen and (max-device-width: 1000px) {
+  #viz-container {
+    top: 0;
+  }
 }
 
 .svgForeground, .hiddenCanvas {
