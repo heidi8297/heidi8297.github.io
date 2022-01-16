@@ -1,19 +1,4 @@
 
-/* totally not sure if either of these "main" styles actually does anything */
-.main {
-  margin: 2.5% 9% 5% 9%;
-  padding: 1px 1% 10px 1%;
-}
-
-@media (max-width: 500px) {
-  .main {
-    margin-left: 4%;
-    margin-right: 4%;
-  }
-}
-
-
-
 * {
   box-sizing: border-box;
 }
@@ -106,7 +91,7 @@ header h2 {
   padding: 50px 5px;
 }
 
-@media (max-width: 1000px) {
+@media only screen and (max-device-width: 1000px) {
   .mobileWarning {
     display: block;
   }
@@ -181,7 +166,7 @@ a.button:hover {
   opacity: 0.3;
 }
 
-@media (max-width: 1000px) {
+@media only screen and (max-device-width: 1000px) {
   .graphic__prose {
     width: 170px;
   }
@@ -195,15 +180,13 @@ a.button:hover {
 }
 
 /* if larger than 1360, the user should be able to see all the content */
-@media (min-width: 1360px) {
-  @media (min-height: 800px) {
+@media only screen and (min-width: 1360px) and (min-height: 800px) {
     .zoomInstruct {
       display: none;
     }
     .scrollToDiscover {
       display: block;
     }
-  }
 }
 
 /* this section is smaller because it's right above the legend icon */
@@ -211,17 +194,12 @@ a.button:hover {
 	min-height: 150px;
 }
 
-/* this section is smaller because it's empty from text - I want the user to read the viz pane instead */
-.graphic__prose .trigger.pane10 {
-	min-height: 360px;
-}
-
 .legendInstructions {
   height: 390px;
   opacity: 0.3;
 }
 
-@media (max-width: 1000px) {
+@media only screen and (max-device-width: 1000px) {
   .legendInstructions {
     height: 760px;
   }
@@ -242,7 +220,7 @@ a.button:hover {
   opacity: 0.3;
 }
 
-@media (max-width: 1000px) {
+@media only screen and (max-device-width: 1000px) {
   .graphic__prose .preProse {
     min-height: 900px;
   }
@@ -261,6 +239,11 @@ a.button:hover {
 /* added so the legend doesn't bump up against the text */
 .graphic__prose .pane9B {
   padding-top: 30px;
+}
+
+/* this section is smaller because it's empty from text - I want the user to read the viz pane instead */
+.graphic__prose .trigger.pane10 {
+	min-height: 360px;
 }
 
 
