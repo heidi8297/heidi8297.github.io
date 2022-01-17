@@ -178,6 +178,7 @@ a.button:hover {
 
   .graphic__prose {
     width: 100%;
+    z-index: 100;
   }
   .graphic__prose .trigger {
     min-height: 950px;
@@ -377,6 +378,18 @@ a.button:hover {
 @media only screen and (max-device-width: 1000px) {
   #viz-container {
     top: 0;
+    z-index: 5000;
+  }
+
+  #viz-container canvas, #viz-container svg {
+    z-index: 5000;
+  }
+
+  .absoluteWrapper {
+    display: none;
+  }
+  .legendInstructions {
+    display: none;
   }
 }
 

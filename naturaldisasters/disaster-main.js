@@ -8,12 +8,23 @@ if (history.scrollRestoration) {
     }
 }
 
+// (function () {
+//     var old = console.log;
+//     var logger = document.getElementById('log');
+//     console.log = function (message) {
+//         if (typeof message == 'object') {
+//             logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+//         } else {
+//             logger.innerHTML += message + '<br />';
+//         }
+//     }
+// })();
+
 // for smaller devices/screens, move the viz container div above the graphic prose div
 //   this allows us to create a "stacked" view for the viz and the text
 //   and thus allows the viz-container to take up the width of the screen
 function orderPrimaryElements() {
-  console.log("ordering elements")
-  let viewWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+  let viewWidth = Math.min( window.innerWidth, screen.width);
   (() => {
     const list = document.querySelector(".library__graphic");
     if (viewWidth < 1000) {
@@ -341,8 +352,8 @@ window.createGraphic = function(graphicSelector) {
 	mainCanvas.on("mouseout", d => tooltipMain.style("opacity", 0));
 
   // turn the legendIconWrapper into a button that shows/hides the legends
-  let legendWrapper = document.getElementById("legendIconWrapper");
-  legendWrapper.addEventListener("click", showHide);
+  let legendIconWrapper = document.getElementById("legendIconWrapper");
+  legendIconWrapper.addEventListener("click", showHide);
   function show() {
     d3.select("#legendWrapper").style("display","block")
     d3.select(".legendHideIconImage").style("opacity",1)
@@ -368,13 +379,13 @@ window.createGraphic = function(graphicSelector) {
   }
 
   // add tooltip to legend icon
-  legendWrapper.addEventListener("mouseover", function(event) {
+  legendIconWrapper.addEventListener("mouseover", function(event) {
     tooltipAux.style('opacity',0.88)
       .html(infoState === "show" ? "hide legend" : "show legend")
       .style("left", (event.pageX + 5) + "px")
       .style("top", (event.pageY + 5) + "px");
   } );
-  legendWrapper.addEventListener("mouseout", function(event) {
+  legendIconWrapper.addEventListener("mouseout", function(event) {
     tooltipAux.style('opacity',0)
   })
 
