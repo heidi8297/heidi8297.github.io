@@ -64,7 +64,7 @@ header {
   position: relative;
   padding: 1rem 0;
   margin: 2rem auto;
-  width: 1360px; /* needs to match width of library__graphic below */
+  width: min(1360px, 100%); /* needs to match width of library__graphic below */
 }
 
 h1, h2 {
@@ -92,6 +92,9 @@ header h2 {
 }
 
 @media only screen and (max-device-width: 1000px) {
+  body {
+    margin: 5px;
+  }
   .mobileWarning {
     display: block;
   }
@@ -185,6 +188,9 @@ a.button:hover {
     width: 100%;
     z-index: 100;
   }
+  .graphic__prose .trigger {
+    min-height:300px;
+  }
 }
 
 .scrollToDiscover {
@@ -224,12 +230,6 @@ a.button:hover {
 .graphic__prose .preProse {
   min-height: 260px;
   opacity: 0.3;
-}
-
-@media only screen and (max-device-width: 1000px) {
-  .graphic__prose .preProse {
-    min-height: 900px;
-  }
 }
 
 .graphic__prose .postProse {
@@ -372,6 +372,12 @@ a.button:hover {
 }
 
 @media only screen and (max-device-width: 1000px) {
+  .graphic__prose .pane9B {
+    height: 100px;
+  }
+  .graphic__prose .trigger.pane10 {
+    height: 1px;
+  }
   #viz-container {
     box-sizing: content-box;
     z-index: 5000;
@@ -387,70 +393,67 @@ a.button:hover {
   .legendInstructions {
     display: none;
   }
-  .variableSpacer {
-    height: 900px;
-  }
 }
 
 /* zoom the viz-container to fit the device-width */
 @media only screen and (max-device-width: 800px) {
   #viz-container {
-    zoom: 0.7;
+    zoom: 0.690;
   }
 }
 @media only screen and (max-device-width: 700px) {
   #viz-container {
-    zoom: 0.6;
+    zoom: 0.590;
   }
 }
 @media only screen and (max-device-width: 600px) {
   #viz-container {
-    zoom: 0.5;
+    zoom: 0.490;
   }
 }
 @media only screen and (max-device-width: 500px) {
   #viz-container {
-    zoom: 0.445;
+    zoom: 0.440;
   }
 }
 @media only screen and (max-device-width: 450px) {
   #viz-container {
-    zoom: 0.405;
+    zoom: 0.402;
   }
 }
 @media only screen and (max-device-width: 411px) {
   #viz-container {
-    zoom: 0.4;
+    zoom: 0.390;
   }
 }
-@media only screen and (max-device-width: 400px) {
+@media only screen and (max-device-width: 399px) {
   #viz-container {
-    zoom: 0.375;
+    zoom: 0.370;
   }
 }
 @media only screen and (max-device-width: 379px) {
   #viz-container {
-    zoom: 0.365;
+    zoom: 0.360;
   }
 }
 @media only screen and (max-device-width: 369px) {
   #viz-container {
-    zoom: 0.355;
+    zoom: 0.350;
   }
 }
 @media only screen and (max-device-width: 359px) {
   #viz-container {
-    zoom: 0.335;
+    zoom: 0.330;
   }
 }
 @media only screen and (max-device-width: 339px) {
   #viz-container {
-    zoom: 0.315;
+    zoom: 0.310;
   }
 }
 @media only screen and (max-device-width: 319px) {
   #viz-container {
-    zoom: 0.285;
+    zoom: 0.280;
   }
 }
 @media only screen and (max-device-width: 290px) {

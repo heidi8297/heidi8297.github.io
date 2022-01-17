@@ -20,15 +20,18 @@ if (history.scrollRestoration) {
 //     }
 // })();
 
+
 // for smaller devices/screens, move the viz container div above the graphic prose div
 //   this allows us to create a "stacked" view for the viz and the text
 //   and thus allows the viz-container to take up the width of the screen
 function orderPrimaryElements() {
   let viewWidth = Math.min( window.innerWidth, screen.width);
+  let viewHeight = Math.min(window.innerHeight, screen.height);
   (() => {
     const list = document.querySelector(".library__graphic");
     if (viewWidth < 1000) {
       list.appendChild(document.querySelector(".graphic__prose"));
+      document.querySelector(".zoomInstruct").innerHTML = "If the visualization doesn't fit your screen, try pinching to zoom out.<br /><br />"
     } else {
       list.appendChild(document.querySelector("#viz-container"));
     }
