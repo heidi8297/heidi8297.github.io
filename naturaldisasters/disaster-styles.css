@@ -191,11 +191,13 @@ header h2 {
 @media only screen and (max-device-width: 1000px) {
   header {
     width: 100%;
+    margin: 2rem auto 0 auto;
   }
   @media (max-aspect-ratio: 2/3) {
     .library__graphic.graphic {
       display: block;
       width: 100%;
+      margin: 0 auto;
     }
     .graphic__prose {
       width: 100%;
@@ -219,6 +221,7 @@ header h2 {
   @media (min-aspect-ratio: 3/2) {
     .library__graphic.graphic {
       width: 100%;
+      margin: 0 auto;
     }
     .graphic__prose {
       z-index: 100;
