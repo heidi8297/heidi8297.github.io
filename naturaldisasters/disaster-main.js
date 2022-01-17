@@ -21,15 +21,18 @@ if (history.scrollRestoration) {
 // })();
 
 
+let mobile = false;
 // for smaller devices/screens, move the viz container div above the graphic prose div
-//   this allows us to create a "stacked" view for the viz and the text
+//   this allows us to create a "stacked" view for the viz and the text (phone)
 //   and thus allows the viz-container to take up the width of the screen
+// on tablet (or landscape-view phone) this allows us to put the viz on the left
+//   and hopefully scale to fit 100% of the height (or close enough)
 function orderPrimaryElements() {
   let viewWidth = Math.min( window.innerWidth, screen.width);
-  let viewHeight = Math.min(window.innerHeight, screen.height);
   (() => {
     const list = document.querySelector(".library__graphic");
     if (viewWidth < 1000) {
+      mobile = true;
       list.appendChild(document.querySelector(".graphic__prose"));
       document.querySelector(".zoomInstruct").innerHTML = "If the visualization doesn't fit your screen, try pinching to zoom out.<br /><br />"
     } else {
@@ -330,29 +333,30 @@ window.createGraphic = function(graphicSelector) {
 	}
 	initializeDrawingSpaces()
 
-	// activate tooltip when the mouse moves over an event circle
-	mainCanvas.on('mousemove', function(e) {
-	  drawCircles(hiddenCtx, true); // draw the hidden canvas
-		let mouseX = e.layerX || e.offsetX;
-		let mouseY = e.layerY || e.offsetY;
-		// pick the color from the mouse position
-		let pickedCol = hiddenCtx.getImageData(scaleFactor*mouseX, scaleFactor*mouseY, 1, 1).data;
-  	let colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
-		let nodeData = colToCircle[colKey];  // get the data from our map!
-		if (nodeData) {
-			// Show the tooltip only when there is nodeData found by the mouse
-	    tooltipMain.style('opacity', 0.88)
-				.style('left', mouseX + 5 + 'px')
-	      .style('top', mouseY + 5 + 'px')
-        .html(paneTooltips(currentPane, nodeData));
-	  	} else {
-	  	// Hide the tooltip when the mouse doesn't find nodeData
-	    tooltipMain.style('opacity', 0);
-  	}
-	});
+	// activate tooltip when the mouse moves over an event circle (not available on mobile)
+  if (!mobile) {
+    mainCanvas.on('mousemove', function(e) {
+      drawCircles(hiddenCtx, true); // draw the hidden canvas
+      let mouseX = e.layerX || e.offsetX;
+      let mouseY = e.layerY || e.offsetY;
+      // pick the color from the mouse position
+      let pickedCol = hiddenCtx.getImageData(scaleFactor*mouseX, scaleFactor*mouseY, 1, 1).data;
+      let colKey = 'rgb(' + pickedCol[0] + ',' + pickedCol[1] + ',' + pickedCol[2] + ')';
+      let nodeData = colToCircle[colKey];  // get the data from our map!
+      if (nodeData) {
+        // Show the tooltip only when there is nodeData found by the mouse
+        tooltipMain.style('opacity', 0.88)
+          .style('left', mouseX + 5 + 'px')
+          .style('top', mouseY + 5 + 'px')
+          .html(paneTooltips(currentPane, nodeData));
+      } else { // Hide the tooltip when the mouse doesn't find nodeData
+        tooltipMain.style('opacity', 0);
+      }
+    });
 
-	// hide tooltip when mouse leaves main canvas (not sure why 'd =>' is needed here, but it errors w/o)
-	mainCanvas.on("mouseout", d => tooltipMain.style("opacity", 0));
+    // hide tooltip when mouse leaves main canvas (not sure why 'd =>' is needed here, but it errors w/o)
+    mainCanvas.on("mouseout", d => tooltipMain.style("opacity", 0));
+  }
 
   // turn the legendIconWrapper into a button that shows/hides the legends
   let legendIconWrapper = document.getElementById("legendIconWrapper");

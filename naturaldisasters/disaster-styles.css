@@ -105,41 +105,40 @@ header h2 {
     font-size: 1.4rem;
     bottom: 0;
   }
-}
+  .button {
+    padding: 10px 14px;
+    margin-left: 8px;
+    margin-right: 8px;
+    display: inline;
+    background-color: #7F7269;
+    border: none;
+    color: #fbf9f9;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  }
+  .button:hover {
+    background-color: #9e938c;
+  }
+  a.button {
+    text-decoration: none;
+    text-align: center;
+  }
+  a.button:hover {
+    color: #fbf9f9;
+  }
 
-.button {
-	padding: 10px 14px;
-  margin-left: 8px;
-  margin-right: 8px;
-	display: inline;
-	background-color: #7F7269;
-	border: none;
-	color: #fbf9f9;
-	cursor: pointer;
-  font-family: 'Raleway', sans-serif;
-  font-size: 1rem;
-	font-weight: bold;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-.button:hover {
-	background-color: #9e938c;
-}
-a.button {
-  text-decoration: none;
-  text-align: center;
-}
-a.button:hover {
-  color: #fbf9f9;
-}
-
-.button.noCTA {
-  background-color: #EAE0DB;
-  color: #7F7269;
-}
-.button.noCTA:hover {
-  background-color: #d8cdc7;
+  .button.noCTA {
+    background-color: #EAE0DB;
+    color: #7F7269;
+  }
+  .button.noCTA:hover {
+    background-color: #d8cdc7;
+  }
 }
 
 
@@ -176,25 +175,60 @@ a.button:hover {
   opacity: 0.3;
 }
 
-@media only screen and (max-device-width: 1000px) {
-  header {
-    width: 100%;
-  }
-  .library__graphic.graphic {
-    display: block;
-    width: 100%;
-  }
-  .graphic__prose {
-    width: 100%;
-    z-index: 100;
-  }
-  .graphic__prose .trigger {
-    min-height:300px;
-  }
+.vizWrapper {
+  position: relative;
 }
 
 .scrollToDiscover {
   display: none;
+}
+
+.rotateInstruct {
+  display: none;
+}
+
+
+@media only screen and (max-device-width: 1000px) {
+  header {
+    width: 100%;
+  }
+  @media (max-aspect-ratio: 2/3) {
+    .library__graphic.graphic {
+      display: block;
+      width: 100%;
+    }
+    .graphic__prose {
+      width: 100%;
+      z-index: 100;
+    }
+    .graphic__prose .trigger {
+      min-height:300px;
+    }
+    .vizWrapper {
+      position: sticky;
+      top: 0;
+    }
+    .rotateInstruct {
+      display: block;
+    }
+    .rotateIcon {
+      height: 30px;
+    }
+  }
+
+  @media (min-aspect-ratio: 3/2) {
+    .library__graphic.graphic {
+      width: 100%;
+    }
+    .graphic__prose {
+      z-index: 100;
+      margin: 0 10px;
+      width: 100%;
+    }
+    .graphic__prose .trigger {
+      min-height:280px;
+    }
+  }
 }
 
 /* if larger than 1360, the user should be able to see all the content */
@@ -378,6 +412,9 @@ a.button:hover {
   .graphic__prose .trigger.pane10 {
     height: 1px;
   }
+  .vizWrapper {
+    z-index: 6000;
+  }
   #viz-container {
     box-sizing: content-box;
     z-index: 5000;
@@ -392,73 +429,6 @@ a.button:hover {
   }
   .legendInstructions {
     display: none;
-  }
-}
-
-/* zoom the viz-container to fit the device-width */
-@media only screen and (max-device-width: 800px) {
-  #viz-container {
-    zoom: 0.690;
-  }
-}
-@media only screen and (max-device-width: 700px) {
-  #viz-container {
-    zoom: 0.590;
-  }
-}
-@media only screen and (max-device-width: 600px) {
-  #viz-container {
-    zoom: 0.490;
-  }
-}
-@media only screen and (max-device-width: 500px) {
-  #viz-container {
-    zoom: 0.440;
-  }
-}
-@media only screen and (max-device-width: 450px) {
-  #viz-container {
-    zoom: 0.402;
-  }
-}
-@media only screen and (max-device-width: 411px) {
-  #viz-container {
-    zoom: 0.390;
-  }
-}
-@media only screen and (max-device-width: 399px) {
-  #viz-container {
-    zoom: 0.370;
-  }
-}
-@media only screen and (max-device-width: 379px) {
-  #viz-container {
-    zoom: 0.360;
-  }
-}
-@media only screen and (max-device-width: 369px) {
-  #viz-container {
-    zoom: 0.350;
-  }
-}
-@media only screen and (max-device-width: 359px) {
-  #viz-container {
-    zoom: 0.330;
-  }
-}
-@media only screen and (max-device-width: 339px) {
-  #viz-container {
-    zoom: 0.310;
-  }
-}
-@media only screen and (max-device-width: 319px) {
-  #viz-container {
-    zoom: 0.280;
-  }
-}
-@media only screen and (max-device-width: 290px) {
-  #viz-container {
-    zoom: 0.25;
   }
 }
 
@@ -659,4 +629,40 @@ g.annotations, .annotation-note-label {
   text-align: center;
   display: table-cell;
   padding: 50px;
+}
+
+
+/* ZOOM INSTRUCTIONS FOR VIZ CONTAINER */
+/* zoom the viz-container to fit the device-width or device-height, depending on orientation */
+/* zoom instruction does not work on Firefox, but few use Firefox on mobile so that's OK by me */
+@media only screen and (max-aspect-ratio: 2/3) { /* portrait mode */
+  @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
+  @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
+  @media (max-device-width: 599px) { #viz-container {zoom: 0.490;} }
+  @media (max-device-width: 499px) { #viz-container {zoom: 0.440;} }
+  @media (max-device-width: 449px) { #viz-container {zoom: 0.402;} }
+  @media (max-device-width: 411px) { #viz-container {zoom: 0.390;} }
+  @media (max-device-width: 399px) { #viz-container {zoom: 0.370;} }
+  @media (max-device-width: 379px) { #viz-container {zoom: 0.360;} }
+  @media (max-device-width: 369px) { #viz-container {zoom: 0.350;} }
+  @media (max-device-width: 359px) { #viz-container {zoom: 0.330;} }
+  @media (max-device-width: 339px) { #viz-container {zoom: 0.310;} }
+  @media (max-device-width: 319px) { #viz-container {zoom: 0.280;} }
+  @media (max-device-width: 290px) { #viz-container {zoom: 0.250;} }
+}
+
+@media only screen and (min-aspect-ratio: 3/2) { /* landscape mode */
+  @media (max-device-height: 999px) { #viz-container {zoom: 0.787;} }
+  @media (max-device-height: 699px) { #viz-container {zoom: 0.673;} }
+  @media (max-device-height: 599px) { #viz-container {zoom: 0.559;} }
+  @media (max-device-height: 499px) { #viz-container {zoom: 0.502;} }
+  @media (max-device-height: 449px) { #viz-container {zoom: 0.459;} }
+  @media (max-device-height: 411px) { #viz-container {zoom: 0.445;} }
+  @media (max-device-height: 399px) { #viz-container {zoom: 0.422;} }
+  @media (max-device-height: 379px) { #viz-container {zoom: 0.411;} }
+  @media (max-device-height: 369px) { #viz-container {zoom: 0.400;} }
+  @media (max-device-height: 359px) { #viz-container {zoom: 0.376;} }
+  @media (max-device-height: 339px) { #viz-container {zoom: 0.354;} }
+  @media (max-device-height: 319px) { #viz-container {zoom: 0.319;} }
+  @media (max-device-height: 290px) { #viz-container {zoom: 0.285;} }
 }
