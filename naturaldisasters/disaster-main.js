@@ -29,6 +29,7 @@ let mobile = false;
 //   and hopefully scale to fit 100% of the height (or close enough)
 function orderPrimaryElements() {
   let viewWidth = Math.min( window.innerWidth, screen.width);
+  // let viewHeight = Math.min( window.innerHeight, screen.height);
   (() => {
     const list = document.querySelector(".library__graphic");
     if (viewWidth < 1000) {
@@ -38,6 +39,12 @@ function orderPrimaryElements() {
     } else {
       list.appendChild(document.querySelector("#viz-container"));
     }
+    // for mobile/portrait mode, move the "thanks" section below the library__graphic section
+    // if (viewWidth < 1000 && viewHeight > 1*viewWidth) {
+    //   const main = document.querySelector(".mainContent");
+    //   main.appendChild(document.querySelector(".postProse.thanks"));
+    //   main.appendChild(document.querySelector("#contactMe"));
+    // }
   })();
 }
 orderPrimaryElements()

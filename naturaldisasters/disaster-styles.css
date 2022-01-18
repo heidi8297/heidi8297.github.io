@@ -274,6 +274,11 @@ header h2 {
   opacity: 0.3;
 }
 
+.postProseMobile {
+  display: none;
+  margin-top: 15px;
+}
+
 /* scrolly text - active segment */
 .graphic__prose .active {
 	opacity: 1; /* overwrites the opacities specified above when 'active' */
@@ -410,7 +415,7 @@ header h2 {
 
 @media only screen and (max-device-width: 1000px) {
   .graphic__prose .pane9B {
-    height: 100px;
+    height: 50px;
   }
   .graphic__prose .trigger.pane10 {
     height: 1px;
@@ -432,6 +437,9 @@ header h2 {
   }
   .legendInstructions {
     display: none;
+  }
+  .graphic__prose .trigger.pane2 {
+  	min-height: 190px;
   }
 }
 
@@ -639,6 +647,9 @@ g.annotations, .annotation-note-label {
 /* zoom the viz-container to fit the device-width or device-height, depending on orientation */
 /* zoom instruction does not work on Firefox, but few use Firefox on mobile so that's OK by me */
 @media only screen and (max-aspect-ratio: 2/3) { /* portrait mode */
+  .postProseMobile {display: block;}
+  .postProse {display: none;}
+  .preProse {margin-top: 20px;}
   @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
   @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
   @media (max-device-width: 599px) { #viz-container {zoom: 0.490;} }
