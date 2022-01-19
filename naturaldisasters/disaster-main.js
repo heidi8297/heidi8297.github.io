@@ -37,7 +37,7 @@ function orderPrimaryElements() {
       list.appendChild(document.querySelector(".graphic__prose"));
       document.querySelector(".zoomInstruct").innerHTML = "If the visualization doesn't fit your screen, try pinching to zoom out.<br /><br />"
     } else {
-      list.appendChild(document.querySelector("#viz-container"));
+      list.appendChild(document.querySelector(".vizWrapper"));
     }
     // for mobile/portrait mode, move the "thanks" section below the library__graphic section
     // if (viewWidth < 1000 && viewHeight > 1*viewWidth) {
