@@ -55,6 +55,10 @@ function proceedAnyway() {
   d3.select(".mobileWarning").style("display", "none")
 }
 
+function goHome() {
+  window.location = "https://heidistockton.com"
+}
+
 // one function to rule them all
 // this function handles all the viz + updates, it is used in the setupWaypointsTriggers.js script
 window.createGraphic = function(graphicSelector) {
@@ -550,6 +554,7 @@ window.createGraphic = function(graphicSelector) {
         .join("line")
         .transition()
         .duration(speedFactor*1000)
+        .ease(ease)
         .attr("y1", d => scaleYeventCount5(d[1]))
         .attr("y2", d => scaleYeventCount5(d[2]))
       slopegraphG5.selectAll("line.deathChanges")
@@ -557,6 +562,7 @@ window.createGraphic = function(graphicSelector) {
         .join("line")
         .transition()
         .duration(speedFactor*1000)
+        .ease(ease)
         .attr("y1", d => scaleYdeathCount5(d[1]))
         .attr("y2", d => scaleYdeathCount5(d[2]))
       slopegraphG5A.transition().call(fadeInStd) // pane FIVE A
@@ -574,6 +580,7 @@ window.createGraphic = function(graphicSelector) {
         .join("line")
         .transition()
         .duration(speedFactor*1000)
+        .ease(ease)
 				.attr("y1", d => scaleYeventPct(0))
 				.attr("y2", d => scaleYeventPct(d[1]))
       slopegraphG5.selectAll("line.deathChanges") // pane FIVE B
@@ -581,6 +588,7 @@ window.createGraphic = function(graphicSelector) {
         .join("line")
         .transition()
         .duration(speedFactor*1000)
+        .ease(ease)
 				.attr("y1", d => scaleYdeathPct(0))
 				.attr("y2", d => scaleYdeathPct(d[1]))
       slopegraphG5B.transition().call(fadeInStd) // pane FIVE B
@@ -607,6 +615,7 @@ window.createGraphic = function(graphicSelector) {
 			lollipopLinesG7.selectAll("line") // pane SEVEN
 				.transition()
 				.duration(speedFactor*800)
+        .ease(ease)
 				.attr("x1", d => scaleXyear7(d.year)-8+16*d.jitter)
 				.attr("y1", d => scaleYdeaths(d.deaths)+6) // this is the top of the line
 				.attr("x2", d => scaleXyear7(d.year)-8+16*d.jitter)
@@ -627,6 +636,7 @@ window.createGraphic = function(graphicSelector) {
       teardropsG8.selectAll("path").transition() // pane EIGHT
         .delay(speedFactor*300)
         .duration(speedFactor*1000)
+        .ease(ease)
         .attr('opacity',0.7)
         .attr("transform", function(d,i) {  // first position the teardrops at lat/long
           let translateX = projection([d.longitude,d.latitude])[0]
@@ -636,6 +646,7 @@ window.createGraphic = function(graphicSelector) {
         .transition()
         .delay(speedFactor*200)
         .duration(speedFactor*800)
+        .ease(ease)
         .attr("transform", function(d,i) { // then move them to their respective offsets, if applicable
           let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX
           let translateY = projection([d.longitude,d.latitude])[1]+d.offsetY
@@ -644,6 +655,7 @@ window.createGraphic = function(graphicSelector) {
       teardropLinesG8.selectAll("line").transition() // pane EIGHT
         .delay(speedFactor*1500)
         .duration(speedFactor*800)  // add/extend the lines at the same time as moving the teardrops
+        .ease(ease)
         .attr("x2", d => projection([d.longitude,d.latitude])[0]+d.offsetX)
 				.attr("y2", d => projection([d.longitude,d.latitude])[1]+d.offsetY)
 
@@ -773,6 +785,7 @@ window.createGraphic = function(graphicSelector) {
     tearTransOffset = 40
     teardropsG8.selectAll("path.TR")  // top right - sized by death toll
       .transition().duration(scaleFactor*600)
+      .ease(ease)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
         let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
@@ -781,6 +794,7 @@ window.createGraphic = function(graphicSelector) {
       } )
     teardropsG8.selectAll("path.BR")  // bottom right - sized by total affected
       .transition().duration(scaleFactor*600)
+      .ease(ease)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
         let translateX = projection([d.longitude,d.latitude])[0] - tearTransOffset
@@ -789,6 +803,7 @@ window.createGraphic = function(graphicSelector) {
       } )
     teardropsG8.selectAll("path.BL")  // bottom left - sized by damages
       .transition().duration(scaleFactor*600)
+      .ease(ease)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
         let translateX = projection([d.longitude,d.latitude])[0] + tearTransOffset
@@ -797,6 +812,7 @@ window.createGraphic = function(graphicSelector) {
       } )
     teardropsG8.selectAll("path.TL")  // top left - sized by geoIdCount
       .transition().duration(scaleFactor*600)
+      .ease(ease)
       .attr("opacity",0)
       .attr("transform", function(d,i) {
         let translateX = projection([d.longitude,d.latitude])[0]+d.offsetX + tearTransOffset
@@ -2124,6 +2140,7 @@ window.createGraphic = function(graphicSelector) {
     lollipopLinesG7.selectAll("line") // pane SEVEN
       .transition()
       .duration(speedFactor*800)
+      .ease(ease)
       .attr("x1", d => scaleXyear7(d.year)-8+16*d.jitter)
       .attr("y1", d => dispHeight*1.2)
       .attr("x2", d => scaleXyear7(d.year)-8+16*d.jitter)
@@ -2134,6 +2151,7 @@ window.createGraphic = function(graphicSelector) {
     transitionTeardrops8()
     teardropLinesG8.selectAll("line").transition() // pane EIGHT
       .duration(speedFactor*800)
+      .ease(ease)
       .attr("x2", d => projection([d.longitude,d.latitude])[0])
       .attr("y2", d => projection([d.longitude,d.latitude])[1])
     d3.select(".teardropLegend").style("display", "none") // pane EIGHT

@@ -193,7 +193,7 @@ header h2 {
     width: 100%;
     margin: 2rem auto 0 auto;
   }
-  @media (max-aspect-ratio: 2/3) {
+  @media (max-aspect-ratio: 2/3) { /* portrait mode */
     .library__graphic.graphic {
       display: block;
       width: 100%;
@@ -218,7 +218,7 @@ header h2 {
     }
   }
 
-  @media (min-aspect-ratio: 3/2) {
+  @media (min-aspect-ratio: 3/2) { /* landscape mode */
     .library__graphic.graphic {
       width: 100%;
       margin: 0 auto;
@@ -250,7 +250,7 @@ header h2 {
 }
 
 .legendInstructions {
-  height: 390px;
+  height: 355px;
   opacity: 0.3;
 }
 
@@ -644,39 +644,77 @@ g.annotations, .annotation-note-label {
 
 
 /* ZOOM INSTRUCTIONS FOR VIZ CONTAINER */
-/* zoom the viz-container to fit the device-width or device-height, depending on orientation */
+/* zoom the viz-container to fit the width or height, depending on orientation */
 /* zoom instruction does not work on Firefox, but few use Firefox on mobile so that's OK by me */
 @media only screen and (max-aspect-ratio: 2/3) { /* portrait mode */
   .postProseMobile {display: block;}
   .postProse {display: none;}
   .preProse {margin-top: 20px;}
-  @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
-  @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
-  @media (max-device-width: 599px) { #viz-container {zoom: 0.490;} }
-  @media (max-device-width: 499px) { #viz-container {zoom: 0.440;} }
-  @media (max-device-width: 449px) { #viz-container {zoom: 0.402;} }
-  @media (max-device-width: 411px) { #viz-container {zoom: 0.390;} }
-  @media (max-device-width: 399px) { #viz-container {zoom: 0.370;} }
-  @media (max-device-width: 379px) { #viz-container {zoom: 0.360;} }
-  @media (max-device-width: 369px) { #viz-container {zoom: 0.350;} }
-  @media (max-device-width: 359px) { #viz-container {zoom: 0.330;} }
-  @media (max-device-width: 339px) { #viz-container {zoom: 0.310;} }
-  @media (max-device-width: 319px) { #viz-container {zoom: 0.280;} }
-  @media (max-device-width: 290px) { #viz-container {zoom: 0.250;} }
+  #viz-container, .vizWrapper {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media (max-width: 999px) { #viz-container {zoom: 0.690;} }
+  @media (max-width: 699px) { #viz-container {zoom: 0.590;} }
+  @media (max-width: 599px) { #viz-container {zoom: 0.490;} }
+  @media (max-width: 499px) { #viz-container {zoom: 0.440;} }
+  @media (max-width: 449px) { #viz-container {zoom: 0.402;} }
+  @media (max-width: 411px) { #viz-container {zoom: 0.390;} }
+  @media (max-width: 399px) { #viz-container {zoom: 0.370;} }
+  @media (max-width: 379px) { #viz-container {zoom: 0.360;} }
+  @media (max-width: 369px) { #viz-container {zoom: 0.350;} }
+  @media (max-width: 359px) { #viz-container {zoom: 0.330;} }
+  @media (max-width: 339px) { #viz-container {zoom: 0.310;} }
+  @media (max-width: 319px) { #viz-container {zoom: 0.280;} }
+  @media (max-width: 290px) { #viz-container {zoom: 0.250;} }
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+    @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
+    @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
+    @media (max-device-width: 599px) { #viz-container {zoom: 0.490;} }
+    @media (max-device-width: 499px) { #viz-container {zoom: 0.440;} }
+    @media (max-device-width: 449px) { #viz-container {zoom: 0.402;} }
+    @media (max-device-width: 411px) { #viz-container {zoom: 0.390;} }
+    @media (max-device-width: 399px) { #viz-container {zoom: 0.370;} }
+    @media (max-device-width: 379px) { #viz-container {zoom: 0.360;} }
+    @media (max-device-width: 369px) { #viz-container {zoom: 0.350;} }
+    @media (max-device-width: 359px) { #viz-container {zoom: 0.330;} }
+    @media (max-device-width: 339px) { #viz-container {zoom: 0.310;} }
+    @media (max-device-width: 319px) { #viz-container {zoom: 0.280;} }
+    @media (max-device-width: 290px) { #viz-container {zoom: 0.250;} }
+  }
 }
 
 @media only screen and (min-aspect-ratio: 3/2) { /* landscape mode */
-  @media (max-device-height: 999px) { #viz-container {zoom: 0.787;} }
-  @media (max-device-height: 699px) { #viz-container {zoom: 0.673;} }
-  @media (max-device-height: 599px) { #viz-container {zoom: 0.559;} }
-  @media (max-device-height: 499px) { #viz-container {zoom: 0.502;} }
-  @media (max-device-height: 449px) { #viz-container {zoom: 0.459;} }
-  @media (max-device-height: 411px) { #viz-container {zoom: 0.445;} }
-  @media (max-device-height: 399px) { #viz-container {zoom: 0.422;} }
-  @media (max-device-height: 379px) { #viz-container {zoom: 0.411;} }
-  @media (max-device-height: 369px) { #viz-container {zoom: 0.400;} }
-  @media (max-device-height: 359px) { #viz-container {zoom: 0.376;} }
-  @media (max-device-height: 339px) { #viz-container {zoom: 0.354;} }
-  @media (max-device-height: 319px) { #viz-container {zoom: 0.319;} }
-  @media (max-device-height: 290px) { #viz-container {zoom: 0.285;} }
+  @media (max-height: 999px) { #viz-container {zoom: 0.787;} }
+  @media (max-height: 699px) { #viz-container {zoom: 0.673;} }
+  @media (max-height: 599px) { #viz-container {zoom: 0.559;} }
+  @media (max-height: 499px) { #viz-container {zoom: 0.502;} }
+  @media (max-height: 449px) { #viz-container {zoom: 0.459;} }
+  @media (max-height: 411px) { #viz-container {zoom: 0.445;} }
+  @media (max-height: 399px) { #viz-container {zoom: 0.422;} }
+  @media (max-height: 379px) { #viz-container {zoom: 0.411;} }
+  @media (max-height: 369px) { #viz-container {zoom: 0.400;} }
+  @media (max-height: 359px) { #viz-container {zoom: 0.376;} }
+  @media (max-height: 339px) { #viz-container {zoom: 0.354;} }
+  @media (max-height: 319px) { #viz-container {zoom: 0.319;} }
+  @media (max-height: 290px) { #viz-container {zoom: 0.285;} }
+
+  /* this query SHOULD detect if the browser is Chrome. */
+  /* this browser-detection method is generally frowned upon, but I coulnd't find anotehr solution */
+  /* hopefully I can come back to it and find/try something more robust */
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+    @media (max-device-height: 999px) { #viz-container {zoom: 0.787;} }
+    @media (max-device-height: 699px) { #viz-container {zoom: 0.673;} }
+    @media (max-device-height: 599px) { #viz-container {zoom: 0.559;} }
+    @media (max-device-height: 499px) { #viz-container {zoom: 0.502;} }
+    @media (max-device-height: 449px) { #viz-container {zoom: 0.459;} }
+    @media (max-device-height: 411px) { #viz-container {zoom: 0.445;} }
+    @media (max-device-height: 399px) { #viz-container {zoom: 0.422;} }
+    @media (max-device-height: 379px) { #viz-container {zoom: 0.411;} }
+    @media (max-device-height: 369px) { #viz-container {zoom: 0.400;} }
+    @media (max-device-height: 359px) { #viz-container {zoom: 0.376;} }
+    @media (max-device-height: 339px) { #viz-container {zoom: 0.354;} }
+    @media (max-device-height: 319px) { #viz-container {zoom: 0.319;} }
+    @media (max-device-height: 290px) { #viz-container {zoom: 0.285;} }
+  }
 }
