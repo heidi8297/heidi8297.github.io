@@ -193,7 +193,7 @@ header h2 {
     width: 100%;
     margin: 2rem auto 0 auto;
   }
-  @media (max-aspect-ratio: 2/3) { /* portrait mode */
+  @media (max-aspect-ratio: 2/3) {
     .library__graphic.graphic {
       display: block;
       width: 100%;
@@ -220,7 +220,7 @@ header h2 {
     }
   }
 
-  @media (min-aspect-ratio: 3/2) { /* landscape mode */
+  @media (min-aspect-ratio: 3/2) {
     .library__graphic.graphic {
       width: 100%;
       margin: 0 auto;
@@ -646,16 +646,12 @@ g.annotations, .annotation-note-label {
 
 
 /* ZOOM INSTRUCTIONS FOR VIZ CONTAINER */
-/* zoom the viz-container to fit the width or height, depending on orientation */
+/* zoom the viz-container to fit the device-width or device-height, depending on orientation */
 /* zoom instruction does not work on Firefox, but few use Firefox on mobile so that's OK by me */
-@media only screen and (max-aspect-ratio: 2/3) { /* portrait mode */
+@media only screen and (max-device-width: 1000px) and (max-aspect-ratio: 2/3) { /* portrait mode */
   .postProseMobile {display: block;}
   .postProse {display: none;}
   .preProse {margin-top: 20px;}
-  #viz-container, .vizWrapper {
-    margin-left: auto;
-    margin-right: auto;
-  }
   @media (max-width: 999px) { #viz-container {zoom: 0.690;} }
   @media (max-width: 699px) { #viz-container {zoom: 0.590;} }
   @media (max-width: 599px) { #viz-container {zoom: 0.490;} }
@@ -690,7 +686,7 @@ g.annotations, .annotation-note-label {
   }
 }
 
-@media only screen and (min-aspect-ratio: 3/2) { /* landscape mode */
+@media only screen and (max-device-width: 1000px) and (min-aspect-ratio: 3/2) { /* landscape mode */
   @media (max-height: 999px) { #viz-container {zoom: 0.787;} }
   @media (max-height: 699px) { #viz-container {zoom: 0.673;} }
   @media (max-height: 599px) { #viz-container {zoom: 0.559;} }
