@@ -208,6 +208,8 @@ header h2 {
     }
     .vizWrapper {
       position: sticky;
+      width: 100vw;
+      background-color: #F4EFED;
       top: 0;
     }
     .rotateInstruct {
@@ -667,6 +669,10 @@ g.annotations, .annotation-note-label {
   @media (max-width: 339px) { #viz-container {zoom: 0.310;} }
   @media (max-width: 319px) { #viz-container {zoom: 0.280;} }
   @media (max-width: 290px) { #viz-container {zoom: 0.250;} }
+
+  /* this query SHOULD detect if the browser is Chrome. */
+  /* this browser-detection method is generally frowned upon, but I coulnd't find anotehr solution */
+  /* hopefully I can come back to it and find/try something more robust */
   @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
     @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
     @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
@@ -699,9 +705,7 @@ g.annotations, .annotation-note-label {
   @media (max-height: 319px) { #viz-container {zoom: 0.319;} }
   @media (max-height: 290px) { #viz-container {zoom: 0.285;} }
 
-  /* this query SHOULD detect if the browser is Chrome. */
-  /* this browser-detection method is generally frowned upon, but I coulnd't find anotehr solution */
-  /* hopefully I can come back to it and find/try something more robust */
+  /* detect if the browser is Chrome */
   @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
     @media (max-device-height: 999px) { #viz-container {zoom: 0.787;} }
     @media (max-device-height: 699px) { #viz-container {zoom: 0.673;} }
