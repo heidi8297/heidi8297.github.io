@@ -718,3 +718,10 @@ g.annotations, .annotation-note-label {
     @media (max-device-height: 290px) { #viz-container {zoom: 0.285;} }
   }
 }
+
+@media (max-width: 700px) {
+  #contactMe { /* adjusting formatting here to accommodate 10px margin on "body" */
+    padding-left: calc(5% - 10px);
+    padding-right: calc(5% - 10px);
+  }
+}

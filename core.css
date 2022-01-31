@@ -68,11 +68,15 @@ section {
 
 @media (max-width: 700px) {
   #contactMe a {
-    padding: 3%;
+    padding: 4.9%;
     font-size: 1.6rem;
   }
   #contactMe .githubLink {
     font-size: 1.74rem;
+  }
+  #contactMe {
+    padding-left: 5%;
+    padding-right: 5%;
   }
 }
 

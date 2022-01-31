@@ -199,7 +199,7 @@ and make sure the svg is still positioned well */
   width: 260px;
   position: relative;
   margin-right: 70px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 #aboutMe .section-title {
@@ -711,7 +711,7 @@ and make sure the svg is still positioned well */
 
 
 @media (max-width: 500px) {
-  #header, #aboutMe, #portfolio, #contactMe {
+  #header, #aboutMe, #portfolio {
     padding-left: 3%;
     padding-right: 3%;
   }
