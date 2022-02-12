@@ -1711,7 +1711,7 @@ window.createGraphic = function(graphicSelector) {
     let annotAttr8 = [
       {
         note: { label: "Europe's 2003 heat wave was recorded in 155 distinct locations across 15 countries" },
-        x: 510, y: 185, dx: 30, dy: -35
+        x: 510, y: 185, dx: 20, dy: -35
       },
       {
         note: { label: "This drought in Africa (The Congo, Ethiopa and Sudan) caused a famine that killed an estimated 450,000 people." },
@@ -1723,7 +1723,7 @@ window.createGraphic = function(graphicSelector) {
       }
     ]
     let makeAnnotations8 = d3.annotation()
-      .textWrap(160)
+      .textWrap(154)
       .annotations(annotAttr8)
       .type(d3.annotationCallout)
     annotations8 = svgForeground.append("g")
@@ -1934,7 +1934,7 @@ window.createGraphic = function(graphicSelector) {
         cy = scaleFactor*(paneDim(9).top + (paneDim(9).bottom - paneDim(9).top)/2)
         r = scaleFactor*scaleRdeaths(node.deaths)
       }
-			circleEndInfo[i] = {'cx': cx, 'cy': cy, 'r':r, 'opacity': 0.6}
+			circleEndInfo[i] = {'cx': cx, 'cy': cy, 'r':r, 'opacity': 0.45}
     }
 	} // transitionPane9A()
 
@@ -2282,7 +2282,7 @@ window.createGraphic = function(graphicSelector) {
     // define offsets for the teardrop map
     let offsetValues = {
       '2008-0192':[40,120],
-      '1970-0063':[-20,-150],
+      '1970-0063':[-15,-150],
       '1973-9005':[-90,-30],
       '1991-0120':[120,-10]
     }
