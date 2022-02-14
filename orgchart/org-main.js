@@ -1,4 +1,27 @@
 
+/**
+ * Easy selector helper function
+ */
+const select = (el, all = false) => {
+  el = el.trim()
+  if (all) {
+    return [...document.querySelectorAll(el)]
+  } else {
+    return document.querySelector(el)
+  }
+}
+
+
+function setIsotope() {
+  let portfolioContainer = select('.teams');
+  if (portfolioContainer) {
+    let portfolioIsotope = new Isotope(portfolioContainer, {
+      itemSelector: '.teamCard'
+    });
+  }
+}
+
+
 // started this code with a basic collapsible tree diagram from "d3noob" (https://github.com/d3noob)
 // example pulled from: https://blockbuilder.org/d3noob/9de0768412ac2ce5dbec430bb1370efe
 
@@ -50,35 +73,6 @@ if (treeFile === "DMOrgChart.json") {
   etwText = "(ETW";
 }
 
-// may get rid of this function at some point - keeping it here for later use
-drag = simulation => {
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-}
-function range(start, end) {
-    var ans = [];
-    for (let i = start; i <= end; i++) {
-        ans.push(i);
-    }
-    return ans;
-}
-
 // Creating Pie generator
 var pie = d3.pie()
   .sort(null);
@@ -117,7 +111,7 @@ function formChanged() {
   rolename2 = (rolename2 === "" ? "sdjkadjskladsds" : rolename2);
   idealTeamSize = document.getElementsByName("inputTeamSize")[0].value;
   console.log("form changed",rolename1,rolename2);
-  renderTree();
+  renderTree(setIsotope);
 }
 
 // shift the contents of an array by n
@@ -221,64 +215,9 @@ function childCircleRadius(childCount) {
 
 
 
-function renderForceTree() { d3.json(treeFile).then( function(flatData) {
-    var rootForce = d3.stratify()
-      .id(d => d.user_ntid)
-      .parentId(d => d.manager_ntid)
-      (flatData);
-    const linksForce = rootForce.links();
-    const nodesForce = rootForce.descendants();
-
-    const simulation = d3.forceSimulation(nodesForce)
-        .force("link", d3.forceLink(linksForce).id(d => d.user_ntid).distance(0).strength(1))
-        .force("charge", d3.forceManyBody().strength(-6))
-        .force("x", d3.forceX())
-        .force("y", d3.forceY());
-
-    const svgForce = d3.select(".orgForce").append("svg")
-        .attr("viewBox", [-600 / 2, -400 / 2, 600, 400]);
-
-    const linkForce = svgForce.append("g")
-        .attr("stroke", "#e5e5e5")
-        .attr("stroke-opacity", 0.9)
-        .attr("stroke-width",0.25)
-      .selectAll("line")
-      .data(linksForce)
-      .join("line");
-
-    const nodeForce = svgForce.append("g")
-        .attr("fill", "#fff")
-        .attr("stroke-width", 0.25)
-      .selectAll("circle")
-      .data(nodesForce)
-      .join("circle")
-        .attr("fill", d=> colorCircle(d.data))
-        .attr("r", 1.2)
-        .call(drag(simulation));
-
-    nodeForce.append("title")
-        .text(d => d.data.display_name);
-
-    simulation.on("tick", () => {
-      linkForce
-          .attr("x1", d => d.source.x)
-          .attr("y1", d => d.source.y)
-          .attr("x2", d => d.target.x)
-          .attr("y2", d => d.target.y);
-
-      nodeForce
-          .attr("cx", d => d.x)
-          .attr("cy", d => d.y);
-    });
-
-    return svgForce.node();
-  })
-} // end renderForceTree
-// renderForceTree();
-
 
 // read in a 'flattened' json file (one object per node)
-function renderTree() {d3.json(treeFile).then(function(flatData) {
+function renderTree(myCallback) {d3.json(treeFile).then(function(flatData) {
 
   // call an initial zoom event to move the graph into view (without this, JD's name gets cut off)
   svg.call(zoom.transform,d3.zoomIdentity.scale(1).translate(initialOffsetX,initialOffsetY));
@@ -350,7 +289,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
       leaders.forEach(function(thisLeader, iLead) {
         if (leaderFound) { return }
         teamCount = thisLeader.descendants().length;
-        console.log(thisLeader.data.display_name,"teamCount:",teamCount);
+        //console.log(thisLeader.data.display_name,"teamCount:",teamCount);
         if (teamCount > idealTeamSize) {  // once we get a team size larger than idealTeamSize, it's time to compare
           let identifiedLeader;
           let identifiedTeamCount;
@@ -372,7 +311,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
           if (thisLeader.depth <= 1 || thisLeader.height >= 5 || thisLeader.data.teamSize > idealTeamSize*6 ) {
             identifiedLeader = leaders[iLead-1];
             identifiedTeamCount = lastTeamCount;
-            console.log("not this leader",thisLeader.data.display_name);
+            //console.log("not this leader",thisLeader.data.display_name);
           }
 
           leaderFound = true;
@@ -824,7 +763,7 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
   d3.select(".teamCards .row.teams").selectAll("div.teamCard")
     .data(teamLeaders)
     .join("div")
-      .attr("class","col-12 col-md-6 col-xl-4 teamCard")
+      .attr("class","col-xl-4 col-md-6 teamCard")
       .append("div")
         .attr("class",d=>"d-flex flex-column align-items-start justify-content-between block "+d.data.user_ntid)
         .attr("id",d=>"teamGraphs-"+d.data.user_ntid);
@@ -1039,10 +978,10 @@ function renderTree() {d3.json(treeFile).then(function(flatData) {
 
   });  // end of team cards section
 
+  myCallback();
 
-
-})};
-window.setTimeout(renderTree, animationDelay);
+})};  // renderTree()
+window.setTimeout(renderTree(setIsotope), animationDelay);
 
 
 
