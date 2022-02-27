@@ -20,7 +20,6 @@ if (history.scrollRestoration) {
 //     }
 // })();
 
-
 let mobile = false;
 // for smaller devices/screens, move the viz container div above the graphic prose div
 //   this allows us to create a "stacked" view for the viz and the text (phone)
@@ -39,12 +38,6 @@ function orderPrimaryElements() {
     } else {
       list.appendChild(document.querySelector(".vizWrapper"));
     }
-    // for mobile/portrait mode, move the "thanks" section below the library__graphic section
-    // if (viewWidth < 1000 && viewHeight > 1*viewWidth) {
-    //   const main = document.querySelector(".mainContent");
-    //   main.appendChild(document.querySelector(".postProse.thanks"));
-    //   main.appendChild(document.querySelector("#contactMe"));
-    // }
   })();
 }
 orderPrimaryElements()
@@ -123,6 +116,13 @@ window.createGraphic = function(graphicSelector) {
   let colorblindMode = false;
 
 	let setupComplete = false;
+
+  // detect if offscreenCanvas is supported by the browser
+  if (typeof OffscreenCanvas !== "undefined") {
+      offscreenSupported = true;
+  } else {
+      offscreenSupported = false;
+  }
 
   // check to see if colorblind mode has been activated
   const queryString = window.location.search;
@@ -266,7 +266,7 @@ window.createGraphic = function(graphicSelector) {
 	// stats.domElement.style.position = 'fixed';
 	// stats.domElement.style.left = '0px';
 	// stats.domElement.style.top = '0px';
-
+  //
 	// document.body.appendChild( stats.domElement );
 
 
@@ -340,6 +340,10 @@ window.createGraphic = function(graphicSelector) {
 		  .attr("class", "tooltip tooltipMain");
     tooltipAux = d3.select('body').append("div")
       .attr("class", "tooltip tooltipAux");
+
+
+    //const offscreen = document.querySelector('.mainCanvas').transferControlToOffscreen();
+    //const mainWorker = new Worker('mainWorker.js');
 
 	}
 	initializeDrawingSpaces()
@@ -729,11 +733,11 @@ window.createGraphic = function(graphicSelector) {
     // the below is just 'animateCircles' without the 'moveCircles' step
     let dt = 0;
     let t = d3.timer(function(elapsed) {
-      // stats.begin();
+      //stats.begin();
       interpCircMove(elapsed - dt);
       dt = elapsed;
       drawCircles(mainCtx)
-      // stats.end();
+      //stats.end();
       if (elapsed > setDuration || stepInc !== lockInc) t.stop();
     });
     update(0)
@@ -2056,11 +2060,11 @@ window.createGraphic = function(graphicSelector) {
 		moveCircles()
 		let dt = 0;
 		let t = d3.timer(function(elapsed) {
-			// stats.begin();
+			//stats.begin();
 			interpCircMove(elapsed - dt);
 			dt = elapsed;
 			drawCircles(mainCtx)
-			// stats.end();
+			//stats.end();
 			if (elapsed > setDuration || currentInc !== lockInc) {
         if (secondAnimNeeded) {readyFor2ndAnim = true; }
         t.stop()

@@ -72,7 +72,7 @@ h4 {
   text-align: center;
   line-height: 1;
   height: 100vh;
-  padding: 2% 12% calc(7% + 10px) 12%;
+  padding: 2% 12% calc(5% + 30px) 12%;
 }
 
 .introText {
@@ -190,7 +190,7 @@ and make sure the svg is still positioned well */
 --------------------------------------------------------------*/
 #aboutMe {
   background-image: linear-gradient(#DEEEFF, #DEE1FF);
-  padding: calc(7% + 10px) 12%;
+  padding: calc(5% + 30px) 12%;
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
 }
 
@@ -243,7 +243,7 @@ and make sure the svg is still positioned well */
 --------------------------------------------------------------*/
 
 #portfolio {
-  padding: calc(7% + 10px) 12%;
+  padding: calc(5% + 30px) 12%;
 }
 
 #portfolio .section-title {
@@ -483,7 +483,19 @@ and make sure the svg is still positioned well */
 
 @media (max-width: 800px) {
   #testimonial-carousel, .carousel-inner.heidis-carousel  {
-    height: 420px;
+    height: 360px;
+  }
+  .portfolio #portfolio-flters li {
+    padding: 10px 8px;
+  }
+  .portfolio #portfolio-flters {
+    padding: 2px 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .portfolio #portfolio-flters li {
+    padding: 10px 4px;
   }
 }
 

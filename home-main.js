@@ -136,20 +136,6 @@
 
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-const spellsFullList = ["Lumos","Accio","Muffliato","Riddikulus","Expecto Patronum",
-	"Expelliarmus","Impedimenta","Stupefy","Crucio","Avada Kedavra"];
-
-
-// determine the size of each star based on the emphasis descriptor value
-function starSize(thisDescriptorValue, scaler = 1) {
-	return scaler*0.3*(12+thisDescriptorValue)
-};
-
-// define a "jitter" function based on the namePosition
-function jitter(namePos,harrySeparate = true,rangeDefault = 0.2) {
-	return namePos -(0.5*rangeDefault) + Math.random()*rangeDefault;
-};
-
 // Color scale: give me a number, I return a color
 // const color = d3.scaleOrdinal()
 // 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
@@ -285,12 +271,6 @@ grad12.append('stop').attr('class', 'stop-left').attr('offset', '0.1');
 grad12.append('stop').attr('class', 'stop-right').attr('offset', '0.9');
 
 
-// Color scale: give me a number, I return a color
-// const color = d3.scaleOrdinal()
-// 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-// 	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
-// 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6"]);
-
 const color = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
 	.range(["url(#grad01)","url(#grad01)","url(#grad02)","url(#grad03)","url(#grad04)","url(#grad05)","url(#grad06)",
@@ -313,12 +293,10 @@ d3.json('circlesWithMobile.json').then(data => {
 
   // define the x and y scales
   const x = d3.scaleLinear()
-    // .domain([0,d3.max(data,d=>d.histogramX)])
     .domain([0,36])
     .range([0,graphWidth]);
 
   const y = d3.scaleLinear()
-    // .domain([0,d3.max(data,d=>d.histogramY)])
     .domain([0,30])
     .range([0,graphHeight]);
 
@@ -394,7 +372,7 @@ d3.json('circlesWithMobile.json').then(data => {
       .delay(timeoutLength)
       .attr("opacity",0);
 
-});
+});  // end d3.json('circlesWithMobile.json')
 
 
 
