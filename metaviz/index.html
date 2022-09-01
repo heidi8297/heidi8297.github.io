@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Meta Visualization</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script type="text/javascript">
+    var analytics = true;
+    let loc = window.location
+    console.log("hostname: ",loc.hostname,"    port: ",loc.port,"    protocol: ",loc.protocol)
+    //try {   // temporarily removing error handling so I can see why this sometimes fails
+      if(
+        'localStorage' in window &&
+        window['localStorage'] !== null &&
+        localStorage["analytics"] == 'no' // check for local 'analytics' variable
+      ) { analytics = false } else
+      {
+        console.log('localStorage' in window)
+        console.log(window['localStorage'] !== null)
+        console.log(localStorage["analytics"] == 'no')
+        console.log(localStorage["analytics"])
+      }            // if value is set to no, DO NOT TRACK
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    if (analytics) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12NPY4109R');
+    } else { console.log('GA disabled') }
+  </script> -->
+
+
+  <!-- Make the webpage perform better on mobile? -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=0.24,maximum-scale=5.0,user-scalable=yes">
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="An investigation of data visualizations">
+  <meta name="news_keywords" content="scrollytelling, canvas, scroll-driven, graphics, d3, scrollmagic, waypoints, graph-scoll, scrollstory, in-view">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Meta Visualization" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://heidistockton.com/metaviz/naturalDisastersGifLonger.gif" />
+  <meta property="og:description" content="An investigation of data visualizations" />
+  <meta property="og:url" content="https://heidistockton.com/metaviz/" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch&family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+  <!-- primary style sheet -->
+  <link rel="stylesheet" href="/core.css" type="text/css">
+  <link rel='stylesheet' href='metaviz-styles.css' />
+
+
+</head>
+
+
+<body>
+  <div class="mobileWarning"> <!--show this warning to mobile users -->
+    <p>Sorry, but this particular visualization really commands a larger viewing
+      screen than what you are currently using.  I'd love for you to come back on
+      a desktop!<br /><br />In the meantime, my homepage is mobile-friendly.</p>
+    <br>
+    <form class="roleForm" action="" method="get">
+      <input class="button noCTA" type="button" name="proceedButton" value="Proceed anyway" onclick="proceedAnyway()">
+      <input class="button" type="button" name="homeButton" value="Return home" onclick="goHome()">
+    </form>
+  </div>
+
+  <header>
+    <h1>Natural Disasters</h1>
+    <h2>1960-2018</h2>
+    <p>Earthquakes. Volcanoes. Tornadoes. Hurricanes. These natural events remind
+      us that we are small and vulnerable — and that living on this dynamic planet
+      will always entail risk.<br /><em>American Museum of Natural History</em></p>
+    <p id="log"></p>
+  </header>
+
+
+  <main class = "mainContent">
+    <div class='library__graphic graphic flex-container'>
+      <!-- scrolly text section -->
+      <div class='graphic__prose'>
+        <div class='preProse active'>
+          <tspan class = "zoomInstruct">If the visualization doesn't fit your screen,
+          try zooming in/out with ctrl + - (or Cmd + -).<br /><br /></tspan>
+          <tspan class = "scrollToDiscover">Scroll to reveal the story!</tspan>
+          <div class="rotateInstruct">
+            <img class="rotateIcon" src="rotateToLandscape.png" alt="">
+            <tspan>Rotating to landscape may give you a better view.</tspan>
+          </div>
+        </div>
+        <div class='trigger pane1 active' data-step='0'>
+          <p>This is the story of nearly 9000 natural disasters that have occurred
+            globally between 1960 and 2018.  If it feels like more disasters have
+            occurred in recent years, your perception is correct.  The increasing
+            frequency is troubling as is the nature and impact of those events, and
+            who is most affected by them.  Let's take a look...</p>
+        </div>
+        <div class='trigger pane2' data-step='1'>
+          <p>This data set chronicles disasters across 7 different categories,
+            shown here by total event count.  So far the most frequent types of disasters
+            have been floods and storms.</p>
+        </div>
+        <div class="legendSticky">  <!-- this div is to assist with positioning/containing the legends -->
+          <div class="absoluteWrapper">
+            <div id="legendIconWrapper">
+              <img src="legendIcon.svg" class="legendIconImage" alt="Legend icon - click to reveal applicable legends">
+              <img src="legendHideIcon.svg" class="legendHideIconImage" alt="Arrow icon - click to hide legends">
+            </div>
+            <div id="legendWrapper">
+              <div class="colorLegend1"></div>
+              <div class="sizeLegend1"></div>
+              <div class="sizeLegend2"></div>
+              <img src="teardropTextToPath.svg" class="teardropLegend" style="display: none;" alt="Teardrop legend for deadliest 15 events">
+            </div>
+          </div>  <!-- absoluteWrapper -->
+          <div class="legendInstructions">
+            <p><--- click here to <tspan class="showHideText">hide</tspan> legend(s)</p>
+          </div>
+          <!-- the height of this div is updated based on whether or not the legends are being shown -->
+          <!-- doing so improves the waypoints trigger interactions and available reading space for the scrolly text -->
+          <div class="variableSpacer">
+            <tspan class = "colorblindMsg">Having a hard time discerning the colors?
+            <a href="https://heidistockton.com/naturaldisasters/?colorblind=true">Click here</a>
+            to reload in colorblind mode.</tspan>
+          </div>
+
+          <div class='trigger pane3' data-step='2'>
+            <p>Here is a look at how those events have played out across the globe.</p>
+          </div>
+          <div class="trigger pane4" data-step='3'>
+            <p>If we compare the first 10 years of the data set with the last 10
+              years, the trend is clear: disasters are occurring now more than ever.
+              How long can we realistically sustain this pace?</p>
+          </div>
+          <div class='trigger pane4' data-step='4'>
+            <p>So what is the impact?  Where are we seeing the largest loss of life?
+              If we look at total death counts by event type, we can see that so
+              far the largest death tolls have been from earthquakes and storms.</p>
+          </div>
+          <div class='trigger pane5' data-step='5'>
+            <p>If we look again at the first 10 years and last 10 years
+              of our data set, we can see how things have been changing.  The frequency
+              of events increased for every single event type, and death tolls increased
+              for all but two types (storms and volcanic activity).  Just as we saw
+              in our previous charts, floods and earthquakes saw the highest event
+              and death counts (respectively).</p>
+          </div>
+          <div class='trigger pane5B' data-step='6'>
+            <p>However, if we instead look at how things have evolved
+              as a <b>percent change</b> from baseline, we see a new standout:
+              extreme temperature takes the cake (by far) for the largest percentage
+              increase in both event frequency and total death toll.</p>
+          </div>
+          <div class='trigger pane6' data-step='7'>
+            <p>If we look now at the death toll for each individual event and how
+              those tolls are distributed for each type, we can see which individual
+              events are most likely to result in loss of life.  The highest typical
+              death toll is for extreme temperature  events, which is particularly troubling
+              when combined with the trends from the previous pane.</p>
+          </div>
+          <div class='trigger pane7' data-step='8'>
+            <p>So where are the biggest impacts occurring?  If we plot
+              deaths on a <b>linear</b> scale we can see that only a small subset
+              of events are responsible for the largest loss of life.</p>
+          </div>
+          <div class='trigger pane8' data-step='9'>
+            <p>The deadliest 15 events include earthquakes, storms, droughts and
+              extreme temperature events.</p>
+          </div>
+          <div class='trigger pane9' data-step='10'>
+            <p>If we plot these same events by GDP per capita** we can see
+              the inequality in who's facing the brunt of these disasters. Poorer
+              countries are generally less prepared for disaster and see much higher
+              loss of life. </p>
+            <br />
+            <p class="footnote">**Some events take place in more than one country.
+              In this case, only one of the affected countries is listed and GDP per
+              capita is reported as an average across all countries, weighted by location count.</p>
+          </div>
+        </div> <!-- legendSticky -->
+        <div class='trigger pane9B' data-step='11'>
+          <p>This same inequality persists when we look at all events.</p>
+          <br /><br />
+        </div>
+        <div class='trigger pane10' data-step='12'>
+          <p></p>
+        </div>
+        <div class='postProse thanks'>
+          Built on the shoulders of giants
+          <ul>
+            <li>
+              Data from <a target="_blank" href="https://sedac.ciesin.columbia.edu/data/set/pend-gdis-1960-2018">SEDAC (NASA)</a>,
+              <a target="_blank" href="https://www.emdat.be/">EM-DAT</a>, and
+              <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita">Wikipedia</a>
+            </li>
+            <li>
+              Inspiration from <a target="_blank" href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/">Tony Yu</a> and
+              <a target="_blank" href="https://public.tableau.com/app/profile/george.gorczynski/viz/naturaldisasters_country/NaturalDisasters">George Gorczynski</a>
+            </li>
+            <li>Super helpful blog posts, modules and code snippets from <a target="_blank" href="https://d3-legend.susielu.com/">Susie Lu</a>,
+              <a target="_blank" href="https://bost.ocks.org/mike/">Mike Bostock</a>,
+              <a target="_blank" href="http://bl.ocks.org/smoli/d7e4f9199c15d71258b5">Stephan Smola</a>,
+              <a target="_blank" href="https://www.visualcinnamon.com/2015/11/learnings-from-a-d3-js-addict-on-starting-with-canvas/">Nadieh Bremer</a>,
+              <a target="_blank" href="https://www.freecodecamp.org/news/d3-and-canvas-in-3-steps-8505c8b27444/">Lars Verspohl</a>,
+              and <a target="_blank" href="https://pudding.cool/process/how-to-implement-scrollytelling/">Russell Goldenberg</a>
+            </li>
+            <li>QA/tech/moral support from Shafer Stockton</li>
+          </ul>
+          Thank you!
+        </div>
+      </div>
+
+      <!-- this is where the drawing spaces will sit (canvas and svg) -->
+      <div class="vizWrapper">  <!-- added this wrapper to improve mobile landscape view -->
+        <div id="viz-container">
+          <!-- most elements needed for the viz are created in javascript, but this one is
+          almost entirely text so I'm building it here. -->
+          <div class="finalWords10">
+            <p>
+              While no single event can definitively be attributed to climate change,
+              the evidence is abundantly clear that the trend is certainly causally
+              related, and it's indisputable at this point that our actions are causing
+              climate change to occur in the first place.<br><br>
+              It's not too late to start taking your carbon footprint seriously.<br /> <br />
+              Fly less. &nbsp&nbsp Buy electric. &nbsp&nbsp Eat less meat.<br /><br />
+              Don't dismiss the power of small actions over time, don't dismiss the
+              influence that your actions will have on those around you, and - most of all - don't dismiss hope.
+              <br /><br />The next generation is counting on us.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- This is a duplicate of the thanks section above... at some point I'll try to "move" -->
+    <!-- this div into place using javascript (my first attempt failed) rather than keep the duplication -->
+    <div class='postProseMobile thanks'>
+      Built on the shoulders of giants
+      <ul>
+        <li>
+          Data from <a target="_blank" href="https://sedac.ciesin.columbia.edu/data/set/pend-gdis-1960-2018">SEDAC (NASA)</a>,
+          <a target="_blank" href="https://www.emdat.be/">EM-DAT</a>, and
+          <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita">Wikipedia</a>
+        </li>
+        <li>
+          Inspiration from <a target="_blank" href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/">Tony Yu</a> and
+          <a target="_blank" href="https://public.tableau.com/app/profile/george.gorczynski/viz/naturaldisasters_country/NaturalDisasters">George Gorczynski</a>
+        </li>
+        <li>Super helpful blog posts, modules and code snippets from <a target="_blank" href="https://d3-legend.susielu.com/">Susie Lu</a>,
+          <a target="_blank" href="https://bost.ocks.org/mike/">Mike Bostock</a>,
+          <a target="_blank" href="http://bl.ocks.org/smoli/d7e4f9199c15d71258b5">Stephan Smola</a>,
+          <a target="_blank" href="https://www.visualcinnamon.com/2015/11/learnings-from-a-d3-js-addict-on-starting-with-canvas/">Nadieh Bremer</a>,
+          <a target="_blank" href="https://www.freecodecamp.org/news/d3-and-canvas-in-3-steps-8505c8b27444/">Lars Verspohl</a>,
+          and <a target="_blank" href="https://pudding.cool/process/how-to-implement-scrollytelling/">Russell Goldenberg</a>
+        </li>
+        <li>QA/tech/moral support from Shafer Stockton</li>
+      </ul>
+      Thank you!
+    </div>
+
+    <div id="contactMe">
+      <!-- placeholder for my standard "contact me" footer content -->
+      <div w3-include-html="/footer.html"></div>
+    </div>
+
+  </main>
+
+
+
+
+  <!-- for the graphic - d3-legend and annotation libraries courtesy of Susie Lu -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js" charset="utf-8"></script>
+  <script src='metaviz-main.js'></script>
+
+  <!-- load core.js file -->
+  <script src="/core.js"></script>
+
+  <!-- The scroll library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.js"></script>
+
+  <!-- FPS stats utility (for testing) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r14/Stats.js"></script>
+
+  <!-- setting up the waypoints/triggers -->
+  <script src="setupWaypointsTriggers.js"></script>
+
+  <!-- run javascript to include external html files where specified -->
+  <script>includeHTML()</script>
+
+</body>
+
+</html>

@@ -1,0 +1,727 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  color: #3F3027;
+  font-feature-settings: "kern" 1, "onum" 1, "liga" 0;
+  background-color: #F4EFED;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 10px;
+}
+
+main {
+  padding-bottom: 1rem;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Cabin Sketch', cursive;
+  color: #3F3027;
+}
+
+p {
+  color: #3F3027;
+  margin: 1.5rem 0;
+}
+
+svg text {
+  fill: #5e5047;
+}
+
+a {
+  /* likely should keep this the same color as the 'footerLink' color below */
+  color: #4E3C30;
+}
+
+a:hover {
+  color: #A57F66;
+}
+
+.footerLink {
+  fill: #4E3C30;
+}
+
+.footerLink:hover, .tableauLink svg:hover {
+  fill: #A57F66;
+}
+
+header {
+  z-index: 1000;
+  position: relative;
+  padding: 1rem 0;
+  margin: 2rem auto;
+  width: min(1360px, 100%); /* needs to match width of library__graphic below */
+}
+
+h1, h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+header h1 {
+  font-size: 4rem;
+}
+
+header h2 {
+  font-size: 1.8rem;
+  position: relative;
+  bottom: 15px;
+}
+
+.mobileWarning {
+  display: none;
+  text-align: center;
+  background-color: #bdb6b1;
+  padding: 50px 5px;
+}
+
+@media only screen and (max-device-width: 1000px) {
+  body {
+    margin: 5px;
+  }
+  .mobileWarning {
+    display: block;
+  }
+  header h1 {
+    font-size: 2.5rem;
+  }
+  header h2 {
+    font-size: 1.4rem;
+    bottom: 0;
+  }
+  .button {
+    padding: 10px 14px;
+    margin-left: 8px;
+    margin-right: 8px;
+    display: inline;
+    background-color: #7F7269;
+    border: none;
+    color: #fbf9f9;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  }
+  .button:hover {
+    background-color: #9e938c;
+  }
+  a.button {
+    text-decoration: none;
+    text-align: center;
+  }
+  a.button:hover {
+    color: #fbf9f9;
+  }
+
+  .button.noCTA {
+    background-color: #EAE0DB;
+    color: #7F7269;
+  }
+  .button.noCTA:hover {
+    background-color: #d8cdc7;
+  }
+}
+
+
+
+
+/* GRAPHIC STYLES */
+
+/* wrapper for the scrolly text and viz / svg */
+.library__graphic.graphic {
+  display: flex;
+  padding: 1rem 0;
+  margin: 2rem auto;
+  width: 1360px; /* 300 for prose + 50 margin + 1000 viz container + 10 margin */
+  flex-direction: row;
+  justify-content: space-around;
+	position: relative;
+}
+
+/* scrolly text entire section */
+.graphic__prose {
+	position: relative;
+	display: block;
+	width: 300px;
+  line-height: 1.5;
+	top: 0;
+	margin-right: 50px;
+}
+
+/* scrolly text - one segment */
+.graphic__prose .trigger {
+	padding: 0;
+	margin: 0;
+	min-height: 570px;
+  opacity: 0.3;
+}
+
+.vizWrapper {
+  position: relative;
+}
+
+.scrollToDiscover {
+  display: none;
+}
+
+.rotateInstruct {
+  display: none;
+}
+
+
+@media only screen and (max-device-width: 1000px) {
+  header {
+    width: 100%;
+    margin: 2rem auto 0 auto;
+  }
+  @media (max-aspect-ratio: 2/3) {
+    .library__graphic.graphic {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .graphic__prose {
+      width: 100%;
+      z-index: 100;
+    }
+    .graphic__prose .trigger {
+      min-height:300px;
+    }
+    .vizWrapper {
+      position: sticky;
+      width: 100vw;
+      background-color: #F4EFED;
+      top: 0;
+    }
+    .rotateInstruct {
+      display: block;
+    }
+    .rotateIcon {
+      height: 30px;
+    }
+  }
+
+  @media (min-aspect-ratio: 3/2) {
+    .library__graphic.graphic {
+      width: 100%;
+      margin: 0 auto;
+    }
+    .graphic__prose {
+      z-index: 100;
+      margin: 0 10px;
+      width: 100%;
+    }
+    .graphic__prose .trigger {
+      min-height:280px;
+    }
+  }
+}
+
+/* if larger than 1360, the user should be able to see all the content */
+@media only screen and (min-width: 1360px) and (min-height: 800px) {
+    .zoomInstruct {
+      display: none;
+    }
+    .scrollToDiscover {
+      display: block;
+    }
+}
+
+/* this section is smaller because it's right above the legend icon */
+.graphic__prose .trigger.pane2 {
+	min-height: 150px;
+}
+
+.legendInstructions {
+  height: 355px;
+  opacity: 0.3;
+}
+
+.legendInstructions p {
+  padding-left: 49px;
+  padding-top: 4px;
+}
+
+.variableSpacer {
+  height: 270px;
+  opacity: 0.3;
+}
+
+.graphic__prose .preProse {
+  min-height: 260px;
+  opacity: 0.3;
+}
+
+.graphic__prose .postProse {
+  min-height: 200px;
+  opacity: 0.3;
+}
+
+.postProseMobile {
+  display: none;
+  margin-top: 15px;
+}
+
+/* scrolly text - active segment */
+.graphic__prose .active {
+	opacity: 1; /* overwrites the opacities specified above when 'active' */
+}
+
+/* added so the legend doesn't bump up against the text */
+.graphic__prose .pane9B {
+  padding-top: 30px;
+}
+
+/* this section is smaller because it's empty from text - I want the user to read the viz pane instead */
+.graphic__prose .trigger.pane10 {
+	min-height: 360px;
+}
+
+
+
+/* LEGENDS */
+
+.cell .swatch { /* opacity for all legend swatches */
+  opacity: 0.8;
+}
+
+.legendTitle {
+  font-size: 0.92rem;
+  fill: #3F3027;
+}
+
+.cell .label {
+  font-size: 0.85rem;
+  fill: #3F3027;
+}
+
+.sizeLegend1 .swatch {
+  fill: #176F90;
+}
+
+.sizeLegend2 .swatch {
+  fill: #A96830;
+}
+
+.teardropLegend {
+  width: 175px;
+  padding-left: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.legendSticky {
+  position: relative;
+}
+
+.absoluteWrapper {
+  position: absolute;
+  pointer-events: none;
+  height: 100%;
+}
+
+#legendIconWrapper {
+  position: sticky;
+  cursor: pointer;
+  pointer-events: all;
+  width: 36px;
+  top: 20px;
+  padding: 3px;
+  background-color: #fbf9f9;
+  border: 1px solid #EAE0DB;
+  z-index: 1000;
+}
+
+#legendIconWrapper:hover {
+  background-color: white;
+  border: 1px solid #c9ae9f;
+}
+
+.legendIconImage {
+  width: 100%;
+}
+
+.legendHideIconImage {
+  width: 90%;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+}
+
+#legendWrapper {
+  position: sticky;
+  width: 240px;
+  top: 58px;
+  padding: 3px;
+  margin-top: 1px;
+  background-color: #fbf9f9;
+  border: 1px solid #EAE0DB;
+  z-index: 900;
+  display: block;
+}
+
+.colorLegend1 svg {
+  height: 180px;
+}
+
+.sizeLegend1 svg, .sizeLegend2 svg {
+  height: 120px;
+}
+
+
+
+/* VIZ CONTAINER AND TOOLTIPS */
+
+/* div wrapper for svg */
+#viz-container {
+	position: sticky;
+	width: 1000px;
+	height: 800px;
+	/* if the viewport is larger than 800px, this centers the div vertically */
+	/* if the viewport is smaller than that, this anchors the div to the top */
+	top: max(0px, calc(50vh - 400px));
+	margin-left: 0;
+  margin-right: 10px;
+	-webkit-transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	display: inline-block;
+  background-color: #fbf9f9;
+  border: 1px solid #EAE0DB;
+}
+
+#viz-container canvas, #viz-container svg {
+	position: absolute;
+	height: 800px;
+	width: 1000px;
+}
+
+@media only screen and (max-device-width: 1000px) {
+  .graphic__prose .pane9B {
+    height: 50px;
+  }
+  .graphic__prose .trigger.pane10 {
+    height: 1px;
+  }
+  .vizWrapper {
+    z-index: 6000;
+  }
+  #viz-container {
+    box-sizing: content-box;
+    z-index: 5000;
+    border-top: 3vh solid #F4EFED;
+    border-bottom: 3vh solid #F4EFED;
+  }
+  #viz-container canvas, #viz-container svg {
+    z-index: 5000;
+  }
+  .absoluteWrapper {
+    display: none;
+  }
+  .legendInstructions {
+    display: none;
+  }
+  .graphic__prose .trigger.pane2 {
+  	min-height: 190px;
+  }
+}
+
+.svgForeground, .hiddenCanvas {
+  pointer-events: none; /* makes it possible to register 'mousemove' events from mainCanvas */
+}
+
+.tooltip {
+  background-color: #EAE0DB;
+  color: #3F3027;
+  border: 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.1;
+  height: auto;
+  letter-spacing: 0px;
+  opacity: 0;
+  padding: 3px 6px;
+  pointer-events: none;
+  position: absolute;
+  text-align: left;
+}
+
+.tooltipAux {
+  z-index: 900000;
+}
+
+
+
+/* VIZ PANES */
+
+.graphTitle {
+  fill: #3F3027;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+g.annotations, .annotation-note-label {
+  font-size: 0.82rem;
+  fill: #6e6158;
+}
+
+.pane1text {
+  text-anchor: middle;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Cabin Sketch', cursive;
+  fill: #4E3C30;
+}
+
+.pane1text.yearCount {
+  font-size: 2.4rem;
+}
+
+.pane1text.eventCount {
+  font-size: 2.2rem;
+}
+
+.pane1text.livesCount {
+  font-size: 1.6rem;
+}
+
+.pane1text.yearCount tspan {
+  font-size: 5.2rem;
+}
+
+.pane1text.eventCount tspan {
+  font-size: 4.4rem;
+}
+
+.pane1text.deathCount tspan {
+  font-size: 3.8rem;
+}
+
+.pane1text.livesCount tspan {
+  font-size: 3.6rem;
+}
+
+.graphLabel {
+  fill: #5e5047;
+  font-size: 0.8rem;
+}
+
+.graphLabel.anchorEnd {
+  text-anchor: end;
+}
+
+.graphLabel.anchorStart {
+  text-anchor: start;
+}
+
+.annotLine {
+  stroke: #7F7269;
+}
+
+.typeLabels.pane2 { /* pane TWO */
+  text-anchor: start;
+  font-size: 0.9rem;
+  fill: #5e5047;
+}
+
+.count { /* pane TWO and FOUR */
+  font-size: 0.92rem;
+}
+
+.subtitle {  /* pane THREE and pane FIVE */
+  text-anchor: middle;
+}
+
+.animationSubtitle { /* pane THREE */
+  text-anchor: start;
+}
+
+.annotations3B .annotation-note-label, .annotations5 .annotation-note-label { /* pane THREE B, pane FIVE */
+  font-size: 0.92rem;
+  fill: #5e5047;
+}
+
+.qMark { /* pane THREE B */
+  font-size: 5rem;
+  font-family: 'Cabin Sketch', cursive;
+  fill: #5e5047;
+  font-weight: 700;
+}
+
+.dotted { /* pane THREE B */
+  stroke-dasharray: 2,5;
+  stroke-width: 2px;
+  opacity: 0.5;
+}
+
+.typeLabels { /* pane FOUR and pane SIX */
+  text-anchor: middle;
+  font-size: 0.9rem;
+  fill: #5e5047;
+}
+
+.logLine { /* pane SIX */
+  stroke: #6e6158;
+}
+
+.logLabel { /* pane SIX */
+  color: #6e6158;
+  font-size: 0.82rem;
+  text-anchor: start;
+}
+
+.tick line, path.domain { /* pane SEVEN */
+  stroke: none;
+}
+
+.tick text {
+  font-size: 0.82rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+.deadliestEventNote8 { /* pane EIGHT */
+  font-size: 1.3rem;
+  font-family: 'Cabin Sketch', cursive;
+  text-anchor: middle;
+}
+
+.deadliestEventNote8 tspan { /* pane EIGHT */
+  font-size: 2.6rem;
+  font-weight: bold;
+}
+
+.gdp.annotation:not(.above):not(.anomaly) path { /* pane NINE */
+  stroke-dasharray: 2,5;
+  stroke-width: 2px;
+}
+
+.gdp .note-line { /* pane NINE */
+  stroke: none;
+}
+
+.graphic__prose .footnote { /* pane NINE */
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.finalWords10 { /* pane TEN */
+  position: absolute;
+  z-index: 900000;
+  background-color: #fbf9f992;
+  margin-left: 170px;
+  margin-right: 170px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.finalWords10 p { /* pane TEN */
+  text-align: center;
+  display: table-cell;
+  padding: 50px;
+}
+
+
+/* ZOOM INSTRUCTIONS FOR VIZ CONTAINER */
+/* zoom the viz-container to fit the device-width or device-height, depending on orientation */
+/* zoom instruction does not work on Firefox, but few use Firefox on mobile so that's OK by me */
+@media only screen and (max-device-width: 1000px) and (max-aspect-ratio: 2/3) { /* portrait mode */
+  .postProseMobile {display: block;}
+  .postProse {display: none;}
+  .preProse {margin-top: 20px;}
+  @media (max-width: 999px) { #viz-container {zoom: 0.690;} }
+  @media (max-width: 699px) { #viz-container {zoom: 0.590;} }
+  @media (max-width: 599px) { #viz-container {zoom: 0.490;} }
+  @media (max-width: 499px) { #viz-container {zoom: 0.440;} }
+  @media (max-width: 449px) { #viz-container {zoom: 0.402;} }
+  @media (max-width: 411px) { #viz-container {zoom: 0.390;} }
+  @media (max-width: 399px) { #viz-container {zoom: 0.370;} }
+  @media (max-width: 379px) { #viz-container {zoom: 0.360;} }
+  @media (max-width: 369px) { #viz-container {zoom: 0.350;} }
+  @media (max-width: 359px) { #viz-container {zoom: 0.330;} }
+  @media (max-width: 339px) { #viz-container {zoom: 0.310;} }
+  @media (max-width: 319px) { #viz-container {zoom: 0.280;} }
+  @media (max-width: 290px) { #viz-container {zoom: 0.250;} }
+
+  /* this query SHOULD detect if the browser is Chrome. */
+  /* this browser-detection method is generally frowned upon, but I coulnd't find anotehr solution */
+  /* hopefully I can come back to it and find/try something more robust */
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+    @media (max-device-width: 999px) { #viz-container {zoom: 0.690;} }
+    @media (max-device-width: 699px) { #viz-container {zoom: 0.590;} }
+    @media (max-device-width: 599px) { #viz-container {zoom: 0.490;} }
+    @media (max-device-width: 499px) { #viz-container {zoom: 0.440;} }
+    @media (max-device-width: 449px) { #viz-container {zoom: 0.402;} }
+    @media (max-device-width: 411px) { #viz-container {zoom: 0.390;} }
+    @media (max-device-width: 399px) { #viz-container {zoom: 0.370;} }
+    @media (max-device-width: 379px) { #viz-container {zoom: 0.360;} }
+    @media (max-device-width: 369px) { #viz-container {zoom: 0.350;} }
+    @media (max-device-width: 359px) { #viz-container {zoom: 0.330;} }
+    @media (max-device-width: 339px) { #viz-container {zoom: 0.310;} }
+    @media (max-device-width: 319px) { #viz-container {zoom: 0.280;} }
+    @media (max-device-width: 290px) { #viz-container {zoom: 0.250;} }
+  }
+}
+
+@media only screen and (max-device-width: 1000px) and (min-aspect-ratio: 3/2) { /* landscape mode */
+  @media (max-height: 999px) { #viz-container {zoom: 0.787;} }
+  @media (max-height: 699px) { #viz-container {zoom: 0.673;} }
+  @media (max-height: 599px) { #viz-container {zoom: 0.559;} }
+  @media (max-height: 499px) { #viz-container {zoom: 0.502;} }
+  @media (max-height: 449px) { #viz-container {zoom: 0.459;} }
+  @media (max-height: 411px) { #viz-container {zoom: 0.445;} }
+  @media (max-height: 399px) { #viz-container {zoom: 0.422;} }
+  @media (max-height: 379px) { #viz-container {zoom: 0.411;} }
+  @media (max-height: 369px) { #viz-container {zoom: 0.400;} }
+  @media (max-height: 359px) { #viz-container {zoom: 0.376;} }
+  @media (max-height: 339px) { #viz-container {zoom: 0.354;} }
+  @media (max-height: 319px) { #viz-container {zoom: 0.319;} }
+  @media (max-height: 290px) { #viz-container {zoom: 0.285;} }
+
+  /* detect if the browser is Chrome */
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+    @media (max-device-height: 999px) { #viz-container {zoom: 0.787;} }
+    @media (max-device-height: 699px) { #viz-container {zoom: 0.673;} }
+    @media (max-device-height: 599px) { #viz-container {zoom: 0.559;} }
+    @media (max-device-height: 499px) { #viz-container {zoom: 0.502;} }
+    @media (max-device-height: 449px) { #viz-container {zoom: 0.459;} }
+    @media (max-device-height: 411px) { #viz-container {zoom: 0.445;} }
+    @media (max-device-height: 399px) { #viz-container {zoom: 0.422;} }
+    @media (max-device-height: 379px) { #viz-container {zoom: 0.411;} }
+    @media (max-device-height: 369px) { #viz-container {zoom: 0.400;} }
+    @media (max-device-height: 359px) { #viz-container {zoom: 0.376;} }
+    @media (max-device-height: 339px) { #viz-container {zoom: 0.354;} }
+    @media (max-device-height: 319px) { #viz-container {zoom: 0.319;} }
+    @media (max-device-height: 290px) { #viz-container {zoom: 0.285;} }
+  }
+}
+
+@media (max-width: 700px) {
+  #contactMe { /* adjusting formatting here to accommodate 10px margin on "body" */
+    padding-left: calc(5% - 10px);
+    padding-right: calc(5% - 10px);
+  }
+}
