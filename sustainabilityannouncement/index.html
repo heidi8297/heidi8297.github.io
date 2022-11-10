@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sustainability for the win</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script type="text/javascript">
+    var analytics = true;
+    //try {
+      if(
+        'localStorage' in window &&
+        window['localStorage'] !== null &&
+        localStorage["analytics"] == 'no' // check for local 'analytics' variable
+      ) { analytics = false }             // if value is set to no, DO NOT TRACK
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    if (analytics) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12NPY4109R');
+    } else { console.log('GA disabled') }
+  </script>
+
+  <!-- Make the webpage perform better on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Sustainability Announcement" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://heidistockton.com/fireandice/announceThumbnail.png" />
+  <meta property="og:description" content="A purely performative piece to celebrate my new role in Sustainability at Nike" />
+  <meta property="og:url" content="https://heidistockton.com/sustainabilityannouncement/" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- primary style sheet -->
+  <link rel="stylesheet" href="/core.css" type="text/css">
+  <link rel="stylesheet" href="announce-styles.css" type="text/css">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="NikeMoveToZeroAsPolygon.png">
+
+
+</head>
+
+
+<body>
+
+  <div class="main headerSection">
+    <h1><span class="titleFire">Fire</span> <span class="titleAnd">&</span> <span class="titleIce">Ice</span></h1>
+    <p class="info"><span id="infoIcon"><i class="fas fa-info-circle"></i></span></p>
+
+    <!-- Different options for descriptions/formatting based on screen width -->
+    <p class="descLine1">Like many parts of the world, Portland, OR has been experiencing increasingly
+      extreme weather conditions.</p>
+    <p class="descLine2">The winter of 2016/2017 and summer of 2017 were particularly notable and are
+      illustrated below.</p>
+    <p class="descMobile">Like many parts of the world, Portland, OR has been experiencing increasingly
+      extreme weather conditions. The winter of 2016/2017 and summer of 2017 were particularly notable and are
+      illustrated below.</p>
+    <p class="descMobile">View on desktop for best viewing experience.</p>
+  </div>
+
+  <div class="main genericChartArea">
+
+  </div>
+
+
+
+  <div id="contactMe">
+    <!-- placeholder for my standard "contact me" footer content -->
+    <div w3-include-html="/footer.html"></div>
+  </div>
+
+  <!-- load the d3.js library -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://unpkg.com/geometric@2.0.1/build/geometric.min.js"></script>
+
+  <!-- load core.js file -->
+  <script src="/core.js"></script>
+
+  <!-- load the javascript to render the org chart -->
+  <script src="announce-main.js" charset="utf-8"></script>
+
+  <!-- run javascript to include external html files where specified -->
+  <script>includeHTML()</script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+body {
+  background-color: #F2F5F7;
+  margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Cinzel', sans-serif;
+  color: #525252;
+}
+
+h1 {
+  font-size: 4rem;
+  margin-bottom: 17px;
+}
+
+h1 span.titleFire {
+  background: -webkit-linear-gradient(#ffbb30 10%, #FF5619 78%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h1 span.titleAnd {
+  font-size: 3.8rem;
+}
+
+h1 span.titleIce {
+  background: -webkit-linear-gradient(#61dee3 10%, #2474DF 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p {
+  margin-bottom: 0px;
+}
+
+.main {
+  margin: 2.5% 9% 7% 9%;
+  padding: 1px 1% 10px 1%;
+}
+
+.main.headerSection {
+  margin: 4.5% 9% 4% 9%;
+}
+
+.descMobile {
+  display: none;
+}
+.descLine1, .descLine2 {
+  display: inline-block;
+}
+
+@media (max-width: 1000px) {
+  .main.headerSection {
+    width: 77%;
+  }
+  .descMobile {
+    display: inline-block;
+  }
+  .descLine1, .descLine2 {
+    display: none;
+  }
+  #infoIcon .svg-inline--fa {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .main.headerSection {
+    width: 68%;
+  }
+  #infoIcon .svg-inline--fa {
+    font-size: 2.8rem;
+  }
+}
+
+
+p.info {
+  font-size: 2rem;
+  width: 82%;
+  background-color: none;
+  position: absolute;
+  text-align: right;
+}
+
+@media (max-width: 500px) {
+  .main {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .main.headerSection {
+    width: 78%;
+    margin-left: 4%;
+    margin-left: 4%;
+  }
+  p.info {
+    width: 92%;
+  }
+
+}
+
+.info .fa-info-circle {
+  color: #626262;
+}
+
+.info .fa-info-circle:hover {
+  color: #343434;
+}
+
+
+.genericChartArea {
+  text-align: center;
+}
+
+@media (max-width: 500px) {
+  .main.radialChart {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+.area {
+  fill:  #DADADA;
+  fill-opacity:  .5;
+}
+
+.lineAverage {
+  fill: none;
+  stroke: url(#temperature-gradient);
+}
+
+.tick line {
+  stroke: #E4E4E4;
+}
+
+
+
+
+/* Contact Me */
+#contactMe {
+  background-color: #F2F5F7;
+  height: 180px;
+}

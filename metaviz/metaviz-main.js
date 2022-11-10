@@ -314,7 +314,7 @@ window.createGraphic = function(graphicSelector) {
       "5B": "How things have changed (percent change from 1960-1969)",
       "6": "Deaths for each event by disaster type (log scale)",
       "7": "Deaths for each event by year (linear scale)",
-      "8": "The deadliest 15 events",
+      "8": "Natural Disasters\n1960 - 2018",
       "9A": "The deadliest 15 events by GDP per capita**",
       "9B": "All events by GDP per capita**",
       "10": ""
