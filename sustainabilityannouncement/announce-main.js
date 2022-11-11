@@ -1,156 +1,70 @@
 
+let data = [];
+let width = 750
+let height = 400
 
-// this function makes our svg responsive to the size of the container/screen!
-// initial version provided by Ben Clinkinbeard and Brendan Sudol
-function responsivefy(thisSvg,maxWidth=4000) {
-  console.log("running responsivefy");
-  const container = d3.select(thisSvg.node().parentNode),
-    width = parseInt(thisSvg.style('width'), 10),
-    height = parseInt(thisSvg.style('height'), 10),
-    aspect = width / height;
-  thisSvg.attr('viewBox', `0 0 ${width} ${height}`)
-    .attr('preserveAspectRatio', 'xMinYMid')
-    .call(resize);
-  d3.select(window).on(
-    'resize.' + container.attr('id'),
-    resize
-  );
-  function resize() {
-    const w = Math.min(maxWidth,parseInt(container.style('width')));
-    thisSvg.attr('width', w);
-    thisSvg.attr('height', Math.round(w / aspect));
-  }
-}
+d3.range(5000).forEach(function(el) {
+  data.push({ value: el });
+});
 
+let canvas = d3.select('#viz-container')
+  .append('canvas')
+  .attr('width', width)
+  .attr('height', height);
 
+let context = canvas.node().getContext('2d');
+let customBase = document.createElement('custom');
 
-const canvasWidth = 4000;
-const canvasHeight = 3200;
+let custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
 
-// this should be the same size as defined in CSS
-const dispWidth = 1000;
-const dispHeight = 800;
-const scaleFactor = canvasWidth/dispWidth;
-eventData = [];
+function databind(data) {    // Bind data to custom elements.
+  let join = custom.selectAll('custom.circle')
+    .data(data);
+  let enterSel = join.enter()
+    .append('custom')
+    .attr('class', 'circle')
+    .attr("cx", 100)
+    .attr("cy", 200)
+    .attr('r', 0);
 
+  join.merge(enterSel)
+    .transition()
+    .attr('r', 100)
+    .attr('fillStyle', "#176F90");
 
-function initializeDrawingSpaces() {
-  // create an svg which we will use for our world map / background image
-  svgBackground = d3.select("#viz-container").append('svg')
-    .attr("class", "svgBackground"); // this is purely to make it easy to see in 'inspect'
+  let exitSel = join.exit()
+    .transition()
+    .attr('r', 0)
+    .remove();
 
-  // create variables for referring to the 'canvas' element in HTML and to its CONTEXT
-  //   the latter of which will be used for rendering our elements to the canvas
-  // note that defining the width/height of the drawing space is distinct from
-  //   setting the size in CSS
-  mainCanvas = d3.select('#viz-container')
-    .append('canvas')
-    .attr('width', canvasWidth)
-    .attr('height', canvasHeight)
-    .attr("class", "mainCanvas"); // this is purely to make it easy to see in 'inspect'
-  mainCtx = mainCanvas.node().getContext('2d');
-
-  // create an svg which we will use for axes and/or other plotting needs
-  svgForeground = d3.select("#viz-container").append('svg')
-    .attr("class", "svgForeground"); // this is purely to make it easy to see in 'inspect'
-
-  // create a text element for our graph titles
-  mainGraphTitle = svgForeground.append("text")
-    .attr("class","graphTitle")
-    .text("This is my graph title")
-    .attr("x", 30)
-    .attr("y", 50)
-    .style("opacity",0)
-
-  // create a map to keep track of the graph titles
-  graphTitles = {
-    "1": "",
-    "2": "Total event counts by disaster type",
-    "3A": "1960",
-    "3B": "An unsettling increase in frequency"
-  }
-
-
-  // create a hidden canvas in which each circle will have a different color
-  // we can use this for tooltips
-  let hiddenCanvas  = d3.select('#viz-container')
-    .append('canvas')
-    .attr('width', canvasWidth)
-    .attr('height', canvasHeight)
-    .style('display','none')
-    .attr("class", "hiddenCanvas"); // this is purely to make it easy to see in 'inspect'
-  hiddenCtx = hiddenCanvas.node().getContext("2d");
-
-  // Define the div for two tooltips - one for the viz container and one for the entire page
-  tooltipMain = d3.select('#viz-container').append("div")
-    .attr("class", "tooltip tooltipMain");
-  tooltipAux = d3.select('body').append("div")
-    .attr("class", "tooltip tooltipAux");
-
-
-  //const offscreen = document.querySelector('.mainCanvas').transferControlToOffscreen();
-  //const mainWorker = new Worker('mainWorker.js');
-
-}
-initializeDrawingSpaces()
-
-
-// initialize the visualization
-function init() {
-  let stepInc = lockInc += 1;
-  setupCharts()
-  createAnnotations()
-  // the below is just 'animateCircles' without the 'moveCircles' step
-  let dt = 0;
-  let t = d3.timer(function(elapsed) {
-    //stats.begin();
-    interpCircMove(elapsed - dt);
-    dt = elapsed;
-    drawCircles(mainCtx)
-    //stats.end();
-    if (elapsed > setDuration || stepInc !== lockInc) t.stop();
-  });
-  update(0)
-}; // init()
-
-
-// create dicts to keep track of circle positions for the transitions
-function initiateCircleInfo() {
-  for (let i = 0; i < eventData.length; i++) {
-    let node = eventData[i]
-    circleStartInfo[i] = {
-      'cx': node.gridX,
-      'cy': node.gridY,
-      'r': 16,
-      'fill': typeColor(node.disasterType), // set fill once and then leave it alone
-      'opacity': 0
-    }
-    circleEndInfo[i] = {
-      'cx': node.gridX,
-      'cy': node.gridY,
-      'r': 16,
-      'fill': typeColor(node.disasterType), // set fill once and then leave it alone
-      'opacity': 0.3
-    }
-  }
-}
-initiateCircleInfo()
+} // databind()
 
 
 
-d3.json('circlesMoveToZero.json', function(d) {
-  return {
-    id: 1,
-    country: "Hello",
-    iso3: 43,
-    otherNotes: ""
-  }
-  }).then(disData => {
-  data = disData;
+function drawCircles() {  // draw the elements on the canvas
+  context.clearRect(0, 0, width, height); // Clear the canvas.
 
-  // rollup/collapse the data in various ways to support the different visualization components
-  eventData = data;
+  // Draw each individual custom element with their properties.
+  let elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
+  elements.each(function(d,i) { // For each virtual/custom element...
+    console.log(i)
+    let node = d3.select(this);   // This is each individual element in the loop.
+    context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+    context.globalAlpha = 1;
+    console.log(node.attr('fillStyle'))
 
-  init()
+    context.beginPath();
+    //context.arc(node.attr("cx"), node.attr("cy"), node.attr("r"), 0, 2*Math.PI, true);
+    context.arc(100, 200, 20, 0, 2*Math.PI, true);
+    context.fill();
+    context.closePath();
 
-})
+  }); // Loop through each element.
+
+    //context.fillRect(node.attr('x'), node.attr('y'), node.attr('width'), node.attr('height'));  // Here you retrieve the position of the node and apply it to the fillRect context function which will fill and paint the square.
+
+} // drawCircles
+
+
+databind(data);
+drawCircles();

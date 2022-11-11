@@ -118,22 +118,6 @@ p.info {
   }
 }
 
-.area {
-  fill:  #DADADA;
-  fill-opacity:  .5;
-}
-
-.lineAverage {
-  fill: none;
-  stroke: url(#temperature-gradient);
-}
-
-.tick line {
-  stroke: #E4E4E4;
-}
-
-
-
 
 /* Contact Me */
 #contactMe {
