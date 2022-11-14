@@ -1,8 +1,16 @@
 
 let data = [];
-let width = 750
-let height = 400
-dataSet = [];
+let width = 750;
+let height = 400;
+let circleData = [];
+
+// variables needed for transition method
+let circleStartInfo = {};
+let circleEndInfo = {};
+const ease = d3.easeCubicInOut;
+const setDuration = 2000;
+let timeElapsed = 0;
+let interpolators = null;
 
 d3.range(5000).forEach(function(el) {
   data.push({ value: el });
@@ -20,9 +28,9 @@ let customBase = document.createElement('custom');
 
 let custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
 
-function databind(data) {    // Bind data to custom elements.
+function databind(dataSet) {    // Bind data to custom elements.
   let join = custom.selectAll('custom.circle')
-    .data(data);
+    .data(dataSet);
   let enterSel = join.enter()
     .append('custom')
     .attr('class', 'circle')
@@ -64,12 +72,36 @@ function drawCircles() {  // draw the elements on the canvas
 } // drawCircles
 
 
+// create dicts to keep track of circle positions for the transitions
+function initiateCircleInfo(dataSet) {
+  for (let i = 0; i < dataSet.length; i++) {
+    let node = circleData[i]
+    circleStartInfo[i] = {
+      'cx': node.gridX,
+      'cy': node.gridY,
+      'r': 16,
+      'fillStyle': "#176F90", // set fill once and then leave it alone
+      'opacity': 0
+    }
+    circleEndInfo[i] = {
+      'cx': node.gridX,
+      'cy': node.gridY,
+      'r': 16,
+      'fillStyle': "#176F90", // set fill once and then leave it alone
+      'opacity': 0.3
+    }
+  }
+}
+
+
 
 d3.json('circlesMoveToZero.json').then(data => {
-  dataSet = data;
+  circleData = data;
 }).then( function() {
 
-  databind(dataSet); // Build the custom elements in memory.
+  initiateCircleInfo(circleData)
+
+  databind(circleData); // Build the custom elements in memory.
   var t = d3.timer(function(elapsed) {
     drawCircles();
     if (elapsed > 300) t.stop();
