@@ -52,6 +52,39 @@ function databind(dataSet) {    // Bind data to custom elements.
 
 
 
+// for each transition/animation step, create new interpolator functions to be used for drawing circles
+function moveCircles() {
+  interpolators = {}
+  for (let i = 0; i < circleData.length; i++) {
+    interpolators[i] = [
+      d3.interpolate(circleStartInfo[i].cx, circleEndInfo[i].cx),
+      d3.interpolate(circleStartInfo[i].cy, circleEndInfo[i].cy),
+      d3.interpolate(circleStartInfo[i].r, circleEndInfo[i].r),
+      d3.interpolate(circleStartInfo[i].opacity, circleEndInfo[i].opacity)
+    ];
+  }
+  timeElapsed = 0;
+} // moveCircles()
+
+
+// iterate through every circle and update the circleStartInfo
+//   to allow redrawing a single frame accordingly
+function interpCircMove(dt) {
+  if (interpolators) {
+    timeElapsed += dt;
+    let pct = Math.min(ease(timeElapsed / setDuration), 1.0);
+    for (let i = 0; i < circleData.length; i++) {
+      circleStartInfo[i].cx = Math.floor(interpolators[i][0](pct));
+      circleStartInfo[i].cy = Math.floor(interpolators[i][1](pct));
+      circleStartInfo[i].r = Math.floor(interpolators[i][2](pct));
+      circleStartInfo[i].opacity = interpolators[i][3](pct);
+    }
+    if (timeElapsed >= setDuration) { interpolators = null; }
+  }
+} // interpCircMove()
+
+
+// THIS FUNCTION NEEDS TO BE REBUILT TO NOT RELY ON DATA BINDING
 function drawCircles() {  // draw the elements on the canvas
   context.clearRect(0, 0, width, height); // Clear the canvas.
 
@@ -70,6 +103,21 @@ function drawCircles() {  // draw the elements on the canvas
   }); // Loop through each element.
 
 } // drawCircles
+
+
+// this function activates the animation for the length specified by duration
+function animateCircles() {
+  moveCircles()
+  let dt = 0;
+  let t = d3.timer(function(elapsed) {
+    //stats.begin();
+    interpCircMove(elapsed - dt);
+    dt = elapsed;
+    drawCircles()
+    //stats.end();
+    if (elapsed > setDuration) { t.stop() };
+  });
+} // animateCircles()
 
 
 // create dicts to keep track of circle positions for the transitions
