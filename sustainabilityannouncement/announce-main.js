@@ -2,10 +2,13 @@
 let data = [];
 let width = 750
 let height = 400
+dataSet = [];
 
 d3.range(5000).forEach(function(el) {
   data.push({ value: el });
 });
+
+
 
 let canvas = d3.select('#viz-container')
   .append('canvas')
@@ -23,13 +26,13 @@ function databind(data) {    // Bind data to custom elements.
   let enterSel = join.enter()
     .append('custom')
     .attr('class', 'circle')
-    .attr("cx", 100)
-    .attr("cy", 200)
+    .attr("cx", d => 10*d.histogramX)
+    .attr("cy", d => 10*d.histogramY)
     .attr('r', 0);
 
   join.merge(enterSel)
     .transition()
-    .attr('r', 100)
+    .attr('r', 4)
     .attr('fillStyle', "#176F90");
 
   let exitSel = join.exit()
@@ -47,24 +50,28 @@ function drawCircles() {  // draw the elements on the canvas
   // Draw each individual custom element with their properties.
   let elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
   elements.each(function(d,i) { // For each virtual/custom element...
-    console.log(i)
     let node = d3.select(this);   // This is each individual element in the loop.
     context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
     context.globalAlpha = 1;
-    console.log(node.attr('fillStyle'))
 
     context.beginPath();
-    //context.arc(node.attr("cx"), node.attr("cy"), node.attr("r"), 0, 2*Math.PI, true);
-    context.arc(100, 200, 20, 0, 2*Math.PI, true);
+    context.arc(node.attr("cx"), node.attr("cy"), node.attr("r"), 0, 2*Math.PI, true);
     context.fill();
     context.closePath();
 
   }); // Loop through each element.
 
-    //context.fillRect(node.attr('x'), node.attr('y'), node.attr('width'), node.attr('height'));  // Here you retrieve the position of the node and apply it to the fillRect context function which will fill and paint the square.
-
 } // drawCircles
 
 
-databind(data);
-drawCircles();
+
+d3.json('circlesMoveToZero.json').then(data => {
+  dataSet = data;
+}).then( function() {
+
+  databind(dataSet); // Build the custom elements in memory.
+  var t = d3.timer(function(elapsed) {
+    drawCircles();
+    if (elapsed > 300) t.stop();
+  }); // Timer running the draw function repeatedly for 300 ms.
+})
