@@ -181,6 +181,15 @@ d3.json('circlesMoveToZero.json').then(data => {
 
   initiateCircleInfo(circleData)
 
+  // transitionPane1()
+  // animateCircles(stepInc)
+
+  // transitionPane includes:
+  //   UPDATE CIRCLE END INFO WITH NEW VALUES FOR TRANSITION
+
+  // animateCircles includes:
+  //  drawCircles => works right now but NEEDS UPDATE TO REMOVE DATA BINDING
+
 
   databind(circleData); // Build the custom elements in memory.
   var t = d3.timer(function(elapsed) {
