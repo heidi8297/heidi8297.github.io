@@ -12,6 +12,16 @@ const setDuration = 2000;
 let timeElapsed = 0;
 let interpolators = null;
 
+// Color scale: give me a number, I return a color
+const colorByNum = d3.scaleOrdinal()
+	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
+	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6"]);
+
+// used to create semi-randomness in the color order
+let colorOffset = 12*Math.random();
+
+
 d3.range(5000).forEach(function(el) {
   data.push({ value: el });
 });
@@ -41,7 +51,7 @@ function databind(dataSet) {    // Bind data to custom elements.
   join.merge(enterSel)
     .transition()
     .attr('r', 4)
-    .attr('fillStyle', "#176F90");
+    .attr('fillStyle', d => colorByNum(d.index%12));
 
   let exitSel = join.exit()
     .transition()
@@ -105,6 +115,25 @@ function drawCircles() {  // draw the elements on the canvas
 } // drawCircles
 
 
+// // THIS IS THE VERSION FROM THE NATURAL DISASTERS VIZ
+// // for each event, read the corresponding circleStartInfo entry and draw it on the canvas
+// // this function clears and redraws one frame onto the canvas
+// function drawCircles(chosenCtx, hidden = false) {
+//   chosenCtx.clearRect(0,0,canvasWidth,canvasHeight);
+//   for (let i = 0; i < eventsFlat.length; i++) {
+//     let node = eventsFlat[i];
+//
+//     chosenCtx.fillStyle = circleStartInfo[i].fill;
+//     chosenCtx.globalAlpha = circleStartInfo[i].opacity
+//
+//     chosenCtx.beginPath();
+//     chosenCtx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
+//     chosenCtx.fill()
+//     chosenCtx.closePath()
+//   }
+// } // drawCircles()
+
+
 // this function activates the animation for the length specified by duration
 function animateCircles() {
   moveCircles()
@@ -124,18 +153,21 @@ function animateCircles() {
 function initiateCircleInfo(dataSet) {
   for (let i = 0; i < dataSet.length; i++) {
     let node = circleData[i]
+    let numOneToTwelve = Math.round(i/12 + 2*Math.random() -1 + colorOffset)
     circleStartInfo[i] = {
-      'cx': node.gridX,
-      'cy': node.gridY,
-      'r': 16,
-      'fillStyle': "#176F90", // set fill once and then leave it alone
+      'cx': node.scatterX,
+      'cy': node.scatterY,
+      'class': numOneToTwelve,
+      'r': 4,
+      'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
       'opacity': 0
     }
     circleEndInfo[i] = {
-      'cx': node.gridX,
-      'cy': node.gridY,
-      'r': 16,
-      'fillStyle': "#176F90", // set fill once and then leave it alone
+      'cx': node.scatterX,
+      'cy': node.scatterY,
+      'class': numOneToTwelve,
+      'r': 4,
+      'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
       'opacity': 0.3
     }
   }
@@ -148,6 +180,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 }).then( function() {
 
   initiateCircleInfo(circleData)
+
 
   databind(circleData); // Build the custom elements in memory.
   var t = d3.timer(function(elapsed) {
