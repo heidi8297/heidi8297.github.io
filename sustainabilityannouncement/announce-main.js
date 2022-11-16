@@ -99,18 +99,19 @@ function drawCircles() {  // draw the elements on the canvas
   context.clearRect(0, 0, width, height); // Clear the canvas.
 
   // Draw each individual custom element with their properties.
-  let elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
-  elements.each(function(d,i) { // For each virtual/custom element...
-    let node = d3.select(this);   // This is each individual element in the loop.
-    context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+  //let elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
+  //elements.each(function(d,i) { // For each virtual/custom element...
+  for (let i = 0; i < circleData.length; i++) {
+    let node = circleData[i];   // This is each individual element in the loop.
+    context.fillStyle = circleStartInfo[i].fillStyle;   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
     context.globalAlpha = 1;
 
     context.beginPath();
-    context.arc(node.attr("cx"), node.attr("cy"), node.attr("r"), 0, 2*Math.PI, true);
+    context.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
     context.fill();
     context.closePath();
 
-  }); // Loop through each element.
+  }; // Loop through each element.
 
 } // drawCircles
 
@@ -155,18 +156,18 @@ function initiateCircleInfo(dataSet) {
     let node = circleData[i]
     let numOneToTwelve = Math.round(i/12 + 2*Math.random() -1 + colorOffset)
     circleStartInfo[i] = {
-      'cx': node.scatterX,
-      'cy': node.scatterY,
+      'cx': 20*node.scatterX,
+      'cy': height-13*node.scatterY,
       'class': numOneToTwelve,
-      'r': 4,
+      'r': 7,
       'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
       'opacity': 0
     }
     circleEndInfo[i] = {
-      'cx': node.scatterX,
-      'cy': node.scatterY,
+      'cx': 16*node.histogramX,
+      'cy': height-12*node.histogramY,
       'class': numOneToTwelve,
-      'r': 4,
+      'r': 7,
       'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
       'opacity': 0.3
     }
@@ -181,6 +182,8 @@ d3.json('circlesMoveToZero.json').then(data => {
 
   initiateCircleInfo(circleData)
 
+  // STARTING BIGGER EDITS HERE
+
   // transitionPane1()
   // animateCircles(stepInc)
 
@@ -191,9 +194,10 @@ d3.json('circlesMoveToZero.json').then(data => {
   //  drawCircles => works right now but NEEDS UPDATE TO REMOVE DATA BINDING
 
 
-  databind(circleData); // Build the custom elements in memory.
-  var t = d3.timer(function(elapsed) {
-    drawCircles();
-    if (elapsed > 300) t.stop();
-  }); // Timer running the draw function repeatedly for 300 ms.
+  // databind(circleData); // Build the custom elements in memory.
+  animateCircles()
+  // var t = d3.timer(function(elapsed) {
+  //   drawCircles();
+  //   if (elapsed > 300) t.stop();
+  // }); // Timer running the draw function repeatedly for 300 ms.
 })
