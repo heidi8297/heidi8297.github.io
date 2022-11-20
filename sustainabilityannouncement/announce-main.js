@@ -1,7 +1,10 @@
 
-let data = [];
-let width = 750;
-let height = 400;
+//----------------------------------------------------------------------------
+//  DEFINE VARIABLES
+//----------------------------------------------------------------------------
+
+let canvasWidth = 750;
+let canvasHeight = 400;
 let circleData = [];
 
 // variables needed for transition method
@@ -12,6 +15,9 @@ const setDuration = 2000;
 let timeElapsed = 0;
 let interpolators = null;
 
+var customBase = document.createElement('custom');
+var custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
+
 // Color scale: give me a number, I return a color
 const colorByNum = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
@@ -21,45 +27,34 @@ const colorByNum = d3.scaleOrdinal()
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
 
-
-d3.range(5000).forEach(function(el) {
-  data.push({ value: el });
-});
-
-
-
 let canvas = d3.select('#viz-container')
   .append('canvas')
-  .attr('width', width)
-  .attr('height', height);
+  .attr('width', canvasWidth)
+  .attr('height', canvasHeight);
 
 let context = canvas.node().getContext('2d');
-let customBase = document.createElement('custom');
 
-let custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
 
-function databind(dataSet) {    // Bind data to custom elements.
-  let join = custom.selectAll('custom.circle')
-    .data(dataSet);
-  let enterSel = join.enter()
-    .append('custom')
-    .attr('class', 'circle')
-    .attr("cx", d => 10*d.histogramX)
-    .attr("cy", d => 10*d.histogramY)
-    .attr('r', 0);
 
-  join.merge(enterSel)
-    .transition()
-    .attr('r', 4)
-    .attr('fillStyle', d => colorByNum(d.index%12));
+//----------------------------------------------------------------------------
+//  DRAWING FUNCTIONS
+//----------------------------------------------------------------------------
 
-  let exitSel = join.exit()
-    .transition()
-    .attr('r', 0)
-    .remove();
+function databind(data) {
+	var allCircles = custom.selectAll('custom.circle')
+		.data(data);
+
+	allCircles.join('custom')
+		.attr('class', 'circle')
+		.attr("cx", d => 5*d.scatterXMobile )
+		.attr("cy", d => 15*d.scatterYMobile )
+		.attr('r', 0)
+		.attr('fillStyle', d => colorByNum(d.index%12))
+		.transition().duration(30)
+		.attr('cx', d => 15*d.scatterXMobile );
+
 
 } // databind()
-
 
 
 // for each transition/animation step, create new interpolator functions to be used for drawing circles
@@ -94,50 +89,33 @@ function interpCircMove(dt) {
 } // interpCircMove()
 
 
-// THIS FUNCTION NEEDS TO BE REBUILT TO NOT RELY ON DATA BINDING
+// this function draws one frame onto the canvas
 function drawCircles() {  // draw the elements on the canvas
-  context.clearRect(0, 0, width, height); // Clear the canvas.
+  context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
+
+	var elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
+	elements.each(function(d,i) { // For each virtual/custom element...
 
   // Draw each individual custom element with their properties.
-  //let elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
-  //elements.each(function(d,i) { // For each virtual/custom element...
-  for (let i = 0; i < circleData.length; i++) {
-    let node = circleData[i];   // This is each individual element in the loop.
-    context.fillStyle = circleStartInfo[i].fillStyle;   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+  //for (let i = 0; i < circleData.length; i++) {
+		var node = d3.select(this);   // This is each individual element in the loop.
+    //let node = circleData[i];   // This is each individual element in the loop.
+    context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
     context.globalAlpha = 1;
 
     context.beginPath();
-    context.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
+    context.arc(node.attr('cx'), node.attr('cy'), node.attr('r'), 0, 2*Math.PI, true);
     context.fill();
     context.closePath();
 
-  }; // Loop through each element.
+  }); // Loop through each element.
 
 } // drawCircles
 
 
-// // THIS IS THE VERSION FROM THE NATURAL DISASTERS VIZ
-// // for each event, read the corresponding circleStartInfo entry and draw it on the canvas
-// // this function clears and redraws one frame onto the canvas
-// function drawCircles(chosenCtx, hidden = false) {
-//   chosenCtx.clearRect(0,0,canvasWidth,canvasHeight);
-//   for (let i = 0; i < eventsFlat.length; i++) {
-//     let node = eventsFlat[i];
-//
-//     chosenCtx.fillStyle = circleStartInfo[i].fill;
-//     chosenCtx.globalAlpha = circleStartInfo[i].opacity
-//
-//     chosenCtx.beginPath();
-//     chosenCtx.arc(circleStartInfo[i].cx, circleStartInfo[i].cy, circleStartInfo[i].r, 0, 2*Math.PI, true);
-//     chosenCtx.fill()
-//     chosenCtx.closePath()
-//   }
-// } // drawCircles()
-
-
 // this function activates the animation for the length specified by duration
 function animateCircles() {
-  moveCircles()
+	moveCircles()
   let dt = 0;
   let t = d3.timer(function(elapsed) {
     //stats.begin();
@@ -146,7 +124,7 @@ function animateCircles() {
     drawCircles()
     //stats.end();
     if (elapsed > setDuration) { t.stop() };
-  });
+	});
 } // animateCircles()
 
 
@@ -155,17 +133,17 @@ function initiateCircleInfo(dataSet) {
   for (let i = 0; i < dataSet.length; i++) {
     let node = circleData[i]
     let numOneToTwelve = Math.round(i/12 + 2*Math.random() -1 + colorOffset)
-    circleStartInfo[i] = {
+    circleStartInfo[i] = { // represents the starting points of the circles for each transition
       'cx': 20*node.scatterX,
-      'cy': height-13*node.scatterY,
+      'cy': canvasHeight-13*node.scatterY,
       'class': numOneToTwelve,
       'r': 7,
       'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
       'opacity': 0
     }
-    circleEndInfo[i] = {
+    circleEndInfo[i] = { // represents the ending points of the circles for each transition
       'cx': 16*node.histogramX,
-      'cy': height-12*node.histogramY,
+      'cy': canvasHeight-12*node.histogramY,
       'class': numOneToTwelve,
       'r': 7,
       'fillStyle': colorByNum(numOneToTwelve), // set fill once and then leave it alone
@@ -175,29 +153,43 @@ function initiateCircleInfo(dataSet) {
 }
 
 
+//----------------------------------------------------------------------------
+//  TRANSITIONS - DEFINE POSITIONS FOR THE CIRCLES AT EVERY STEP
+//----------------------------------------------------------------------------
+function transition1() {  // "grid" of events with summary numbers
+	for (let i = 0; i < circleData.length; i++) {
+		let node = circleData[i];
+		circleEndInfo[i] = {
+			'cx': 10+18.5*node.scatterXMobile,
+			'cy': -20+canvasHeight - 11.5*node.scatterYMobile,
+			'r': 26,
+			'opacity': 0.25
+	}}
+} // transition1()
+
+
+
+//----------------------------------------------------------------------------
+//  ALL THE ACTION
+//----------------------------------------------------------------------------
 
 d3.json('circlesMoveToZero.json').then(data => {
   circleData = data;
 }).then( function() {
 
-  initiateCircleInfo(circleData)
+  //initiateCircleInfo(circleData)
+  //animateCircles(transition1)
+	//setTimeout(animateCircles(transition1),7000)
 
-  // STARTING BIGGER EDITS HERE
+	databind(circleData)
+	drawCircles()
 
-  // transitionPane1()
-  // animateCircles(stepInc)
-
-  // transitionPane includes:
-  //   UPDATE CIRCLE END INFO WITH NEW VALUES FOR TRANSITION
-
-  // animateCircles includes:
-  //  drawCircles => works right now but NEEDS UPDATE TO REMOVE DATA BINDING
+	// transition1()
+	// animateCircles()
+	// update circleEndInfo with new positions
+	// sleep or similar
+	// animateCircles()
+	// repeat...
 
 
-  // databind(circleData); // Build the custom elements in memory.
-  animateCircles()
-  // var t = d3.timer(function(elapsed) {
-  //   drawCircles();
-  //   if (elapsed > 300) t.stop();
-  // }); // Timer running the draw function repeatedly for 300 ms.
 })
