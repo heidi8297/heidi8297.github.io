@@ -18,6 +18,7 @@ let interpolators = null;
 var customBase = document.createElement('custom');
 var custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
 
+
 // Color scale: give me a number, I return a color
 const colorByNum = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
@@ -48,11 +49,18 @@ function databind(data) {
 		.attr('class', 'circle')
 		.attr("cx", d => 5*d.scatterXMobile )
 		.attr("cy", d => 15*d.scatterYMobile )
-		.attr('r', 0)
+		.attr('r', 14)
 		.attr('fillStyle', d => colorByNum(d.index%12))
-		.transition().duration(30)
-		.attr('cx', d => 15*d.scatterXMobile );
+		.transition().duration(1500)
+		.attr("r",100)
+		.attr('cx', d => 15*d.scatterXMobile )
+		.transition().duration(800)
+		.attr("r",10)
+		.attr("cx", d=> 20*d.histogramX)
+		.attr("cy", d=> canvasHeight - 15*d.histogramY)
+		;
 
+	console.log(custom)
 
 } // databind()
 
@@ -182,7 +190,12 @@ d3.json('circlesMoveToZero.json').then(data => {
 	//setTimeout(animateCircles(transition1),7000)
 
 	databind(circleData)
-	drawCircles()
+
+	var t = d3.timer(function(elapsed) {
+		drawCircles()
+		if (elapsed > 3000) t.stop();
+	}); // Timer running the draw function repeatedly for 300 ms.
+
 
 	// transition1()
 	// animateCircles()
