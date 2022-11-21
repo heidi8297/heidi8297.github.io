@@ -48,6 +48,7 @@ p {
 	height: 800px;
   background-color: #f9f9f9;
   border: 1px solid #EAE0DB;
+  padding: 0px;
 }
 
 #viz-container canvas, #viz-container svg {
