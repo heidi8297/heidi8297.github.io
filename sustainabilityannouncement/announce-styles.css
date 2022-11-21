@@ -42,6 +42,20 @@ p {
   margin: 4.5% 9% 4% 9%;
 }
 
+/* div wrapper for svg */
+#viz-container {
+	width: 1000px;
+	height: 800px;
+  background-color: #f9f9f9;
+  border: 1px solid #EAE0DB;
+}
+
+#viz-container canvas, #viz-container svg {
+	position: absolute;
+	height: 800px;
+	width: 1000px;
+}
+
 .descMobile {
   display: none;
 }

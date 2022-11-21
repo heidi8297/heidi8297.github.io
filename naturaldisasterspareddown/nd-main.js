@@ -1045,6 +1045,7 @@ window.createGraphic = function(graphicSelector) {
 	// load/parse the main data file and store as 'data'
 	// then set up the charts and kick off the updater function
 	d3.csv('pend-gdis-aug-v2.csv', function(d) {
+    console.log("hello")
 		return {
 			id: d.id,
 			country: d.country,
