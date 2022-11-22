@@ -46,15 +46,8 @@ var shoeImg = document.getElementById('ombre-shoe');
 var shoeCanvas = document.createElement('canvas');
 shoeCanvas.width = shoeImg.width;
 shoeCanvas.height = shoeImg.height;
-console.log(shoeCanvas.height, shoeCanvas.width)
 shoeCanvas.getContext('2d').drawImage(shoeImg, 0, 0, shoeImg.width, shoeImg.height);
 
-var pixelData = shoeCanvas.getContext('2d').getImageData(600, 400, 1, 1).data;
-console.log(pixelData)
-console.log(pixelData[0])
-console.log(pixelData[1])
-
-//"rgb(155, 102, 102)"
 
 let stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms, 2: mb
@@ -89,17 +82,8 @@ let mtzPolygon = mtzPoints.split(" ").map(function (point){
 	return [xVal,yVal];
 });
 
-console.log("minX",minX);
-console.log("maxX",maxX);
-console.log("minY",minY);
-console.log("maxY",maxY);
 
 mtzPolygon.splice(-1)
-//console.log(mtzPolygon)
-
-console.log(d3.polygonCentroid(mtzPolygon))
-
-console.log(d3.polygonContains(mtzPolygon,[3774,5990]))
 
 
 
@@ -134,15 +118,15 @@ function databind(data) {
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
-		.transition().duration(1000)
+		.transition().delay(1200).duration(1000)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
 		.attr("fillStyle", d=> d.shoeColor)
 		.transition().duration(5000)
 		.attr("r", d => 3 + 7*Math.random())
-		.transition().duration(1200)
-		.attr("cx", d=> 2000*d.jitter)
-		.attr("cy", d=> d.index/2)
+		//.transition().duration(1200)
+		//.attr("cx", d=> 2000*d.jitter)
+		//.attr("cy", d=> d.index/2)
 		;
 
 } // databind()
@@ -203,7 +187,7 @@ d3.json('circleData5000.json').then(data => {
 				shoeFound = true
 				shoePixel = shoeCanvas.getContext('2d').getImageData(randomX, randomY, 1, 1).data
 				circleData[i].shoeX = 200+randomX*2
-				circleData[i].shoeY = 200+randomY*2
+				circleData[i].shoeY = 300+randomY*2
 				circleData[i].shoeColor = `rgb(${shoePixel[0]}, ${shoePixel[1]}, ${shoePixel[2]})`
 			}
 		}
@@ -211,8 +195,6 @@ d3.json('circleData5000.json').then(data => {
 	}
 }).then( function() {
 
-
-	console.log(circleData)
 
 	databind(circleData)
 
