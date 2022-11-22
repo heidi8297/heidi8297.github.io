@@ -42,6 +42,19 @@ let svgForeground = d3.select("#viz-container").append('svg')
 
 //svgForeground.append()
 
+var shoeImg = document.getElementById('ombre-shoe');
+var shoeCanvas = document.createElement('canvas');
+shoeCanvas.width = shoeImg.width;
+shoeCanvas.height = shoeImg.height;
+console.log(shoeCanvas.height, shoeCanvas.width)
+shoeCanvas.getContext('2d').drawImage(shoeImg, 0, 0, shoeImg.width, shoeImg.height);
+
+var pixelData = shoeCanvas.getContext('2d').getImageData(600, 400, 1, 1).data;
+console.log(pixelData)
+console.log(pixelData[0])
+console.log(pixelData[1])
+
+//"rgb(155, 102, 102)"
 
 let stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms, 2: mb
@@ -107,11 +120,11 @@ function databind(data) {
 		.attr('r', 14)
 		.attr('fillStyle', d => colorByNum(d.index%12))
 		//.attr('fillStyle', d => "#7c97ff")
-		.transition().duration(1200)
+		.transition().duration(800)
 		.attr("r",100)
 		.attr('cx', d => 15*d.scatterXMobile + Math.random() )
 		//.attr('cx', d => d.scatterXMobile )
-		.transition().duration(1200)
+		.transition().duration(800)
 		.attr("r",20)
 		.attr("cx", d=> 50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
@@ -121,8 +134,12 @@ function databind(data) {
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
+		.transition().duration(1000)
+		.attr("cx", d=> d.shoeX)
+		.attr("cy", d=> d.shoeY)
+		.attr("fillStyle", d=> d.shoeColor)
 		.transition().duration(5000)
-		.attr("r", d => 5 + 10*Math.random())
+		.attr("r", d => 3 + 7*Math.random())
 		.transition().duration(1200)
 		.attr("cx", d=> 2000*d.jitter)
 		.attr("cy", d=> d.index/2)
@@ -176,6 +193,18 @@ d3.json('circleData5000.json').then(data => {
 				matchFound = true
 				circleData[i].mtzX = randomX - 2480
 				circleData[i].mtzY = randomY - 4637
+			}
+		}
+		shoeFound = false
+		while (shoeFound == false) {
+			let randomX = 799*Math.random()
+			let randomY = 456*Math.random()
+			if (shoeCanvas.getContext('2d').getImageData(randomX, randomY, 1, 1).data[3] == 255) { // pixel has color other than alpha
+				shoeFound = true
+				shoePixel = shoeCanvas.getContext('2d').getImageData(randomX, randomY, 1, 1).data
+				circleData[i].shoeX = 200+randomX*2
+				circleData[i].shoeY = 200+randomY*2
+				circleData[i].shoeColor = `rgb(${shoePixel[0]}, ${shoePixel[1]}, ${shoePixel[2]})`
 			}
 		}
 		circleData[i].jitter = Math.random()
