@@ -11,8 +11,8 @@ let circleData = [];
 let circleStartInfo = {};
 let circleEndInfo = {};
 const ease = d3.easeCubicInOut;
-const stdDuration = 1100;
-const stdDelay = 500;
+const stdDuration = 1300;
+const stdDelay = 1200;
 let timeElapsed = 0;
 let interpolators = null;
 
@@ -40,6 +40,17 @@ let svgForeground = d3.select("#viz-container").append('svg')
 	.attr('width', canvasWidth)
 	.attr('height', canvasHeight)
 	.attr("class", "svgForeground"); // this is purely to make it easy to see in 'inspect'
+
+// create scale to use for the GHG by fiscal year bar chart
+let scaleXfiscal = d3.scaleBand()
+	.domain(["FY2015","FY2016","FY2017","FY2018","FY2019","FY2020","FY2021"])
+	.range([ 0 , canvasWidth ])
+	.paddingInner(0.35)
+	.paddingOuter(0.7);
+
+let	scaleYemissions = d3.scaleLinear()
+		.domain([0, d3.max(circleData,d => d.ghgScope1 + d.ghgScope2 + d.ghgScope3)])
+		.range([ canvasHeight -100, 100 ]); // 60 makes space for the label
 
 //svgForeground.append()
 
@@ -115,19 +126,22 @@ function databind(data) {
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
 		.attr("opacity",0.8)
 		.transition().delay(stdDelay).duration(stdDuration)
-		.attr("cx", d=> 50*d.histogramX + 5*Math.random())
+		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
+
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
 		.attr("r",20)
 		.attr('fillStyle', d => colorByNum(d.index%12))
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
-		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp)
+		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
 		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(7+d.index%5) )
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		.attr("cy", d=> 600 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
+		.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("r", d=> 15-d.index/600)
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
@@ -137,6 +151,8 @@ function databind(data) {
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
 		.attr("opacity",0.8)
+		.transition().duration(stdDuration)
+		.attr("r", d => 3 + 7*Math.random())
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
