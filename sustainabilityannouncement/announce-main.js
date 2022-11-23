@@ -11,7 +11,7 @@ let circleData = [];
 let circleStartInfo = {};
 let circleEndInfo = {};
 const ease = d3.easeCubicInOut;
-const stdDuration = 1300;
+const stdDuration = 1200;
 const stdDelay = 1200;
 let timeElapsed = 0;
 let interpolators = null;
@@ -45,12 +45,16 @@ let svgForeground = d3.select("#viz-container").append('svg')
 let scaleXfiscal = d3.scaleBand()
 	.domain(["FY2015","FY2016","FY2017","FY2018","FY2019","FY2020","FY2021"])
 	.range([ 0 , canvasWidth ])
-	.paddingInner(0.35)
-	.paddingOuter(0.7);
+	.paddingInner(0.45)
+	.paddingOuter(2.5);
 
 let	scaleYemissions = d3.scaleLinear()
 	.domain([0, 11807600])
-	.range([ canvasHeight - 150, 150 ]); // 60 makes space for the label
+	.range([ canvasHeight - 350, 350 ]); // 60 makes space for the label
+
+let scaleYemissionsMag = d3.scaleLinear()
+	.domain([0, 11807600])
+	.range([ 0, canvasHeight - 700 ]); // 60 makes space for the label
 
 //svgForeground.append()
 
@@ -125,9 +129,17 @@ function databind(data) {
 		.attr('r', 6)
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
 		.attr("opacity",0.8)
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay/2).duration(stdDuration)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
-		.attr("cy", d=> scaleYemissions(d.ghgScope3)+Math.random()*(scaleYemissions(0)-scaleYemissions(d.ghgScope3)) )
+		.attr("cy", function(d) {
+			if (d.ghgCategory == "scope1") {
+				return scaleYemissions(d.ghgScope1+d.ghgScope2+d.ghgScope3) + Math.random()*scaleYemissionsMag(d.ghgScope1+d.ghgScope2)
+			} else {
+				return scaleYemissions(d.ghgScope3) + Math.random()*scaleYemissionsMag(d.ghgScope3)
+			}
+		} )
+		.attr("r",6)
+		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
@@ -264,5 +276,5 @@ var t = d3.timer(function(elapsed) {
 	stats.begin();
 	drawCircles()
 	stats.end();
-	if (elapsed > 20000) t.stop();
+	if (elapsed > 23000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
