@@ -91,30 +91,27 @@ function databind(data) {
 		.attr('class', 'circle')
 		.attr("cx", d => 5*d.scatterXMobile + Math.random() )
 		.attr("cy", d => 15*d.scatterYMobile + Math.random())
-		//.attr("cx", d => d.scatterXMobile )
-		//.attr("cy", d => d.scatterYMobile )
 		.attr('r', 14)
 		.attr('fillStyle', d => colorByNum(d.index%12))
-		//.attr('fillStyle', d => "#7c97ff")
-		.transition().duration(800)
-		.attr("r",100)
-		.attr('cx', d => 15*d.scatterXMobile + Math.random() )
-		//.attr('cx', d => d.scatterXMobile )
-		.transition().duration(800)
+		.transition().duration(1200)
 		.attr("r",20)
 		.attr("cx", d=> 50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
-		//.attr("cx", d=> d.histogramX)
-		//.attr("cy", d=> canvasHeight - d.histogramY )
 		.transition().duration(1200)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
 		.transition().delay(1200).duration(1000)
+		.attr("cx", d=> 10+5.45*d.pdxDailyDayOfYear)
+		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp)
+		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
+		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : "#ffcc6d")
+		.transition().delay(6200).duration(1000)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
+		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
-		.transition().duration(5000)
+		.transition().duration(2000)
 		.attr("r", d => 3 + 7*Math.random())
 		//.transition().duration(1200)
 		//.attr("cx", d=> 2000*d.jitter)
@@ -154,7 +151,7 @@ function drawCircles() {  // draw the elements on the canvas
 //  ALL THE ACTION
 //----------------------------------------------------------------------------
 
-d3.json('circleData5000.json').then(data => {
+d3.json('circlesMoveToZero.json').then(data => {
   circleData = data.splice(10);
 	//console.log(circleData)
 	// add elements!
