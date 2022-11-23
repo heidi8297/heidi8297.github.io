@@ -11,7 +11,8 @@ let circleData = [];
 let circleStartInfo = {};
 let circleEndInfo = {};
 const ease = d3.easeCubicInOut;
-const setDuration = 2000;
+const stdDuration = 1100;
+const stdDelay = 500;
 let timeElapsed = 0;
 let interpolators = null;
 
@@ -112,39 +113,44 @@ function databind(data) {
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
-		.transition().delay(1000).duration(1200)
-		.attr("r",20)
-		.attr('fillStyle', d => colorByNum(d.index%12))
+		.attr("opacity",0.8)
+		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
-		.transition().delay(1200).duration(1000)
+		.attr("r",20)
+		.attr('fillStyle', d => colorByNum(d.index%12))
+		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
-		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(6+d.index%5) )
-		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.1)
-		.transition().delay(3000).duration(1200)
-		.attr('fillStyle', d => colorByNum(d.index%12))
-		.attr("r", d => 3 + 7*Math.random())
-		.attr("cx", d=> 350 + d.mtzX/2)
-		.attr("cy", d=> 150 + d.mtzY/2)
-		.attr("opacity",1)
-		.transition().delay(1200).duration(1000)
+		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(7+d.index%5) )
+		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
+		.attr("cy", d=> 600 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
+		.attr("r", d=> 15-d.index/600)
+		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
+		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
+		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
-		.transition().duration(2000)
+		.attr("opacity",0.8)
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("cx", d=> 350 + d.mtzX/2)
+		.attr("cy", d=> 150 + d.mtzY/2)
 		.attr("r", d => 3 + 7*Math.random())
-		.transition().duration(2000)
-		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		.attr("cy", d=> 600 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/416)))
-		.attr("opacity", d=> d.pdxWeeklyDup == 1? 0.6:0)
-		.attr("r", d=> 15-d.index/600)
-		//.transition().duration(1200)
-		//.attr("cx", d=> 2000*d.jitter)
-		//.attr("cy", d=> d.index/2)
+		.attr('fillStyle', d => colorByNum(d.index%12))
+		.attr("opacity",0.8)
+		.transition().duration(stdDuration)
+		.attr("r", d => 3 + 7*Math.random())
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("cx", d => d.swooshX )
+		.attr("cy", d => d.swooshY)
+		.attr('r', 6)
+		.attr('fillStyle', d=> colorByNum(7+d.index%3))
+		.attr("opacity",0.8)
 		;
 
 } // databind()
@@ -162,7 +168,7 @@ function drawCircles() {  // draw the elements on the canvas
 		var node = d3.select(this);   // This is each individual element in the loop.
     //let node = circleData[i];   // This is each individual element in the loop.
     context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
-    context.globalAlpha = 0.8;
+    context.globalAlpha = node.attr('opacity');
 
     context.beginPath();
     context.arc(node.attr('cx'), node.attr('cy'), node.attr('r'), 0, 2*Math.PI, true);
