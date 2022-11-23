@@ -49,8 +49,8 @@ let scaleXfiscal = d3.scaleBand()
 	.paddingOuter(0.7);
 
 let	scaleYemissions = d3.scaleLinear()
-		.domain([0, d3.max(circleData,d => d.ghgScope1 + d.ghgScope2 + d.ghgScope3)])
-		.range([ canvasHeight -100, 100 ]); // 60 makes space for the label
+	.domain([0, 11807600])
+	.range([ canvasHeight - 150, 150 ]); // 60 makes space for the label
 
 //svgForeground.append()
 
@@ -127,7 +127,7 @@ function databind(data) {
 		.attr("opacity",0.8)
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
-
+		.attr("cy", d=> scaleYemissions(d.ghgScope3)+Math.random()*(scaleYemissions(0)-scaleYemissions(d.ghgScope3)) )
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
