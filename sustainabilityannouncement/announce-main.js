@@ -76,15 +76,25 @@ let mtzPolygon = mtzPoints.split(" ").map(function (point){
 mtzPolygon.splice(-1)
 
 
+maxX = 0
+maxY = 0
+minX = 10000
+minY = 10000
+
 let swooshPoints = "245.8,717.6 234.9,716.9 219.5,714.5 209.8,712.1 200.7,709 192,705.3 183.9,700.9 176.2,695.9 172.6,693.1 169.1,690.1 160.5,681.4 157.4,677.9 152,670.7 145.6,659.7 142.3,652.1 140.9,648.2 139,642.1 136.5,629 135.5,615.2 136,600.6 138,585.2 141.5,569.2 146.5,552.7 153,535.7 156.7,527 160.3,519.6 168,504.5 176.9,489.3 187,473.6 204.8,448.9 234.1,412.8 251.4,393 268.3,374.2 280,361.4 279.3,362.7 277.5,365.8 272.8,374 264.2,390.9 256.6,408.3 250.5,425.4 248.1,433.6 246.4,440.1 243.9,452.6 242.3,464.6 241.7,476.2 242.2,487.2 243.6,497.6 246,507.5 249.4,516.7 251.4,521.1 254.7,527 262.7,537.9 272.3,547.5 283.1,555.3 288.8,558.4 294.1,560.8 305.4,564.6 317.9,567.3 331.4,568.9 346,569.3 361.6,568.5 378,566.6 395.4,563.6 404.4,561.6 515.2,532.3 773,463.8 1029,395.7 1135.5,367.4 873.9,479.4 431.9,668.5 408,678.7 378.2,690.7 365.7,695.2 348.8,700.8 316.4,709.7 286.2,715.3 265.3,717.4 252.1,717.8 245.8,717.6 245.8,717.6"
 
 let swooshPolygon = swooshPoints.split(" ").map(function (point){
   pointStrings = point.split(",")
 	xVal = parseFloat(pointStrings[0])
 	yVal = parseFloat(pointStrings[1])
+	if (xVal > maxX) { maxX = xVal };
+	if (yVal > maxY) { maxY = yVal };
+	if (xVal < minX) { minX = xVal };
+	if (yVal < minY) { minY = yVal };
 	return [xVal,yVal];
 });
 
+console.log(minX,maxX,minY,maxY)
 
 
 
@@ -98,23 +108,27 @@ function databind(data) {
 
 	allCircles.join('custom')
 		.attr('class', 'circle')
-		.attr("cx", d => 5*d.scatterXMobile + Math.random() )
-		.attr("cy", d => 15*d.scatterYMobile + Math.random())
-		.attr('r', 14)
-		.attr('fillStyle', d => colorByNum(d.index%12))
-		.transition().duration(1200)
+		.attr("cx", d => d.swooshX )
+		.attr("cy", d => d.swooshY)
+		.attr('r', 6)
+		.attr('fillStyle', d=> colorByNum(7+d.index%3))
+		.transition().delay(1000).duration(1200)
 		.attr("r",20)
+		.attr('fillStyle', d => colorByNum(d.index%12))
 		.attr("cx", d=> 50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
-		.transition().duration(1200)
-		.attr("r", d => 3 + 7*Math.random())
-		.attr("cx", d=> 350 + d.mtzX/2)
-		.attr("cy", d=> 150 + d.mtzY/2)
 		.transition().delay(1200).duration(1000)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
-		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : "#ffcc6d")
+		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(6+d.index%5) )
+		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.1)
+		.transition().delay(3000).duration(1200)
+		.attr('fillStyle', d => colorByNum(d.index%12))
+		.attr("r", d => 3 + 7*Math.random())
+		.attr("cx", d=> 350 + d.mtzX/2)
+		.attr("cy", d=> 150 + d.mtzY/2)
+		.attr("opacity",1)
 		.transition().delay(1200).duration(1000)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
@@ -188,12 +202,12 @@ d3.json('circlesMoveToZero.json').then(data => {
 		}
 		swooshFound = false
 		while (swooshFound == false) {
-			randomX = 1000*Math.random()
-			randomY = 1000*Math.random() // NEED TO OPTIMIZE HERE
+			randomX = 135.5*1000*Math.random()
+			randomY = 361+357*Math.random() // NEED TO OPTIMIZE HERE
 			if (d3.polygonContains(swooshPolygon,[randomX,randomY])) {
 				swooshFound = true
-				circleData[i].swooshX = 2*randomX
-				circleData[i].swooshY = 2*randomY
+				circleData[i].swooshX = 140   + 1.3*randomX
+				circleData[i].swooshY = -0 + 1.3*randomY
 			}
 		}
 		shoeFound = false
@@ -228,5 +242,5 @@ var t = d3.timer(function(elapsed) {
 	stats.begin();
 	drawCircles()
 	stats.end();
-	if (elapsed > 12000) t.stop();
+	if (elapsed > 20000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
