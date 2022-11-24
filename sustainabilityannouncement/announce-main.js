@@ -29,6 +29,15 @@ const colorByNum = d3.scaleOrdinal()
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
 
+
+//----------------------------------------------------------------------------
+//  BUILD DRAWING SPACES - SVG, CANVAS AND SCALES ELEMENTS
+//----------------------------------------------------------------------------
+
+// create an svg which we will use for our underlying shapes
+let svgBackground = d3.select("#viz-container").append('svg')
+	.attr("class", "svgBackground"); // this is purely to make it easy to see in 'inspect'
+
 let canvas = d3.select('#viz-container')
   .append('canvas')
   .attr('width', canvasWidth)
@@ -64,17 +73,14 @@ let scaleYanomaly = d3.scaleLinear()
 	.domain([-0.6,1.1])
 	.range([canvasHeight-400,400])
 
-console.log(scaleYanomaly(0))
-
-//svgForeground.append()
-
+// add a shoe image to the document, used to create the shoe image composed of dots
 var shoeImg = document.getElementById('ombre-shoe');
 var shoeCanvas = document.createElement('canvas');
 shoeCanvas.width = shoeImg.width;
 shoeCanvas.height = shoeImg.height;
 shoeCanvas.getContext('2d').drawImage(shoeImg, 0, 0, shoeImg.width, shoeImg.height);
 
-
+// initialize stats (performance) monitor for performance optimization during development
 let stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms, 2: mb
 
@@ -102,10 +108,6 @@ let mtzPolygon = mtzPoints.split(" ").map(function (point){
 mtzPolygon.splice(-1)
 
 
-maxX = 0
-maxY = 0
-minX = 10000
-minY = 10000
 
 let swooshPoints = "245.8,717.6 234.9,716.9 219.5,714.5 209.8,712.1 200.7,709 192,705.3 183.9,700.9 176.2,695.9 172.6,693.1 169.1,690.1 160.5,681.4 157.4,677.9 152,670.7 145.6,659.7 142.3,652.1 140.9,648.2 139,642.1 136.5,629 135.5,615.2 136,600.6 138,585.2 141.5,569.2 146.5,552.7 153,535.7 156.7,527 160.3,519.6 168,504.5 176.9,489.3 187,473.6 204.8,448.9 234.1,412.8 251.4,393 268.3,374.2 280,361.4 279.3,362.7 277.5,365.8 272.8,374 264.2,390.9 256.6,408.3 250.5,425.4 248.1,433.6 246.4,440.1 243.9,452.6 242.3,464.6 241.7,476.2 242.2,487.2 243.6,497.6 246,507.5 249.4,516.7 251.4,521.1 254.7,527 262.7,537.9 272.3,547.5 283.1,555.3 288.8,558.4 294.1,560.8 305.4,564.6 317.9,567.3 331.4,568.9 346,569.3 361.6,568.5 378,566.6 395.4,563.6 404.4,561.6 515.2,532.3 773,463.8 1029,395.7 1135.5,367.4 873.9,479.4 431.9,668.5 408,678.7 378.2,690.7 365.7,695.2 348.8,700.8 316.4,709.7 286.2,715.3 265.3,717.4 252.1,717.8 245.8,717.6 245.8,717.6"
 
@@ -113,14 +115,9 @@ let swooshPolygon = swooshPoints.split(" ").map(function (point){
   pointStrings = point.split(",")
 	xVal = parseFloat(pointStrings[0])
 	yVal = parseFloat(pointStrings[1])
-	if (xVal > maxX) { maxX = xVal };
-	if (yVal > maxY) { maxY = yVal };
-	if (xVal < minX) { minX = xVal };
-	if (yVal < minY) { minY = yVal };
 	return [xVal,yVal];
 });
 
-console.log(minX,maxX,minY,maxY)
 
 
 
@@ -151,9 +148,9 @@ function databind(data) {
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
 		.transition().delay(stdDelay).duration(stdDuration)
-		.attr("cx", d=> scaleXanomaly(d.globalYear)+10*Math.random())
-		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly)+10*Math.random())
-		.attr("r", 8)
+		.attr("cx", d=> scaleXanomaly(d.globalYear))
+		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly))
+		.attr("r", 9)
 		.attr("fillStyle", function(d) {
 			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
 				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
@@ -161,11 +158,11 @@ function databind(data) {
 				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
 			}
 		})
-		.transition().delay(4*stdDelay).duration(stdDuration)
-		.attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
-		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
-		.attr("r",20)
-		.attr('fillStyle', d => colorByNum(d.index%12))
+		// .transition().delay(4*stdDelay).duration(stdDuration)
+		// .attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
+		// .attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
+		// .attr("r",20)
+		// .attr('fillStyle', d => colorByNum(d.index%12))
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
