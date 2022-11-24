@@ -56,6 +56,16 @@ let scaleYemissionsMag = d3.scaleLinear()
 	.domain([0, 11807600])
 	.range([ 0, canvasHeight - 700 ]); // 60 makes space for the label
 
+let scaleXanomaly = d3.scaleLinear()
+	.domain([1880,2022])
+	.range([200,canvasWidth-200])
+
+let scaleYanomaly = d3.scaleLinear()
+	.domain([-0.6,1.1])
+	.range([canvasHeight-400,400])
+
+console.log(scaleYanomaly(0))
+
 //svgForeground.append()
 
 var shoeImg = document.getElementById('ombre-shoe');
@@ -141,6 +151,17 @@ function databind(data) {
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
 		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("cx", d=> scaleXanomaly(d.globalYear)+10*Math.random())
+		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly)+10*Math.random())
+		.attr("r", 8)
+		.attr("fillStyle", function(d) {
+			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
+				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			} else {
+				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			}
+		})
+		.transition().delay(4*stdDelay).duration(stdDuration)
 		.attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
 		.attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
 		.attr("r",20)
