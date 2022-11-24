@@ -162,7 +162,7 @@ function databind(data) {
 		.attr("cy", d=> d.shoeY)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
-		.attr("opacity",0.8)
+		.attr("opacity",0.87)
 		.transition().duration(stdDuration)
 		.attr("r", d => 3 + 7*Math.random())
 		.transition().delay(stdDelay).duration(stdDuration)
