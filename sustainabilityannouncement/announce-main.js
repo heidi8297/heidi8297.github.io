@@ -126,7 +126,7 @@ let swooshPolygon = swooshPoints.split(" ").map(function (point){
 //  DRAWING FUNCTIONS
 //----------------------------------------------------------------------------
 
-function databind(data) {
+function databindCircles(data) {
 	var allCircles = custom.selectAll('custom.circle')
 		.data(data);
 
@@ -160,11 +160,6 @@ function databind(data) {
 			}
 		})
 		.attr("opacity",0.5)
-		// .transition().delay(4*stdDelay).duration(stdDuration)
-		// .attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
-		// .attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
-		// .attr("r",20)
-		// .attr('fillStyle', d => colorByNum(d.index%12))
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
@@ -201,7 +196,7 @@ function databind(data) {
 		.attr("opacity",0.8)
 		;
 
-} // databind()
+} // databindCircles()
 
 
 function databindLines(data) {
@@ -210,8 +205,8 @@ function databindLines(data) {
 
 	lollipopLines.join('custom')
 		.attr('class', 'line')
-		.attr("stroke", d => "#000000" )
-		.attr("stroke-width", 1.5 )
+		.attr("strokeStyle", d => "#66B9FF" )
+		.attr("lineWidth", 9.5 )
 		.attr("x1", d => 100)
 		.attr("y1", d => 100)
 		.attr("x2", d => 200)
@@ -224,7 +219,7 @@ function databindLines(data) {
 function drawElements() {  // draw the elements on the canvas
   context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
 
-	var elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
+	var elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databindCircles() function.
 	elements.each(function(d,i) { // For each virtual/custom element...
 
   // Draw each individual custom element with their properties.
@@ -244,9 +239,11 @@ function drawElements() {  // draw the elements on the canvas
 	var lineElements = custom.selectAll('custom.line');
 	lineElements.each(function(d,i) {
 		var node = d3.select(this);
+		context.strokeStyle = node.attr("strokeStyle")
+		context.lineWidth = node.attr("lineWidth")
 		context.beginPath();
-		context.moveTo(0, 0);
-		context.lineTo(300, 150);
+		context.moveTo(node.attr("x1"), node.attr("y1"));
+		context.lineTo(node.attr("x2"), node.attr("y2"));
 		context.stroke();
 	})
 
@@ -260,9 +257,7 @@ function drawElements() {  // draw the elements on the canvas
 //----------------------------------------------------------------------------
 
 d3.json('circlesMoveToZero.json').then(data => {
-  circleData = data.splice(10);
-	//console.log(circleData)
-	// add elements!
+  circleData = data;
 	let mtzFound = false
 	let swooshFound = false
 	let shoeFound = false
@@ -306,7 +301,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 }).then( function() {
 
 
-	databind(circleData)
+	databindCircles(circleData)
 	databindLines([1,2,3])
 
 	// var t = d3.timer(function(elapsed) {
