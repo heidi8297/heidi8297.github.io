@@ -132,11 +132,13 @@ function databindCircles(data) {
 
 	allCircles.join('custom')
 		.attr('class', 'circle')
+		// NIKE SWOOSH (purple)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
 		.attr("opacity",0.8)
+		// GHG vertical bar chart
 		.transition().delay(stdDelay/2).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
 		.attr("cy", function(d) {
@@ -148,6 +150,7 @@ function databindCircles(data) {
 		} )
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
+		// global temperature anomalies - lollipop chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXanomaly(d.globalYear))
 		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly))
@@ -160,18 +163,21 @@ function databindCircles(data) {
 			}
 		})
 		.attr("opacity",0.5)
+		// pdx daily maximum temperature - scatter plot with highlight for June 2021 heat dome
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
 		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(7+d.index%5) )
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
+		// pdx weekly maximum temperature - radial burst chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("r", d=> 15-d.index/600)
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
+		// Air force 1 composite
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
@@ -180,6 +186,7 @@ function databindCircles(data) {
 		.attr("opacity",0.87)
 		.transition().duration(stdDuration).ease(ease)
 		.attr("r", d => 3 + 7*Math.random())
+		// Nike Move to Zero logo
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
@@ -188,6 +195,7 @@ function databindCircles(data) {
 		.attr("opacity",0.8)
 		.transition().duration(stdDuration).ease(ease)
 		.attr("r", d => 3 + 7*Math.random())
+		// return to Nike Swoosh (to complete the loop)
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
@@ -212,6 +220,17 @@ function databindLines(data) {
 		.attr("x2", d => 200)
 		.attr("y2", d => 200)
 		.attr("opacity", 0.7)
+		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("strokeStyle", d => "#fe8187" )
+		.attr("x2", d => d*100)
+		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("strokeStyle", d => "#66B9FF" )
+		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("strokeStyle", d => "#fe8187" )
+		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("strokeStyle", d => "#66B9FF" )
+		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("strokeStyle", d => "#fe8187" )
 }
 
 
@@ -219,8 +238,8 @@ function databindLines(data) {
 function drawElements() {  // draw the elements on the canvas
   context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
 
-	var elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databindCircles() function.
-	elements.each(function(d,i) { // For each virtual/custom element...
+	var circleElements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databindCircles() function.
+	circleElements.each(function(d,i) { // For each virtual/custom element...
 
   // Draw each individual custom element with their properties.
   //for (let i = 0; i < circleData.length; i++) {
@@ -241,6 +260,7 @@ function drawElements() {  // draw the elements on the canvas
 		var node = d3.select(this);
 		context.strokeStyle = node.attr("strokeStyle")
 		context.lineWidth = node.attr("lineWidth")
+		context.globalAlpha = node.attr('opacity');
 		context.beginPath();
 		context.moveTo(node.attr("x1"), node.attr("y1"));
 		context.lineTo(node.attr("x2"), node.attr("y2"));
@@ -302,7 +322,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 
 	databindCircles(circleData)
-	databindLines([1,2,3])
+	databindLines([1,2,3,4,5])
 
 	// var t = d3.timer(function(elapsed) {
 	// 	stats.begin();
