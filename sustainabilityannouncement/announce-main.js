@@ -13,7 +13,7 @@ let circleEndInfo = {};
 const ease = d3.easeCubicInOut;
 //const ease = d3.easeBackInOut.overshoot(0.4);
 const stdDuration = 1200;
-const stdDelay = 1200;
+const stdDelay = 1300;
 let timeElapsed = 0;
 let interpolators = null;
 
@@ -233,20 +233,16 @@ function databindLines(data) {
 		.attr("y1", d => scaleYanomaly(0))
 		.attr("x2", d => scaleXanomaly(d.globalYear))
 		.attr("y2", d => scaleYanomaly(0))
-		.attr("opacity", 0.7)
-		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("lineWidth", 10 )
-		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("opacity", 0)
+		.transition().delay(1.5*stdDelay+stdDuration).duration(stdDuration).ease(ease)
 		.attr("lineWidth", 4 )
 		.attr("y2", d => scaleYanomaly(d.globalTempAnomaly))
-		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
+		.attr("opacity",0.7)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("lineWidth", 10 )
 		.attr("y2", d => scaleYanomaly(0))
-		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("lineWidth", 4 )
+		.attr("opacity",0)
 
-		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("lineWidth", 10 )
 }
 
 
