@@ -121,6 +121,14 @@ let swooshPolygon = swooshPoints.split(" ").map(function (point){
 
 
 
+//----------------------------------------------------------------------------
+//  DEFINE GLOBAL TEMP ANOMALY DATA
+//----------------------------------------------------------------------------
+
+let globalTempData = [{"index":1,"globalYear":1880,"globalTempAnomaly":-0.23},{"index":2,"globalYear":1881,"globalTempAnomaly":-0.29},{"index":3,"globalYear":1882,"globalTempAnomaly":-0.23},{"index":4,"globalYear":1883,"globalTempAnomaly":-0.22},{"index":5,"globalYear":1884,"globalTempAnomaly":-0.27},{"index":6,"globalYear":1885,"globalTempAnomaly":-0.19},{"index":7,"globalYear":1886,"globalTempAnomaly":-0.31},{"index":8,"globalYear":1887,"globalTempAnomaly":-0.32},{"index":9,"globalYear":1888,"globalTempAnomaly":0.04},{"index":10,"globalYear":1889,"globalTempAnomaly":-0.24},{"index":11,"globalYear":1890,"globalTempAnomaly":-0.35},{"index":12,"globalYear":1891,"globalTempAnomaly":-0.29},{"index":13,"globalYear":1892,"globalTempAnomaly":-0.27},{"index":14,"globalYear":1893,"globalTempAnomaly":-0.24},{"index":15,"globalYear":1894,"globalTempAnomaly":-0.29},{"index":16,"globalYear":1895,"globalTempAnomaly":-0.11},{"index":17,"globalYear":1896,"globalTempAnomaly":0.02},{"index":18,"globalYear":1897,"globalTempAnomaly":-0.18},{"index":19,"globalYear":1898,"globalTempAnomaly":-0.38},{"index":20,"globalYear":1899,"globalTempAnomaly":-0.09},{"index":21,"globalYear":1900,"globalTempAnomaly":0.08},{"index":22,"globalYear":1901,"globalTempAnomaly":-0.32},{"index":23,"globalYear":1902,"globalTempAnomaly":-0.32},{"index":24,"globalYear":1903,"globalTempAnomaly":-0.51},{"index":25,"globalYear":1904,"globalTempAnomaly":-0.42},{"index":26,"globalYear":1905,"globalTempAnomaly":-0.25},{"index":27,"globalYear":1906,"globalTempAnomaly":-0.28},{"index":28,"globalYear":1907,"globalTempAnomaly":-0.29},{"index":29,"globalYear":1908,"globalTempAnomaly":-0.5},{"index":30,"globalYear":1909,"globalTempAnomaly":-0.36},{"index":31,"globalYear":1910,"globalTempAnomaly":-0.43},{"index":32,"globalYear":1911,"globalTempAnomaly":-0.32},{"index":33,"globalYear":1912,"globalTempAnomaly":-0.54},{"index":34,"globalYear":1913,"globalTempAnomaly":-0.31},{"index":35,"globalYear":1914,"globalTempAnomaly":-0.1},{"index":36,"globalYear":1915,"globalTempAnomaly":-0.23},{"index":37,"globalYear":1916,"globalTempAnomaly":-0.28},{"index":38,"globalYear":1917,"globalTempAnomaly":-0.33},{"index":39,"globalYear":1918,"globalTempAnomaly":-0.11},{"index":40,"globalYear":1919,"globalTempAnomaly":-0.24},{"index":41,"globalYear":1920,"globalTempAnomaly":-0.23},{"index":42,"globalYear":1921,"globalTempAnomaly":-0.06},{"index":43,"globalYear":1922,"globalTempAnomaly":-0.28},{"index":44,"globalYear":1923,"globalTempAnomaly":-0.19},{"index":45,"globalYear":1924,"globalTempAnomaly":-0.31},{"index":46,"globalYear":1925,"globalTempAnomaly":-0.17},{"index":47,"globalYear":1926,"globalTempAnomaly":-0.08},{"index":48,"globalYear":1927,"globalTempAnomaly":0.01},{"index":49,"globalYear":1928,"globalTempAnomaly":-0.16},{"index":50,"globalYear":1929,"globalTempAnomaly":-0.14},{"index":51,"globalYear":1930,"globalTempAnomaly":-0.02},{"index":52,"globalYear":1931,"globalTempAnomaly":0.04},{"index":53,"globalYear":1932,"globalTempAnomaly":-0.09},{"index":54,"globalYear":1933,"globalTempAnomaly":-0.2},{"index":55,"globalYear":1934,"globalTempAnomaly":-0.03},{"index":56,"globalYear":1935,"globalTempAnomaly":-0.03},{"index":57,"globalYear":1936,"globalTempAnomaly":-0.01},{"index":58,"globalYear":1937,"globalTempAnomaly":0.1},{"index":59,"globalYear":1938,"globalTempAnomaly":0.08},{"index":60,"globalYear":1939,"globalTempAnomaly":0},{"index":61,"globalYear":1940,"globalTempAnomaly":0.16},{"index":62,"globalYear":1941,"globalTempAnomaly":0.42},{"index":63,"globalYear":1942,"globalTempAnomaly":0.07},{"index":64,"globalYear":1943,"globalTempAnomaly":0.26},{"index":65,"globalYear":1944,"globalTempAnomaly":0.32},{"index":66,"globalYear":1945,"globalTempAnomaly":0.28},{"index":67,"globalYear":1946,"globalTempAnomaly":0},{"index":68,"globalYear":1947,"globalTempAnomaly":0.06},{"index":69,"globalYear":1948,"globalTempAnomaly":-0.06},{"index":70,"globalYear":1949,"globalTempAnomaly":-0.06},{"index":71,"globalYear":1950,"globalTempAnomaly":-0.16},{"index":72,"globalYear":1951,"globalTempAnomaly":0.13},{"index":73,"globalYear":1952,"globalTempAnomaly":0.01},{"index":74,"globalYear":1953,"globalTempAnomaly":0.12},{"index":75,"globalYear":1954,"globalTempAnomaly":-0.05},{"index":76,"globalYear":1955,"globalTempAnomaly":-0.12},{"index":77,"globalYear":1956,"globalTempAnomaly":-0.19},{"index":78,"globalYear":1957,"globalTempAnomaly":0.03},{"index":79,"globalYear":1958,"globalTempAnomaly":0.07},{"index":80,"globalYear":1959,"globalTempAnomaly":0},{"index":81,"globalYear":1960,"globalTempAnomaly":0.06},{"index":82,"globalYear":1961,"globalTempAnomaly":-0.02},{"index":83,"globalYear":1962,"globalTempAnomaly":0.12},{"index":84,"globalYear":1963,"globalTempAnomaly":0.22},{"index":85,"globalYear":1964,"globalTempAnomaly":-0.25},{"index":86,"globalYear":1965,"globalTempAnomaly":0.02},{"index":87,"globalYear":1966,"globalTempAnomaly":-0.07},{"index":88,"globalYear":1967,"globalTempAnomaly":0.15},{"index":89,"globalYear":1968,"globalTempAnomaly":0.05},{"index":90,"globalYear":1969,"globalTempAnomaly":0.09},{"index":91,"globalYear":1970,"globalTempAnomaly":-0.02},{"index":92,"globalYear":1971,"globalTempAnomaly":-0.08},{"index":93,"globalYear":1972,"globalTempAnomaly":0.09},{"index":94,"globalYear":1973,"globalTempAnomaly":0.07},{"index":95,"globalYear":1974,"globalTempAnomaly":-0.07},{"index":96,"globalYear":1975,"globalTempAnomaly":-0.12},{"index":97,"globalYear":1976,"globalTempAnomaly":-0.19},{"index":98,"globalYear":1977,"globalTempAnomaly":0.12},{"index":99,"globalYear":1978,"globalTempAnomaly":0.07},{"index":100,"globalYear":1979,"globalTempAnomaly":0.29},{"index":101,"globalYear":1980,"globalTempAnomaly":0.18},{"index":102,"globalYear":1981,"globalTempAnomaly":0.18},{"index":103,"globalYear":1982,"globalTempAnomaly":0.18},{"index":104,"globalYear":1983,"globalTempAnomaly":0.24},{"index":105,"globalYear":1984,"globalTempAnomaly":0.14},{"index":106,"globalYear":1985,"globalTempAnomaly":0.15},{"index":107,"globalYear":1986,"globalTempAnomaly":0.22},{"index":108,"globalYear":1987,"globalTempAnomaly":0.35},{"index":109,"globalYear":1988,"globalTempAnomaly":0.31},{"index":110,"globalYear":1989,"globalTempAnomaly":0.29},{"index":111,"globalYear":1990,"globalTempAnomaly":0.43},{"index":112,"globalYear":1991,"globalTempAnomaly":0.29},{"index":113,"globalYear":1992,"globalTempAnomaly":0.05},{"index":114,"globalYear":1993,"globalTempAnomaly":0.22},{"index":115,"globalYear":1994,"globalTempAnomaly":0.42},{"index":116,"globalYear":1995,"globalTempAnomaly":0.44},{"index":117,"globalYear":1996,"globalTempAnomaly":0.21},{"index":118,"globalYear":1997,"globalTempAnomaly":0.64},{"index":119,"globalYear":1998,"globalTempAnomaly":0.48},{"index":120,"globalYear":1999,"globalTempAnomaly":0.34},{"index":121,"globalYear":2000,"globalTempAnomaly":0.32},{"index":122,"globalYear":2001,"globalTempAnomaly":0.52},{"index":123,"globalYear":2002,"globalTempAnomaly":0.49},{"index":124,"globalYear":2003,"globalTempAnomaly":0.74},{"index":125,"globalYear":2004,"globalTempAnomaly":0.6},{"index":126,"globalYear":2005,"globalTempAnomaly":0.68},{"index":127,"globalYear":2006,"globalTempAnomaly":0.68},{"index":128,"globalYear":2007,"globalTempAnomaly":0.56},{"index":129,"globalYear":2008,"globalTempAnomaly":0.67},{"index":130,"globalYear":2009,"globalTempAnomaly":0.64},{"index":131,"globalYear":2010,"globalTempAnomaly":0.63},{"index":132,"globalYear":2011,"globalTempAnomaly":0.61},{"index":133,"globalYear":2012,"globalTempAnomaly":0.7},{"index":134,"globalYear":2013,"globalTempAnomaly":0.66},{"index":135,"globalYear":2014,"globalTempAnomaly":0.76},{"index":136,"globalYear":2015,"globalTempAnomaly":1.03},{"index":137,"globalYear":2016,"globalTempAnomaly":0.79},{"index":138,"globalYear":2017,"globalTempAnomaly":0.81},{"index":139,"globalYear":2018,"globalTempAnomaly":0.92},{"index":140,"globalYear":2019,"globalTempAnomaly":0.94},{"index":141,"globalYear":2020,"globalTempAnomaly":0.82},{"index":142,"globalYear":2021,"globalTempAnomaly":0.88},{"index":143,"globalYear":2022,"globalTempAnomaly":0.89}]
+
+console.log(globalTempData)
+
 
 //----------------------------------------------------------------------------
 //  DRAWING FUNCTIONS
@@ -213,30 +221,50 @@ function databindLines(data) {
 
 	lollipopLines.join('custom')
 		.attr('class', 'line')
-		.attr("strokeStyle", d => "#66B9FF" )
-		.attr("lineWidth", 9.5 )
-		.attr("x1", d => 100)
-		.attr("y1", d => 100)
-		.attr("x2", d => 200)
-		.attr("y2", d => 200)
+		.attr("strokeStyle", function(d) {
+			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
+				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			} else {
+				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			}
+		})
+		.attr("lineWidth", 3.5 )
+		.attr("x1", d => scaleXanomaly(d.globalYear))
+		.attr("y1", d => scaleYanomaly(0))
+		.attr("x2", d => scaleXanomaly(d.globalYear))
+		.attr("y2", d => scaleYanomaly(0))
 		.attr("opacity", 0.7)
 		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("strokeStyle", d => "#fe8187" )
-		.attr("x2", d => d*100)
+		.attr("lineWidth", 10 )
 		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("strokeStyle", d => "#66B9FF" )
+		.attr("lineWidth", 4 )
+		.attr("y2", d => scaleYanomaly(d.globalTempAnomaly))
 		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("strokeStyle", d => "#fe8187" )
+		.attr("lineWidth", 10 )
+		.attr("y2", d => scaleYanomaly(0))
 		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("strokeStyle", d => "#66B9FF" )
+		.attr("lineWidth", 4 )
+
 		.transition(2*stdDelay).duration(2*stdDuration).ease(ease)
-		.attr("strokeStyle", d => "#fe8187" )
+		.attr("lineWidth", 10 )
 }
 
 
 // this function draws one frame onto the canvas
 function drawElements() {  // draw the elements on the canvas
   context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
+
+	var lineElements = custom.selectAll('custom.line');
+	lineElements.each(function(d,i) {
+		var node = d3.select(this);
+		context.strokeStyle = node.attr("strokeStyle")
+		context.lineWidth = node.attr("lineWidth")
+		context.globalAlpha = node.attr('opacity');
+		context.beginPath();
+		context.moveTo(node.attr("x1"), node.attr("y1"));
+		context.lineTo(node.attr("x2"), node.attr("y2"));
+		context.stroke();
+	})
 
 	var circleElements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databindCircles() function.
 	circleElements.each(function(d,i) { // For each virtual/custom element...
@@ -254,18 +282,6 @@ function drawElements() {  // draw the elements on the canvas
     context.closePath();
 
   }); // Loop through each element.
-
-	var lineElements = custom.selectAll('custom.line');
-	lineElements.each(function(d,i) {
-		var node = d3.select(this);
-		context.strokeStyle = node.attr("strokeStyle")
-		context.lineWidth = node.attr("lineWidth")
-		context.globalAlpha = node.attr('opacity');
-		context.beginPath();
-		context.moveTo(node.attr("x1"), node.attr("y1"));
-		context.lineTo(node.attr("x2"), node.attr("y2"));
-		context.stroke();
-	})
 
 } // drawElements
 
@@ -322,7 +338,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 
 	databindCircles(circleData)
-	databindLines([1,2,3,4,5])
+	databindLines(globalTempData)
 
 	// var t = d3.timer(function(elapsed) {
 	// 	stats.begin();
