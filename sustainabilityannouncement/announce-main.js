@@ -11,6 +11,7 @@ let circleData = [];
 let circleStartInfo = {};
 let circleEndInfo = {};
 const ease = d3.easeCubicInOut;
+//const ease = d3.easeBackInOut.overshoot(0.4);
 const stdDuration = 1200;
 const stdDelay = 1200;
 let timeElapsed = 0;
@@ -136,7 +137,7 @@ function databind(data) {
 		.attr('r', 6)
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
 		.attr("opacity",0.8)
-		.transition().delay(stdDelay/2).duration(stdDuration)
+		.transition().delay(stdDelay/2).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
 		.attr("cy", function(d) {
 			if (d.ghgCategory == "scope1") {
@@ -147,7 +148,7 @@ function databind(data) {
 		} )
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXanomaly(d.globalYear))
 		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly))
 		.attr("r", 9)
@@ -158,40 +159,41 @@ function databind(data) {
 				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
 			}
 		})
+		.attr("opacity",0.5)
 		// .transition().delay(4*stdDelay).duration(stdDuration)
 		// .attr("cx", d=> 60+50*d.histogramX + 5*Math.random())
 		// .attr("cy", d=> canvasHeight - 45*d.histogramY + 5*Math.random())
 		// .attr("r",20)
 		// .attr('fillStyle', d => colorByNum(d.index%12))
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
 		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(7+d.index%5) )
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("r", d=> 15-d.index/600)
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> d.shoeX)
 		.attr("cy", d=> d.shoeY)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
 		.attr("opacity",0.87)
-		.transition().duration(stdDuration)
+		.transition().duration(stdDuration).ease(ease)
 		.attr("r", d => 3 + 7*Math.random())
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 350 + d.mtzX/2)
 		.attr("cy", d=> 150 + d.mtzY/2)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr('fillStyle', d => colorByNum(d.index%12))
 		.attr("opacity",0.8)
-		.transition().duration(stdDuration)
+		.transition().duration(stdDuration).ease(ease)
 		.attr("r", d => 3 + 7*Math.random())
-		.transition().delay(stdDelay).duration(stdDuration)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
@@ -202,8 +204,24 @@ function databind(data) {
 } // databind()
 
 
+function databindLines(data) {
+	var lollipopLines = custom.selectAll('custom.line')
+		.data(data);
+
+	lollipopLines.join('custom')
+		.attr('class', 'line')
+		.attr("stroke", d => "#000000" )
+		.attr("stroke-width", 1.5 )
+		.attr("x1", d => 100)
+		.attr("y1", d => 100)
+		.attr("x2", d => 200)
+		.attr("y2", d => 200)
+		.attr("opacity", 0.7)
+}
+
+
 // this function draws one frame onto the canvas
-function drawCircles() {  // draw the elements on the canvas
+function drawElements() {  // draw the elements on the canvas
   context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
 
 	var elements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databind() function.
@@ -223,7 +241,16 @@ function drawCircles() {  // draw the elements on the canvas
 
   }); // Loop through each element.
 
-} // drawCircles
+	var lineElements = custom.selectAll('custom.line');
+	lineElements.each(function(d,i) {
+		var node = d3.select(this);
+		context.beginPath();
+		context.moveTo(0, 0);
+		context.lineTo(300, 150);
+		context.stroke();
+	})
+
+} // drawElements
 
 
 
@@ -280,10 +307,11 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 
 	databind(circleData)
+	databindLines([1,2,3])
 
 	// var t = d3.timer(function(elapsed) {
 	// 	stats.begin();
-	// 	drawCircles()
+	// 	drawElements()
 	// 	stats.end();
 	// 	if (elapsed > 6000) t.stop();
 	// }); // Timer running the draw function repeatedly for 300 ms.
@@ -292,7 +320,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 var t = d3.timer(function(elapsed) {
 	stats.begin();
-	drawCircles()
+	drawElements()
 	stats.end();
 	if (elapsed > 23000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
