@@ -299,11 +299,16 @@ function databindRects(data) {
 		.attr("x", d => scaleXfiscal("FY"+String(d.ghgYear)) )
 		.attr("yTop", d => scaleYemissions(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
 		.attr("width", scaleXfiscal.bandwidth() )
-		.attr("heightTop", d=> scaleYemissionsMag(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
-		.attr("fillStyleTop","#77DBFD")
-		.attr("yBot", 3)
-		.attr("heightBot", 200)
-		.attr("fillStyleBot", "#fe8187");
+		.attr("heightTop", d=> scaleYemissionsMag(d.ghgScope1+d.ghgScope2) )
+		.attr("fillStyleTop","#fe8187")
+		.attr("yBot", d => scaleYemissions(d.ghgScope3))
+		.attr("heightBot", d=> scaleYemissionsMag(d.ghgScope3))
+		.attr("fillStyleBot", "#77DBFD")
+		.attr("opacity",0)
+		.transition().delay(0.5*stdDelay).duration(stdDuration)
+		.attr("opacity",0.25)
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("opacity",0)
 
 }
 
@@ -316,9 +321,17 @@ function drawElements() {  // draw the elements on the canvas
 	rectElements.each(function(d,i) {
 		var node = d3.select(this);
 		context.fillStyle = node.attr('fillStyleTop');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
-		context.globalAlpha = 0.4;
+		context.globalAlpha = node.attr('opacity');
 		context.fillRect(node.attr('x'), node.attr('yTop'), node.attr('width'), node.attr('heightTop'));  // Here you retrieve the position of the node and apply it to the fillRect context function which will fill and paint the square.
 	})
+
+	rectElements.each(function(d,i) {
+		var node = d3.select(this);
+		context.fillStyle = node.attr('fillStyleBot');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+		context.globalAlpha = node.attr('opacity');
+		context.fillRect(node.attr('x'), node.attr('yBot'), node.attr('width'), node.attr('heightBot'));  // Here you retrieve the position of the node and apply it to the fillRect context function which will fill and paint the square.
+	})
+
 
 	var lineElements = custom.selectAll('custom.line');
 	lineElements.each(function(d,i) {
