@@ -1,5 +1,42 @@
 
 //----------------------------------------------------------------------------
+//  MID-COLOR FUNCTION (from https://gist.github.com/Linnk/7fe6d246d982bf91d343675fb6e156f0)
+//----------------------------------------------------------------------------
+
+/*** From hex to dec ***/
+function hex(hex)
+{
+	var result = 0
+	for (var i = 0; i < hex.length; i++)
+	{
+		result = result * 16 + '0123456789abcdefgh'.indexOf(hex[i].toLowerCase());
+	}
+	return result
+}
+
+/**
+ * factor2 needs to be between 0 and 1, to calculate how much of the
+ * two colors you want your middle color.
+ */
+function midcolor(color1, color2, factor2)
+{
+	var c1 = color1.replace('#', '').match(/.{1,2}/g)
+	var c2 = color2.replace('#', '').match(/.{1,2}/g)
+
+	var factor1 = 1 - factor2
+
+	var c3 = [
+		parseInt(hex(c1[0]) * factor1 + hex(c2[0]) * factor2).toString(16),
+		parseInt(hex(c1[1]) * factor1 + hex(c2[1]) * factor2).toString(16),
+		parseInt(hex(c1[2]) * factor1 + hex(c2[2]) * factor2).toString(16),
+	]
+
+	return '#' + c3.join('')
+}
+
+
+
+//----------------------------------------------------------------------------
 //  DEFINE VARIABLES
 //----------------------------------------------------------------------------
 
@@ -142,10 +179,20 @@ function databindCircles(data) {
 		.attr('class', 'circle')
 		// NIKE SWOOSH (purple)
 		.attr("cx", d => d.swooshX )
-		.attr("cy", d => d.swooshY)
+		.attr("cy", d => d.swooshY )
 		.attr('r', 6)
 		.attr('fillStyle', d=> colorByNum(7+d.index%3))
+		// .attr("fillStyle", function(d) {
+		// 	//return colorByNum((Math.floor(d.swooshXOriginal/100))%12)
+		//
+		// 	if (d.index < 4000) {
+		// 		return colorByNum(7+d.index%3)
+		// 	} else {
+		// 		return midcolor(colorByNum(7+d.index%3),"#333333",0.1)
+		// 	}
+		// })
 		.attr("opacity",0.8)
+		//.attr("opacity", d=> d.index < 4000 ? 0.8 : 0.4)
 		// GHG vertical bar chart
 		.transition().delay(stdDelay/2).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
@@ -192,8 +239,6 @@ function databindCircles(data) {
 		.attr("r", d => 3 + 7*Math.random())
 		.attr("fillStyle", d=> d.shoeColor)
 		.attr("opacity",0.87)
-		.transition().duration(stdDuration).ease(ease)
-		.attr("r", d => 3 + 7*Math.random())
 		// Nike Move to Zero logo
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 350 + d.mtzX/2)
@@ -235,15 +280,24 @@ function databindLines(data) {
 		.attr("y2", d => scaleYanomaly(0))
 		.attr("opacity", 0)
 		.transition().delay(1.5*stdDelay+stdDuration).duration(stdDuration).ease(ease)
-		.attr("lineWidth", 4 )
+		.attr("lineWidth", 3 )
 		.attr("y2", d => scaleYanomaly(d.globalTempAnomaly))
-		.attr("opacity",0.7)
+		.attr("opacity",0.6)
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("lineWidth", 10 )
 		.attr("y2", d => scaleYanomaly(0))
 		.attr("opacity",0)
 
 }
+
+// function databindRects(data) {
+// 	var barRects = custom.selectAll('custom.rect')
+// 		.data(data);
+//
+// 	barRects.join('custom')
+// 		.attr("class", "rect")
+//
+// }
 
 
 // this function draws one frame onto the canvas
@@ -253,7 +307,7 @@ function drawElements() {  // draw the elements on the canvas
 	var lineElements = custom.selectAll('custom.line');
 	lineElements.each(function(d,i) {
 		var node = d3.select(this);
-		context.strokeStyle = node.attr("strokeStyle")
+		context.strokeStyle = midcolor(node.attr("strokeStyle"),"#999999",0.3)
 		context.lineWidth = node.attr("lineWidth")
 		context.globalAlpha = node.attr('opacity');
 		context.beginPath();
@@ -312,8 +366,18 @@ d3.json('circlesMoveToZero.json').then(data => {
 			randomY = 361+357*Math.random() // NEED TO OPTIMIZE HERE
 			if (d3.polygonContains(swooshPolygon,[randomX,randomY])) {
 				swooshFound = true
-				circleData[i].swooshX = 140   + 1.3*randomX
-				circleData[i].swooshY = -0 + 1.3*randomY
+				if (circleData[i].index < 6000) {
+					circleData[i].swooshXOriginal = 140   + 1.3*randomX
+					circleData[i].swooshX = 140   + 1.3*randomX
+					circleData[i].swooshY = 0 + 1.3*randomY
+				} else {
+					let swooshYVal = 1800 - 1.3*randomY
+					let swooshXVal = 140   + 1.3*randomX
+					circleData[i].swooshXOriginal = 140   + 1.3*randomX
+					circleData[i].swooshX = 140   + (1.3 +Math.abs(swooshYVal - 800)/1200 )*randomX + 0.6*Math.abs(swooshYVal - 800)
+					// a value of 800 is equivalent to the zero-plane for the reflection
+					circleData[i].swooshY = 1600 - randomY
+				}
 			}
 		}
 		shoeFound = false
