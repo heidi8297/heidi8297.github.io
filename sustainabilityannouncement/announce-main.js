@@ -61,8 +61,8 @@ var custom = d3.select(customBase); // This is your SVG replacement and the pare
 // Color scale: give me a number, I return a color
 const colorByNum = d3.scaleOrdinal()
 	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-	.range(["#FFEE88","#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
-		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6"]);
+	.range(["#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6","#FFEE88"]);
 
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
@@ -181,7 +181,7 @@ function databindCircles(data) {
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY )
 		.attr('r', 6)
-		.attr('fillStyle', d=> colorByNum(7+d.index%3))
+		.attr('fillStyle', d=> colorByNum(6+d.index%3))
 		// .attr("fillStyle", function(d) {
 		// 	//return colorByNum((Math.floor(d.swooshXOriginal/100))%12)
 		//
@@ -204,7 +204,7 @@ function databindCircles(data) {
 			}
 		} )
 		.attr("r",6)
-		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(5+d.index%3): colorByNum(9+d.index%3) )
+		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(4+d.index%3): colorByNum(8+d.index%3) )
 		// global temperature anomalies - lollipop chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXanomaly(d.globalYear))
@@ -223,7 +223,7 @@ function databindCircles(data) {
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
-		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(7+d.index%5) )
+		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(6+d.index%5) )
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
 		// pdx weekly maximum temperature - radial burst chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
@@ -241,19 +241,26 @@ function databindCircles(data) {
 		.attr("opacity",0.87)
 		// Nike Move to Zero logo
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
-		.attr("cx", d=> 350 + d.mtzX/2)
-		.attr("cy", d=> 150 + d.mtzY/2)
+		.attr("cx", d=> 0 + d.mtzX)
+		.attr("cy", d=> 0 + d.mtzY)
 		.attr("r", d => 3 + 7*Math.random())
 		.attr('fillStyle', d => colorByNum(d.index%12))
 		.attr("opacity",0.8)
 		.transition().duration(stdDuration).ease(ease)
 		.attr("r", d => 3 + 7*Math.random())
+		.attr("fillStyle", function(d) {
+			let angleAsFraction = d.mtzAngle/(Math.PI*2)+0.5
+			console.log( Math.floor(12*angleAsFraction) )
+
+			//console.log(Math.floor((d.mtzAngle*12/(Math.PI*2))%12))
+			return colorByNum(Math.floor(12*angleAsFraction))
+		} )
 		// return to Nike Swoosh (to complete the loop)
-		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
+		.transition().delay(10*stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
-		.attr('fillStyle', d=> colorByNum(7+d.index%3))
+		.attr('fillStyle', d=> colorByNum(6+d.index%3))
 		.attr("opacity",0.8)
 		;
 
@@ -385,8 +392,12 @@ d3.json('circlesMoveToZero.json').then(data => {
 			randomY = 4637 + 2600*Math.random()
 			if (d3.polygonContains(mtzPolygon,[randomX,randomY])) {
 				mtzFound = true
-				circleData[i].mtzX = randomX - 2480
-				circleData[i].mtzY = randomY - 4637
+				circleData[i].mtzX = 350+ (randomX - 2480)/2
+				circleData[i].mtzY = 150+ (randomY - 4637)/2
+				// origin point = [1000,800]
+				//let angleRadians = Math.atan2(circleData[i].mtzY - 800, circleData[i].mtzX - 1000)
+				let angleRadians = Math.atan2(800 - circleData[i].mtzY, 1000 - circleData[i].mtzX)
+				circleData[i].mtzAngle = angleRadians;
 			}
 		}
 		swooshFound = false
