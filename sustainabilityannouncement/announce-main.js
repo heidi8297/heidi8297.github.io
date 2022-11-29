@@ -296,12 +296,14 @@ function databindRects(data) {
 
 	barRects.join('custom')
 		.attr("class", "rect")
-		.attr("x", d => scaleXemissions(d.ghgYear) )
-		.attr("y", d => scaleYemissions(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
-		.attr("width", scaleXemissions.bandwidth() )
-		.attr("height", scaleYemissionsMag(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
-		.attr("fill","#77DBFD")
-		.attr("opacity", 0.7);
+		.attr("x", d => scaleXfiscal("FY"+String(d.ghgYear)) )
+		.attr("yTop", d => scaleYemissions(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
+		.attr("width", scaleXfiscal.bandwidth() )
+		.attr("heightTop", d=> scaleYemissionsMag(d.ghgScope1+d.ghgScope2+d.ghgScope3) )
+		.attr("fillStyleTop","#77DBFD")
+		.attr("yBot", 3)
+		.attr("heightBot", 200)
+		.attr("fillStyleBot", "#fe8187");
 
 }
 
@@ -309,6 +311,14 @@ function databindRects(data) {
 // this function draws one frame onto the canvas
 function drawElements() {  // draw the elements on the canvas
   context.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas.
+
+	var rectElements = custom.selectAll('custom.rect');
+	rectElements.each(function(d,i) {
+		var node = d3.select(this);
+		context.fillStyle = node.attr('fillStyleTop');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
+		context.globalAlpha = 0.4;
+		context.fillRect(node.attr('x'), node.attr('yTop'), node.attr('width'), node.attr('heightTop'));  // Here you retrieve the position of the node and apply it to the fillRect context function which will fill and paint the square.
+	})
 
 	var lineElements = custom.selectAll('custom.line');
 	lineElements.each(function(d,i) {
