@@ -64,6 +64,12 @@ const colorByNum = d3.scaleOrdinal()
 	.range(["#FFEE88","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6","#FFEE88"]);
 
+// Color scale: give me a number, I return a color
+const colorByNumMtz = d3.scaleOrdinal()
+	.domain([0,1,2,3,4,5,6,7,8,9,10,11,12,13])
+	.range(["#FFEE88","#ffdd79","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
+		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6","#FFEE88"]);
+
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
 
@@ -116,7 +122,7 @@ var shoeImg = document.getElementById('ombre-shoe');
 var shoeCanvas = document.createElement('canvas');
 shoeCanvas.width = shoeImg.width;
 shoeCanvas.height = shoeImg.height;
-shoeCanvas.getContext('2d').drawImage(shoeImg, 0, 0, shoeImg.width, shoeImg.height);
+shoeCanvas.getContext('2d', {willReadFrequently: true}).drawImage(shoeImg, 0, 0, shoeImg.width, shoeImg.height);
 
 // initialize stats (performance) monitor for performance optimization during development
 let stats = new Stats();
@@ -244,48 +250,48 @@ function databindCircles(data) {
 		.attr("cx", d=> 0 + d.mtzX)
 		.attr("cy", d=> 0 + d.mtzY)
 		.attr("r", d => 3 + 7*Math.random())
-		.attr('fillStyle', d => colorByNum(Math.floor(0+12*d.mtzAngleAsFraction+2*Math.random())%12) )
+		.attr('fillStyle', d => colorByNumMtz(Math.floor(0+12*d.mtzAngleAsFraction+1*Math.random())%13) )
 		.attr("opacity",0.8)
 		// .transition().duration(stdDuration/2).ease(ease)
 		// .attr("r", d => 2 + 8*Math.random())
 		// .attr("fillStyle", d => colorByNum(Math.floor(0+12*d.mtzAngleAsFraction+2*Math.random())%12) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(11+12*d.mtzAngleAsFraction+2.5*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(12+12*d.mtzAngleAsFraction+1.3*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(10+12*d.mtzAngleAsFraction+2.8*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(11+12*d.mtzAngleAsFraction+1.6*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(9+12*d.mtzAngleAsFraction+3*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(10+12*d.mtzAngleAsFraction+1.9*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(8+12*d.mtzAngleAsFraction+3.2*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(9+12*d.mtzAngleAsFraction+2.2*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(7+12*d.mtzAngleAsFraction+3.5*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(8+12*d.mtzAngleAsFraction+2.5*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(6+12*d.mtzAngleAsFraction+4*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(7+12*d.mtzAngleAsFraction+2.8*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(5+12*d.mtzAngleAsFraction+4.5*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(6+12*d.mtzAngleAsFraction+3.1*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(4+12*d.mtzAngleAsFraction+5.5*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(5+12*d.mtzAngleAsFraction+3.4*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(3+12*d.mtzAngleAsFraction+7*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(4+12*d.mtzAngleAsFraction+3.6*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(2+12*d.mtzAngleAsFraction+9*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(3+12*d.mtzAngleAsFraction+3.8*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNum(Math.floor(1+12*d.mtzAngleAsFraction+12*Math.random())%12) )
+		.attr("fillStyle", d => colorByNumMtz(Math.floor(2+12*d.mtzAngleAsFraction+4.0*Math.random())%13) )
 
 
 		// return to Nike Swoosh (to complete the loop)
-		.transition().delay(10*stdDelay).duration(stdDuration).ease(ease)
+		.transition().delay(7*stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
@@ -484,5 +490,5 @@ var t = d3.timer(function(elapsed) {
 	stats.begin();
 	drawElements()
 	stats.end();
-	if (elapsed > 23000) t.stop();
+	if (elapsed > 36000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
