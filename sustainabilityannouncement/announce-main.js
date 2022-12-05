@@ -114,8 +114,8 @@ let scaleXanomaly = d3.scaleLinear()
 	.range([200,canvasWidth-200])
 
 let scaleYanomaly = d3.scaleLinear()
-	.domain([-0.6,1.1])
-	.range([canvasHeight-400,400])
+	.domain([-0.7,1.1])
+	.range([canvasHeight-300,300])
 
 // add a shoe image to the document, used to create the shoe image composed of dots
 var shoeImg = document.getElementById('ombre-shoe');
@@ -250,12 +250,12 @@ function databindCircles(data) {
 		.attr("cx", d=> 0 + d.mtzX)
 		.attr("cy", d=> 0 + d.mtzY)
 		.attr("r", d => 3 + 7*Math.random())
-		.attr('fillStyle', d => colorByNumMtz(Math.floor(0+12*d.mtzAngleAsFraction+1*Math.random())%13) )
+		//.attr('fillStyle', d => colorByNumMtz(Math.floor(0+12*d.mtzAngleAsFraction+1*Math.random())%13) )
 		.attr("opacity",0.8)
 		// .transition().duration(stdDuration/2).ease(ease)
 		// .attr("r", d => 2 + 8*Math.random())
 		// .attr("fillStyle", d => colorByNum(Math.floor(0+12*d.mtzAngleAsFraction+2*Math.random())%12) )
-		.transition().duration(stdDuration/6).ease(ease)
+		.transition().delay(d => 600*(d.mtzAngleAsFraction+0.5*Math.random())).duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(12+12*d.mtzAngleAsFraction+1.3*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
@@ -291,7 +291,7 @@ function databindCircles(data) {
 
 
 		// return to Nike Swoosh (to complete the loop)
-		.transition().delay(7*stdDelay).duration(stdDuration).ease(ease)
+		.transition().delay(2*stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
@@ -490,5 +490,5 @@ var t = d3.timer(function(elapsed) {
 	stats.begin();
 	drawElements()
 	stats.end();
-	if (elapsed > 36000) t.stop();
+	if (elapsed > 22000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
