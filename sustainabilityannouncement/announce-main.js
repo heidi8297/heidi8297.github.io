@@ -303,11 +303,11 @@ function databindCircles(data) {
 
 
 function databindLines(data) {
-	var lollipopLines = custom.selectAll('custom.line')
+	var lollipopLines = custom.selectAll('custom.lollipopLine')
 		.data(data);
 
 	lollipopLines.join('custom')
-		.attr('class', 'line')
+		.attr('class', 'lollipopLine')
 		.attr("strokeStyle", function(d) {
 			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
 				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
@@ -332,6 +332,25 @@ function databindLines(data) {
 
 }
 
+
+// little bit of a misnomer here because we aren't actually binding any data in this case
+function databindAxis() {
+	var axisLine = custom.selectAll('custom.axis')
+		.data([1])
+
+	axisLine.join('custom')
+		.attr("class", "axis")
+		.attr("strokeStyle", "#444444")
+		.attr("lineWidth", 2.5)
+		.attr("x1", 200)
+		.attr("y1", scaleYemissions(0))
+		.attr("x2", canvasWidth - 200)
+		.attr("y2", scaleYemissions(0))
+		.attr("opacity", 0)
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("opacity",1)
+}
+
 function databindRects(data) {
 	var barRects = custom.selectAll('custom.rect')
 		.data(data);
@@ -351,7 +370,6 @@ function databindRects(data) {
 		.attr("opacity",0.25)
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("opacity",0)
-
 }
 
 
@@ -375,7 +393,8 @@ function drawElements() {  // draw the elements on the canvas
 	})
 
 
-	var lineElements = custom.selectAll('custom.line');
+	var lineElements = custom.selectAll('custom.lollipopLine');
+	console.log(lineElements)
 	lineElements.each(function(d,i) {
 		var node = d3.select(this);
 		context.strokeStyle = midcolor(node.attr("strokeStyle"),"#999999",0.3)
@@ -386,6 +405,21 @@ function drawElements() {  // draw the elements on the canvas
 		context.lineTo(node.attr("x2"), node.attr("y2"));
 		context.stroke();
 	})
+
+	var axisElements = custom.selectAll('custom.axis');
+	console.log(axisElements)
+	axisElements.each(function(d,i) {
+		console.log('axis')
+		var node = d3.select(this);
+		context.strokeStyle = node.attr("strokeStyle")
+		context.lineWidth = node.attr("lineWidth")
+		context.globalAlpha = node.attr('opacity');
+		context.beginPath();
+		context.moveTo(node.attr("x1"), node.attr("y1"));
+		context.lineTo(node.attr("x2"), node.attr("y2"));
+		context.stroke();
+	})
+
 
 	var circleElements = custom.selectAll('custom.circle');// Grab all elements you bound data to in the databindCircles() function.
 	circleElements.each(function(d,i) { // For each virtual/custom element...
@@ -475,6 +509,7 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 	databindCircles(circleData)
 	databindLines(globalTempData)
+	databindAxis()
 	databindRects(emissionsData)
 
 	// var t = d3.timer(function(elapsed) {
