@@ -259,31 +259,31 @@ function databindCircles(data) {
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(12+12*d.mtzAngleAsFraction+1.3*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 4 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(11+12*d.mtzAngleAsFraction+1.6*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 5 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(10+12*d.mtzAngleAsFraction+1.9*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 6 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(9+12*d.mtzAngleAsFraction+2.2*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 4 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(8+12*d.mtzAngleAsFraction+2.5*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(7+12*d.mtzAngleAsFraction+2.8*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 4 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(6+12*d.mtzAngleAsFraction+3.1*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 5 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(5+12*d.mtzAngleAsFraction+3.4*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 6 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(4+12*d.mtzAngleAsFraction+3.6*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
+		.attr("r", d => 4 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(3+12*d.mtzAngleAsFraction+3.8*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
@@ -333,7 +333,6 @@ function databindLines(data) {
 }
 
 
-// little bit of a misnomer here because we aren't actually binding any data in this case
 function databindAxis() {
 	var axisLine = custom.selectAll('custom.axis')
 		.data([{"num":1},{"num":2}])
@@ -348,12 +347,11 @@ function databindAxis() {
 		.attr("y2", d => d.num == 1? scaleYemissions(0) : scaleYanomaly(0) )
 		.attr("opacity", 0)
 		.transition().delay(0.5*stdDelay).duration(stdDuration)
-		.attr("opacity", d => d.num == 1 ? 0.15 : 0)
+		.attr("opacity", d => d.num == 1 ? 0.09 : 0)
 		.transition().delay(stdDelay).duration(stdDuration)
-		.attr("opacity", d => d.num == 2 ? 0.15 : 0)
+		.attr("opacity", d => d.num == 2 ? 0.09 : 0)
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("opacity", 0)
-
 }
 
 function databindRects(data) {
@@ -427,9 +425,7 @@ function drawElements() {  // draw the elements on the canvas
 	circleElements.each(function(d,i) { // For each virtual/custom element...
 
   // Draw each individual custom element with their properties.
-  //for (let i = 0; i < circleData.length; i++) {
 		var node = d3.select(this);   // This is each individual element in the loop.
-    //let node = circleData[i];   // This is each individual element in the loop.
     context.fillStyle = node.attr('fillStyle');   // Here you retrieve the colour from the individual in-memory node and set the fillStyle for the canvas paint
     context.globalAlpha = node.attr('opacity');
 
