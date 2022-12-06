@@ -455,8 +455,12 @@ function createMap() {
 			.data(worldData.features)
 			.join('path')
 			.attr('fill', '#EAE0DB')
-			.attr('opacity', 0.9)
-			.attr('d', geoPath);
+			.attr('opacity', 0)
+			.attr('d', geoPath)
+			.transition().delay(3.5*stdDelay+3*stdDuration).duration(stdDuration)
+			.attr("opacity",0.5)
+			.transition().delay(stdDelay).duration(stdDuration)
+			.attr("opacity",0)
 	});
 }
 
