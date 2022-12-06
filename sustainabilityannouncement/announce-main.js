@@ -255,7 +255,7 @@ function databindCircles(data) {
 		// .transition().duration(stdDuration/2).ease(ease)
 		// .attr("r", d => 2 + 8*Math.random())
 		// .attr("fillStyle", d => colorByNum(Math.floor(0+12*d.mtzAngleAsFraction+2*Math.random())%12) )
-		.transition().delay(d => 600*(d.mtzAngleAsFraction+0.5*Math.random())).duration(stdDuration/6).ease(ease)
+		.transition().delay(d => 500*(d.mtzAngleAsFraction+0.5*d.jitter)).duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(12+12*d.mtzAngleAsFraction+1.3*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
@@ -291,7 +291,7 @@ function databindCircles(data) {
 
 
 		// return to Nike Swoosh (to complete the loop)
-		.transition().delay(2*stdDelay).duration(stdDuration).ease(ease)
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d => d.swooshX )
 		.attr("cy", d => d.swooshY)
 		.attr('r', 6)
@@ -490,5 +490,5 @@ var t = d3.timer(function(elapsed) {
 	stats.begin();
 	drawElements()
 	stats.end();
-	if (elapsed > 22000) t.stop();
+	if (elapsed > 21000) t.stop();
 }); // Timer running the draw function repeatedly for 300 ms.
