@@ -336,19 +336,24 @@ function databindLines(data) {
 // little bit of a misnomer here because we aren't actually binding any data in this case
 function databindAxis() {
 	var axisLine = custom.selectAll('custom.axis')
-		.data([1])
+		.data([{"num":1},{"num":2}])
 
 	axisLine.join('custom')
 		.attr("class", "axis")
 		.attr("strokeStyle", "#444444")
-		.attr("lineWidth", 2.5)
-		.attr("x1", 200)
-		.attr("y1", scaleYemissions(0))
-		.attr("x2", canvasWidth - 200)
-		.attr("y2", scaleYemissions(0))
+		.attr("lineWidth", 3.5)
+		.attr("x1", d => d.num == 1? 270 : 120)
+		.attr("y1", d => d.num == 1? scaleYemissions(0) : scaleYanomaly(0) )
+		.attr("x2", d => canvasWidth - (d.num == 1? 270 : 120))
+		.attr("y2", d => d.num == 1? scaleYemissions(0) : scaleYanomaly(0) )
 		.attr("opacity", 0)
+		.transition().delay(0.5*stdDelay).duration(stdDuration)
+		.attr("opacity", d => d.num == 1 ? 0.15 : 0)
 		.transition().delay(stdDelay).duration(stdDuration)
-		.attr("opacity",1)
+		.attr("opacity", d => d.num == 2 ? 0.15 : 0)
+		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("opacity", 0)
+
 }
 
 function databindRects(data) {
@@ -394,7 +399,6 @@ function drawElements() {  // draw the elements on the canvas
 
 
 	var lineElements = custom.selectAll('custom.lollipopLine');
-	console.log(lineElements)
 	lineElements.each(function(d,i) {
 		var node = d3.select(this);
 		context.strokeStyle = midcolor(node.attr("strokeStyle"),"#999999",0.3)
@@ -407,9 +411,7 @@ function drawElements() {  // draw the elements on the canvas
 	})
 
 	var axisElements = custom.selectAll('custom.axis');
-	console.log(axisElements)
 	axisElements.each(function(d,i) {
-		console.log('axis')
 		var node = d3.select(this);
 		context.strokeStyle = node.attr("strokeStyle")
 		context.lineWidth = node.attr("lineWidth")
