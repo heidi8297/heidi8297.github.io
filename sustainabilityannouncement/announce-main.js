@@ -280,7 +280,7 @@ function databindCircles(data) {
 		.attr("r", d => 5 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(5+12*d.mtzAngleAsFraction+3.4*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 6 + 8*Math.random())
+		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(4+12*d.mtzAngleAsFraction+3.6*Math.random())%13) )
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 4 + 8*Math.random())
@@ -439,6 +439,28 @@ function drawElements() {  // draw the elements on the canvas
 } // drawElements
 
 
+function createMap() {
+	mapGroup = svgBackground.append('g')
+		.attr("class","mapGroup")
+		.attr('width', canvasWidth)
+		.attr('height', canvasHeight)
+		.attr("opacity", 1);
+	projection = d3.geoNaturalEarth1()
+		.scale((canvasWidth / 3.1) / Math.PI) // smaller values of 1.5 = more zoomed in
+		.translate([-30+ 0.25* canvasWidth, 0.24* canvasHeight]);
+	let geoPath = d3.geoPath(projection);
+	// draw the map and set the opacity to 0
+	d3.json("map.geojson").then( function(worldData){
+		mapGroup.selectAll('path')
+			.data(worldData.features)
+			.join('path')
+			.attr('fill', '#EAE0DB')
+			.attr('opacity', 0.9)
+			.attr('d', geoPath);
+	});
+}
+
+
 
 
 //----------------------------------------------------------------------------
@@ -504,6 +526,8 @@ d3.json('circlesMoveToZero.json').then(data => {
 	}
 }).then( function() {
 
+
+	createMap()
 
 	databindCircles(circleData)
 	databindLines(globalTempData)
