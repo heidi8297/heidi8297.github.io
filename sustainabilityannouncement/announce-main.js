@@ -223,29 +223,13 @@ function databindCircles(data) {
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
 		.attr("fillStyle", d=> (d.index >= 4496 && d.index <= 4498) ? "#ff9473" : colorByNum(6+d.index%5) )
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
-		// pdx weekly maximum temperature - radial burst chart
+		// world map of natural disasters
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
-
-		// 'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
-		// 'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
-		// 'r': scaleFactor*scaleRgeo(node.geoIdCount),
-		// 'opacity': 0
-
-
 		.attr("cx", d=> 2*projection([d.ndLong, d.ndLat])[0] )
 		.attr("cy", d=> 2*projection([d.ndLong, d.ndLat])[1] )
 		.attr("r", d=> 3*Math.sqrt( d.ndLocCount) )
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
-
-
-		//.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		//.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		// .attr("r", d=> 15-d.index/600)
-		// .attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
-		// .attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
-
-
 
 		// global temperature anomalies - lollipop chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
@@ -272,11 +256,7 @@ function databindCircles(data) {
 		.attr("cx", d=> 0 + d.mtzX)
 		.attr("cy", d=> 0 + d.mtzY)
 		.attr("r", d => 3 + 7*Math.random())
-		//.attr('fillStyle', d => colorByNumMtz(Math.floor(0+12*d.mtzAngleAsFraction+1*Math.random())%13) )
 		.attr("opacity",0.8)
-		// .transition().duration(stdDuration/2).ease(ease)
-		// .attr("r", d => 2 + 8*Math.random())
-		// .attr("fillStyle", d => colorByNum(Math.floor(0+12*d.mtzAngleAsFraction+2*Math.random())%12) )
 		.transition().delay(d => 500*(d.mtzAngleAsFraction+0.5*d.jitter)).duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(12+12*d.mtzAngleAsFraction+1.3*Math.random())%13) )
@@ -511,8 +491,6 @@ d3.json('circlesMoveToZero.json').then(data => {
 				mtzFound = true
 				circleData[i].mtzX = 350+ (randomX - 2480)/2
 				circleData[i].mtzY = 150+ (randomY - 4637)/2
-				// origin point = [1000,800]
-				//let angleRadians = Math.atan2(circleData[i].mtzY - 800, circleData[i].mtzX - 1000)
 				let angleRadians = Math.atan2(800 - circleData[i].mtzY, 1000 - circleData[i].mtzX)
 				circleData[i].mtzAngle = angleRadians;
 				circleData[i].mtzAngleAsFraction = angleRadians/(Math.PI*2)+0.5
@@ -562,12 +540,6 @@ d3.json('circlesMoveToZero.json').then(data => {
 	databindRects(emissionsData)
 	databindCircles(circleData)
 
-	// var t = d3.timer(function(elapsed) {
-	// 	stats.begin();
-	// 	drawElements()
-	// 	stats.end();
-	// 	if (elapsed > 6000) t.stop();
-	// }); // Timer running the draw function repeatedly for 300 ms.
 
 })
 
