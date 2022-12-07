@@ -51,6 +51,7 @@ const ease = d3.easeCubicInOut;
 //const ease = d3.easeBackInOut.overshoot(0.4);
 const stdDuration = 1200;
 const stdDelay = 1300;
+const fullCycle = stdDuration + stdDelay;
 let timeElapsed = 0;
 let interpolators = null;
 
@@ -211,19 +212,6 @@ function databindCircles(data) {
 		} )
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(4+d.index%3): colorByNum(8+d.index%3) )
-		// global temperature anomalies - lollipop chart
-		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
-		.attr("cx", d=> scaleXanomaly(d.globalYear))
-		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly))
-		.attr("r", 9)
-		.attr("fillStyle", function(d) {
-			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
-				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
-			} else {
-				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
-			}
-		})
-		.attr("opacity",0.5)
 		// pdx daily maximum temperature - scatter plot with highlight for June 2021 heat dome
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
@@ -238,6 +226,19 @@ function databindCircles(data) {
 		.attr("r", d=> 15-d.index/600)
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
+		// global temperature anomalies - lollipop chart
+		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
+		.attr("cx", d=> scaleXanomaly(d.globalYear))
+		.attr("cy", d=> scaleYanomaly(d.globalTempAnomaly))
+		.attr("r", 9)
+		.attr("fillStyle", function(d) {
+			if (d.globalTempAnomaly >= 0) {	// warm colors for warmer temps (positive), cool colors for cooler temps (negative)
+				return colorByNum(0+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			} else {
+				return colorByNum(6+(d.index%143)%6)  // by using a %143 modifier we get the same color for each year
+			}
+		})
+		.attr("opacity",0.5)
 		// Air force 1 composite
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> d.shoeX)
@@ -321,7 +322,7 @@ function databindLines(data) {
 		.attr("x2", d => scaleXanomaly(d.globalYear))
 		.attr("y2", d => scaleYanomaly(0))
 		.attr("opacity", 0)
-		.transition().delay(1.5*stdDelay+stdDuration).duration(stdDuration).ease(ease)
+		.transition().delay(0.5*stdDelay+3*fullCycle).duration(stdDuration).ease(ease)
 		.attr("lineWidth", 3 )
 		.attr("y2", d => scaleYanomaly(d.globalTempAnomaly))
 		.attr("opacity",0.6)
@@ -346,9 +347,11 @@ function databindAxis() {
 		.attr("x2", d => canvasWidth - (d.num == 1? 270 : 120))
 		.attr("y2", d => d.num == 1? scaleYemissions(0) : scaleYanomaly(0) )
 		.attr("opacity", 0)
-		.transition().delay(0.5*stdDelay).duration(stdDuration)
+		.transition().delay(0.5*stdDelay).duration(stdDuration) // nike emissions bar chart
 		.attr("opacity", d => d.num == 1 ? 0.09 : 0)
 		.transition().delay(stdDelay).duration(stdDuration)
+		.attr("opacity", 0)
+		.transition().delay(stdDelay+fullCycle).duration(stdDuration) // lollipop chart
 		.attr("opacity", d => d.num == 2 ? 0.09 : 0)
 		.transition().delay(stdDelay).duration(stdDuration)
 		.attr("opacity", 0)
@@ -457,7 +460,7 @@ function createMap() {
 			.attr('fill', '#EAE0DB')
 			.attr('opacity', 0)
 			.attr('d', geoPath)
-			.transition().delay(3.5*stdDelay+3*stdDuration).duration(stdDuration)
+			.transition().delay(0.5*stdDelay+2*fullCycle).duration(stdDuration)
 			.attr("opacity",0.5)
 			.transition().delay(stdDelay).duration(stdDuration)
 			.attr("opacity",0)
