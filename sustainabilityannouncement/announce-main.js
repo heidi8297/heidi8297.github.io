@@ -71,6 +71,10 @@ const colorByNumMtz = d3.scaleOrdinal()
 	.range(["#FFEE88","#ffdd79","#ffcc6d","#FFAC69","#ff9473","#fe8187","#e278d6","#ad8aff",
 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6","#FFEE88"]);
 
+// color scale for natural disasters
+// const colorByDisasterType = d3.scaleOrdinal()
+// 	.domain([])
+
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
 
@@ -228,11 +232,21 @@ function databindCircles(data) {
 		// 'opacity': 0
 
 
-		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
-		.attr("r", d=> 15-d.index/600)
+		.attr("cx", d=> 2*projection([d.ndLong, d.ndLat])[0] )
+		.attr("cy", d=> 2*projection([d.ndLong, d.ndLat])[1] )
+		.attr("r", d=> 3*Math.sqrt( d.ndLocCount) )
 		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
+
+
+		//.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
+		//.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
+		// .attr("r", d=> 15-d.index/600)
+		// .attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
+		// .attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
+
+
+
 		// global temperature anomalies - lollipop chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXanomaly(d.globalYear))
@@ -543,10 +557,10 @@ d3.json('circlesMoveToZero.json').then(data => {
 
 	createMap()
 
-	databindCircles(circleData)
 	databindLines(globalTempData)
 	databindAxis()
 	databindRects(emissionsData)
+	databindCircles(circleData)
 
 	// var t = d3.timer(function(elapsed) {
 	// 	stats.begin();
