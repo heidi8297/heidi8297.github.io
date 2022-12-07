@@ -221,6 +221,13 @@ function databindCircles(data) {
 		.attr("opacity", d=> (d.index >= 4496 && d.index <= 4498) ? 1 : 0.55)
 		// pdx weekly maximum temperature - radial burst chart
 		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
+
+		// 'cx': scaleFactor*projection([node.longitude,node.latitude])[0],
+		// 'cy': scaleFactor*projection([node.longitude,node.latitude])[1],
+		// 'r': scaleFactor*scaleRgeo(node.geoIdCount),
+		// 'opacity': 0
+
+
 		.attr("cx", d=> 1000 + 8*d.pdxWeeklyMaxTemp*Math.cos(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("cy", d=> 640 + 8*d.pdxWeeklyMaxTemp*Math.sin(2*Math.PI*d.pdxWeeklyWeekNum/52-0.5*Math.PI))
 		.attr("r", d=> 15-d.index/600)
