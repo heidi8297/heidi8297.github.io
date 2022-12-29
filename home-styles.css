@@ -299,6 +299,10 @@ and make sure the svg is still positioned well */
   box-shadow: 0 0 5px #999999, 0 0 8px #CCCCCC;
 }
 
+.portfolio .portfolio-wrap.white-background {
+  background: rgba(255, 255, 255, 0.8);
+}
+
 .portfolio .portfolio-wrap::before {
   content: "";
   background: rgba(255, 255, 255, 0.81);
@@ -389,7 +393,7 @@ and make sure the svg is still positioned well */
   right: 15px;
 }
 
-.new-content {
+.content-banner {
   position: absolute;
   left: 0;
 }
