@@ -72,8 +72,9 @@ const colorByNumMtz = d3.scaleOrdinal()
 		"#7c97ff","#66B9FF","#77DBFD","#83E8D0","#C3E6A6","#FFEE88"]);
 
 // color scale for natural disasters
-// const colorByDisasterType = d3.scaleOrdinal()
-// 	.domain([])
+ const colorByDisasterType = d3.scaleOrdinal()
+ 	.domain(["flood","storm","earthquake","landslide","drought","extreme temperature","volcanic activity"])
+	.range(["#77DBFD","#7c97ff","#83E8D0","#C3E6A6","#e278d6","#ffcc6d","#ff9473"])
 
 // used to create semi-randomness in the color order
 let colorOffset = 12*Math.random();
@@ -205,7 +206,7 @@ function databindCircles(data) {
 		.attr("opacity",0.8)
 		//.attr("opacity", d=> d.index < 4000 ? 0.8 : 0.4)
 		// GHG vertical bar chart
-		.transition().delay(stdDelay/2).duration(stdDuration).ease(ease)
+		.transition().delay(d => stdDelay/2 - d.swooshX/3).duration(stdDuration).ease(ease)
 		.attr("cx", d=> scaleXfiscal("FY"+String(d.ghgYear)) +Math.random()*scaleXfiscal.bandwidth() )
 		.attr("cy", function(d) {
 			if (d.ghgCategory == "scope1") {
@@ -217,7 +218,7 @@ function databindCircles(data) {
 		.attr("r",6)
 		.attr("fillStyle", d=> d.ghgCategory == "scope1" ? colorByNum(4+d.index%3): colorByNum(8+d.index%3) )
 		// pdx daily maximum temperature - scatter plot with highlight for June 2021 heat dome
-		.transition().delay(stdDelay).duration(stdDuration).ease(ease)
+		.transition().delay(d => stdDelay +d.swooshX/3).duration(stdDuration).ease(ease)
 		.attr("cx", d=> 10+5.42*d.pdxDailyDayOfYear)
 		.attr("cy", d=> canvasHeight - 12*d.pdxDailyMaxTemp + 100)
 		.attr("r", d=> (d.index >= 4496 && d.index <= 4498) ? 10 : 6)
@@ -228,7 +229,7 @@ function databindCircles(data) {
 		.attr("cx", d=> 2*projection([d.ndLong, d.ndLat])[0] )
 		.attr("cy", d=> 2*projection([d.ndLong, d.ndLat])[1] )
 		.attr("r", d=> 3*Math.sqrt( d.ndLocCount) )
-		.attr("fillStyle", d=> colorByNum(Math.floor(d.index/390)%12))
+		.attr("fillStyle", d=> colorByDisasterType(d.ndType))
 		.attr("opacity", d=> (d.pdxWeeklyDup == 1)? 0 : 0.75)
 
 		// global temperature anomalies - lollipop chart
@@ -284,12 +285,12 @@ function databindCircles(data) {
 		.transition().duration(stdDuration/6).ease(ease)
 		.attr("r", d => 2 + 8*Math.random())
 		.attr("fillStyle", d => colorByNumMtz(Math.floor(4+12*d.mtzAngleAsFraction+3.6*Math.random())%13) )
-		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 4 + 8*Math.random())
-		.attr("fillStyle", d => colorByNumMtz(Math.floor(3+12*d.mtzAngleAsFraction+3.8*Math.random())%13) )
-		.transition().duration(stdDuration/6).ease(ease)
-		.attr("r", d => 2 + 8*Math.random())
-		.attr("fillStyle", d => colorByNumMtz(Math.floor(2+12*d.mtzAngleAsFraction+4.0*Math.random())%13) )
+		//.transition().duration(stdDuration/6).ease(ease)
+		//.attr("r", d => 4 + 8*Math.random())
+		//.attr("fillStyle", d => colorByNumMtz(Math.floor(3+12*d.mtzAngleAsFraction+3.8*Math.random())%13) )
+		//.transition().duration(stdDuration/6).ease(ease)
+		//.attr("r", d => 2 + 8*Math.random())
+		//.attr("fillStyle", d => colorByNumMtz(Math.floor(2+12*d.mtzAngleAsFraction+4.0*Math.random())%13) )
 
 
 		// return to Nike Swoosh (to complete the loop)
@@ -451,7 +452,7 @@ function createMap() {
 		.attr("opacity", 1);
 	projection = d3.geoNaturalEarth1()
 		.scale((canvasWidth / 3.1) / Math.PI) // smaller values of 1.5 = more zoomed in
-		.translate([-30+ 0.25* canvasWidth, 0.24* canvasHeight]);
+		.translate([-60+ 0.25* canvasWidth, 0.24* canvasHeight]);
 	let geoPath = d3.geoPath(projection);
 	// draw the map and set the opacity to 0
 	d3.json("map.geojson").then( function(worldData){
