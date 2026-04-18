@@ -541,7 +541,13 @@ and make sure the svg is still positioned well */
 
 .carousel-item {
   font-size: 1rem;
-  padding: 0% 12% 0% calc(12% + 90px);
+  /* minimum padding on each side = 12% of width
+    maximum width of quote section = 780px (don't want people to need to read too far across page
+    extra width on LEFT padding is for the quotation mark */
+  padding-top: 0%;
+  padding-bottom: 0%;
+  padding-right: calc(max(12%, 50% - 390px));
+  padding-left: calc(max(12% + 90px, 50% - 300px));  /* the 90px is for the quote */
 }
 
 .quote {
@@ -550,7 +556,7 @@ and make sure the svg is still positioned well */
   color: #85A0EA;
   opacity: 0.4;
   font-family: 'Proza Libre', sans-serif;
-  left: 12%;
+  left: calc(max(12%, 50% - 390px));
 
 }
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Promotional Video</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script type="text/javascript">
+    var analytics = true;
+    //try {
+      if(
+        'localStorage' in window &&
+        window['localStorage'] !== null &&
+        localStorage["analytics"] == 'no' // check for local 'analytics' variable
+      ) { analytics = false }             // if value is set to no, DO NOT TRACK
+    //} catch (e) {}                 // this logic courtesy of Mathieu Decaffmeyer
+    if (analytics) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12NPY4109R');
+    } else { console.log('GA disabled') }
+  </script>
+
+  <!-- Make the webpage perform better on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Promotional Video" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://heidistockton.com/images/workSamplePromoVideo.png" />
+  <meta property="og:description" content="A short promotional video highglighting the broad range of skills that I bring to storytelling" />
+  <meta property="og:url" content="https://heidistockton.com/promovideo/" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- primary style sheet -->
+  <link rel="stylesheet" href="/core.css" type="text/css">
+  <link rel="stylesheet" href="slider.css" type="text/css">
+  <link rel="stylesheet" href="video-styles.css" type="text/css">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+
+</head>
+
+
+<body>
+
+  <video class="promoVid" controls width="800">
+      <source src="/videos/PromoVideo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+  </video>
+
+
+
+
+  <div id="contactMe">
+    <!-- placeholder for my standard "contact me" footer content -->
+    <div w3-include-html="/footer.html"></div>
+  </div>
+
+
+
+  <!-- load the d3.js library -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+
+  <!-- load jQuery -->
+  <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+
+  <script src="/vendorAssets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendorAssets/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- load core.js file -->
+  <script src="/core.js"></script>
+
+  <!-- load the javascript for this page (manages fullscreen attribute) -->
+  <script src="video-main.js" charset="utf-8"></script>
+
+  <!-- run javascript to include external html files where specified -->
+  <script>includeHTML()</script>
+</body>
+
+</html>

@@ -160,9 +160,7 @@
 
       <div class="section-title">
         <h2>Portfolio</h2>
-        <p>A selection of my recent projects - a mix of work and personal ventures.  Shown here are
-          static images of the work - the original versions are generally interactive and allow
-          users to further explore the data.  Links are provided to the interactive versions of
+        <p>A selection of my recent projects - a mix of work and personal ventures.  Links are provided to the interactive versions of
           my personal projects. </p>
       </div>
 
@@ -174,6 +172,7 @@
             <li data-filter=".filter-personal">Personal</li>
             <li data-filter=".filter-tableau">Tableau</li>
             <li data-filter=".filter-d3">D3.js</li>
+            <li data-filter=".filter-storytelling">Storytelling</li>
           </ul>
         </div>
       </div>
@@ -231,7 +230,7 @@
         <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
           <div class="portfolio-wrap">
             <img src="images/workSampleNaturalDisastersLarger.gif" class="img-fluid" alt="An exploration of natural disasters across the world told in scrollytelling style and utilizing d3, canvas and svg">
-            <img src="images/featuredContentBanner.png" class="img-fluid content-banner" alt="Featured content banner">
+            <!-- <img src="images/featuredContentBanner.png" class="img-fluid content-banner" alt="Featured content banner"> -->
             <div class="portfolio-info">
               <a href="https://heidistockton.com/naturaldisasters/">
                 <h4>Natural Disasters</h4>
@@ -253,28 +252,30 @@
         </div>
 
 
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-d3">
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-storytelling">
           <div class="portfolio-wrap">
-            <div class="dark">
-              <img src="images/workSampleSpells.png" class="img-fluid" alt="A data visualization illustrating the spells and spellcasters of Harry Potter">
-            </div>
+            <img src="images/workSamplePromoVideoIntro.png" class="img-fluid darker" alt="Confused business person sitting at computer">
+            <img src="images/newContentBanner.png" class="img-fluid content-banner" alt="New content banner">
+            
             <div class="portfolio-info">
-              <a href="https://heidistockton.com/spells/">
-                <h4>Spells & Spellcasters</h4>
-                <p class="desc">The top spells and spellcasters of Harry Potter along with
-                  who said what when</p>
-                <p class="tech">D3.js, HTML, CSS, Javascript</p>
+              <a href="https://heidistockton.com/promovideo/">
+                <h4>Promotional Video</h4>
+                <p class="desc">A short promotional video highlighting the broad range
+                  of skills that I bring to storytelling</p>
+                <p class="tech">Davinci Resolve</p>
               </a>
               <div class="portfolio-links">
-                <a href="images/workSampleSpells.png"
+                <a
+                  href="images/workSamplePromoVideo.png"
                   data-gallery="portfolioGallery"
                   class="portfolio-lightbox"
-                  title="Spells & Spellcasters - inspired by Skyler Johnson's 'Spells of Harry Potter' viz"
+                  title="With support from Brandon Evers, Steve Fife-Adams, Matt Bregoli, Bennett Wetch, Nathan McIntire, Leena Bendale, Adam Fuller"
                 ><i class="bx bx-plus"></i></a>
-                <a href="https://heidistockton.com/spells/"><i class="bx bx-link"></i></a>
+                <a href="https://heidistockton.com/promovideo/"><i class="bx bx-link"></i></a>
               </div>
             </div>
+
+
           </div>
         </div>
 
@@ -294,6 +295,30 @@
                 <p class="desc">Providing simplified comparisons of very granular information
                   across quotes for Nike footwear</p>
                 <p class="tech">Tableau, Snowflake, Figma</p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-storytelling">
+          <div class="portfolio-wrap white-background">
+            <img src="images/workSampleInnovationTalk.png" class="img-fluid darker" alt="Heidi on stage gesturing toward an audience">
+            <img src="images/newContentBanner.png" class="img-fluid content-banner" alt="New content banner">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleInnovationTalkSample.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="Innovation Talk 2026: with story support from Steve Fife-Adams"
+              >
+                <h4>Innovation Talk</h4>
+                <p class="desc">A carefully curated story-driven talk to inspire people to cultivate innovation
+                  in the everyday
+                </p>
                 <div class="portfolio-links">
                   <i class="bx bx-plus"></i>
                 </div>
@@ -327,31 +352,6 @@
         </div>
 
 
-        <div class="row portfolio-container">
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tableau filter-work">
-            <div class="portfolio-wrap">
-              <img src="images/workSampleAutoBudget.png" class="img-fluid" alt="Cost prediction interface for footwear tech developers at Nike">
-              <div class="portfolio-info">
-                <a
-                  href="images/workSampleAutoBudgetTwoScreens.png"
-                  data-gallery="portfolioGallery"
-                  class="portfolio-lightbox"
-                  title="Cost prediction tool - machine learning model by Hua Wei with SMEs Sara Darland, Troy Kazebee and Brett McNeil"
-                >
-                  <h4>Cost Prediction</h4>
-                  <p class="desc">Automatic budgeting tool for footwear tech developers</p>
-                  <p class="tech">Tableau, Snowflake</p>
-                  <div class="portfolio-links">
-                    <i class="bx bx-plus"></i>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-
-
-
         <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
           <div class="portfolio-wrap">
             <img src="images/workSampleFireIceCropped.png" class="img-fluid" alt="A radial chart showing some of the extreme weather in Portland, OR">
@@ -375,25 +375,71 @@
         </div>
 
 
-
         <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
           <div class="portfolio-wrap">
-            <img src="images/workSampleNewDevelopments.png" class="img-fluid" alt="Multisourcing Tracker - a dashboard for Nike's sourcing department">
+            <img src="images/workSampleSMS.png" class="img-fluid" alt="A high-level status tracker for KPI metrics">
             <div class="portfolio-info">
               <a
-                href="images/workSampleNewDevelopments.png"
+                href="images/workSampleSMS.png"
                 data-gallery="portfolioGallery"
                 class="portfolio-lightbox"
-                title="Multisourcing Tracker - with Vo Hoang, Meredith Thurston, Sivareddy Mekapothula and Sergey Lyashenko"
+                title="Sustainability KPI Tracker - one of the more impactful projects I've had the pleasure of working on - with Michelle Sawyer, Tracy Waldman, and Peter Brink"
               >
-                <h4>Multisourcing Tracker</h4>
-                <p class="desc">Tracking how sourcing outcomes are impacted by styles newly
-                  developed at multiple suppliers</p>
+                <h4>Sustainability KPI Tracker</h4>
+                <p class="desc">Monitoring progress against annual sustainability targets</p>
                 <p class="tech">Tableau, Snowflake</p>
                 <div class="portfolio-links">
                   <i class="bx bx-plus"></i>
                 </div>
               </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-storytelling">
+          <div class="portfolio-wrap white-background">
+            <img src="images/workSampleEscapeRoomGroupShot.jpg" class="img-fluid darker" alt="A group of people solving puzzles in an escape room">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleEscapeRoomThreeImages.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="A message so important, we needed an escape room to achieve full impact - with support from Clarissa Ache-Cabello and Steve Fife-Adams"
+              >
+                <h4>An "Uncertain" Experience</h4>
+                <p class="desc">An interactive storytelling approach to land some critical sustainability messaging
+                  at Nike
+                </p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-d3">
+          <div class="portfolio-wrap">
+            <div class="dark">
+              <img src="images/workSampleSpells.png" class="img-fluid" alt="A data visualization illustrating the spells and spellcasters of Harry Potter">
+            </div>
+            <div class="portfolio-info">
+              <a href="https://heidistockton.com/spells/">
+                <h4>Spells & Spellcasters</h4>
+                <p class="desc">The top spells and spellcasters of Harry Potter along with
+                  who said what when</p>
+                <p class="tech">D3.js, HTML, CSS, Javascript</p>
+              </a>
+              <div class="portfolio-links">
+                <a href="images/workSampleSpells.png"
+                  data-gallery="portfolioGallery"
+                  class="portfolio-lightbox"
+                  title="Spells & Spellcasters - inspired by Skyler Johnson's 'Spells of Harry Potter' viz"
+                ><i class="bx bx-plus"></i></a>
+                <a href="https://heidistockton.com/spells/"><i class="bx bx-link"></i></a>
+              </div>
             </div>
           </div>
         </div>
@@ -422,18 +468,43 @@
         </div>
 
 
+        <div class="row portfolio-container">
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-tableau filter-work">
+            <div class="portfolio-wrap">
+              <img src="images/workSampleAutoBudget.png" class="img-fluid" alt="Cost prediction interface for footwear tech developers at Nike">
+              <div class="portfolio-info">
+                <a
+                  href="images/workSampleAutoBudgetTwoScreens.png"
+                  data-gallery="portfolioGallery"
+                  class="portfolio-lightbox"
+                  title="Cost prediction tool - machine learning model by Hua Wei with SMEs Sara Darland, Troy Kazebee and Brett McNeil"
+                >
+                  <h4>Cost Prediction</h4>
+                  <p class="desc">Automatic budgeting tool for footwear tech developers</p>
+                  <p class="tech">Tableau, Snowflake</p>
+                  <div class="portfolio-links">
+                    <i class="bx bx-plus"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
           <div class="portfolio-wrap">
-            <img src="images/workSampleSMS.png" class="img-fluid" alt="A high-level status tracker for KPI metrics">
+            <img src="images/workSampleSourcedDemand.png" class="img-fluid" alt="A data visualization to track sourcing strategy against incoming demand">
             <div class="portfolio-info">
               <a
-                href="images/workSampleSMS.png"
+                href="images/workSampleSourcedDemand.png"
                 data-gallery="portfolioGallery"
                 class="portfolio-lightbox"
-                title="Sustainability KPI Tracker - one of the more impactful projects I've had the pleasure of working on - with Michelle Sawyer, Tracy Waldman, and Peter Brink"
+                title="Sourced Demand - made possible by the data wizardry of Sergey Lyashenko"
               >
-                <h4>Sustainability KPI Tracker</h4>
-                <p class="desc">Monitoring progress against annual sustainability targets</p>
+                <h4>Sourced Demand vs Strategy</h4>
+                <p class="desc">Tracking sourcing strategy against the incoming demand signal</p>
                 <p class="tech">Tableau, Snowflake</p>
                 <div class="portfolio-links">
                   <i class="bx bx-plus"></i>
@@ -442,6 +513,30 @@
             </div>
           </div>
         </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-storytelling">
+          <div class="portfolio-wrap white-background">
+            <img src="images/workSampleCarbonBoxes.jpg" class="img-fluid darker" alt="An art installation featuring large sheer boxes">
+            <div class="portfolio-info">
+              <a
+                href="images/workSampleCarbonBoxesWithHeidiRedacted.png"
+                data-gallery="portfolioGallery"
+                class="portfolio-lightbox"
+                title="Carbon box installation 2025 - in collaboration with Global Sustainability Analytics"
+              >
+                <h4>Carbon Box Installation at Nike</h4>
+                <p class="desc">A physical representation of carbon impact designed to leave an impression on
+                  passersby
+                </p>
+                <div class="portfolio-links">
+                  <i class="bx bx-plus"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
 
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-personal filter-tableau">
@@ -466,70 +561,8 @@
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-work filter-tableau">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleSourcedDemand.png" class="img-fluid" alt="A data visualization to track sourcing strategy against incoming demand">
-            <div class="portfolio-info">
-              <a
-                href="images/workSampleSourcedDemand.png"
-                data-gallery="portfolioGallery"
-                class="portfolio-lightbox"
-                title="Sourced Demand - made possible by the data wizardry of Sergey Lyashenko"
-              >
-                <h4>Sourced Demand vs Strategy</h4>
-                <p class="desc">Tracking sourcing strategy against the incoming demand signal</p>
-                <p class="tech">Tableau, Snowflake</p>
-                <div class="portfolio-links">
-                  <i class="bx bx-plus"></i>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
 
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-tableau filter-personal">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleClimate.png" class="img-fluid" alt="Visual results of a climate change survey">
-            <div class="portfolio-info">
-              <a
-                href="images/workSampleClimate.png"
-                data-gallery="portfolioGallery"
-                class="portfolio-lightbox"
-                title="ECAP Climate Change survey - for Luna Abadia, a truly inspiring young activist"
-              >
-                <h4>ECAP Climate Change survey</h4>
-                <p class="desc">Results of a survey looking at public knowledge, attitudes
-                  and behaviors pertaining to climate change</p>
-                <p class="tech">Tableau, Python</p>
-                <div class="portfolio-links">
-                  <i class="bx bx-plus"></i>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-d3 filter-personal">
-          <div class="portfolio-wrap">
-            <img src="images/workSampleWebsite.png" class="img-fluid" alt="Screenshot of Heidi's portfolio website">
-            <div class="portfolio-info">
-              <a href="images/workSampleWebsite.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Personal Website">
-                <h4>Personal Website</h4>
-                <p class="desc">A website to impress and delight (is it working?)</p>
-                <p class="tech">HTML, CSS, D3.js, Bootstrap, Javascript</p>
-                <div class="portfolio-links wonkyL">
-                  <i class="bx bx-plus"></i>
-                </div>
-              </a>
-
-              <div class="portfolio-links wonkyR">
-                <a href="https://heidistockton.com"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
 
 
       </div>
@@ -548,70 +581,124 @@
           <h4 class="testimonial-text">She has earned an undisputed respect amongst
             peers and leaders alike with her clear thinking, strong problem solving
             skills and dedication to excellence.</h4>
-          <em class="testimonial-author">-Kristi Wilson</em>
+          <em class="testimonial-author">-Kristi Wilson, Director of Operations, NSRL</em>
         </div>
+
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">She communicates with confidence, expresses
-            her ideas clearly and respects the views and opinions of teammates.</h4>
-          <em class="testimonial-author">-Anonymous (peer feedback at Nike)</em>
+          <h4 class="testimonial-text">Working with her expands boundaries for her peers.</h4>
+          <em class="testimonial-author">-Steve Fife-Adams, Director of Product,
+            Sustainability Analytics
+          </em>
         </div>
+
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Heidi is an outstanding team member.
-            I feel extremely lucky to have someone so skilled and reliable on
-            my team.</h4>
-          <em class="testimonial-author">-Dan Feldman</em>
+          <h4 class="testimonial-text">Heidi is incredibly talented.  We will miss
+            her and the dedication she brought to making us all collectively better.</h4>
+          <em class="testimonial-author">-Matthew Nurse, VP, Nike Sport Research Lab</em>
         </div>
+        
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">Heidi is one of the standout visualization
+            developers at Nike who truly innovates in her mission to distill data with
+            the stakeholders' language... her level of leadership is not only
+            technical but intellectual and creative.</h4>
+          <em class="testimonial-author">-Aubrey Xiong, Senior Visualization Developer</em>
+        </div>
+
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">She can inspire people to do better work, to
+            think outside the box, to truly innovate.  I have not met someone else - in
+            this role or even in the periphery of this role - who represents that more
+            than Heidi does.</h4>
+          <em class="testimonial-author">-Matt Bregoli, Director, Marketplace Analytics</em>
+        </div>
+
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">Heidi is such a genuine human being with a fierce 
+            work ethic, tireless creativity and problem-solving and the determination to
+            always improve, all while being disarming, witty and kind.
+          </h4>
+          <em class="testimonial-author">-Kristi Wilson, Director of Operations, NSRL</em>
+        </div>
+        
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">[Heidi's Innovation Talk] was inspiring, relatable,
+            empathetic, fun, insightful, vulnerable, authentic, and so much more.
+          </h4>
+          <em class="testimonial-author">-Jesse Germanow, Program Manager, Climate &
+            Energy</em>
+        </div>
+
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">She's a firm believer in 'something good is better
+            than something perfect' and that attitude is infectious.  I'm so glad I've
+            gotten to work with and be inspired by Heidi!
+          </h4>
+          <em class="testimonial-author">-Dara Taylor, Data Analytics Manager</em>
+        </div>
+
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
           <h4 class="testimonial-text">Heidi's relentless focus on the user experience
             resulted in the creation of a wonderful tool that truly does make the
             complex simple!</h4>
-          <em class="testimonial-author">-Brett McNeil</em>
+          <em class="testimonial-author">-Brett McNeil, Director of Cost Engineering</em>
         </div>
-        <!-- <div class="carousel-item container-fluid">
+
+        <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Pushing the status quo has essentially
-            been her entire job since she has been here.  We are implementing
-            something brand new and she has done a fantastic job of exploring
-            new ways to incorporate this into the [Nike Sport Research Lab].</h4>
+          <h4 class="testimonial-text">Heidi drives clarity and accountability by asking
+            tough questions and not letting anything slip through the cracks.
+          </h4>
+          <em class="testimonial-author">-Leena Bendale, Senior Manager, Data
+            Visualization</em>
+        </div>
+
+
+        <div class="carousel-item container-fluid">
+          <h1 class="quote">“</h1>
+          <h4 class="testimonial-text">I feel so fortunate to be able to work with Heidi,
+            one of the most inspirational, galvanizing, and admirable people I have ever
+            known.
+          </h4>
           <em class="testimonial-author">-Anonymous (peer feedback at Nike)</em>
-        </div> -->
+        </div>
+
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Heidi is incredibly talented.  We will miss
-            her and the dedication she brought to making us all collectively better.</h4>
-          <em class="testimonial-author">-Matthew Nurse</em>
+          <h4 class="testimonial-text">She really builds this contagious desire to drive 
+            influence - and to question why we can't.
+          </h4>
+          <em class="testimonial-author">-Matt Bregoli, Director, Marketplace Analytics
+          </em>
         </div>
-        <!-- <div class="carousel-item container-fluid">
-          <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Heidi is an integral part of the project.
-            Her experience in Tableau design has brought the [sourcing department]
-            to realize what they were missing... she challenges her team to think
-            outside the box and make the product the best it can be.</h4>
-          <em class="testimonial-author">-Michelle Coomes</em>
-        </div> -->
-        <div class="carousel-item container-fluid">
-          <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Heidi is a terrific asset to the team.  Her
-            problem solving and analytic skills are unmatched.</h4>
-          <em class="testimonial-author">-Angela Eastburn</em>
-        </div>
+
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
           <h4 class="testimonial-text">Heidi can be trusted to deliver and collaborates
             easily.  People are pleasantly surprised when they see what she can do,
             and she makes it look easy when it often isn't.</h4>
-          <em class="testimonial-author">-Jennifer Smith</em>
+          <em class="testimonial-author">-Jennifer Smith, Director of Research and Data
+            Integrity</em>
         </div>
+
+        <!-- DROP THIS QUOTE? -->
         <div class="carousel-item container-fluid">
           <h1 class="quote">“</h1>
-          <h4 class="testimonial-text">Heidi is a true unicorn. She’s able to go deep
-            on data mining and analysis while bringing the insights to life in a beautiful
-            and compelling way.</h4>
-          <em class="testimonial-author">-Sara Mostafavi</em>
+          <h4 class="testimonial-text">Heidi is an outstanding team member.
+            I feel extremely lucky to have someone so skilled and reliable on
+            my team.</h4>
+          <em class="testimonial-author">-Dan Feldman, Lead Product Manager</em>
         </div>
+
+
       </div>
       <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon"></span>

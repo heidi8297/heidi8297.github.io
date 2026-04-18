@@ -1,0 +1,106 @@
+body, p, .tooltip {
+  font-family: 'Quattrocento', serif;
+  background-color: #bec8df;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Oswald', sans-serif;
+}
+
+h1 {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+h4 {
+  margin-top: 10px;
+  font-size: 0.83rem;
+}
+
+h5 {
+  font-size: 0.83rem;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+p {
+  font-size: 0.83rem;
+}
+
+a {
+  /* likely should keep this the same color as the 'tableauIcon' color below */
+  color: #2C3D6D;
+}
+
+a:hover {
+  color: #5B87FF;
+}
+
+.footerLink:hover {
+  fill: #5B87FF;
+}
+
+.main {
+  margin: 2.5% 9% 5% 9%;
+  padding: 1px 1% 10px 1%;
+}
+
+@media (max-width: 500px) {
+  .main {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+}
+
+
+
+/* Video */
+.promoVid {
+  display: block;
+  margin: 80px auto;
+  border-style: solid;
+  border-color: #97a3c2;
+  border-width: 4px;
+}
+
+
+/* hide border when fullscreen */
+/* kind of a scattershot approach because apparently none of these are foolproof */
+video:-webkit-full-screen {
+  border: none;
+}
+video:-moz-full-screen {
+  border: none;
+}
+video:-ms-fullscreen {
+  border: none;
+}
+video:fullscreen {
+  border: none;
+}
+:fullscreen video {
+  border: none;
+}
+:-webkit-full-screen video {
+  border: none;
+}
+video.is-fullscreen {
+  border: none;
+}
+
+
+
+
+/* Contact Me */
+#contactMe {
+  background-color: #bec8df;
+  height: 180px;
+}
+
+
+
+.tableauIcon {
+  /* likely should keep this the same color as the 'a' color above */
+  fill: #2C3D6D;
+}
