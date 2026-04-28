@@ -59,6 +59,7 @@ a:hover {
 .promoVid {
   display: block;
   margin: 80px auto;
+  width: calc(min(94%, 800px));
   border-style: solid;
   border-color: #97a3c2;
   border-width: 4px;
