@@ -189,7 +189,9 @@ and make sure the svg is still positioned well */
 # About Me
 --------------------------------------------------------------*/
 #aboutMe {
-  background-image: linear-gradient(#DEEEFF, #DEE1FF);
+  /* background-image: linear-gradient(#DEEEFF, #DEE1FF); */
+
+  background-image: linear-gradient(#D7EBFA, #CBD4F5);
   padding: calc(5% + 30px) 12%;
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
 }
@@ -200,6 +202,7 @@ and make sure the svg is still positioned well */
   position: relative;
   margin-right: 70px;
   margin-bottom: 10px;
+  box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
 }
 
 #aboutMe .section-title {
@@ -480,7 +483,9 @@ and make sure the svg is still positioned well */
 --------------------------------------------------------------*/
 
 #testimonial-carousel, .carousel-inner.heidis-carousel  {
-  background-image: linear-gradient(#DEEEFF, #DEE1FF);
+  /* background-image: linear-gradient(#DEEEFF, #DEE1FF); */
+
+  background-image: linear-gradient(#D7EBFA, #CBD4F5);
   box-shadow: 0 0 5px #AAAAAA, 0 0 8px #D5D5D5;
   height: 330px;
 }
